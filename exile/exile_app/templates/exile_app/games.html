@@ -1,10 +1,18 @@
 {% extends 'exile_app/base.html' %}
 
 {% block content %}
+
+  <h1 class="text-danger my-4">Games</h1>
+  <hr>
+
     {% for game in object_list %}
-        <div class="card mb-4">
+        <div class="card mb-4" style="width: 25rem;">
           <div class="card-body">
-              <h2 class="card-title"> {{ game.id }} {{ game.name }} {{ game.password }}</h2>
+              <h4 class="card-title text-primary">{{ game.name }}</h4>
+              <ul>
+                <li>game id: {{ game.id }}</li>
+                <li>game top secret password: {{ game.password }}</li>
+              </ul>
           </div>
         </div>
       {% endfor %}
