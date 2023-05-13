@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Game
 # Create your views here.
 
@@ -13,4 +13,8 @@ class GameView(ListView):
     model = Game
     template_name = 'exile_app/games.html'
 
+
+class GameDetailView(DetailView):
+    model = Game
+    template_name = 'exile_app/game_detail.html'
 
