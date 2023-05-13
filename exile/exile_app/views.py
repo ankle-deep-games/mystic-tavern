@@ -11,6 +11,6 @@ def simple_view(request):
 
 class GameView(ListView):
     model = Game
-    template_name = 'games.html'
+    template_name = 'exile_app/games.html'
 
 
