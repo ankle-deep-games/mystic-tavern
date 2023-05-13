@@ -22,3 +22,7 @@ class GameDetailView(DetailView):
 class GameUsersView(ListView):
     model = GameUser
     template_name = 'exile_app/lobby.html'
+
+    def get_queryset(self):
+        game = self.kwargs['game_id']
+        return GameUser.objects.filter(game_id_id=game)
