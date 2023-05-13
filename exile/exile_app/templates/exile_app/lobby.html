@@ -1,0 +1,9 @@
+{% extends 'exile_app/base.html' %}
+
+{% block content %}
+    {% for user in object_list %}
+        <p>User ID: {{ user.user_id_id }}</p>
+        <p>Game ID: {{ user.game_id_id }}</p>
+        <p>GameUser ID: {{ user.id }}</p><hr>
+    {% endfor %}
+{% endblock %}
