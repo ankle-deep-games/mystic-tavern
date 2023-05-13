@@ -2,4 +2,5 @@
 
 {% block content %}
 <h1>{{ game.id }} {{ game.name }}</h1>
+<a href="{% url 'exile_app:lobby' game.pk  %}" class="btn btn-primary">Lobby</a>
 {% endblock %}
