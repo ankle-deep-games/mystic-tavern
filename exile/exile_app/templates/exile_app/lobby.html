@@ -1,9 +1,17 @@
 {% extends 'exile_app/base.html' %}
 
 {% block content %}
+    <h1 class="text-danger my-4">Game Lobby</h1>
+    <hr>
     {% for user in object_list %}
-        <p>User ID: {{ user.user_id_id }}</p>
-        <p>Game ID: {{ user.game_id_id }}</p>
-        <p>GameUser ID: {{ user.id }}</p><hr>
+        <div class="card mb-4" style="width: 25rem;">
+          <div class="card-body">
+              <h4 class="card-title text-primary">User ID: {{ user.user_id_id }}</h4>
+              <ul>
+                <li>Game ID: {{ user.game_id_id }}</li>
+                <li>GameUser ID: {{ user.id }}</li>
+              </ul>
+          </div>
+        </div>
     {% endfor %}
 {% endblock %}
