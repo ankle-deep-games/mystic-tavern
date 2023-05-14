@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Mystic Tavern</h5>
+    <p class="card-text">Embark on a perilous adventure with a group of warriors as they battle fierce monsters, complete side quests, and uncover hidden secrets in a world of magic and wonder!</p>
+    <a href="{% url 'exile_app:games' %}" class="btn btn-primary">Join</a>
+  </div>
+</div>
+
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Exile</h5>
+    <p class="card-text">Exile is a survival game where you compete against up to a dozen players on an island to be the last one standing. Build shelter, gather resources to upgrade weapons, strategically move and outsmart your foes to claim victory.</p>
+    <a href="#" class="btn btn-danger">Coming Soon!</a>
+  </div>
+</div>
+  {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% if user.is_authenticated %}
+  {% block content %}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Create a Game</h5>
+    <p class="card-text">Create a game here and play with friends!</p>
+    <a href="#" class="btn btn-primary">Create</a>
+  </div>
+</div>
+
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Join a Game</h5>
+    <p class="card-text">If you were given a password for an already created game, join it here!</p>
+    <a href="{% url 'choose_game' %}" class="btn btn-primary">Join</a>
+  </div>
+</div>
+  {% endblock %}
+{% else %}
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+{% endif %}
