@@ -2,19 +2,27 @@
 
 {% if user.is_authenticated %}
   {% block content %}
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Create a Game</h5>
-    <p class="card-text">Create a game here and play with friends!</p>
-    <a href="#" class="btn btn-primary">Create</a>
-  </div>
-</div>
-
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Join a Game</h5>
-    <p class="card-text">If you were given a password for an already created game, join it here!</p>
-    <a href="{% url 'choose_game' %}" class="btn btn-primary">Join</a>
+<br/>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Create a Game</h5>
+          <p class="card-text">Create a game here and play with friends!</p>
+          <a href="#" class="btn btn-primary">Create</a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Join a Game</h5>
+          <p class="card-text">If you were given a password for an already created game, join it here!</p>
+          <a href="{% url 'choose_game' %}" class="btn btn-primary">Join</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
   {% endblock %}
