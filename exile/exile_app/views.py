@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from .forms import CreateGameForm
 from .models import Game, GameUser
+from django.urls import reverse_lazy
+from django.shortcuts import redirect, reverse
 # Create your views here.
 
 
@@ -26,3 +29,15 @@ class GameUsersView(ListView):
     def get_queryset(self):
         game = self.kwargs['game_id']
         return GameUser.objects.filter(game_id_id=game)
+
+
+class CreateGameView(CreateView):
+    model = Game
+    template_name = 'exile_app/create_game.html'
+    form_class = CreateGameForm
+
+    def form_valid(self, form):
+        game = form.save(commit=False)
+        game.creator = self.request.user
+        game.save()
+        return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))

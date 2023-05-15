@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import CreateOrJoinView, ChooseGameView
+from .views import CreateOrJoinView, ChooseGameJoinView, ChooseGameCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('', LoginView.as_view(template_name='registration/login.html', next_page='home'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('home/', CreateOrJoinView.as_view(), name='home'),
-    path('home/choose_game/', ChooseGameView.as_view(), name='choose_game'),
+    path('home/choose_game_join/', ChooseGameJoinView.as_view(), name='choose_game_join'),
+    path('home/choose_game_create/', ChooseGameCreateView.as_view(), name='choose_game_create'),
 ]
