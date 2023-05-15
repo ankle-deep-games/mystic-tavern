@@ -11,3 +11,13 @@ class CreateGameForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'password': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+
+class JoinGameForm(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = ('password',)
+
+        widgets = {
+            'password': forms.TextInput(attrs={'class': 'form-control'})
+        }
