@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView
-from .forms import CreateGameForm
+from .forms import CreateGameForm, JoinGameForm
 from .models import Game, GameUser
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse
+from django.contrib import messages
+from django.views.generic.edit import FormMixin
 # Create your views here.
 
 
@@ -17,9 +19,35 @@ class GameView(ListView):
     template_name = 'exile_app/games.html'
 
 
-class GameDetailView(DetailView):
+class GameDetailView(FormMixin, DetailView):
     model = Game
     template_name = 'exile_app/game_detail.html'
+    form_class = JoinGameForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class()
+        return context
+
+    def form_valid(self, form):
+        game = self.get_object()
+        password = form.cleaned_data.get('password')
+        if password == game.password:
+            # Add the user to the gameuser table
+            GameUser.objects.create(user_id=self.request.user, game_id=game)
+            messages.success(self.request, 'You have successfully joined the game!')
+            return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
+        else:
+            messages.error(self.request, 'Incorrect password. Please try again.')
+            return self.form_invalid(form)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 class GameUsersView(ListView):
