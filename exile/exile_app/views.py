@@ -40,4 +40,8 @@ class CreateGameView(CreateView):
         game = form.save(commit=False)
         game.creator = self.request.user
         game.save()
+
+        # Add the user who created the game to the gameuser table
+        GameUser.objects.create(user_id=self.request.user, game_id=game)
+
         return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
