@@ -39,7 +39,7 @@ class GameDetailView(FormMixin, DetailView):
                 pass
             else:
                 # Add the user to the GameUser table
-                GameUser.objects.create(user_id=self.request.user, game_id=game)
+                GameUser.objects.create(user=self.request.user, game=game)
                 messages.success(self.request, 'You have successfully joined the game!')
             return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
         else:
@@ -61,7 +61,7 @@ class GameUsersView(ListView):
 
     def get_queryset(self):
         game = self.kwargs['game_id']
-        return GameUser.objects.filter(game_id_id=game)
+        return GameUser.objects.filter(game_id=game)
 
 
 class CreateGameView(CreateView):
@@ -75,6 +75,6 @@ class CreateGameView(CreateView):
         game.save()
 
         # Add the user who created the game to the gameuser table
-        GameUser.objects.create(user_id=self.request.user, game_id=game)
+        GameUser.objects.create(user=self.request.user, game=game)
 
         return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
