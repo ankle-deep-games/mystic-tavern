@@ -1,4 +1,4 @@
-{% extends 'exile_app/mt_base.html' %}
+{% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
 
@@ -13,7 +13,7 @@
                 <li>game id: {{ game.id }}</li>
                 <li>game top secret password: {{ game.password }}</li>
               </ul>
-              <a href="{% url 'exile_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
+              <a href="{% url 'tavern_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
           </div>
         </div>
       {% endfor %}

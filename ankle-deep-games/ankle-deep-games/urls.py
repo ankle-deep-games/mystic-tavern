@@ -1,5 +1,5 @@
 """
-URL configuration for exile project.
+URL configuration for tavern project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -21,7 +21,7 @@ from .views import CreateOrJoinView, ChooseGameJoinView, ChooseGameCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('exile_app/', include('exile_app.urls')),
+    path('tavern_app/', include('tavern_app.urls')),
     path('', LoginView.as_view(template_name='registration/login.html', next_page='home'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('home/', CreateOrJoinView.as_view(), name='home'),

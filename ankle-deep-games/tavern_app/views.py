@@ -16,12 +16,12 @@ def simple_view(request):
 
 class GameView(ListView):
     model = Game
-    template_name = 'exile_app/games.html'
+    template_name = 'tavern_app/games.html'
 
 
 class GameDetailView(FormMixin, DetailView):
     model = Game
-    template_name = 'exile_app/game_detail.html'
+    template_name = 'tavern_app/game_detail.html'
     form_class = JoinGameForm
 
     def get_context_data(self, **kwargs):
@@ -41,7 +41,7 @@ class GameDetailView(FormMixin, DetailView):
                 # Add the user to the GameUser table
                 GameUser.objects.create(user=self.request.user, game=game)
                 messages.success(self.request, 'You have successfully joined the game!')
-            return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
+            return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
         else:
             messages.error(self.request, 'Incorrect password. Please try again.')
             return self.form_invalid(form)
@@ -57,7 +57,7 @@ class GameDetailView(FormMixin, DetailView):
 
 class GameUsersView(ListView):
     model = GameUser
-    template_name = 'exile_app/lobby.html'
+    template_name = 'tavern_app/lobby.html'
 
     def get_queryset(self):
         game = self.kwargs['game_id']
@@ -66,7 +66,7 @@ class GameUsersView(ListView):
 
 class CreateGameView(CreateView):
     model = Game
-    template_name = 'exile_app/create_game.html'
+    template_name = 'tavern_app/create_game.html'
     form_class = CreateGameForm
 
     def form_valid(self, form):
@@ -77,4 +77,4 @@ class CreateGameView(CreateView):
         # Add the user who created the game to the gameuser table
         GameUser.objects.create(user=self.request.user, game=game)
 
-        return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
+        return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))

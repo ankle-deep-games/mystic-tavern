@@ -2,9 +2,9 @@ from django.urls import path
 from . import views
 from .views import GameView, GameDetailView, GameUsersView, CreateGameView
 
-app_name = 'exile_app'
+app_name = 'tavern_app'
 
-# domain.com/exile_app/
+# domain.com/tavern_app/
 urlpatterns = [
     path('', views.simple_view),
     path('create_game/', CreateGameView.as_view(), name='create_game'),
