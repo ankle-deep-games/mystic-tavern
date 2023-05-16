@@ -15,8 +15,8 @@ class Game(models.Model):
 
 
 class GameUser(models.Model):
-    game_id = models.ForeignKey(Game, on_delete=models.PROTECT)
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT)
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
