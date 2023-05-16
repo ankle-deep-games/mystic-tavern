@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.views.generic.edit import FormMixin
+from django.db.models import Count
 # Create your views here.
 
 
@@ -17,6 +18,12 @@ def simple_view(request):
 class GameView(ListView):
     model = Game
     template_name = 'exile_app/games.html'
+    queryset = Game.objects.annotate(num_players=Count('gameuser'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = self.queryset
+        return context
 
 
 class GameDetailView(FormMixin, DetailView):

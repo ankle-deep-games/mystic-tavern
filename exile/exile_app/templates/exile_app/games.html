@@ -8,9 +8,9 @@
     {% for game in object_list %}
         <div class="card mb-4" style="width: 25rem;">
           <div class="card-body">
-              <h4 class="card-title text-primary">{{ game.name }}</h4>
+              <h4 class="card-title text-primary">Game Name: {{ game.name }}</h4>
               <ul>
-                <li>game id: {{ game.id }}</li>
+                <li>players in lobby: {{ game.gameuser_set.count }}/6</li>
                 <li>game top secret password: {{ game.password }}</li>
               </ul>
               <a href="{% url 'exile_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>

@@ -3,13 +3,14 @@
 {% block content %}
     <h1 class="text-danger my-4">Game Lobby</h1>
     <hr>
-    {% for user in object_list %}
+    <h2 class="text-primary my-4">Players:</h2>
+    {% for gameuser in object_list %}
         <div class="card mb-4" style="width: 25rem;">
           <div class="card-body">
-              <h4 class="card-title text-primary">User ID: {{ user.user_id }}</h4>
+              <h4 class="card-title text-primary">Player: {{ gameuser.user.username }}</h4>
               <ul>
-                <li>Game ID: {{ user.game_id }}</li>
-                <li>GameUser ID: {{ user.id }}</li>
+                <li>Game ID: {{ gameuser.game_id }}</li>
+                <li>GameUser ID: {{ gameuser.id }}</li>
               </ul>
           </div>
         </div>
