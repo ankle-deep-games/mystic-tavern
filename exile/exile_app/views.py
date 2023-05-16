@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from .forms import CreateGameForm, JoinGameForm
 from .models import Game, GameUser
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.views.generic.edit import FormMixin
 # Create your views here.
@@ -33,9 +33,14 @@ class GameDetailView(FormMixin, DetailView):
         game = self.get_object()
         password = form.cleaned_data.get('password')
         if password == game.password:
-            # Add the user to the gameuser table
-            GameUser.objects.create(user_id=self.request.user, game_id=game)
-            messages.success(self.request, 'You have successfully joined the game!')
+            user = self.request.user
+            existing_game_user = GameUser.objects.filter(user_id=self.request.user, game_id=game).exists()
+            if existing_game_user:
+                pass
+            else:
+                # Add the user to the GameUser table
+                GameUser.objects.create(user_id=self.request.user, game_id=game)
+                messages.success(self.request, 'You have successfully joined the game!')
             return redirect(reverse('exile_app:lobby', kwargs={'game_id': game.id}))
         else:
             messages.error(self.request, 'Incorrect password. Please try again.')
