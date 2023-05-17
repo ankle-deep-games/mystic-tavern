@@ -21,7 +21,7 @@ from .views import CreateOrJoinView, ChooseGameJoinView, ChooseGameCreateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('exile_app/', include('exile_app.urls')),
+    path('tavern_app/', include('tavern_app.urls')),
     path('', LoginView.as_view(template_name='registration/login.html', next_page='home'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('home/', CreateOrJoinView.as_view(), name='home'),
