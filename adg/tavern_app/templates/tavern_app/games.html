@@ -1,20 +1,22 @@
 {% extends 'tavern_app/mt_base.html' %}
-
 {% block content %}
 
-  <h1 class="text-danger my-4">Games</h1>
-  <hr>
+<h1 class="text-danger my-4">Games</h1>
+<hr>
 
-    {% for game in object_list %}
-        <div class="card mb-4" style="width: 25rem;">
-          <div class="card-body">
-              <h4 class="card-title text-primary">Game Name: {{ game.name }}</h4>
-              <ul>
-                <li>players in lobby: {{ game.gameuser_set.count }}/6</li>
-                <li>game top secret password: {{ game.password }}</li>
-              </ul>
-              <a href="{% url 'tavern_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
-          </div>
-        </div>
-      {% endfor %}
+  {% for game in object_list %}
+    <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+      <div class="card-header">Header Placeholder</div>
+      <div class="card-body">
+        <h5 class="card-title">Game Name: {{ game.name }}</h5>
+        <ul>
+          <li>players in lobby: {{ game.gameuser_set.count }}/6</li>
+          <li>game top secret password: {{ game.password }}</li>
+        </ul>
+        <p class="card-text">This is game <u>{{ game.name }}</u>.</p>
+        <a href="{% url 'tavern_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
+      </div>
+    </div>
+
+  {% endfor %}
 {% endblock %}
