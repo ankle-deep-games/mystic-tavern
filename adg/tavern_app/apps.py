@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ExileAppConfig(AppConfig):
+class AdgAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'tavern_app'
