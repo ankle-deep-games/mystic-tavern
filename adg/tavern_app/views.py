@@ -19,11 +19,7 @@ class GameView(ListView):
     model = Game
     template_name = 'tavern_app/games.html'
     queryset = Game.objects.annotate(num_players=Count('gameuser'))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object_list'] = self.queryset
-        return context
+    context_object_name = 'games'
 
 
 class GameDetailView(FormMixin, DetailView):
