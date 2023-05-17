@@ -29,4 +29,4 @@ class GameUser(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Game Name: ' + str(self.game_id.name) + ', Player: ' + str(self.user_id.username) + ', Role: ' + str(self.role_id.name)
+        return 'Game Name: ' + str(self.game.name) + ', Player: ' + str(self.user.username) + ', Role: ' + str(self.role.name)
