@@ -14,6 +14,8 @@ from django.db.models import Count
 def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
+def leeroy(request):
+    return render(request, 'leeroy.html')
 
 class GameView(ListView):
     model = Game
