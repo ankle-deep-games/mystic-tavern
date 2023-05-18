@@ -17,6 +17,11 @@
                 <li>Gender ID: {{ gameuser.gender_id }}</li>
                 <li>{{ gameuser.gender }}</li>
               </ul>
+
+              <samp class="my-2 text-danger">hardcoded image below. need to figure out how to put variables in that static img src</samp>
+              {% load static %}
+              <img src="{% static 'tavern_app/blackmage-male.png' %}" alt="drunk old man "style="width:150px;height:150px;">
+
           </div>
         </div>
     {% endfor %}
