@@ -12,7 +12,7 @@ from django.db.models import Count
 
 
 def simple_view(request):
-    return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO") # TEMPLATE HTML (JINJA) in future
+    return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
 
 class GameView(ListView):
@@ -114,8 +114,8 @@ class RoleAssignmentView(FormView):
 
     def get_success_url(self):
         game_id = self.kwargs['game_id']
-        return reverse('tavern_app:player_customization', kwargs={'game_id': game_id})
+        return reverse('tavern_app:customize_character', kwargs={'game_id': game_id})
 
 
 class PlayerCustomizationView(TemplateView):
-    template_name = 'tavern_app/player_customization.html'
+    template_name = 'tavern_app/customize_character.html'

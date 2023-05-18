@@ -7,10 +7,10 @@ app_name = 'tavern_app'
 # domain.com/tavern_app/
 urlpatterns = [
     path('', views.simple_view),
-    path('create_game/', CreateGameView.as_view(), name='create_game'),
+    path('create/', CreateGameView.as_view(), name='create_game'),
     path('games/', GameView.as_view(), name='games'),
     path('games/<int:pk>', GameDetailView.as_view(), name='game_detail'),
     path('games/<int:game_id>/lobby', GameUsersView.as_view(), name='lobby'),
     path('games/<int:game_id>/lobby/role_assignment', RoleAssignmentView.as_view(), name='role_assignment'),
-    path('games/<int:game_id>/lobby/role_assignment/player_customization', RoleAssignmentView.as_view(), name='player_customization'),
+    path('games/<int:game_id>/lobby/customize_character', RoleAssignmentView.as_view(), name='customize_character'),
 ]
