@@ -21,7 +21,8 @@ class Role(models.Model):
 
     def __str__(self):
         return str(self.name)
-    
+
+
 class Gender(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,4 +41,8 @@ class GameUser(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Game Name: ' + str(self.game.name) + ', Player: ' + str(self.user.username) + ', Role: ' + str(self.role.name)
+        game_name = self.game.name if self.game else 'Unknown Game'
+        username = self.user.username if self.user else 'Unknown User'
+        role_name = self.role.name if self.role else 'Unknown Role'
+
+        return f'Game Name: {game_name}, Player: {username}, Role: {role_name}'
