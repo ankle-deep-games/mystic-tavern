@@ -8,11 +8,3 @@ def login_user(request):
 
 class CreateOrJoinView(TemplateView):
     template_name = "home.html"
-
-
-class ChooseGameJoinView(TemplateView):
-    template_name = "choose_game_join.html"
-
-
-class ChooseGameCreateView(TemplateView):
-    template_name = "choose_game_create.html"
