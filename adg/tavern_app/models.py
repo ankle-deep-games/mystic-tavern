@@ -20,7 +20,7 @@ class Role(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Role Name: ' + str(self.name)
+        return str(self.name)
     
 class Gender(models.Model):
     name = models.CharField(max_length=255)
@@ -28,7 +28,7 @@ class Gender(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Gender Name: ' + str(self.name)
+        return str(self.name)
 
 
 class GameUser(models.Model):
