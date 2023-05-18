@@ -17,7 +17,7 @@
         <div class="card-body">
           <h5 class="card-title">Create a Game</h5>
           <p class="card-text">Create a game here and play with friends!</p>
-          <a href="{% url 'choose_game_create' %}" class="btn btn-primary">Create</a>
+          <a href="{% url 'tavern_app:create_game' %}" class="btn btn-primary">Create</a>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@
         <div class="card-body">
           <h5 class="card-title">Join a Game</h5>
           <p class="card-text">If you were given a password for an already created game, join it here!</p>
-          <a href="{% url 'choose_game_join' %}" class="btn btn-primary">Join</a>
+          <a href="{% url 'tavern_app:games' %}" class="btn btn-primary">Join</a>
         </div>
       </div>
     </div>
