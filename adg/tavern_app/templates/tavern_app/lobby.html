@@ -4,26 +4,25 @@
     <h1 class="text-danger my-4">Game Lobby</h1>
     <hr>
     <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">START GAME</a>
-    <h2 class="text-primary my-4">Players:</h2>
+    <h2 class="text-white my-4">Players:</h2>
+    <div class="card-group">
     {% for gameuser in object_list %}
-        <div class="card text-white bg-secondary mb-3" style="width: 18rem;">
+        <div class="card text-white bg-secondary mb-3">
+          {% load static %}
+          <img class="card-img-top" src ="{% static 'tavern_app/' %}{{gameuser.role}}-{{gameuser.gender}}.png" alt="role and gender picture">
           <div class="card-body">
-              <h4 class="card-title text-primary">Player: {{ gameuser.user.username }}</h4>
+              <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
+              <hr>
+              
+              <h6>stats:</h6>
               <ul>
                 <li>Game ID: {{ gameuser.game_id }}</li>
                 <li>GameUser ID: {{ gameuser.id }}</li>
-                <li>Role ID: {{ gameuser.role_id }}</li>
-                <li>{{ gameuser.role }}</li>
-                <li>Gender ID: {{ gameuser.gender_id }}</li>
-                <li>{{ gameuser.gender }}</li>
+                <li>Role: {{ gameuser.role_id }} {{ gameuser.role }}</li>
+                <li>Gender: {{ gameuser.gender_id }} {{ gameuser.gender }}</li>
               </ul>
-
-              {% load static %}
-              <img src ="{% static 'tavern_app/' %}{{gameuser.role}}-{{gameuser.gender}}.png" alt="role and gender picture" style="width:150px;height:150px;">
-
- 
-
           </div>
         </div>
     {% endfor %}
+    </div>
 {% endblock %}
