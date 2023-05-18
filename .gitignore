@@ -6,3 +6,5 @@ adg/tavern_app/migrations/__pycache__
 
 # temporarily ignoring migrations. will undo when we create real migrations
 adg/tavern_app/migrations/0001_initial.py
+
+.DS_Store
