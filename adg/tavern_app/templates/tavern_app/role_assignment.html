@@ -1,9 +1,13 @@
 {% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Assign Roles</button>
-</form>
+
+    <h1>Role Assignment Form</h1>
+      <div class="form-group">
+        <form method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-secondary">Assign Roles</button>
+        </form>
+      </div>
 {% endblock %}
