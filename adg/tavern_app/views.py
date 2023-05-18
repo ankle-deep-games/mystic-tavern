@@ -65,13 +65,19 @@ class GameUsersView(ListView):
     template_name = 'tavern_app/lobby.html'
 
     def get_queryset(self):
-        game = self.kwargs['game_id']
-        return GameUser.objects.filter(game_id=game)
+        game_id = self.kwargs['game_id']
+        return GameUser.objects.filter(game_id=game_id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         game_id = self.kwargs['game_id']
-        context['game'] = Game.objects.get(id=game_id)
+        game = Game.objects.get(id=game_id)
+        context['game'] = game
+
+        # Retrieve the creator of the game
+        context['creator'] = game.creator
+        context['leader'] = GameUser.objects.get(game_id=game_id, user=context['creator'])
+
         return context
 
 
@@ -98,14 +104,19 @@ class RoleAssignmentView(FormView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['game_id'] = self.kwargs['game_id']
+        kwargs['num_players'] = GameUser.objects.filter(game_id=self.kwargs['game_id']).count()
         return kwargs
 
     def form_valid(self, form):
         game = Game.objects.get(pk=self.kwargs['game_id'])
+        num_players = form.initial['num_players']
 
-        for i in range(1, form.num_players + 1):
+        for i in range(1, num_players + 1):
             player_name = form.cleaned_data[f'player_{i}_name']
             player_role = form.cleaned_data[f'player_{i}_role']
+
+            print("Player Name:", player_name)
+            print("Player Role:", player_role)
 
             player = GameUser.objects.get(game=game, user__username=player_name)
 
@@ -116,8 +127,4 @@ class RoleAssignmentView(FormView):
 
     def get_success_url(self):
         game_id = self.kwargs['game_id']
-        return reverse('tavern_app:customize_character', kwargs={'game_id': game_id})
-
-
-class PlayerCustomizationView(TemplateView):
-    template_name = 'tavern_app/customize_character.html'
+        return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
