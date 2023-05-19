@@ -26,6 +26,13 @@ def leeroy(request):
     user3.save()
     user4.save()
 
+    Game.objects.bulk_create([
+        Game(name="Game Seed 1",creator=user1,password="apple"),
+        Game(name="Game Seed 2",creator=user2,password="banana"),
+        Game(name="Game Seed 3",creator=user3,password="carrot"),
+        Game(name="Game Seed 4",creator=user4,password="date"),
+    ])
+
     return render(request, 'leeroy.html')
 
 class GameView(ListView):
