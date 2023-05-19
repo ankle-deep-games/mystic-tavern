@@ -6,15 +6,22 @@ from .models import Game, GameUser
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.views.generic.edit import FormMixin
 from django.db.models import Count
 # Create your views here.
+
+
+
 
 
 def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
 def leeroy(request):
+    user = User.objects.create_user(username='john',email='jlennon@beatles.com',password='glass onion')
+    user.save()
+
     return render(request, 'leeroy.html')
 
 class GameView(ListView):
