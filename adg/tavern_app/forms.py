@@ -47,5 +47,9 @@ class RoleAssignmentForm(forms.ModelForm):
                                                                        empty_label=None,
                                                                        label=f'Player {i} Gender')
 
+            self.initial[f'player_{i}_name'] = player.user.username
+            self.initial[f'player_{i}_role'] = player.role.id if player.role else None
+            self.initial[f'player_{i}_gender'] = player.gender.id if player.gender else None
+
         self.Meta.fields = list(self.fields.keys())
         self.initial['num_players'] = num_players
