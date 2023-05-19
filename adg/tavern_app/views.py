@@ -15,8 +15,16 @@ def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
 def leeroy(request):
-    user = User.objects.create_user(username='john',email='jlennon@beatles.com',password='glass onion')
-    user.save()
+    # users are special because they get created with a hashed password with create_user
+    # may come back and refoctor this to add all 4 in 1 function
+    user1 = User.objects.create_user(username='john',email='jlennon@beatles.com',password='imagine')
+    user2 = User.objects.create_user(username='paul',email='pmccartney@beatles.com',password='let it be')
+    user3 = User.objects.create_user(username='george',email='gharrison@beatles.com',password='my sweet lord')
+    user4 = User.objects.create_user(username='ringo',email='rstarr@beatles.com',password='yellow submarine')
+    user1.save()
+    user2.save()
+    user3.save()
+    user4.save()
 
     return render(request, 'leeroy.html')
 
