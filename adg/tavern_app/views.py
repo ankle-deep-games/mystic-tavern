@@ -147,10 +147,6 @@ class RoleAssignmentView(FormView):
             player_role = form.cleaned_data[f'player_{i}_role']
             player_gender = form.cleaned_data[f'player_{i}_gender']
 
-            print("Player Name:", player_name)
-            print("Player Role:", player_role)
-            print("Player Gender:", player_gender)
-
             player = GameUser.objects.get(game=game, user__username=player_name)
 
             player.role = player_role
