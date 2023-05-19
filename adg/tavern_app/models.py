@@ -37,8 +37,19 @@ class GameUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, default=None, blank=True, null=True)
     gender = models.ForeignKey(Gender, on_delete=models.PROTECT, default=None, blank=True, null=True)
+    is_ready = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def update_is_ready_field(self):
+        if self.role is not None and self.gender is not None:
+            self.is_ready = True
+        else:
+            self.is_ready = False
+
+    def save(self, *args, **kwargs):
+        self.update_is_ready_field()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         game_name = self.game.name if self.game else 'Unknown Game'

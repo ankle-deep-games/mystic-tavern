@@ -5,14 +5,18 @@
     <hr>
     {% if leader.user == request.user %}
         <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
-        <a href="{% url 'tavern_app:act1_scene1' game_id=game.pk  %}" class="btn btn-primary">START GAME</a>
+        {% if any_player_not_ready %}
+            <a href="#" class="btn btn-primary disabled">START GAME</a>
+        {% else %}
+            <a href="{% url 'tavern_app:act1_scene1' game_id=game.pk  %}" class="btn btn-primary">START GAME</a>
+        {% endif %}
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
     <div class="card-group">
     {% for gameuser in object_list %}
         <div class="card text-white bg-secondary mb-3">
           {% load static %}
-          {% if gameuser.role and gameuser.gender %}
+          {% if gameuser.is_ready %}
             <img class="card-img-top" src ="{% static 'tavern_app/' %}{{gameuser.role}}-{{gameuser.gender}}.png" alt="role and gender picture">
             <div class="card-body">
               <h3 class="card-title text-white">{{ gameuser.user.username }} - READY</h3>
