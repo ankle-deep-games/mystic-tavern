@@ -109,6 +109,10 @@ class GameUsersView(ListView):
         context['creator'] = game.creator
         context['leader'] = GameUser.objects.get(game_id=game_id, user=context['creator'])
 
+        # Check if any player is not ready
+        any_player_not_ready = context['object_list'].filter(is_ready=False).exists()
+        context['any_player_not_ready'] = any_player_not_ready
+
         return context
 
 
