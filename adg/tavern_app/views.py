@@ -11,10 +11,6 @@ from django.views.generic.edit import FormMixin
 from django.db.models import Count
 # Create your views here.
 
-
-
-
-
 def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
