@@ -1,7 +1,7 @@
 {% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
-    <h1 class="text-danger my-4">Game Lobby</h1>
+    <h1 class="text-danger my-4">Game Lobby - {{ game.name }}</h1>
     <hr>
     {% if leader.user == request.user %}
         <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
@@ -14,21 +14,32 @@
           {% load static %}
           {% if gameuser.role and gameuser.gender %}
             <img class="card-img-top" src ="{% static 'tavern_app/' %}{{gameuser.role}}-{{gameuser.gender}}.png" alt="role and gender picture">
-          {% else %}
-            <img class="card-img-top" src ="{% static 'tavern_app/logo.png' %}" alt="game logo">
-          {% endif %}
-          <div class="card-body">
+            <div class="card-body">
               <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
               <hr>
-              
-              <h6>stats:</h6>
+              <h6>Stats:</h6>
               <ul>
-                <li>Game ID: {{ gameuser.game_id }}</li>
-                <li>GameUser ID: {{ gameuser.id }}</li>
-                <li>Role: {{ gameuser.role_id }} {{ gameuser.role }}</li>
-                <li>Gender: {{ gameuser.gender_id }} {{ gameuser.gender }}</li>
+                <li>Role: {{ gameuser.role }}</li>
+                <li>Gender: {{ gameuser.gender }}</li>
+                <li>HP: 100</li>
+                <li>Attributes: +1 STRENGTH</li>
               </ul>
           </div>
+          {% else %}
+            <img class="card-img-top" src ="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body">
+              <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
+              <hr>
+              <h6>Stats:</h6>
+              <ul>
+                <li>Role: UNKNOWN</li>
+                <li>Gender: UNKNOWN</li>
+                <li>HP: UNKNOWN</li>
+                <li>Attributes: UNKNOWN</li>
+              </ul>
+          </div>
+          {% endif %}
+
         </div>
     {% endfor %}
     </div>
