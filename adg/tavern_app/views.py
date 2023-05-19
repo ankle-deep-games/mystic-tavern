@@ -158,3 +158,7 @@ class RoleAssignmentView(FormView):
     def get_success_url(self):
         game_id = self.kwargs['game_id']
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
+
+
+class Act1Scene1View(TemplateView):
+    template_name = "tavern_app/act1/act1_scene1.html"

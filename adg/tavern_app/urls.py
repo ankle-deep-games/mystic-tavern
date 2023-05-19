@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import GameView, GameDetailView, GameUsersView, CreateGameView, RoleAssignmentView
+from .views import GameView, GameDetailView, GameUsersView, CreateGameView, RoleAssignmentView, Act1Scene1View
 
 app_name = 'tavern_app'
 
@@ -13,4 +13,5 @@ urlpatterns = [
     path('games/<int:pk>', GameDetailView.as_view(), name='game_detail'),
     path('games/<int:game_id>/lobby', GameUsersView.as_view(), name='lobby'),
     path('games/<int:game_id>/lobby/role_assignment', RoleAssignmentView.as_view(), name='role_assignment'),
+    path('games/<int:game_id>/act1/scene1', Act1Scene1View.as_view(), name='act1_scene1'),
 ]
