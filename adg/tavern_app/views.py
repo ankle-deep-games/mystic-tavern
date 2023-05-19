@@ -16,7 +16,7 @@ def simple_view(request):
 
 def leeroy(request):
     # users are special because they get created with a hashed password with create_user
-    # may come back and refoctor this to add all 4 in 1 function
+    # may come back and refactor this to add all 4 in 1 function
     user1 = User.objects.create_user(username='john',email='jlennon@beatles.com',password='imagine')
     user2 = User.objects.create_user(username='paul',email='pmccartney@beatles.com',password='let it be')
     user3 = User.objects.create_user(username='george',email='gharrison@beatles.com',password='my sweet lord')
