@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm
-from .models import Game, GameUser
+from .models import Game, GameUser, Role, Gender
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -31,6 +31,19 @@ def leeroy(request):
         Game(name="Game Seed 2",creator=user2,password="banana"),
         Game(name="Game Seed 3",creator=user3,password="carrot"),
         Game(name="Game Seed 4",creator=user4,password="date"),
+    ])
+
+    Role.objects.bulk_create([
+        Role(name="WHITEMAGE"),
+        Role(name="BLACKMAGE"),
+        Role(name="PALADIN"),
+        Role(name="ARCHER"),
+    ])
+
+    Gender.objects.bulk_create([
+        Gender(name="MALE"),
+        Gender(name="FEMALE"),
+        Gender(name="NONBINARY"),
     ])
 
     return render(request, 'leeroy.html')
