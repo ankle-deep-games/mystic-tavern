@@ -66,30 +66,35 @@ def leeroy(request):
         user=user1,
         role=role1,
         gender=gender1,
+        is_ready=True,
     )
     gameuser2 = GameUser(
         game=game1,
         user=user2,
         role=role2,
         gender=gender2,
+        is_ready=True,
     )
     gameuser3 = GameUser(
         game=game1,
         user=user3,
         role=role3,
         gender=gender2,
+        is_ready=True,
     )
     gameuser4 = GameUser(
         game=game1,
         user=user4,
         role=role4,
         gender=gender1,
+        is_ready=True,
     )
     gameuser5 = GameUser(
         game=game2,
         user=user4,
         role=role2,
         gender=gender1,
+        is_ready=True,
     )
     GameUser.objects.bulk_create([
         gameuser1,
