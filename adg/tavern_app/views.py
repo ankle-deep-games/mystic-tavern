@@ -26,24 +26,77 @@ def leeroy(request):
     user3.save()
     user4.save()
 
+    ## games
+    game1 = Game(name="Game Seed 1",creator=user1,password="apple")
+    game2 = Game(name="Game Seed 2",creator=user2,password="banana")
+    game3 = Game(name="Game Seed 3",creator=user3,password="carrot")
+    game4 = Game(name="Game Seed 4",creator=user4,password="date")
     Game.objects.bulk_create([
-        Game(name="Game Seed 1",creator=user1,password="apple"),
-        Game(name="Game Seed 2",creator=user2,password="banana"),
-        Game(name="Game Seed 3",creator=user3,password="carrot"),
-        Game(name="Game Seed 4",creator=user4,password="date"),
+        game1,
+        game2,
+        game3,
+        game4,
     ])
 
+    ## roles
+    role1 = Role(name="WHITEMAGE")
+    role2 = Role(name="BLACKMAGE")
+    role3 = Role(name="PALADIN")
+    role4 = Role(name="ARCHER")
     Role.objects.bulk_create([
-        Role(name="WHITEMAGE"),
-        Role(name="BLACKMAGE"),
-        Role(name="PALADIN"),
-        Role(name="ARCHER"),
+        role1,
+        role2,
+        role3,
+        role4,
     ])
 
+    ## genders
+    gender1 = Gender(name="MALE")
+    gender2 = Gender(name="FEMALE")
+    gender3 = Gender(name="NONBINARY")
     Gender.objects.bulk_create([
-        Gender(name="MALE"),
-        Gender(name="FEMALE"),
-        Gender(name="NONBINARY"),
+        gender1,
+        gender2,
+        gender3,
+    ])
+
+    ## gameuser
+    gameuser1 = GameUser(
+        game=game1,
+        user=user1,
+        role=role1,
+        gender=gender1,
+    )
+    gameuser2 = GameUser(
+        game=game1,
+        user=user2,
+        role=role2,
+        gender=gender2,
+    )
+    gameuser3 = GameUser(
+        game=game1,
+        user=user3,
+        role=role3,
+        gender=gender2,
+    )
+    gameuser4 = GameUser(
+        game=game1,
+        user=user4,
+        role=role4,
+        gender=gender1,
+    )
+    gameuser5 = GameUser(
+        game=game2,
+        user=user4,
+        role=role2,
+        gender=gender1,
+    )
+    GameUser.objects.bulk_create([
+        gameuser1,
+        gameuser2,
+        gameuser3,
+        gameuser4,
+        gameuser5,
     ])
 
     return render(request, 'leeroy.html')
