@@ -43,11 +43,13 @@ def leeroy(request):
     role2 = Role(name="BLACKMAGE")
     role3 = Role(name="PALADIN")
     role4 = Role(name="ARCHER")
+    role5 = Role(name="BARD")
     Role.objects.bulk_create([
         role1,
         role2,
         role3,
         role4,
+        role5,
     ])
 
     ## genders
