@@ -21,6 +21,8 @@
             <div class="card-body">
               <h3 class="card-title text-white">{{ gameuser.user.username }} - READY</h3>
               <hr>
+              <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
+              <hr>
               <h6>Stats:</h6>
               <ul>
                 <li>HP: PLACEHOLDER</li>
@@ -33,6 +35,8 @@
             <img class="card-img-top" src ="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body">
               <h3 class="card-title text-white">{{ gameuser.user.username }} - NOT READY</h3>
+              <hr>
+              <h3 class="card-title text-white">Role: ???</h3>
               <hr>
               <h6>Stats:</h6>
               <ul>
