@@ -21,10 +21,12 @@ def leeroy(request):
     user2 = User.objects.create_user(username='paul',email='pmccartney@beatles.com',password='let it be')
     user3 = User.objects.create_user(username='george',email='gharrison@beatles.com',password='my sweet lord')
     user4 = User.objects.create_user(username='ringo',email='rstarr@beatles.com',password='yellow submarine')
+    user5 = User.objects.create_user(username='eleanor',email='erigby@beatles.com',password='lonely people')
     user1.save()
     user2.save()
     user3.save()
     user4.save()
+    user5.save()
 
     ## games
     game1 = Game(name="Game Seed 1",creator=user1,password="apple")
@@ -43,11 +45,13 @@ def leeroy(request):
     role2 = Role(name="BLACKMAGE")
     role3 = Role(name="PALADIN")
     role4 = Role(name="ARCHER")
+    role5 = Role(name="BARD")
     Role.objects.bulk_create([
         role1,
         role2,
         role3,
         role4,
+        role5,
     ])
 
     ## genders
@@ -90,8 +94,15 @@ def leeroy(request):
         is_ready=True,
     )
     gameuser5 = GameUser(
+        game=game1,
+        user=user5,
+        role=role5,
+        gender=gender2,
+        is_ready=True,
+    )
+    gameuser6 = GameUser(
         game=game2,
-        user=user4,
+        user=user2,
         role=role2,
         gender=gender1,
         is_ready=True,
@@ -102,6 +113,7 @@ def leeroy(request):
         gameuser3,
         gameuser4,
         gameuser5,
+        gameuser6,
     ])
 
     return render(request, 'leeroy.html')
