@@ -23,10 +23,10 @@
               <hr>
               <h6>Stats:</h6>
               <ul>
-                <li>Role: {{ gameuser.role }}</li>
-                <li>Gender: {{ gameuser.gender }}</li>
-                <li>HP: 100</li>
-                <li>Attributes: +1 STRENGTH</li>
+                <li>HP: PLACEHOLDER</li>
+                <li>Attack: PLACEHOLDER</li>
+                <li>Defense: PLACEHOLDER</li>
+                <li>Myst: PLACEHOLDER</li>
               </ul>
           </div>
           {% else %}
@@ -36,15 +36,81 @@
               <hr>
               <h6>Stats:</h6>
               <ul>
-                <li>Role: UNKNOWN</li>
-                <li>Gender: UNKNOWN</li>
-                <li>HP: UNKNOWN</li>
-                <li>Attributes: UNKNOWN</li>
+                <li>HP: ???</li>
+                <li>Attack: ???</li>
+                <li>Defense: ???</li>
+                <li>Myst: ???</li>
               </ul>
           </div>
           {% endif %}
 
         </div>
     {% endfor %}
+    </div>
+{% endblock %}
+
+{% block additional_content %}
+    <div class="container">
+        <hr>
+        <h4 class="text-white my-4">The Roles(Classes):</h4>
+
+        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
+            <img src="{% static 'tavern_app/archer-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
+            <div class="card-body">
+                <h3 class="card-title">Archer</h3>
+                <p class="card-text">In the world of Mystic Tavern, the Archer is a master of precision and deadly accuracy.
+                Armed with a trusty bow and an assortment of arrows, they rain down a flurry of projectiles from afar,
+                swiftly dispatching enemies with their ranged physical attacks. With their keen eyes and nimble
+                movements, Archers provide essential long-range support to their allies in the epic battles that
+                unfold.</p>
+            </div>
+        </div>
+
+        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
+            <img src="{% static 'tavern_app/paladin-male.png' %}" class="card-img-top" alt="..." style="width: 30%;">
+            <div class="card-body">
+                <h3 class="card-title">Paladin</h3>
+                <p class="card-text">As the frontline defender in the realm of Mystic Tavern, the Paladin stands as a paragon of courage and
+                    strength. Clad in heavy armor and wielding a mighty sword or hammer, they excel in close-quarters
+                    combat, unleashing devastating melee physical attacks upon their foes. Paladins are renowned for their
+                    unwavering resolve, shielding their comrades from harm and leading the charge against evil forces.</p>
+            </div>
+        </div>
+
+        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
+            <img src="{% static 'tavern_app/whitemage-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
+            <div class="card-body">
+                <h3 class="card-title">White Mage</h3>
+                <p class="card-text">Within the enchanting world of Mystic Tavern, the White Mage embodies the essence of healing and
+                    restoration. Armed with ancient magical arts and wielding a staff, they are masters of mending wounds
+                    and revitalizing their allies. White Mages channel the ethereal powers of light, mending broken bodies
+                    and replenishing vital energy, ensuring their team remains strong and resilient throughout their
+                    perilous journeys.</p>
+            </div>
+        </div>
+
+        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
+            <img src="{% static 'tavern_app/blackmage-male.png' %}" class="card-img-top" alt="..." style="width: 30%;">
+            <div class="card-body">
+                <h3 class="card-title">Black Mage</h3>
+                <p class="card-text">In the mystical realm of Mystic Tavern, the Black Mage harnesses the raw power of arcane forces. Wielding
+                    a staff crackling with dark energy, they unleash devastating ranged magical attacks upon their
+                    adversaries. Black Mages weave intricate spells, conjuring destructive elements and manipulating the
+                    very fabric of reality to decimate their foes from a distance.</p>
+            </div>
+        </div>
+
+        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
+            <img src="{% static 'tavern_app/bard-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
+            <div class="card-body">
+                <h3 class="card-title">Bard</h3>
+                <p class="card-text">Within the enchanting world reminiscent of Lord of the Rings, the Bard is a charismatic and versatile
+                    support class. Masters of both music and speech, they inspire their allies with uplifting melodies and
+                    captivating tales, bolstering their courage and enhancing their abilities. Bards excel at crowd control,
+                    manipulating the battlefield and providing crucial support, ensuring their comrades remain motivated
+                    and ready for any challenge that awaits in the mythical realm of Mystic Tavern.</p>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
