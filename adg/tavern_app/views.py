@@ -102,7 +102,7 @@ def leeroy(request):
     )
     gameuser6 = GameUser(
         game=game2,
-        user=user4,
+        user=user2,
         role=role2,
         gender=gender1,
         is_ready=True,
