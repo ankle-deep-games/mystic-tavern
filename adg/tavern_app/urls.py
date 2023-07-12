@@ -14,4 +14,7 @@ urlpatterns = [
     path('games/<int:game_id>/lobby', GameUsersView.as_view(), name='lobby'),
     path('games/<int:game_id>/lobby/role_assignment', RoleAssignmentView.as_view(), name='role_assignment'),
     path('games/<int:game_id>/act1/scene1', Act1Scene1View.as_view(), name='act1_scene1'),
+    path('liveupdateprototype', views.live_update_prototype, name='liveupdateprototype'),
+    path('liveupdateprototypeview', views.live_update_prototype_view, name='liveupdateprototypeview'),
+    path('liveupdateprototyperedirectview', views.live_update_prototype_redirect_view, name='liveupdateprototyperedirectview'),
 ]
