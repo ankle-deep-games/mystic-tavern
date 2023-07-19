@@ -16,6 +16,12 @@ class Game(models.Model):
 
 class Role(models.Model):
     name = models.CharField(max_length=255)
+    start_hp = models.IntegerField(default=0)
+    start_atk = models.IntegerField(default=0)
+    start_def = models.IntegerField(default=0)
+    start_myst_atk = models.IntegerField(default=0)
+    start_myst_def = models.IntegerField(default=0)
+    start_speed = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
