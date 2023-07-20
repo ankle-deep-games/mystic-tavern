@@ -81,3 +81,16 @@ class Armor(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class Ability(models.Model):
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    min_damage = models.IntegerField(default=0)
+    max_damage = models.IntegerField(default=0)
+    critical_hit_rate = models.DecimalField(max_digits=2, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
