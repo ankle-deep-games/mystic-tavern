@@ -57,3 +57,15 @@ class GameUser(models.Model):
         role_name = self.role.name if self.role else 'Unknown Role'
 
         return f'Game Name: {game_name}, Player: {username}, Role: {role_name}'
+
+
+class Weapons(models.Model):
+    name = models.CharField(max_length=255)
+    attack_mod = models.IntegerField(default=0)
+    defense_mod = models.IntegerField(default=0)
+    speed_mod = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
