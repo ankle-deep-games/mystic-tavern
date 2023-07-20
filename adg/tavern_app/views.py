@@ -42,11 +42,11 @@ def leeroy(request):
     ])
 
     ## roles
-    role1 = Role(name="WHITEMAGE", start_atk=10, start_def=20, start_hp=100, start_myst_atk=15, start_myst_def=20, start_speed=25)
-    role2 = Role(name="BLACKMAGE", start_atk=15, start_def=10, start_hp=80, start_myst_atk=35, start_myst_def=10, start_speed=30)
-    role3 = Role(name="PALADIN", start_atk=20, start_def=30, start_hp=120, start_myst_atk=10, start_myst_def=20, start_speed=20)
-    role4 = Role(name="ARCHER", start_atk=35, start_def=15, start_hp=85, start_myst_atk=10, start_myst_def=10, start_speed=30)
-    role5 = Role(name="BARD", start_atk=20, start_def=20, start_hp=90, start_myst_atk=20, start_myst_def=20, start_speed=20)
+    role1 = Role(name="WHITEMAGE", start_attack=10, start_defense=20, start_hp=100, start_myst_attack=15, start_myst_defense=20, start_speed=25)
+    role2 = Role(name="BLACKMAGE", start_attack=15, start_defense=10, start_hp=80, start_myst_attack=35, start_myst_defense=10, start_speed=30)
+    role3 = Role(name="PALADIN", start_attack=20, start_defense=30, start_hp=120, start_myst_attack=10, start_myst_defense=20, start_speed=20)
+    role4 = Role(name="ARCHER", start_attack=35, start_defense=15, start_hp=85, start_myst_attack=10, start_myst_defense=10, start_speed=30)
+    role5 = Role(name="BARD", start_attack=20, start_defense=20, start_hp=90, start_myst_attack=20, start_myst_defense=20, start_speed=20)
     Role.objects.bulk_create([
         role1,
         role2,
