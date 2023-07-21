@@ -104,7 +104,7 @@ class Ability(models.Model):
 class Dialogue(models.Model):
     from_node_id = models.IntegerField(default=0)
     node_type = models.CharField(max_length=255)
-    # talk     | player_responses | narration
+    # talk     | player_response | narration
     speaker = models.CharField(max_length=255)
     # npc name | party leader     | narator
     text = models.TextField()

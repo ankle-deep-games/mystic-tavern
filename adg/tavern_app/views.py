@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm
-from .models import Game, GameUser, Role, Gender
+from .models import Game, GameUser, Role, Gender, Dialogue
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -115,6 +115,26 @@ def leeroy(request):
         gameuser4,
         gameuser5,
         gameuser6,
+    ])
+
+    ## dialogue
+    node0 = Dialogue(from_node_id=0, node_type="narration", speaker="narrator", text="Welcome to the enchanting world of mystic tavern. You stumble into the tavern and see a strange drunk old man.")
+    node1 = Dialogue(from_node_id=0, node_type="talk", speaker="drunk old man", text="You there! I have a quest for you.")
+    node2 = Dialogue(from_node_id=1, node_type="player_response", speaker="party leader", text="A quest?! I accept.")
+    node3 = Dialogue(from_node_id=1, node_type="player_response", speaker="party leader", text="What's in it for me?")
+    node4 = Dialogue(from_node_id=1, node_type="player_response", speaker="party leader", text="Hard pass.")
+    node5 = Dialogue(from_node_id=2, node_type="talk", speaker="drunk old man", text="Praise Be you have accepted my quest. You must defend our land from The Creature.")
+    node6 = Dialogue(from_node_id=3, node_type="talk", speaker="drunk old man", text="In it for you? Why, the satisfaction of a job well done.. Hic!")
+    node7 = Dialogue(from_node_id=4, node_type="talk", speaker="drunk old man", text="How dissapointing to hear you will not accept my quest.")
+    Dialogue.objects.bulk_create([
+        node0,
+        node1,
+        node2,
+        node3,
+        node4,
+        node5,
+        node6,
+        node7,
     ])
 
     return render(request, 'leeroy.html')
