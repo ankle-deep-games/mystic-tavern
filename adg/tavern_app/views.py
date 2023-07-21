@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm
-from .models import Game, GameUser, Role, Gender, Dialogue
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -17,7 +17,6 @@ def simple_view(request):
 
 def leeroy(request):
     # users are special because they get created with a hashed password with create_user
-    # may come back and refactor this to add all 4 in 1 function
     user1 = User.objects.create_user(username='john',email='jlennon@beatles.com',password='imagine')
     user2 = User.objects.create_user(username='paul',email='pmccartney@beatles.com',password='let it be')
     user3 = User.objects.create_user(username='george',email='gharrison@beatles.com',password='my sweet lord')
@@ -135,6 +134,16 @@ def leeroy(request):
     node6.save()
     node7.save()
     node8.save()
+
+    # only temporarily seeding gamedialogue for game 1 until we hook up the START GAME button to update DB
+    # idea is that game start button will write to GameDialogue
+    gameDialogue1 = GameDialogue(game=game1, dialogue=node1)
+    gameDialogue2 = GameDialogue(game=game1, dialogue=node2)
+    # to test we can filter by game
+    gameDialogue3 = GameDialogue(game=game2, dialogue=node8)
+    gameDialogue1.save()
+    gameDialogue2.save()
+    gameDialogue3.save()
 
     return render(request, 'leeroy.html')
 
@@ -269,13 +278,12 @@ class RoleAssignmentView(FormView):
         game_id = self.kwargs['game_id']
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
-
-class Act1Scene1View(TemplateView):
-    template_name = "tavern_app/act1/act1_scene1.html"
-
+# TODO - so much to do to make cleaner - this is rough proof of concept
 def act1_scene1_view(request, game_id):
     context = {
         'game_id': game_id,
-        'dialogues': Dialogue.objects.all()
+        'dialogues': Dialogue.objects.all(),
+        'dialogue_progress': GameDialogue.objects.filter(game=game_id),
+        'dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').id
     }
     return render(request, 'tavern_app/act1/act1_scene1.html', context)

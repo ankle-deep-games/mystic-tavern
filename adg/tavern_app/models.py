@@ -113,3 +113,13 @@ class Dialogue(models.Model):
 
     def __str__(self):
         return 'from_node_id: ' + str(self.from_node_id) + ', node_type: ' + str(self.node_type) + ', speaker: ' + str(self.speaker) + ', text: ' + str(self.text)
+
+# running log of decision tree nodes that have been selected for each game
+class GameDialogue(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    dialogue = models.ForeignKey(Dialogue, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'game: ' + str(self.game) + ', dialogue: ' + str(self.dialogue)

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import GameView, GameDetailView, GameUsersView, CreateGameView, RoleAssignmentView, Act1Scene1View
+from .views import GameView, GameDetailView, GameUsersView, CreateGameView, RoleAssignmentView
 
 app_name = 'tavern_app'
 
