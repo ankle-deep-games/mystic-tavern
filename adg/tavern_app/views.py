@@ -118,24 +118,23 @@ def leeroy(request):
     ])
 
     ## dialogue
-    node0 = Dialogue(from_node_id=0, node_type="narration", speaker="narrator", text="Welcome to the enchanting world of mystic tavern. You stumble into the tavern and see a strange drunk old man.")
-    node1 = Dialogue(from_node_id=0, node_type="talk", speaker="drunk old man", text="You there! I have a quest for you.")
-    node2 = Dialogue(from_node_id=1, node_type="player_response", speaker="party leader", text="A quest?! I accept.")
-    node3 = Dialogue(from_node_id=1, node_type="player_response", speaker="party leader", text="What's in it for me?")
-    node4 = Dialogue(from_node_id=1, node_type="player_response", speaker="party leader", text="Hard pass.")
-    node5 = Dialogue(from_node_id=2, node_type="talk", speaker="drunk old man", text="Praise Be you have accepted my quest. You must defend our land from The Creature.")
-    node6 = Dialogue(from_node_id=3, node_type="talk", speaker="drunk old man", text="In it for you? Why, the satisfaction of a job well done.. Hic!")
-    node7 = Dialogue(from_node_id=4, node_type="talk", speaker="drunk old man", text="How dissapointing to hear you will not accept my quest.")
-    Dialogue.objects.bulk_create([
-        node0,
-        node1,
-        node2,
-        node3,
-        node4,
-        node5,
-        node6,
-        node7,
-    ])
+    node1 = Dialogue(from_node_id=0, node_type="narration", speaker="narrator", text="Welcome to the enchanting world of mystic tavern. You stumble into the tavern and see a strange drunk old man.")
+    node2 = Dialogue(from_node_id=1, node_type="talk", speaker="drunk old man", text="You there! I have a quest for you.")
+    node3 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="A quest?! I accept.")
+    node4 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="What's in it for me?")
+    node5 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="Hard pass.")
+    node6 = Dialogue(from_node_id=3, node_type="talk", speaker="drunk old man", text="Praise Be you have accepted my quest. You must defend our land from The Creature.")
+    node7 = Dialogue(from_node_id=4, node_type="talk", speaker="drunk old man", text="In it for you? Why, the satisfaction of a job well done.. Hic!")
+    node8 = Dialogue(from_node_id=5, node_type="talk", speaker="drunk old man", text="How dissapointing to hear you will not accept my quest.")
+    # save nodes 1 at a time so they are assigned the correct id
+    node1.save()
+    node2.save()
+    node3.save()
+    node4.save()
+    node5.save()
+    node6.save()
+    node7.save()
+    node8.save()
 
     return render(request, 'leeroy.html')
 
