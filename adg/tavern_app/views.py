@@ -272,3 +272,10 @@ class RoleAssignmentView(FormView):
 
 class Act1Scene1View(TemplateView):
     template_name = "tavern_app/act1/act1_scene1.html"
+
+def act1_scene1_view(request, game_id):
+    context = {
+        'game_id': game_id,
+        'dialogues': Dialogue.objects.all()
+    }
+    return render(request, 'tavern_app/act1/act1_scene1.html', context)

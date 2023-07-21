@@ -1,11 +1,16 @@
 {% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
+{% load static %}
     <div class="row mb-2">
-        {% load static %}
-        <img src="{% static 'tavern_app/old-man.png' %}" alt="drunk old man "style="width:300px;height:300px;">
-        <h1 class="mt-2"><i>You there!</i></h1>
-        <h3 class="mt-2"><i>I have a quest for you.</i></h3>
-        <samp class="my-2 text-success">Established connection of static images</samp>
+        <h1 class="mt-2"><i>Welcome to game id {{game_id}}</i></h1>
+        {% for dialogue in dialogues %}
+            {% if dialogue.speaker == "drunk old man" %}
+                <img src="{% static 'tavern_app/old-man.png' %}" style="width:125px;height:125px;">
+            {% elif dialogue.speaker == "narrator" %}
+                <img src="{% static 'tavern_app/logo.png' %}" style="width:125px;height:125px;">
+            {% endif %}
+            <p class="mt-2">{{ dialogue.speaker }}: {{dialogue.text}}</p>
+        {% endfor %}
     </div>
 {% endblock %}
