@@ -100,3 +100,26 @@ class Ability(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+class Dialogue(models.Model):
+    from_node_id = models.IntegerField(default=0)
+    node_type = models.CharField(max_length=255)
+    # talk     | player_response | narration
+    speaker = models.CharField(max_length=255)
+    # npc name | party leader     | narator
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'from_node_id: ' + str(self.from_node_id) + ', node_type: ' + str(self.node_type) + ', speaker: ' + str(self.speaker) + ', text: ' + str(self.text)
+
+# running log of decision tree nodes that have been selected for each game
+class GameDialogue(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    dialogue = models.ForeignKey(Dialogue, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'game: ' + str(self.game) + ', dialogue: ' + str(self.dialogue)

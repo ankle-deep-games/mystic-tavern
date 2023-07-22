@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm
-from .models import Game, GameUser, Role, Gender
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -17,7 +17,6 @@ def simple_view(request):
 
 def leeroy(request):
     # users are special because they get created with a hashed password with create_user
-    # may come back and refactor this to add all 4 in 1 function
     user1 = User.objects.create_user(username='john',email='jlennon@beatles.com',password='imagine')
     user2 = User.objects.create_user(username='paul',email='pmccartney@beatles.com',password='let it be')
     user3 = User.objects.create_user(username='george',email='gharrison@beatles.com',password='my sweet lord')
@@ -116,6 +115,35 @@ def leeroy(request):
         gameuser5,
         gameuser6,
     ])
+
+    ## dialogue
+    node1 = Dialogue(from_node_id=0, node_type="narration", speaker="narrator", text="Welcome to the enchanting world of mystic tavern. You stumble into the tavern and see a strange drunk old man.")
+    node2 = Dialogue(from_node_id=1, node_type="talk", speaker="drunk old man", text="You there! I have a quest for you.")
+    node3 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="A quest?! I accept.")
+    node4 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="What's in it for me?")
+    node5 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="Hard pass.")
+    node6 = Dialogue(from_node_id=3, node_type="talk", speaker="drunk old man", text="Praise Be you have accepted my quest. You must defend our land from The Creature.")
+    node7 = Dialogue(from_node_id=4, node_type="talk", speaker="drunk old man", text="In it for you? Why, the satisfaction of a job well done.. Hic!")
+    node8 = Dialogue(from_node_id=5, node_type="talk", speaker="drunk old man", text="How dissapointing to hear you will not accept my quest.")
+    # save nodes 1 at a time so they are assigned the correct id
+    node1.save()
+    node2.save()
+    node3.save()
+    node4.save()
+    node5.save()
+    node6.save()
+    node7.save()
+    node8.save()
+
+    # only temporarily seeding gamedialogue for game 1 until we hook up the START GAME button to update DB
+    # idea is that game start button will write to GameDialogue
+    gameDialogue1 = GameDialogue(game=game1, dialogue=node1)
+    gameDialogue2 = GameDialogue(game=game1, dialogue=node2)
+    # to test we can filter by game
+    gameDialogue3 = GameDialogue(game=game2, dialogue=node8)
+    gameDialogue1.save()
+    gameDialogue2.save()
+    gameDialogue3.save()
 
     return render(request, 'leeroy.html')
 
@@ -250,6 +278,12 @@ class RoleAssignmentView(FormView):
         game_id = self.kwargs['game_id']
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
-
-class Act1Scene1View(TemplateView):
-    template_name = "tavern_app/act1/act1_scene1.html"
+# TODO - so much to do to make cleaner - this is rough proof of concept
+def act1_scene1_view(request, game_id):
+    context = {
+        'game_id': game_id,
+        'dialogues': Dialogue.objects.all(),
+        'dialogue_progress': GameDialogue.objects.filter(game=game_id),
+        'dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').id
+    }
+    return render(request, 'tavern_app/act1/act1_scene1.html', context)
