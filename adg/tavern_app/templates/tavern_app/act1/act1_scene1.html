@@ -6,7 +6,7 @@
         <h1 class="mt-2">game id {{game_id}}</h1>
         <hr>
 
-        <h2>Current dialogue progress</h2>
+        <h2>Current dialogue</h2>
         {% for dialogue_current in dialogue_progress %}
             <div class="d-flex mt-3">
             {% if dialogue_current.dialogue.speaker == "drunk old man" %}
@@ -15,23 +15,31 @@
             {% elif dialogue_current.dialogue.speaker == "narrator" %}
                 <img src="{% static 'tavern_app/logo.png' %}" style="width:100px;height:100px;">
                 <p class="mt-2 text-warning">{{ dialogue_current.dialogue.speaker }}: {{dialogue_current.dialogue.text}}</p>
+            {% elif dialogue_current.dialogue.speaker == "party leader" %}
+                <img src="{% static 'tavern_app/paladin-male.png' %}" style="width:100px;height:100px;">
+                <p class="mt-2 text-success">{{ dialogue_current.dialogue.speaker }}: {{dialogue_current.dialogue.text}}</p>
             {% endif %}
             </div>
         {% endfor %}
 
-        {% comment %} TODO - make each dialogue option a clickable form that submits, writes to GameDialogue, and redirects/refreshes {% endcomment %}
-        <h2 class="mt-4">Current dialogue presented to the player `from_node_id`: {{dialogue_latest}}</h2>
         {% for dialogue in dialogues %}
-            {% if dialogue.from_node_id == dialogue_latest %}    
+            {% if dialogue.from_node_id == dialogue_latest %}
             <div class="d-flex mt-3">
                 <img src="{% static 'tavern_app/paladin-male.png' %}" style="width:100px;height:100px;">
-                <p class="mt-2 text-success">{{ dialogue.speaker }}: {{dialogue.text}}</p>
+                <div class="form-group">
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" name="game" value="{{ game_id }}" />
+                      <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
+                      <button type="submit" class="btn btn-secondary">{{ dialogue.speaker }}: {{dialogue.text}}</button>
+                    </form>
+                  </div>
             </div>
             {% endif %}
         {% endfor %}
 
         <hr class="mt-4">
-        <h2>All dialogue proof</h2>
+        <h2>All dialogue</h2>
         {% for dialogue in dialogues %}
             <div class="d-flex mt-3">
             {% if dialogue.speaker == "drunk old man" %}
