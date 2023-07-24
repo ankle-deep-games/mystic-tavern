@@ -1,8 +1,9 @@
 from django import forms
-from .models import Game, GameUser, Role, Gender
+from django.forms import ModelForm
+from .models import Game, GameUser, Role, Gender, GameDialogue
 
 
-class CreateGameForm(forms.ModelForm):
+class CreateGameForm(ModelForm):
     class Meta:
         model = Game
         fields = ('name', 'password')
@@ -13,7 +14,7 @@ class CreateGameForm(forms.ModelForm):
         }
 
 
-class JoinGameForm(forms.ModelForm):
+class JoinGameForm(ModelForm):
     class Meta:
         model = Game
         fields = ('password',)
@@ -23,7 +24,7 @@ class JoinGameForm(forms.ModelForm):
         }
 
 
-class RoleAssignmentForm(forms.ModelForm):
+class RoleAssignmentForm(ModelForm):
     class Meta:
         model = GameUser
         fields = []
@@ -53,3 +54,9 @@ class RoleAssignmentForm(forms.ModelForm):
 
         self.Meta.fields = list(self.fields.keys())
         self.initial['num_players'] = num_players
+
+class GameDialogueForm(ModelForm):
+    class Meta:
+        model = GameDialogue
+        fields = ['game', 'dialogue']
+        
