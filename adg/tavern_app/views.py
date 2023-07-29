@@ -29,10 +29,10 @@ def leeroy(request):
     user5.save()
 
     ## games
-    game1 = Game(name="Game Seed 1",creator=user1,password="apple")
-    game2 = Game(name="Game Seed 2",creator=user2,password="banana")
-    game3 = Game(name="Game Seed 3",creator=user3,password="carrot")
-    game4 = Game(name="Game Seed 4",creator=user4,password="date")
+    game1 = Game(name="Game Seed 1",creator=user1, game_started=False, game_over=False, password="apple")
+    game2 = Game(name="Game Seed 2",creator=user2, game_started=False, game_over=False, password="banana")
+    game3 = Game(name="Game Seed 3",creator=user3, game_started=False, game_over=False, password="carrot")
+    game4 = Game(name="Game Seed 4",creator=user4, game_started=False, game_over=False, password="date")
     Game.objects.bulk_create([
         game1,
         game2,

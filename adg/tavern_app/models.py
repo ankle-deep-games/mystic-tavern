@@ -7,6 +7,8 @@ class Game(models.Model):
     name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     creator = models.ForeignKey(User, on_delete=models.PROTECT)
+    game_started = models.BooleanField(default=False)
+    game_over = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
