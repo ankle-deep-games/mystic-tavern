@@ -205,31 +205,20 @@ class GameDetailView(FormMixin, DetailView):
         else:
             return self.form_invalid(form)
 
+def lobby(request, game_id):
+    game = Game.objects.get(id=game_id)
+    gameusers = GameUser.objects.filter(game_id=game_id)
+    leader = GameUser.objects.get(game_id=game_id, user=game.creator)
+    any_player_not_ready = gameusers.filter(is_ready=False).exists()
 
-class GameUsersView(ListView):
-    model = GameUser
-    template_name = 'tavern_app/lobby.html'
-
-    def get_queryset(self):
-        game_id = self.kwargs['game_id']
-        return GameUser.objects.filter(game_id=game_id)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        game_id = self.kwargs['game_id']
-        game = Game.objects.get(id=game_id)
-        context['game'] = game
-
-        # Retrieve the creator of the game
-        context['creator'] = game.creator
-        context['leader'] = GameUser.objects.get(game_id=game_id, user=context['creator'])
-
-        # Check if any player is not ready
-        any_player_not_ready = context['object_list'].filter(is_ready=False).exists()
-        context['any_player_not_ready'] = any_player_not_ready
-
-        return context
-
+    context = {
+        'game': game,
+        'gameusers': gameusers,
+        'leader': leader,
+        'any_player_not_ready': any_player_not_ready,
+    }
+    
+    return render(request, 'tavern_app/lobby.html', context)    
 
 class CreateGameView(CreateView):
     model = Game

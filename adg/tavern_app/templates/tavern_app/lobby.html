@@ -15,7 +15,7 @@
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
     <div class="card-group">
-    {% for gameuser in object_list %}
+    {% for gameuser in gameusers %}
         <div class="card text-white bg-secondary mb-3">
           {% load static %}
           {% if gameuser.is_ready %}
