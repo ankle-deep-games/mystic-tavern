@@ -115,9 +115,9 @@ class Ability(models.Model):
 class Dialogue(models.Model):
     from_node_id = models.IntegerField(default=0)
     node_type = models.CharField(max_length=255)
-    # talk     | player_response | narration
+    # talk     | player response | narration
     speaker = models.CharField(max_length=255)
-    # npc name | party leader     | narator
+    # npc name | Group Leader     | narator
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
