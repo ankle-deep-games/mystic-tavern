@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Game, GameUser, Role, Gender, Weapon, Armor, Ability, Dialogue, GameDialogue
+from .models import Game, GameUser, Role, Gender, Weapon, Armor, Ability, Dialogue, GameDialogue, NPC
 
 # Register your models here.
 admin.site.register(Game)
@@ -11,3 +11,4 @@ admin.site.register(Armor)
 admin.site.register(Ability)
 admin.site.register(Dialogue)
 admin.site.register(GameDialogue)
+admin.site.register(NPC)

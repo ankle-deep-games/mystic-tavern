@@ -38,6 +38,15 @@ class Gender(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+class NPC(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class GameUser(models.Model):
