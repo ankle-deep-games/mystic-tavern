@@ -192,7 +192,7 @@ def leeroy(request):
     node47 = Dialogue(from_node_id=46, node_type="talk", speaker="Group Member 2", text="Well, whatever it is, let's stay alert. We don't know what's out there.")
     node48 = Dialogue(from_node_id=47, node_type="talk", speaker="Drunk Man 1", text="Look who's back for another beating!")
     node49 = Dialogue(from_node_id=48, node_type="talk", speaker="Drunk Man 2", text="We warned ya to stay away!")
-    node50 = Dialogue(from_node_id=48, node_type="talk", speaker="Group Leader", text="We've had enough of this. Let's just take these guys out.")
+    node50 = Dialogue(from_node_id=49, node_type="talk", speaker="Group Leader", text="We've had enough of this. Let's just take these guys out.")
 
     # continuation of story from node 43
     node51 = Dialogue(from_node_id=43, node_type="talk", speaker="Group Leader", text="Do you guys feel that too? It's like there's something... different.")
