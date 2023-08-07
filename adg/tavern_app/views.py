@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -114,6 +114,20 @@ def leeroy(request):
         gameuser4,
         gameuser5,
         gameuser6,
+    ])
+
+    ## npcs + images
+    npc1 = NPC(name="Narrator", image="logo.png")
+    npc2 = NPC(name="Old Man", image="old-man.png")
+    npc3 = NPC(name="Drunk Man 1", image="drunk-man-1.png")
+    npc4 = NPC(name="Drunk Man 2", image="drunk-man-2.png")
+    npc5 = NPC(name="Hilda", image="hilda.png")
+    NPC.objects.bulk_create([
+        npc1,
+        npc2,
+        npc3,
+        npc4,
+        npc5,
     ])
 
     ## dialogue
