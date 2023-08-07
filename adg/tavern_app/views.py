@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -40,12 +40,26 @@ def leeroy(request):
         game4,
     ])
 
+    ## types
+    type1 = Type(name="Light", strength=2, weakness=5)
+    type2 = Type(name="Dark", strength=3, weakness=1)
+    type3 = Type(name="Stone", strength=4, weakness=2)
+    type4 = Type(name="Forest", strength=5, weakness=3)
+    type5 = Type(name="Wind", strength=1, weakness=4)
+    Type.objects.bulk_create([
+        type1,
+        type2,
+        type3,
+        type4,
+        type5,
+    ])
+
     ## roles
-    role1 = Role(name="WHITEMAGE", start_hp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
-    role2 = Role(name="BLACKMAGE", start_hp=80, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
-    role3 = Role(name="PALADIN", start_hp=120, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
-    role4 = Role(name="ARCHER", start_hp=85, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
-    role5 = Role(name="BARD", start_hp=90, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
+    role1 = Role(name="WHITEMAGE", type_id=1, start_hp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
+    role2 = Role(name="BLACKMAGE", type_id=2, start_hp=80, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
+    role3 = Role(name="PALADIN", type_id=3, start_hp=120, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
+    role4 = Role(name="ARCHER", type_id=4, start_hp=85, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
+    role5 = Role(name="BARD", type_id=5, start_hp=90, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
     Role.objects.bulk_create([
         role1,
         role2,
