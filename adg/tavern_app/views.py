@@ -201,7 +201,7 @@ def lobby(request, game_id):
             if any_player_not_ready == True:
                 return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
-            # TODO add better error msessaging for not started by creator https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            # TODO add better error messaging for not started by creator https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
             if game.creator != request.user:
                 return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
