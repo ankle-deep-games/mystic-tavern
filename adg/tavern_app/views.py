@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
-from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm
+from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
 from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
@@ -117,33 +117,12 @@ def leeroy(request):
     ])
 
     ## dialogue
-    node1 = Dialogue(from_node_id=0, node_type="narration", speaker="narrator", text="Welcome to the enchanting world of mystic tavern. You stumble into the tavern and see a strange drunk old man.")
+    # TODO fill out all act 1 scene 1 dialogue https://trello.com/c/ynY1d4dX/104-act-1-scene-1-bar-scene-flowchart
+    node1 = Dialogue(from_node_id=0, node_type="narration", speaker="narrator", text="Your group finds themselves teleported to an abandoned alleyway in what looks like a quaint old village. The narrow passage is dimly lit, and the silence is broken by the distant sounds of chatter and laughter. Suddenly, two drunk men spot your group and stagger towards you, their eyes gleaming with mischief.")
     node2 = Dialogue(from_node_id=1, node_type="talk", speaker="drunk old man", text="You there! I have a quest for you.")
-    node3 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="A quest?! I accept.")
-    node4 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="What's in it for me?")
-    node5 = Dialogue(from_node_id=2, node_type="player_response", speaker="party leader", text="Hard pass.")
-    node6 = Dialogue(from_node_id=3, node_type="talk", speaker="drunk old man", text="Praise Be you have accepted my quest. You must defend our land from The Creature.")
-    node7 = Dialogue(from_node_id=4, node_type="talk", speaker="drunk old man", text="In it for you? Why, the satisfaction of a job well done.. Hic!")
-    node8 = Dialogue(from_node_id=5, node_type="talk", speaker="drunk old man", text="How dissapointing to hear you will not accept my quest.")
     # save nodes 1 at a time so they are assigned the correct id
     node1.save()
     node2.save()
-    node3.save()
-    node4.save()
-    node5.save()
-    node6.save()
-    node7.save()
-    node8.save()
-
-    # only temporarily seeding gamedialogue for game 1 until we hook up the START GAME button to update DB
-    # idea is that game start button will write to GameDialogue
-    gameDialogue1 = GameDialogue(game=game1, dialogue=node1)
-    gameDialogue2 = GameDialogue(game=game1, dialogue=node2)
-    # to test we can filter by game
-    gameDialogue3 = GameDialogue(game=game2, dialogue=node8)
-    gameDialogue1.save()
-    gameDialogue2.save()
-    gameDialogue3.save()
 
     return render(request, 'leeroy.html')
 
@@ -205,31 +184,55 @@ class GameDetailView(FormMixin, DetailView):
         else:
             return self.form_invalid(form)
 
+def lobby(request, game_id):
+    game = Game.objects.get(id=game_id)
+    gameusers = GameUser.objects.filter(game_id=game_id)
+    leader = GameUser.objects.get(game_id=game_id, user=game.creator)
+    any_player_not_ready = gameusers.filter(is_ready=False).exists()
 
-class GameUsersView(ListView):
-    model = GameUser
-    template_name = 'tavern_app/lobby.html'
+    if game.game_started == True:
+        return redirect(reverse('tavern_app:act1_scene1', kwargs={'game_id': game.id}))
 
-    def get_queryset(self):
-        game_id = self.kwargs['game_id']
-        return GameUser.objects.filter(game_id=game_id)
+    if request.method == 'POST':
+        form = StartGameForm(request.POST)
+        
+        if form.is_valid():
+            # TODO add better error messaging for any players not ready https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            if any_player_not_ready == True:
+                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        game_id = self.kwargs['game_id']
-        game = Game.objects.get(id=game_id)
-        context['game'] = game
+            # TODO add better error messaging for not started by creator https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            if game.creator != request.user:
+                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
-        # Retrieve the creator of the game
-        context['creator'] = game.creator
-        context['leader'] = GameUser.objects.get(game_id=game_id, user=context['creator'])
+            # TODO add better error messaging if game wasn't started from lobby with same game_id in url https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            if form.cleaned_data['game_id'] != game.pk:
+                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
-        # Check if any player is not ready
-        any_player_not_ready = context['object_list'].filter(is_ready=False).exists()
-        context['any_player_not_ready'] = any_player_not_ready
+            # Write first dialogue node for this game and game_started True
+            starting_game_dialogue = GameDialogue(game=game, dialogue=Dialogue.objects.get(pk=1))
+            starting_game_dialogue.save()
+            game.game_started = True
+            game.save()
 
-        return context
+            return redirect(reverse('tavern_app:act1_scene1', kwargs={'game_id': game.id}))
 
+        else:
+            # TODO better handling of if form is not valid https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+            
+    else:
+        form = StartGameForm(initial={'game_id': game_id})
+
+    context = {
+        'game': game,
+        'gameusers': gameusers,
+        'leader': leader,
+        'any_player_not_ready': any_player_not_ready,
+        'form': form,
+    }
+    
+    return render(request, 'tavern_app/lobby.html', context)    
 
 class CreateGameView(CreateView):
     model = Game
