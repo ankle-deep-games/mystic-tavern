@@ -23,6 +23,8 @@ class JoinGameForm(ModelForm):
             'password': forms.TextInput(attrs={'class': 'form-control'})
         }
 
+class StartGameForm(forms.Form):
+    game_id = forms.IntegerField(widget=forms.HiddenInput())
 
 class RoleAssignmentForm(ModelForm):
     class Meta:
