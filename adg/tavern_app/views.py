@@ -433,24 +433,24 @@ class RoleAssignmentView(FormView):
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
 # TODO
-# 1. https://trello.com/c/Ms7zgd3S/108-refactor-story-views-and-forms-to-classed-based-views
 # 2. https://trello.com/c/nXMi0HR5/109-story-url-routing
 # 3. https://trello.com/c/4tBieF3j/110-only-allow-game-owner-to-submit-dialogue-choices-but-show-it-to-others
-def act1_scene1_view(request, game_id):
+def act1_scene1(request, game_id):
 
-    # form submission if game owner clicked a dialogue option
+    # form submission if game owner clicked next button or dialogue option
     if request.method == 'POST':
         form = GameDialogueForm(request.POST)
 
         if form.is_valid():
-            print(form.cleaned_data)
-            # save selected choice
-            form.save()
-            # get the next dialogue option from non player character and write to db
-            nextGame = Game.objects.get(pk=game_id)
-            nextDialogue = Dialogue.objects.get(from_node_id=form.cleaned_data["dialogue"].id)
-            nextGameDialogue = GameDialogue(game=nextGame, dialogue=nextDialogue)
-            nextGameDialogue.save()
+            # TODO validation: https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            # that the submitted node is a child of current dialogue progress
+            # that submission from game owner 
+
+            # get the next dialogue from form values and write to db
+            game = Game.objects.get(pk=game_id)
+            dialogue = Dialogue.objects.get(pk=form.cleaned_data['dialogue'].id)
+            game_dialogue = GameDialogue(game=game, dialogue=dialogue)
+            game_dialogue.save()
 
     # else render form
     else:
@@ -458,9 +458,10 @@ def act1_scene1_view(request, game_id):
 
     context = {
         'game_id': game_id,
-        'dialogues': Dialogue.objects.all(),
-        'dialogue_progress': GameDialogue.objects.filter(game=game_id),
-        'dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').id,
+        'dialogue_all': Dialogue.objects.all(),
+        'game_dialogue_progress': GameDialogue.objects.filter(game=game_id),
+        'game_dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
         'form': form
     }
+
     return render(request, 'tavern_app/act1/act1_scene1.html', context)
