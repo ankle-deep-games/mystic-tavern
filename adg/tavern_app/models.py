@@ -16,8 +16,20 @@ class Game(models.Model):
         return 'Game Name: ' + str(self.name) + ', Created by: ' + str(self.creator)
 
 
+class Type(models.Model):
+    name = models.CharField(max_length=255)
+    strength = models.IntegerField(default=0)
+    weakness = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
 class Role(models.Model):
     name = models.CharField(max_length=255)
+    type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
     start_attack = models.IntegerField(default=0)
     start_defense = models.IntegerField(default=0)
@@ -38,7 +50,8 @@ class Gender(models.Model):
 
     def __str__(self):
         return str(self.name)
-    
+
+
 class NPC(models.Model):
     name = models.CharField(max_length=255)
     image = models.CharField(max_length=255)
