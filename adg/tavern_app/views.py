@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from django.views.generic.edit import FormMixin
 from django.db.models import Count
 from django.http import JsonResponse
-# Create your views here.
 
 def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
@@ -28,7 +27,7 @@ def leeroy(request):
     user4.save()
     user5.save()
 
-    ## games
+    # games
     game1 = Game(name="Game Seed 1",creator=user1, game_started=False, game_over=False, password="apple")
     game2 = Game(name="Game Seed 2",creator=user2, game_started=False, game_over=False, password="banana")
     game3 = Game(name="Game Seed 3",creator=user3, game_started=False, game_over=False, password="carrot")
@@ -40,7 +39,7 @@ def leeroy(request):
         game4,
     ])
 
-    ## types
+    # types
     type1 = Type(name="Light", strength=2, weakness=5)
     type2 = Type(name="Dark", strength=3, weakness=1)
     type3 = Type(name="Stone", strength=4, weakness=2)
@@ -54,7 +53,7 @@ def leeroy(request):
         type5,
     ])
 
-    ## roles
+    # roles
     role1 = Role(name="WHITEMAGE", type=type1, start_hp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
     role2 = Role(name="BLACKMAGE", type=type2, start_hp=80, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
     role3 = Role(name="PALADIN", type=type3, start_hp=120, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
@@ -68,7 +67,7 @@ def leeroy(request):
         role5,
     ])
 
-    ## genders
+    # genders
     gender1 = Gender(name="MALE")
     gender2 = Gender(name="FEMALE")
     gender3 = Gender(name="NONBINARY")
@@ -78,7 +77,7 @@ def leeroy(request):
         gender3,
     ])
 
-    ## gameuser
+    # gameuser
     gameuser1 = GameUser(
         game=game1,
         user=user1,
@@ -130,7 +129,7 @@ def leeroy(request):
         gameuser6,
     ])
 
-    ## npcs + images
+    # npcs + images
     npc1 = NPC(name="Narrator", image="logo.png")
     npc2 = NPC(name="Old Man", image="old-man.png")
     npc3 = NPC(name="Drunk Man 1", image="drunk-man-1.png")
@@ -144,7 +143,7 @@ def leeroy(request):
         npc5,
     ])
 
-    ## dialogue Act 1 Scene 1
+    # dialogue Act 1 Scene 1
     node1 = Dialogue(from_node_id=0, node_type="narration", speaker="Narrator", text="Your group finds themselves teleported to an abandoned alleyway in what looks like a quaint old village. The narrow passage is dimly lit, and the silence is broken by the distant sounds of chatter and laughter. Suddenly, two drunk men spot your group and stagger towards you, their eyes gleaming with mischief.")
     node2 = Dialogue(from_node_id=1, node_type="talk", speaker="Drunk Man 1", text="Blimey, would ya look at this lot! Fancied themselves lost tourists, do they?")
     node3 = Dialogue(from_node_id=2, node_type="talk", speaker="Drunk Man 2", text="Aven't seen faces like these 'round 'ere before!")
@@ -224,70 +223,70 @@ def leeroy(request):
     node61 = Dialogue(from_node_id=60, node_type="talk", speaker="Drunk Man 2", text="We warned ya to stay away!")
     node62 = Dialogue(from_node_id=61, node_type="talk", speaker="Group Leader", text="We've had enough of this. Let's just take these guys out.")
 
-    # save nodes 1 at a time so they are assigned the correct id
-    node1.save()
-    node2.save()
-    node3.save()
-    node4.save()
-    node5.save()
-    node6.save()
-    node7.save()
-    node8.save()
-    node9.save()
-    node10.save()
-    node11.save()
-    node12.save()
-    node13.save()
-    node14.save()
-    node15.save()
-    node16.save()
-    node17.save()
-    node18.save()
-    node19.save()
-    node20.save()
-    node21.save()
-    node22.save()
-    node23.save()
-    node24.save()
-    node25.save()
-    node26.save()
-    node27.save()
-    node28.save()
-    node29.save()
-    node30.save()
-    node31.save()
-    node32.save()
-    node33.save()
-    node34.save()
-    node35.save()
-    node36.save()
-    node37.save()
-    node38.save()
-    node39.save()
-    node40.save()
-    node41.save()
-    node42.save()
-    node43.save()
-    node44.save()
-    node45.save()
-    node46.save()
-    node47.save()
-    node48.save()
-    node49.save()
-    node50.save()
-    node51.save()
-    node52.save()
-    node53.save()
-    node54.save()
-    node55.save()
-    node56.save()
-    node57.save()
-    node58.save()
-    node59.save()
-    node60.save()
-    node61.save()
-    node62.save()
-    ## dialogue Act 1 Scene 1 END
+    Dialogue.objects.bulk_create([
+        node1,
+        node2,
+        node3,
+        node4,
+        node5,
+        node6,
+        node7,
+        node8,
+        node9,
+        node10,
+        node11,
+        node12,
+        node13,
+        node14,
+        node15,
+        node16,
+        node17,
+        node18,
+        node19,
+        node20,
+        node21,
+        node22,
+        node23,
+        node24,
+        node25,
+        node26,
+        node27,
+        node28,
+        node29,
+        node30,
+        node31,
+        node32,
+        node33,
+        node34,
+        node35,
+        node36,
+        node37,
+        node38,
+        node39,
+        node40,
+        node41,
+        node42,
+        node43,
+        node44,
+        node45,
+        node46,
+        node47,
+        node48,
+        node49,
+        node50,
+        node51,
+        node52,
+        node53,
+        node54,
+        node55,
+        node56,
+        node57,
+        node58,
+        node59,
+        node60,
+        node61,
+        node62,
+    ])
 
     return render(request, 'leeroy.html')
 
