@@ -29,7 +29,7 @@ class Type(models.Model):
 
 class Role(models.Model):
     name = models.CharField(max_length=255)
-    type_id = models.ForeignKey(Type, on_delete=models.PROTECT)
+    type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
     start_attack = models.IntegerField(default=0)
     start_defense = models.IntegerField(default=0)
