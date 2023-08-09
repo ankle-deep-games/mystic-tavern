@@ -469,12 +469,30 @@ def act1_scene1(request, game_id):
     else:
         form = GameDialogueForm()
 
+    list_test = []
+    dn = ""
+    these_game_users = GameUser.objects.filter(game=Game(pk=game_id))
+    for idx, gu in enumerate(these_game_users):
+        if idx == 0:
+            dn = "Group Leader"
+        elif idx == 1:
+            dn = "Group Member 1"
+        elif idx == 2:
+            dn = "Group Member 2"
+        list_test.append({'name': gu.user.username, 'image': gu.image(), 'dialogue_name': dn})
+
+    npc_test = NPC.objects.all()
+    for n in npc_test:
+        list_test.append({'name': n.name, 'image': n.image, 'dialogue_name': n.name})
+    print(list_test)
+
     context = {
         'game_id': game_id,
         'dialogue_all': Dialogue.objects.all(),
         'game_dialogue_progress': GameDialogue.objects.filter(game=game_id),
         'game_dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
-        'form': form
+        'form': form,
+        'list_test': list_test,
     }
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)

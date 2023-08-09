@@ -8,7 +8,16 @@
 
         {% comment %} display dialogue progress thus far {% endcomment %}
         {% for game_dialogue in game_dialogue_progress %}
-            <p><b>{{ game_dialogue.dialogue.speaker }}</b>: {{game_dialogue.dialogue.text}}</p>
+        <div class="d-flex mt-3">
+            {% for l in list_test %}
+                {% if game_dialogue.dialogue.speaker == l.dialogue_name %}
+                    <img src="{% static 'tavern_app/' %}{{l.image}}" style="width:100px;height:100px;">
+                    <p><b>{{ l.name }}</b>: {{game_dialogue.dialogue.text}}</p>
+                {% endif %}
+            {% endfor %}
+            
+            <p></p>
+        </div>
         {% endfor %}
         
         {% comment %} present the next button + player choices {% endcomment %}
