@@ -31,6 +31,7 @@ class Role(models.Model):
     name = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
+    start_mp = models.IntegerField(default=0)
     start_attack = models.IntegerField(default=0)
     start_defense = models.IntegerField(default=0)
     start_myst_attack = models.IntegerField(default=0)
@@ -94,6 +95,7 @@ class Weapon(models.Model):
     attack_mod = models.IntegerField(default=0)
     myst_attack_mod = models.IntegerField(default=0)
     speed_mod = models.IntegerField(default=0)
+    mp_mod = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -107,6 +109,7 @@ class Armor(models.Model):
     myst_defense_mod = models.IntegerField(default=0)
     speed_mod = models.IntegerField(default=0)
     hp_mod = models.IntegerField(default=0)
+    mp_mod = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
