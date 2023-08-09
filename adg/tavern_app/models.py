@@ -106,6 +106,7 @@ class Armor(models.Model):
     defense_mod = models.IntegerField(default=0)
     myst_defense_mod = models.IntegerField(default=0)
     speed_mod = models.IntegerField(default=0)
+    hp_mod = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
