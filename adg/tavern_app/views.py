@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -47,12 +47,14 @@ def leeroy(request):
     type3 = Type(name="Stone", strength=4, weakness=2)
     type4 = Type(name="Forest", strength=5, weakness=3)
     type5 = Type(name="Wind", strength=1, weakness=4)
+    type6 = Type(name="Normal", strength=6, weakness=6)
     Type.objects.bulk_create([
         type1,
         type2,
         type3,
         type4,
         type5,
+        type6,
     ])
 
     # roles
@@ -79,6 +81,30 @@ def leeroy(request):
         gender3,
     ])
 
+    # weapons
+    weapon1 = Weapon(name="Wood Staff", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
+    weapon2 = Weapon(name="Wood Sword", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
+    weapon3 = Weapon(name="Wood Bow", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
+    weapon4 = Weapon(name="Wood Flute", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
+    Weapon.objects.bulk_create([
+        weapon1,
+        weapon2,
+        weapon3,
+        weapon4,
+    ])
+
+    # armor
+    armor1 = Armor(name="Cloth Tunic", defense_mod=5, myst_defense_mod=5, speed_mod=5, hp_mod=5, mp_mod=5)
+    Armor.objects.bulk_create([
+        armor1,
+    ])
+
+    # abilities
+    ability1 = Ability(name="Attack", type=type6, mp_cost=0, threat=1, min_damage=1, max_damage=5)
+    Ability.objects.bulk_create([
+        ability1,
+    ])
+
     # gameuser
     gameuser1 = GameUser(
         game=game1,
@@ -86,6 +112,14 @@ def leeroy(request):
         role=role1,
         gender=gender1,
         is_ready=True,
+        current_hp=role1.start_hp,
+        current_mp=role1.start_mp,
+        current_attack=role1.start_attack,
+        current_defense=role1.start_defense,
+        current_myst_attack=role1.start_myst_attack,
+        current_myst_defense=role1.start_myst_defense,
+        current_speed=role1.start_speed,
+        ability_1=ability1,
     )
     gameuser2 = GameUser(
         game=game1,
@@ -93,6 +127,14 @@ def leeroy(request):
         role=role2,
         gender=gender2,
         is_ready=True,
+        current_hp=role2.start_hp,
+        current_mp=role2.start_mp,
+        current_attack=role2.start_attack,
+        current_defense=role2.start_defense,
+        current_myst_attack=role2.start_myst_attack,
+        current_myst_defense=role2.start_myst_defense,
+        current_speed=role2.start_speed,
+        ability_1=ability1,
     )
     gameuser3 = GameUser(
         game=game1,
@@ -100,6 +142,14 @@ def leeroy(request):
         role=role3,
         gender=gender2,
         is_ready=True,
+        current_hp=role3.start_hp,
+        current_mp=role3.start_mp,
+        current_attack=role3.start_attack,
+        current_defense=role3.start_defense,
+        current_myst_attack=role3.start_myst_attack,
+        current_myst_defense=role3.start_myst_defense,
+        current_speed=role3.start_speed,
+        ability_1=ability1,
     )
     gameuser4 = GameUser(
         game=game1,
@@ -107,6 +157,14 @@ def leeroy(request):
         role=role4,
         gender=gender1,
         is_ready=True,
+        current_hp=role4.start_hp,
+        current_mp=role4.start_mp,
+        current_attack=role4.start_attack,
+        current_defense=role4.start_defense,
+        current_myst_attack=role4.start_myst_attack,
+        current_myst_defense=role4.start_myst_defense,
+        current_speed=role4.start_speed,
+        ability_1=ability1,
     )
     gameuser5 = GameUser(
         game=game1,
@@ -114,6 +172,14 @@ def leeroy(request):
         role=role5,
         gender=gender2,
         is_ready=True,
+        current_hp=role5.start_hp,
+        current_mp=role5.start_mp,
+        current_attack=role5.start_attack,
+        current_defense=role5.start_defense,
+        current_myst_attack=role5.start_myst_attack,
+        current_myst_defense=role5.start_myst_defense,
+        current_speed=role5.start_speed,
+        ability_1=ability1,
     )
     gameuser6 = GameUser(
         game=game2,
@@ -121,6 +187,14 @@ def leeroy(request):
         role=role2,
         gender=gender1,
         is_ready=True,
+        current_hp=role2.start_hp,
+        current_mp=role2.start_mp,
+        current_attack=role2.start_attack,
+        current_defense=role2.start_defense,
+        current_myst_attack=role2.start_myst_attack,
+        current_myst_defense=role2.start_myst_defense,
+        current_speed=role2.start_speed,
+        ability_1=ability1,
     )
     GameUser.objects.bulk_create([
         gameuser1,
