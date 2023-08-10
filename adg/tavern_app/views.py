@@ -11,16 +11,18 @@ from django.views.generic.edit import FormMixin
 from django.db.models import Count
 from django.http import JsonResponse
 
+
 def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
+
 def leeroy(request):
     # users are special because they get created with a hashed password with create_user
-    user1 = User.objects.create_user(username='john',email='jlennon@beatles.com',password='imagine')
-    user2 = User.objects.create_user(username='paul',email='pmccartney@beatles.com',password='let it be')
-    user3 = User.objects.create_user(username='george',email='gharrison@beatles.com',password='my sweet lord')
-    user4 = User.objects.create_user(username='ringo',email='rstarr@beatles.com',password='yellow submarine')
-    user5 = User.objects.create_user(username='eleanor',email='erigby@beatles.com',password='lonely people')
+    user1 = User.objects.create_user(username='john', email='jlennon@beatles.com', password='imagine')
+    user2 = User.objects.create_user(username='paul', email='pmccartney@beatles.com', password='let it be')
+    user3 = User.objects.create_user(username='george', email='gharrison@beatles.com',password='my sweet lord')
+    user4 = User.objects.create_user(username='ringo', email='rstarr@beatles.com', password='yellow submarine')
+    user5 = User.objects.create_user(username='eleanor', email='erigby@beatles.com', password='lonely people')
     user1.save()
     user2.save()
     user3.save()
@@ -28,10 +30,10 @@ def leeroy(request):
     user5.save()
 
     # games
-    game1 = Game(name="Game Seed 1",creator=user1, game_started=False, game_over=False, password="apple")
-    game2 = Game(name="Game Seed 2",creator=user2, game_started=False, game_over=False, password="banana")
-    game3 = Game(name="Game Seed 3",creator=user3, game_started=False, game_over=False, password="carrot")
-    game4 = Game(name="Game Seed 4",creator=user4, game_started=False, game_over=False, password="date")
+    game1 = Game(name="Game Seed 1", creator=user1, game_started=False, game_over=False, password="apple")
+    game2 = Game(name="Game Seed 2", creator=user2, game_started=False, game_over=False, password="banana")
+    game3 = Game(name="Game Seed 3", creator=user3, game_started=False, game_over=False, password="carrot")
+    game4 = Game(name="Game Seed 4", creator=user4, game_started=False, game_over=False, password="date")
     Game.objects.bulk_create([
         game1,
         game2,
@@ -54,11 +56,11 @@ def leeroy(request):
     ])
 
     # roles
-    role1 = Role(name="WHITEMAGE", type=type1, start_hp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
-    role2 = Role(name="BLACKMAGE", type=type2, start_hp=80, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
-    role3 = Role(name="PALADIN", type=type3, start_hp=120, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
-    role4 = Role(name="ARCHER", type=type4, start_hp=85, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
-    role5 = Role(name="BARD", type=type5, start_hp=90, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
+    role1 = Role(name="WHITEMAGE", type=type1, start_hp=100, start_mp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
+    role2 = Role(name="BLACKMAGE", type=type2, start_hp=80, start_mp=120, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
+    role3 = Role(name="PALADIN", type=type3, start_hp=120, start_mp=80, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
+    role4 = Role(name="ARCHER", type=type4, start_hp=85, start_mp=115, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
+    role5 = Role(name="BARD", type=type5, start_hp=90, start_mp=110, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
     Role.objects.bulk_create([
         role1,
         role2,
