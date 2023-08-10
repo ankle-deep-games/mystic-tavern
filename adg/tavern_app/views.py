@@ -484,7 +484,51 @@ def act1_scene1(request, game_id):
     npc_test = NPC.objects.all()
     for n in npc_test:
         list_test.append({'name': n.name, 'image': n.image, 'dialogue_name': n.name})
-    print(list_test)
+    # print(list_test)
+
+    dialogue_test_list = []
+    all_dialogue = Dialogue.objects.all()
+    for ad in all_dialogue:
+        dname = ""
+        dimage = ""
+        for dn in list_test:
+            if dn['dialogue_name'] == ad.speaker:
+                dname = dn['name']
+                dimage = dn['image']
+        
+        dialogue_test_list.append({
+            'id': ad.pk,
+            'from_node_id': ad.from_node_id,
+            'node_type': ad.node_type,
+            'speaker': ad.speaker,
+            'text': ad.text,
+            'name': dname,
+            'image': dimage,
+            })
+        
+
+    game_dialogue_progress_test_list = []
+    game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
+    for adp in game_dialogue_progress:
+        dname = ""
+        dimage = ""
+        for dn in list_test:
+            if dn['dialogue_name'] == adp.dialogue.speaker:
+                dname = dn['name']
+                dimage = dn['image']
+        
+        game_dialogue_progress_test_list.append({
+            'id': adp.dialogue.pk,
+            'from_node_id': adp.dialogue.from_node_id,
+            'node_type': adp.dialogue.node_type,
+            'speaker': adp.dialogue.speaker,
+            'text': adp.dialogue.text,
+            'name': dname,
+            'image': dimage,
+            })
+    
+    # for dtl in dialogue_test_list:
+    #     print(dtl)
 
     context = {
         'game_id': game_id,
@@ -493,6 +537,11 @@ def act1_scene1(request, game_id):
         'game_dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
         'form': form,
         'list_test': list_test,
+        'dialogue_test_list': dialogue_test_list,
+        'game_dialogue_progress_test_list': game_dialogue_progress_test_list,
     }
+
+    for i in game_dialogue_progress_test_list:
+        print(i)
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)

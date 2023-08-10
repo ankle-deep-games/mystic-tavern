@@ -6,25 +6,21 @@
         <h1 class="mb-3">game id {{game_id}}</h1>
         <hr>
 
-        {% comment %} display dialogue progress thus far {% endcomment %}
-        {% for game_dialogue in game_dialogue_progress %}
+        {% for dialogue_test in game_dialogue_progress_test_list %}
         <div class="d-flex mt-3">
-            {% for l in list_test %}
-                {% if game_dialogue.dialogue.speaker == l.dialogue_name %}
-                    <img src="{% static 'tavern_app/' %}{{l.image}}" style="width:100px;height:100px;">
-                    <p><b>{{ l.name }}</b>: {{game_dialogue.dialogue.text}}</p>
-                {% endif %}
-            {% endfor %}
-            
-            <p></p>
+            <img src="{% static 'tavern_app/' %}{{dialogue_test.image}}" style="width:100px;height:100px;">
+            <p><b>{{ dialogue_test.name }}</b>: {{dialogue_test.text}}</p>
         </div>
         {% endfor %}
         
         {% comment %} present the next button + player choices {% endcomment %}
-        {% for dialogue in dialogue_all %}
+        {% for dialogue in dialogue_test_list %}
             {% if dialogue.from_node_id == game_dialogue_latest %}
                 {% if dialogue.node_type == "talk" or dialogue.node_type == "narration" %}
-                    <p><b>{{ dialogue.speaker }}</b>: {{ dialogue.text }}</p>
+                    <div class="d-flex mt-3">
+                        <img src="{% static 'tavern_app/' %}{{dialogue.image}}" style="width:100px;height:100px;">
+                        <p><b>{{ dialogue.name }}</b>: {{dialogue.text}}</p>
+                    </div>
                     <form method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="game" value="{{ game_id }}" />
@@ -32,12 +28,15 @@
                         <button type="submit" class="btn btn-secondary">Next</button>
                     </form>
                 {% elif dialogue.node_type == "player response" %}
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="game" value="{{ game_id }}" />
-                        <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
-                        <button type="submit" class="btn btn-secondary mb-3">{{ dialogue.speaker }}: {{ dialogue.text }}</button>
-                    </form>
+                    <div class="d-flex mt-3">
+                        <img src="{% static 'tavern_app/' %}{{dialogue.image}}" style="width:100px;height:100px;">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="game" value="{{ game_id }}" />
+                            <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
+                            <button type="submit" class="btn btn-secondary mb-3">{{ dialogue.speaker }}: {{ dialogue.text }}</button>
+                        </form>
+                    </div>
                 {% endif %}
             {% endif %}
         {% endfor %}
