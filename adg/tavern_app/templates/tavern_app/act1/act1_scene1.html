@@ -6,15 +6,15 @@
         <h1 class="mb-3">game id {{game_id}}</h1>
         <hr>
 
-        {% for dialogue_test in game_dialogue_progress_test_list %}
+        {% for game_dialogue in game_dialogue_progress_list %}
         <div class="d-flex mt-3">
-            <img src="{% static 'tavern_app/' %}{{dialogue_test.image}}" style="width:100px;height:100px;">
-            <p><b>{{ dialogue_test.name }}</b>: {{dialogue_test.text}}</p>
+            <img src="{% static 'tavern_app/' %}{{game_dialogue.image}}" style="width:100px;height:100px;">
+            <p><b>{{ game_dialogue.name }}</b>: {{game_dialogue.text}}</p>
         </div>
         {% endfor %}
         
         {% comment %} present the next button + player choices {% endcomment %}
-        {% for dialogue in dialogue_test_list %}
+        {% for dialogue in dialogue_all_list %}
             {% if dialogue.from_node_id == game_dialogue_latest %}
                 {% if dialogue.node_type == "talk" or dialogue.node_type == "narration" %}
                     <div class="d-flex mt-3">

@@ -469,79 +469,69 @@ def act1_scene1(request, game_id):
     else:
         form = GameDialogueForm()
 
-    list_test = []
-    dn = ""
-    these_game_users = GameUser.objects.filter(game=Game(pk=game_id))
-    for idx, gu in enumerate(these_game_users):
-        if idx == 0:
-            dn = "Group Leader"
-        elif idx == 1:
-            dn = "Group Member 1"
-        elif idx == 2:
-            dn = "Group Member 2"
-        list_test.append({'name': gu.user.username, 'image': gu.image(), 'dialogue_name': dn})
-
-    npc_test = NPC.objects.all()
-    for n in npc_test:
-        list_test.append({'name': n.name, 'image': n.image, 'dialogue_name': n.name})
-    # print(list_test)
-
-    dialogue_test_list = []
-    all_dialogue = Dialogue.objects.all()
-    for ad in all_dialogue:
-        dname = ""
-        dimage = ""
-        for dn in list_test:
-            if dn['dialogue_name'] == ad.speaker:
-                dname = dn['name']
-                dimage = dn['image']
-        
-        dialogue_test_list.append({
-            'id': ad.pk,
-            'from_node_id': ad.from_node_id,
-            'node_type': ad.node_type,
-            'speaker': ad.speaker,
-            'text': ad.text,
-            'name': dname,
-            'image': dimage,
-            })
-        
-
-    game_dialogue_progress_test_list = []
-    game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
-    for adp in game_dialogue_progress:
-        dname = ""
-        dimage = ""
-        for dn in list_test:
-            if dn['dialogue_name'] == adp.dialogue.speaker:
-                dname = dn['name']
-                dimage = dn['image']
-        
-        game_dialogue_progress_test_list.append({
-            'id': adp.dialogue.pk,
-            'from_node_id': adp.dialogue.from_node_id,
-            'node_type': adp.dialogue.node_type,
-            'speaker': adp.dialogue.speaker,
-            'text': adp.dialogue.text,
-            'name': dname,
-            'image': dimage,
-            })
+    character_list = []
+    game_users = GameUser.objects.filter(game=Game(pk=game_id))
     
-    # for dtl in dialogue_test_list:
-    #     print(dtl)
+    for idx, game_user in enumerate(game_users):
+        speaker = ""
+        if idx == 0:
+            speaker = "Group Leader"
+        elif idx == 1:
+            speaker = "Group Member 1"
+        elif idx == 2:
+            speaker = "Group Member 2"
+        character_list.append({'name': game_user.user.username, 'image': game_user.image(), 'speaker': speaker})
+
+    npcs = NPC.objects.all()
+    for npc in npcs:
+        character_list.append({'name': npc.name, 'image': npc.image, 'speaker': npc.name})
+        
+    game_dialogue_progress_list = []
+    game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
+    for game_dialogue in game_dialogue_progress:
+        name = ""
+        image = ""
+        for char in character_list:
+            if char['speaker'] == game_dialogue.dialogue.speaker:
+                name = char['name']
+                image = char['image']
+        
+        game_dialogue_progress_list.append({
+            'id': game_dialogue.dialogue.pk,
+            'from_node_id': game_dialogue.dialogue.from_node_id,
+            'node_type': game_dialogue.dialogue.node_type,
+            'speaker': game_dialogue.dialogue.speaker,
+            'text': game_dialogue.dialogue.text,
+            'name': name,
+            'image': image,
+            })
+        
+    dialogue_all_list = []
+    dialogue_all = Dialogue.objects.all()
+    for dialogue in dialogue_all:
+        name = ""
+        image = ""
+        for char in character_list:
+            if char['speaker'] == dialogue.speaker:
+                name = char['name']
+                image = char['image']
+        
+        dialogue_all_list.append({
+            'id': dialogue.pk,
+            'from_node_id': dialogue.from_node_id,
+            'node_type': dialogue.node_type,
+            'speaker': dialogue.speaker,
+            'text': dialogue.text,
+            'name': name,
+            'image': image,
+            })
 
     context = {
         'game_id': game_id,
-        'dialogue_all': Dialogue.objects.all(),
-        'game_dialogue_progress': GameDialogue.objects.filter(game=game_id),
+        'dialogue_all_list': dialogue_all_list,
+        'game_dialogue_progress_list': game_dialogue_progress_list,
         'game_dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
         'form': form,
-        'list_test': list_test,
-        'dialogue_test_list': dialogue_test_list,
-        'game_dialogue_progress_test_list': game_dialogue_progress_test_list,
     }
-
-    for i in game_dialogue_progress_test_list:
-        print(i)
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)
