@@ -445,9 +445,6 @@ class RoleAssignmentView(FormView):
         game_id = self.kwargs['game_id']
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
-# TODO
-# 2. https://trello.com/c/nXMi0HR5/109-story-url-routing
-# 3. https://trello.com/c/4tBieF3j/110-only-allow-game-owner-to-submit-dialogue-choices-but-show-it-to-others
 def act1_scene1(request, game_id):
 
     # form submission if game owner clicked next button or dialogue option
@@ -519,6 +516,8 @@ def act1_scene1(request, game_id):
             'text': dialogue.text,
             'image': image,
             })
+        
+    # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
 
     context = {
         'game_id': game_id,
