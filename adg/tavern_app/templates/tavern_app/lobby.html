@@ -21,7 +21,7 @@
         <div class="card text-white bg-secondary mb-3">
           {% load static %}
           {% if gameuser.is_ready %}
-            <img class="card-img-top" src ="{% static 'tavern_app/' %}{{gameuser.role}}-{{gameuser.gender}}.png" alt="role and gender picture">
+            <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
             <div class="card-body">
               <h3 class="card-title text-white">{{ gameuser.user.username }} - READY</h3>
               <hr>
@@ -29,10 +29,13 @@
               <hr>
               <h6>Stats:</h6>
               <ul>
-                <li>HP: PLACEHOLDER</li>
-                <li>Attack: PLACEHOLDER</li>
-                <li>Defense: PLACEHOLDER</li>
-                <li>Myst: PLACEHOLDER</li>
+                <li>HP: {{ gameuser.role.start_hp }}</li>
+                <li>MP: {{ gameuser.role.start_mp }}</li>
+                <li>Attack: {{ gameuser.role.start_attack }}</li>
+                <li>Defense: {{ gameuser.role.start_defense }}</li>
+                <li>Myst Attack: {{ gameuser.role.start_myst_attack }}</li>
+                <li>Myst Defense: {{ gameuser.role.start_myst_defense }}</li>
+                <li>Speed: {{ gameuser.role.start_speed }}</li>
               </ul>
           </div>
           {% else %}
@@ -45,9 +48,12 @@
               <h6>Stats:</h6>
               <ul>
                 <li>HP: ???</li>
+                <li>MP: ???</li>
                 <li>Attack: ???</li>
                 <li>Defense: ???</li>
-                <li>Myst: ???</li>
+                <li>Myst Attack: ???</li>
+                <li>Myst Defense: ???</li>
+                <li>Speed: ???</li>
               </ul>
           </div>
           {% endif %}

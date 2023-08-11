@@ -29,7 +29,7 @@ class Type(models.Model):
 
 class Role(models.Model):
     name = models.CharField(max_length=255)
-    type = models.ForeignKey(Type, on_delete=models.PROTECT)
+    type = models.ForeignKey(Type, on_delete=models.PROTECT, default=1)
     start_hp = models.IntegerField(default=0)
     start_mp = models.IntegerField(default=0)
     start_attack = models.IntegerField(default=0)
@@ -139,6 +139,9 @@ class GameUser(models.Model):
     def save(self, *args, **kwargs):
         self.update_is_ready_field()
         super().save(*args, **kwargs)
+
+    def image(self):
+        return f'{self.role}-{self.gender}.png'
 
     def __str__(self):
         game_name = self.game.name if self.game else 'Unknown Game'

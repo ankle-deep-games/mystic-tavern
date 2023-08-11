@@ -61,7 +61,7 @@ def leeroy(request):
     role1 = Role(name="WHITEMAGE", type=type1, start_hp=100, start_mp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
     role2 = Role(name="BLACKMAGE", type=type2, start_hp=80, start_mp=120, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
     role3 = Role(name="PALADIN", type=type3, start_hp=120, start_mp=80, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
-    role4 = Role(name="ARCHER", type=type4, start_hp=85, start_mp=115, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
+    role4 = Role(name="ARCHER", type=type4, start_hp=110, start_mp=90, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
     role5 = Role(name="BARD", type=type5, start_hp=90, start_mp=110, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
     Role.objects.bulk_create([
         role1,
@@ -521,9 +521,6 @@ class RoleAssignmentView(FormView):
         game_id = self.kwargs['game_id']
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
-# TODO
-# 2. https://trello.com/c/nXMi0HR5/109-story-url-routing
-# 3. https://trello.com/c/4tBieF3j/110-only-allow-game-owner-to-submit-dialogue-choices-but-show-it-to-others
 def act1_scene1(request, game_id):
 
     # form submission if game owner clicked next button or dialogue option
@@ -532,7 +529,7 @@ def act1_scene1(request, game_id):
 
         if form.is_valid():
             # TODO validation: https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-            # that the submitted node is a child of current dialogue progress
+            # that the submitted node is a child of current dialogue progress / prevent dupelicate submissions
             # that submission from game owner 
 
             # get the next dialogue from form values and write to db
@@ -545,12 +542,71 @@ def act1_scene1(request, game_id):
     else:
         form = GameDialogueForm()
 
+    # character_list combines players and npcs into a single list that can later be used to add names and images to dialogues
+    character_list = []
+    game_users = GameUser.objects.filter(game=Game(pk=game_id))
+    
+    # in dialogue we save speakers as "Group Leader" or "Group Member 1"
+    # at run time compare those against players in the game so we can display the player username
+    for idx, game_user in enumerate(game_users):
+        speaker = ""
+        if idx == 0:
+            speaker = "Group Leader"
+        elif idx == 1:
+            speaker = "Group Member 1"
+        elif idx == 2:
+            speaker = "Group Member 2"
+        character_list.append({'name': game_user.user.username, 'image': game_user.image(), 'speaker': speaker})
+
+    npcs = NPC.objects.all()
+    for npc in npcs:
+        character_list.append({'name': npc.name, 'image': npc.image, 'speaker': npc.name})
+        
+    # game_dialogue_progress_list is the current game's dialogue + names and images
+    game_dialogue_progress_list = []
+    game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
+    for game_dialogue in game_dialogue_progress:
+        name = ""
+        image = ""
+        for char in character_list:
+            if char['speaker'] == game_dialogue.dialogue.speaker:
+                name = char['name']
+                image = char['image']
+        
+        game_dialogue_progress_list.append({
+            'id': game_dialogue.dialogue.pk,
+            'name': name,
+            'text': game_dialogue.dialogue.text,
+            'image': image,
+            })
+        
+    # next_dialogue_list queries the game dialogue progress for the next single dialogue or multiple player dialogue choices
+    next_dialogue_list = []
+    next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'])
+    for dialogue in next_dialogue:
+        name = ""
+        image = ""
+        for char in character_list:
+            if char['speaker'] == dialogue.speaker:
+                name = char['name']
+                image = char['image']
+        
+        next_dialogue_list.append({
+            'id': dialogue.pk,
+            'from_node_id': dialogue.from_node_id,
+            'node_type': dialogue.node_type,
+            'name': name,
+            'text': dialogue.text,
+            'image': image,
+            })
+        
+    # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
+
     context = {
         'game_id': game_id,
-        'dialogue_all': Dialogue.objects.all(),
-        'game_dialogue_progress': GameDialogue.objects.filter(game=game_id),
-        'game_dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
-        'form': form
+        'game_dialogue_progress_list': game_dialogue_progress_list,
+        'next_dialogue_list': next_dialogue_list,
+        'form': form,
     }
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)
