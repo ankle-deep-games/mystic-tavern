@@ -453,7 +453,7 @@ def act1_scene1(request, game_id):
 
         if form.is_valid():
             # TODO validation: https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-            # that the submitted node is a child of current dialogue progress
+            # that the submitted node is a child of current dialogue progress / prevent dupelicate submissions
             # that submission from game owner 
 
             # get the next dialogue from form values and write to db
@@ -494,14 +494,15 @@ def act1_scene1(request, game_id):
                 image = char['image']
         
         game_dialogue_progress_list.append({
+            'id': game_dialogue.dialogue.id,
             'name': name,
             'text': game_dialogue.dialogue.text,
             'image': image,
             })
         
-    dialogue_all_list = []
-    dialogue_all = Dialogue.objects.all()
-    for dialogue in dialogue_all:
+    next_dialogue_list = []
+    next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'])
+    for dialogue in next_dialogue:
         name = ""
         image = ""
         for char in character_list:
@@ -509,7 +510,8 @@ def act1_scene1(request, game_id):
                 name = char['name']
                 image = char['image']
         
-        dialogue_all_list.append({
+        next_dialogue_list.append({
+            'id': dialogue.id,
             'from_node_id': dialogue.from_node_id,
             'node_type': dialogue.node_type,
             'name': name,
@@ -521,9 +523,8 @@ def act1_scene1(request, game_id):
 
     context = {
         'game_id': game_id,
-        'dialogue_all_list': dialogue_all_list,
         'game_dialogue_progress_list': game_dialogue_progress_list,
-        'game_dialogue_latest_id': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
+        'next_dialogue_list': next_dialogue_list,
         'form': form,
     }
 
