@@ -530,7 +530,7 @@ def act1_scene1(request, game_id):
         'game_id': game_id,
         'dialogue_all_list': dialogue_all_list,
         'game_dialogue_progress_list': game_dialogue_progress_list,
-        'game_dialogue_latest': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
+        'game_dialogue_latest_id': GameDialogue.objects.filter(game=game_id).latest('id').dialogue_id,
         'form': form,
     }
 
