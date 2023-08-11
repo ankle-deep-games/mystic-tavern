@@ -31,6 +31,7 @@ class Role(models.Model):
     name = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
+    start_mp = models.IntegerField(default=0)
     start_attack = models.IntegerField(default=0)
     start_defense = models.IntegerField(default=0)
     start_myst_attack = models.IntegerField(default=0)
@@ -97,6 +98,7 @@ class Weapon(models.Model):
     attack_mod = models.IntegerField(default=0)
     myst_attack_mod = models.IntegerField(default=0)
     speed_mod = models.IntegerField(default=0)
+    mp_mod = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -109,6 +111,8 @@ class Armor(models.Model):
     defense_mod = models.IntegerField(default=0)
     myst_defense_mod = models.IntegerField(default=0)
     speed_mod = models.IntegerField(default=0)
+    hp_mod = models.IntegerField(default=0)
+    mp_mod = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -118,15 +122,17 @@ class Armor(models.Model):
 
 class Ability(models.Model):
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
+    type = models.ForeignKey(Type, on_delete=models.PROTECT)
+    mp_cost = models.IntegerField(default=0)
+    threat = models.IntegerField(default=0)
     min_damage = models.IntegerField(default=0)
     max_damage = models.IntegerField(default=0)
-    critical_hit_rate = models.DecimalField(max_digits=2, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.name)
+
 
 class Dialogue(models.Model):
     from_node_id = models.IntegerField(default=0)
