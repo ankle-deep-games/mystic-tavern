@@ -466,9 +466,12 @@ def act1_scene1(request, game_id):
     else:
         form = GameDialogueForm()
 
+    # character_list combines players and npcs into a single list that can later be used to add names and images to dialogues
     character_list = []
     game_users = GameUser.objects.filter(game=Game(pk=game_id))
     
+    # in dialogue we save speakers as "Group Leader" or "Group Member 1"
+    # at run time compare those against players in the game so we can display the player username
     for idx, game_user in enumerate(game_users):
         speaker = ""
         if idx == 0:
@@ -483,6 +486,7 @@ def act1_scene1(request, game_id):
     for npc in npcs:
         character_list.append({'name': npc.name, 'image': npc.image, 'speaker': npc.name})
         
+    # game_dialogue_progress_list is the current game's dialogue + names and images
     game_dialogue_progress_list = []
     game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
     for game_dialogue in game_dialogue_progress:
@@ -500,6 +504,7 @@ def act1_scene1(request, game_id):
             'image': image,
             })
         
+    # next_dialogue_list queries the game dialogue progress for the next single dialogue or multiple player dialogue choices
     next_dialogue_list = []
     next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'])
     for dialogue in next_dialogue:
