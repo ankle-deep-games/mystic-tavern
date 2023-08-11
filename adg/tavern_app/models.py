@@ -63,36 +63,6 @@ class NPC(models.Model):
         return str(self.name)
 
 
-class GameUser(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, default=None, blank=True, null=True)
-    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, default=None, blank=True, null=True)
-    is_ready = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def update_is_ready_field(self):
-        if self.role is not None and self.gender is not None:
-            self.is_ready = True
-        else:
-            self.is_ready = False
-
-    def save(self, *args, **kwargs):
-        self.update_is_ready_field()
-        super().save(*args, **kwargs)
-
-    def image(self):
-        return f'{self.role}-{self.gender}.png'
-
-    def __str__(self):
-        game_name = self.game.name if self.game else 'Unknown Game'
-        username = self.user.username if self.user else 'Unknown User'
-        role_name = self.role.name if self.role else 'Unknown Role'
-
-        return f'Game Name: {game_name}, Player: {username}, Role: {role_name}'
-
-
 class Weapon(models.Model):
     name = models.CharField(max_length=255)
     attack_mod = models.IntegerField(default=0)
@@ -132,6 +102,53 @@ class Ability(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class GameUser(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, default=None, blank=True, null=True)
+    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, default=None, blank=True, null=True)
+    is_ready = models.BooleanField(default=False)
+    current_hp = models.IntegerField(default=0)
+    current_mp = models.IntegerField(default=0)
+    current_attack = models.IntegerField(default=0)
+    current_defense = models.IntegerField(default=0)
+    current_myst_attack = models.IntegerField(default=0)
+    current_myst_defense = models.IntegerField(default=0)
+    current_speed = models.IntegerField(default=0)
+    ability_1 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_1')
+    ability_2 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_2')
+    ability_3 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_3')
+    weapon_1 = models.ForeignKey(Weapon, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='weapon_1')
+    weapon_2 = models.ForeignKey(Weapon, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='weapon_2')
+    weapon_3 = models.ForeignKey(Weapon, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='weapon_3')
+    armor_1 = models.ForeignKey(Armor, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='armor_1')
+    armor_2 = models.ForeignKey(Armor, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='armor_2')
+    armor_3 = models.ForeignKey(Armor, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='armor_3')
+    current_gold = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def update_is_ready_field(self):
+        if self.role is not None and self.gender is not None:
+            self.is_ready = True
+        else:
+            self.is_ready = False
+
+    def save(self, *args, **kwargs):
+        self.update_is_ready_field()
+        super().save(*args, **kwargs)
+
+    def image(self):
+        return f'{self.role}-{self.gender}.png'
+
+    def __str__(self):
+        game_name = self.game.name if self.game else 'Unknown Game'
+        username = self.user.username if self.user else 'Unknown User'
+        role_name = self.role.name if self.role else 'Unknown Role'
+
+        return f'Game Name: {game_name}, Player: {username}, Role: {role_name}'
 
 
 class Dialogue(models.Model):
