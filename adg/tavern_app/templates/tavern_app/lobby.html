@@ -29,10 +29,13 @@
               <hr>
               <h6>Stats:</h6>
               <ul>
-                <li>HP: PLACEHOLDER</li>
-                <li>Attack: PLACEHOLDER</li>
-                <li>Defense: PLACEHOLDER</li>
-                <li>Myst: PLACEHOLDER</li>
+                <li>HP: {{ gameuser.role.start_hp }}</li>
+                <li>MP: {{ gameuser.role.start_mp }}</li>
+                <li>Attack: {{ gameuser.role.start_attack }}</li>
+                <li>Defense: {{ gameuser.role.start_defense }}</li>
+                <li>Myst Attack: {{ gameuser.role.start_myst_attack }}</li>
+                <li>Myst Defense: {{ gameuser.role.start_myst_defense }}</li>
+                <li>Speed: {{ gameuser.role.start_speed }}</li>
               </ul>
           </div>
           {% else %}
@@ -45,9 +48,12 @@
               <h6>Stats:</h6>
               <ul>
                 <li>HP: ???</li>
+                <li>MP: ???</li>
                 <li>Attack: ???</li>
                 <li>Defense: ???</li>
-                <li>Myst: ???</li>
+                <li>Myst Attack: ???</li>
+                <li>Myst Defense: ???</li>
+                <li>Speed: ???</li>
               </ul>
           </div>
           {% endif %}
