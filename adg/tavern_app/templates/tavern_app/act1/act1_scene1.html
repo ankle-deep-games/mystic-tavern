@@ -8,10 +8,16 @@
 
         {% comment %} this game's dialogue so far from game_dialogue table {% endcomment %}
         {% for game_dialogue in game_dialogue_progress_list %}
-            <div class="d-flex mt-3">
-                <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" style="width:100px;height:100px;">
-                <p><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
-            </div>
+            {% if game_dialogue.node_type == "player response" %}
+                <div class="mt-3">
+                    <p class="text-warning">{{ game_dialogue.text }}</p>
+                </div>
+            {% else %}
+                <div class="d-flex mt-3">
+                    <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" style="width:100px;height:100px;">
+                    <p><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
+                </div>
+            {% endif %}
         {% endfor %}
         
         {% comment %} the next option from dialogue table plus the next button or player choices {% endcomment %}
@@ -28,13 +34,12 @@
                     <button type="submit" class="btn btn-secondary mt-3">Next</button>
                 </form>
             {% elif dialogue.node_type == "player response" %}
-                <div class="d-flex mt-3">
-                    <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" style="width:100px;height:100px;">
+                <div class="mt-3">
                     <form method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="game" value="{{ game_id }}" />
                         <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
-                        <button type="submit" class="btn btn-secondary mb-3">{{ dialogue.name }}: {{ dialogue.text }}</button>
+                        <button type="submit" class="btn btn-secondary mb-3">{{ dialogue.text }}</button>
                     </form>
                 </div>
             {% endif %}

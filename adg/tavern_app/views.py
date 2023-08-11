@@ -575,6 +575,7 @@ def act1_scene1(request, game_id):
         
         game_dialogue_progress_list.append({
             'id': game_dialogue.dialogue.pk,
+            'node_type': game_dialogue.dialogue.node_type,
             'name': name,
             'text': game_dialogue.dialogue.text,
             'image': image,
