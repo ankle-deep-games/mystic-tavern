@@ -82,6 +82,9 @@ class GameUser(models.Model):
         self.update_is_ready_field()
         super().save(*args, **kwargs)
 
+    def image(self):
+        return f'{self.role}-{self.gender}.png'
+
     def __str__(self):
         game_name = self.game.name if self.game else 'Unknown Game'
         username = self.user.username if self.user else 'Unknown User'
