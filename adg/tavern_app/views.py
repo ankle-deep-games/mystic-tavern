@@ -497,12 +497,8 @@ def act1_scene1(request, game_id):
                 image = char['image']
         
         game_dialogue_progress_list.append({
-            'id': game_dialogue.dialogue.pk,
-            'from_node_id': game_dialogue.dialogue.from_node_id,
-            'node_type': game_dialogue.dialogue.node_type,
-            'speaker': game_dialogue.dialogue.speaker,
-            'text': game_dialogue.dialogue.text,
             'name': name,
+            'text': game_dialogue.dialogue.text,
             'image': image,
             })
         
@@ -517,12 +513,10 @@ def act1_scene1(request, game_id):
                 image = char['image']
         
         dialogue_all_list.append({
-            'id': dialogue.pk,
             'from_node_id': dialogue.from_node_id,
             'node_type': dialogue.node_type,
-            'speaker': dialogue.speaker,
-            'text': dialogue.text,
             'name': name,
+            'text': dialogue.text,
             'image': image,
             })
 

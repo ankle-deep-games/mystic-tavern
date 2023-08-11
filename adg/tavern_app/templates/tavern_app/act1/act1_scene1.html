@@ -35,7 +35,7 @@
                             {% csrf_token %}
                             <input type="hidden" name="game" value="{{ game_id }}" />
                             <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
-                            <button type="submit" class="btn btn-secondary mb-3">{{ dialogue.speaker }}: {{ dialogue.text }}</button>
+                            <button type="submit" class="btn btn-secondary mb-3">{{ dialogue.name }}: {{ dialogue.text }}</button>
                         </form>
                     </div>
                 {% endif %}
