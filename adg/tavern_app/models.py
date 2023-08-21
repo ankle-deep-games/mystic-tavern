@@ -94,6 +94,7 @@ class Ability(models.Model):
     name = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     mp_cost = models.IntegerField(default=0)
+    myst_attack_flag = models.BooleanField(default=False)
     threat = models.IntegerField(default=0)
     min_damage = models.IntegerField(default=0)
     max_damage = models.IntegerField(default=0)
