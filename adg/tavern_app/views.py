@@ -427,7 +427,7 @@ class GameDetailView(FormMixin, DetailView):
 def lobby(request, game_id):
     game = Game.objects.get(id=game_id)
     gameusers = GameUser.objects.filter(game_id=game_id)
-    leader = GameUser.objects.get(game_id=game_id, user=game.creator)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
     any_player_not_ready = gameusers.filter(is_ready=False).exists()
 
     if game.game_started == True:
@@ -467,7 +467,7 @@ def lobby(request, game_id):
     context = {
         'game': game,
         'gameusers': gameusers,
-        'leader': leader,
+        'is_leader': is_leader,
         'any_player_not_ready': any_player_not_ready,
         'form': form,
     }
@@ -542,9 +542,13 @@ def act1_scene1(request, game_id):
     else:
         form = GameDialogueForm()
 
+    # bool: is current user the party leader
+    game = Game.objects.get(pk=game_id)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
+
     # character_list combines players and npcs into a single list that can later be used to add names and images to dialogues
     character_list = []
-    game_users = GameUser.objects.filter(game=Game(pk=game_id))
+    game_users = GameUser.objects.filter(game=game)
     
     # in dialogue we save speakers as "Group Leader" or "Group Member 1"
     # at run time compare those against players in the game so we can display the player username
@@ -608,6 +612,7 @@ def act1_scene1(request, game_id):
         'game_dialogue_progress_list': game_dialogue_progress_list,
         'next_dialogue_list': next_dialogue_list,
         'form': form,
+        'is_leader': is_leader,
     }
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)
