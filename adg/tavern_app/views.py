@@ -427,7 +427,7 @@ class GameDetailView(FormMixin, DetailView):
 def lobby(request, game_id):
     game = Game.objects.get(id=game_id)
     gameusers = GameUser.objects.filter(game_id=game_id)
-    leader = GameUser.objects.get(game_id=game_id, user=game.creator)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
     any_player_not_ready = gameusers.filter(is_ready=False).exists()
 
     if game.game_started == True:
@@ -467,7 +467,7 @@ def lobby(request, game_id):
     context = {
         'game': game,
         'gameusers': gameusers,
-        'leader': leader,
+        'is_leader': is_leader,
         'any_player_not_ready': any_player_not_ready,
         'form': form,
     }

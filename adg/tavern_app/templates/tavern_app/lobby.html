@@ -3,7 +3,7 @@
 {% block content %}
     <h1 class="text-danger my-4">Game Lobby - {{ game.name }}</h1>
     <hr>
-    {% if leader.user == request.user %}
+    {% if is_leader == True %}
         <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
         {% if any_player_not_ready %}
             <a href="#" class="btn btn-primary disabled">START GAME</a>
