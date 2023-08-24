@@ -5,7 +5,7 @@
     <hr>
     {% if is_leader == True %}
         <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
-        {% if any_player_not_ready %}
+        {% if any_player_not_ready or num_players_in_lobby != 4 %}
             <a href="#" class="btn btn-primary disabled">START GAME</a>
         {% else %}
             <form method="POST">

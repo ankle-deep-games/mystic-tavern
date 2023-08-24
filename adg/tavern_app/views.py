@@ -429,6 +429,7 @@ def lobby(request, game_id):
     gameusers = GameUser.objects.filter(game_id=game_id)
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
     any_player_not_ready = gameusers.filter(is_ready=False).exists()
+    num_players_in_lobby = gameusers.count()
 
     if game.game_started == True:
         return redirect(reverse('tavern_app:act1_scene1', kwargs={'game_id': game.id}))
@@ -469,6 +470,7 @@ def lobby(request, game_id):
         'gameusers': gameusers,
         'is_leader': is_leader,
         'any_player_not_ready': any_player_not_ready,
+        'num_players_in_lobby': num_players_in_lobby,
         'form': form,
     }
     
