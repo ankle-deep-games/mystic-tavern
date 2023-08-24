@@ -29,13 +29,13 @@
               <hr>
               <h6>Stats:</h6>
               <ul>
-                <li>HP: {{ gameuser.role.start_hp }}</li>
-                <li>MP: {{ gameuser.role.start_mp }}</li>
-                <li>Attack: {{ gameuser.role.start_attack }}</li>
-                <li>Defense: {{ gameuser.role.start_defense }}</li>
-                <li>Myst Attack: {{ gameuser.role.start_myst_attack }}</li>
-                <li>Myst Defense: {{ gameuser.role.start_myst_defense }}</li>
-                <li>Speed: {{ gameuser.role.start_speed }}</li>
+                <li>HP: {{ gameuser.current_hp }}</li>
+                <li>MP: {{ gameuser.current_mp }}</li>
+                <li>Attack: {{ gameuser.current_attack }}</li>
+                <li>Defense: {{ gameuser.current_defense }}</li>
+                <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
+                <li>Myst Defense: {{ gameuser.current_myst_defense }}</li>
+                <li>Speed: {{ gameuser.current_speed }}</li>
               </ul>
           </div>
           {% else %}

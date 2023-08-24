@@ -57,6 +57,7 @@ class RoleAssignmentForm(ModelForm):
         self.Meta.fields = list(self.fields.keys())
         self.initial['num_players'] = num_players
 
+
 class GameDialogueForm(ModelForm):
     class Meta:
         model = GameDialogue

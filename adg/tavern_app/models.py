@@ -137,8 +137,19 @@ class GameUser(models.Model):
         else:
             self.is_ready = False
 
+    def update_stats_from_role(self):
+        if self.role:
+            self.current_hp = self.role.start_hp
+            self.current_mp = self.role.start_mp
+            self.current_attack = self.role.start_attack
+            self.current_defense = self.role.start_defense
+            self.current_myst_attack = self.role.start_myst_attack
+            self.current_myst_defense = self.role.start_myst_defense
+            self.current_speed = self.role.start_speed
+
     def save(self, *args, **kwargs):
         self.update_is_ready_field()
+        self.update_stats_from_role()
         super().save(*args, **kwargs)
 
     def image(self):
