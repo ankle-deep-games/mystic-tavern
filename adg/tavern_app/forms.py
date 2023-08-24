@@ -57,16 +57,6 @@ class RoleAssignmentForm(ModelForm):
         self.Meta.fields = list(self.fields.keys())
         self.initial['num_players'] = num_players
 
-    def save(self, commit=True, *args, **kwargs):
-        players = GameUser.objects.filter(game_id=self.game_id)
-
-        for i, player in enumerate(players, start=1):
-            role_field_name = f'player_{i}_role'
-            player.role = self.cleaned_data[role_field_name]
-            player.save()
-
-        super().save(*args, **kwargs)
-
 
 class GameDialogueForm(ModelForm):
     class Meta:
