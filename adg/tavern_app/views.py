@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -218,11 +218,67 @@ def leeroy(request):
     ])
 
     # Enemies
-    enemy1 = Enemy(name="Drunk Man 1", image="drunk-man-1.png", type=type1, hp=100, mp=99, attack=98, defense=97, myst_attack=96, myst_defense=95, speed=94, ability_1=ability1)
-    enemy2 = Enemy(name="Drunk Man 2", image="drunk-man-2.png", type=type2, hp=100, mp=99, attack=98, defense=97, myst_attack=96, myst_defense=95, speed=94, ability_1=ability1)
+    enemy1 = Enemy(
+        name="Drunk Man 1",
+        image="drunk-man-1.png",
+        type=type1,
+        start_hp=100,
+        start_mp=99,
+        start_attack=98,
+        start_defense=97,
+        start_myst_attack=96,
+        start_myst_defense=95,
+        start_speed=94,
+        ability_1=ability1,
+    )
+    enemy2 = Enemy(
+        name="Drunk Man 2",
+        image="drunk-man-2.png",
+        type=type2,
+        start_hp=100,
+        start_mp=99,
+        start_attack=98,
+        start_defense=97,
+        start_myst_attack=96,
+        start_myst_defense=95,
+        start_speed=94,
+        ability_1=ability1,
+    )
     Enemy.objects.bulk_create([
         enemy1,
         enemy2,
+    ])
+
+    # GameEnemy
+    gameenemy1 = GameEnemy(
+        game=game1,
+        enemy=enemy1,
+        act=1,
+        battle=1,
+        current_hp=enemy1.start_hp,
+        current_mp=enemy1.start_mp,
+        current_attack=enemy1.start_attack,
+        current_defense=enemy1.start_defense,
+        current_myst_attack=enemy1.start_myst_attack,
+        current_myst_defense=enemy1.start_myst_defense,
+        current_speed=enemy1.start_speed,
+    )
+    gameenemy2 = GameEnemy(
+        game=game1,
+        enemy=enemy2,
+        act=1,
+        battle=1,
+        current_hp=enemy2.start_hp,
+        current_mp=enemy2.start_mp,
+        current_attack=enemy2.start_attack,
+        current_defense=enemy2.start_defense,
+        current_myst_attack=enemy2.start_myst_attack,
+        current_myst_defense=enemy2.start_myst_defense,
+        current_speed=enemy2.start_speed,
+    )
+    GameEnemy.objects.bulk_create([
+        gameenemy1,
+        gameenemy2,
     ])
 
     # dialogue Act 1 Scene 1
