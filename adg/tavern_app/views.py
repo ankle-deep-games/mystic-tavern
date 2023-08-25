@@ -218,6 +218,7 @@ def leeroy(request):
     ])
 
     # Enemies
+    # TODO https://trello.com/c/WUxbo4qF/153-create-all-enemies-and-add-them-to-database - in this ticket we'll update drunk men stats
     enemy1 = Enemy(
         name="Drunk Man 1",
         image="drunk-man-1.png",
@@ -512,9 +513,12 @@ def lobby(request, game_id):
             if form.cleaned_data['game_id'] != game.pk:
                 return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
-            # Write first dialogue node for this game and game_started True
+            # Write first dialogue node for this game, populate game enemies, game_started True
             starting_game_dialogue = GameDialogue(game=game, dialogue=Dialogue.objects.get(pk=1))
             starting_game_dialogue.save()
+
+            # TODO https://trello.com/c/QCw13ncw/154-lobby-start-game-form-submit-populate-enemies-for-that-game
+
             game.game_started = True
             game.save()
 

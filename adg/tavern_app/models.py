@@ -221,3 +221,5 @@ class GameEnemy(models.Model):
     current_speed = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+# TODO https://trello.com/c/daBOgoKZ/155-combat-log-table
