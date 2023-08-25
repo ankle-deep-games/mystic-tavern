@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -74,11 +74,9 @@ def leeroy(request):
     # genders
     gender1 = Gender(name="MALE")
     gender2 = Gender(name="FEMALE")
-    gender3 = Gender(name="NONBINARY")
     Gender.objects.bulk_create([
         gender1,
         gender2,
-        gender3,
     ])
 
     # weapons
@@ -217,6 +215,14 @@ def leeroy(request):
         npc3,
         npc4,
         npc5,
+    ])
+
+    # Enemies
+    enemy1 = Enemy(name="Drunk Man 1", image="drunk-man-1.png", type=type1, hp=100, mp=99, attack=98, defense=97, myst_attack=96, myst_defense=95, speed=94, ability_1=ability1)
+    enemy2 = Enemy(name="Drunk Man 2", image="drunk-man-2.png", type=type2, hp=100, mp=99, attack=98, defense=97, myst_attack=96, myst_defense=95, speed=94, ability_1=ability1)
+    Enemy.objects.bulk_create([
+        enemy1,
+        enemy2,
     ])
 
     # dialogue Act 1 Scene 1
