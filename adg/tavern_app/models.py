@@ -222,4 +222,7 @@ class GameEnemy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
+
 # TODO https://trello.com/c/daBOgoKZ/155-combat-log-table
