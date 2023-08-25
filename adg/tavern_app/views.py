@@ -403,7 +403,6 @@ class GameDetailView(FormMixin, DetailView):
         game = self.get_object()
         password = form.cleaned_data.get('password')
         if password == game.password:
-            user = self.request.user
             existing_game_user = GameUser.objects.filter(user_id=self.request.user, game_id=game).exists()
             if existing_game_user:
                 pass

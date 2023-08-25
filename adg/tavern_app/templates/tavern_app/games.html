@@ -10,11 +10,16 @@
       <div class="card-body">
         <h5 class="card-title">Game Name: {{ game.name }}</h5>
         <ul>
-          <li>players in lobby: {{ game.gameuser_set.count }}/6</li>
+          <li>players in lobby: {{ game.gameuser_set.count }}/4</li>
           <li>game top secret password: {{ game.password }}</li>
         </ul>
         <p class="card-text">This is game <u>{{ game.name }}</u>.</p>
-        <a href="{% url 'tavern_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
+
+        {% if game.gameuser_set.count == 4 %}
+          <a class="btn btn-primary disabled">Lobby is Full</a>
+        {% else %}
+          <a href="{% url 'tavern_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
+        {% endif %}
       </div>
     </div>
 
