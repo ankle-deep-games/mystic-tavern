@@ -670,3 +670,29 @@ def act1_scene1(request, game_id):
     }
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)
+
+def act1_battle1(request, game_id):
+
+    # if request.method == 'POST':
+    #     form = GameDialogueForm(request.POST)
+
+    #     if form.is_valid():
+
+    # # else render form
+    # else:
+    #     form = GameDialogueForm()
+
+    game = Game.objects.get(pk=game_id)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
+
+    gameusers = GameUser.objects.filter(game_id=game_id)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id)
+
+    context = {
+        'game_id': game_id,
+        'is_leader': is_leader,
+        'gameusers': gameusers,
+        'gameenemies': gameenemies,
+    }
+
+    return render(request, 'tavern_app/act1/act1_battle1.html', context)
