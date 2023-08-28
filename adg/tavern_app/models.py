@@ -225,6 +225,7 @@ class GameEnemy(models.Model):
         return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
 
 class CombatLog(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
     player = models.ForeignKey(User, on_delete=models.PROTECT)
     enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT)
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
@@ -238,6 +239,8 @@ class CombatLog(models.Model):
     unit_resulting_mp = models.IntegerField(default=0)
     ability_min_damage = models.IntegerField(default=0)
     ability_max_damage = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Combat Log player: {self.player.username}, enemy: {self.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
