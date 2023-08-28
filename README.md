@@ -3,7 +3,7 @@
 - TBD.
 
 ### wiping the DB clean and starting over with dobby superuser
-Fist, delete the `sqlite` database file on your computer. Then run:
+Fist, delete the `sqlite` database file on your computer and files within `tavern_app/migrations` besides the init file. Then run:
 
 `python3 manage.py makemigrations`
 

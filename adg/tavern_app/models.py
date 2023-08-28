@@ -224,4 +224,21 @@ class GameEnemy(models.Model):
     def __str__(self):
         return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
 
-# TODO https://trello.com/c/daBOgoKZ/155-combat-log-table
+class CombatLog(models.Model):
+    player = models.ForeignKey(User, on_delete=models.PROTECT)
+    enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT)
+    player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
+    ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
+    damage = models.IntegerField(default=0)
+    # fields for debugging below that we'll likely delete later
+    unit_previous_hp = models.IntegerField(default=0)
+    unit_resulting_hp = models.IntegerField(default=0)
+    ability_mp_cost = models.IntegerField(default=0)
+    unit_previous_mp = models.IntegerField(default=0)
+    unit_resulting_mp = models.IntegerField(default=0)
+    ability_min_damage = models.IntegerField(default=0)
+    ability_max_damage = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'Combat Log player: {self.player.username}, enemy: {self.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
+    

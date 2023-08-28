@@ -165,21 +165,6 @@ def leeroy(request):
         ability_1=ability1,
     )
     gameuser5 = GameUser(
-        game=game1,
-        user=user5,
-        role=role5,
-        gender=gender2,
-        is_ready=True,
-        current_hp=role5.start_hp,
-        current_mp=role5.start_mp,
-        current_attack=role5.start_attack,
-        current_defense=role5.start_defense,
-        current_myst_attack=role5.start_myst_attack,
-        current_myst_defense=role5.start_myst_defense,
-        current_speed=role5.start_speed,
-        ability_1=ability1,
-    )
-    gameuser6 = GameUser(
         game=game2,
         user=user2,
         role=role2,
@@ -200,7 +185,6 @@ def leeroy(request):
         gameuser3,
         gameuser4,
         gameuser5,
-        gameuser6,
     ])
 
     # npcs + images
