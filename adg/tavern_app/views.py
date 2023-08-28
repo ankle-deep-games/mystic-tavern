@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -74,11 +74,9 @@ def leeroy(request):
     # genders
     gender1 = Gender(name="MALE")
     gender2 = Gender(name="FEMALE")
-    gender3 = Gender(name="NONBINARY")
     Gender.objects.bulk_create([
         gender1,
         gender2,
-        gender3,
     ])
 
     # weapons
@@ -217,6 +215,71 @@ def leeroy(request):
         npc3,
         npc4,
         npc5,
+    ])
+
+    # Enemies
+    # TODO https://trello.com/c/WUxbo4qF/153-create-all-enemies-and-add-them-to-database - in this ticket we'll update drunk men stats
+    enemy1 = Enemy(
+        name="Drunk Man 1",
+        image="drunk-man-1.png",
+        type=type1,
+        start_hp=100,
+        start_mp=99,
+        start_attack=98,
+        start_defense=97,
+        start_myst_attack=96,
+        start_myst_defense=95,
+        start_speed=94,
+        ability_1=ability1,
+    )
+    enemy2 = Enemy(
+        name="Drunk Man 2",
+        image="drunk-man-2.png",
+        type=type2,
+        start_hp=100,
+        start_mp=99,
+        start_attack=98,
+        start_defense=97,
+        start_myst_attack=96,
+        start_myst_defense=95,
+        start_speed=94,
+        ability_1=ability1,
+    )
+    Enemy.objects.bulk_create([
+        enemy1,
+        enemy2,
+    ])
+
+    # GameEnemy
+    gameenemy1 = GameEnemy(
+        game=game1,
+        enemy=enemy1,
+        act=1,
+        battle=1,
+        current_hp=enemy1.start_hp,
+        current_mp=enemy1.start_mp,
+        current_attack=enemy1.start_attack,
+        current_defense=enemy1.start_defense,
+        current_myst_attack=enemy1.start_myst_attack,
+        current_myst_defense=enemy1.start_myst_defense,
+        current_speed=enemy1.start_speed,
+    )
+    gameenemy2 = GameEnemy(
+        game=game1,
+        enemy=enemy2,
+        act=1,
+        battle=1,
+        current_hp=enemy2.start_hp,
+        current_mp=enemy2.start_mp,
+        current_attack=enemy2.start_attack,
+        current_defense=enemy2.start_defense,
+        current_myst_attack=enemy2.start_myst_attack,
+        current_myst_defense=enemy2.start_myst_defense,
+        current_speed=enemy2.start_speed,
+    )
+    GameEnemy.objects.bulk_create([
+        gameenemy1,
+        gameenemy2,
     ])
 
     # dialogue Act 1 Scene 1
@@ -450,9 +513,12 @@ def lobby(request, game_id):
             if form.cleaned_data['game_id'] != game.pk:
                 return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
 
-            # Write first dialogue node for this game and game_started True
+            # Write first dialogue node for this game, populate game enemies, game_started True
             starting_game_dialogue = GameDialogue(game=game, dialogue=Dialogue.objects.get(pk=1))
             starting_game_dialogue.save()
+
+            # TODO https://trello.com/c/QCw13ncw/154-lobby-start-game-form-submit-populate-enemies-for-that-game
+
             game.game_started = True
             game.save()
 

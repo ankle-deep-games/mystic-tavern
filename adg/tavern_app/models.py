@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class Game(models.Model):
     name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
@@ -185,3 +184,44 @@ class GameDialogue(models.Model):
 
     def __str__(self):
         return 'game: ' + str(self.game) + ', dialogue: ' + str(self.dialogue)
+
+
+class Enemy(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.CharField(max_length=255)
+    type = models.ForeignKey(Type, on_delete=models.PROTECT)
+    start_hp = models.IntegerField(default=0)
+    start_mp = models.IntegerField(default=0)
+    start_attack = models.IntegerField(default=0)
+    start_defense = models.IntegerField(default=0)
+    start_myst_attack = models.IntegerField(default=0)
+    start_myst_defense = models.IntegerField(default=0)
+    start_speed = models.IntegerField(default=0)
+    ability_1 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='enemy_ability_1')
+    ability_2 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='enemy_ability_2')
+    ability_3 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='enemy_ability_3')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.name)
+
+class GameEnemy(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT)
+    act = models.IntegerField(default=0)
+    battle = models.IntegerField(default=0)
+    current_hp = models.IntegerField(default=0)
+    current_mp = models.IntegerField(default=0)
+    current_attack = models.IntegerField(default=0)
+    current_defense = models.IntegerField(default=0)
+    current_myst_attack = models.IntegerField(default=0)
+    current_myst_defense = models.IntegerField(default=0)
+    current_speed = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
+
+# TODO https://trello.com/c/daBOgoKZ/155-combat-log-table
