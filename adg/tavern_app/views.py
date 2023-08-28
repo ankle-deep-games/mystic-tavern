@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
-from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy
+from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm, CombatLogForm
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy, CombatLog
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -165,21 +165,6 @@ def leeroy(request):
         ability_1=ability1,
     )
     gameuser5 = GameUser(
-        game=game1,
-        user=user5,
-        role=role5,
-        gender=gender2,
-        is_ready=True,
-        current_hp=role5.start_hp,
-        current_mp=role5.start_mp,
-        current_attack=role5.start_attack,
-        current_defense=role5.start_defense,
-        current_myst_attack=role5.start_myst_attack,
-        current_myst_defense=role5.start_myst_defense,
-        current_speed=role5.start_speed,
-        ability_1=ability1,
-    )
-    gameuser6 = GameUser(
         game=game2,
         user=user2,
         role=role2,
@@ -200,7 +185,6 @@ def leeroy(request):
         gameuser3,
         gameuser4,
         gameuser5,
-        gameuser6,
     ])
 
     # npcs + images
@@ -686,3 +670,71 @@ def act1_scene1(request, game_id):
     }
 
     return render(request, 'tavern_app/act1/act1_scene1.html', context)
+
+# TODO This entire view is Work in Progress purely for testing. Will be lots of upcoming cleanup.
+def act1_battle1(request, game_id):
+
+    if request.method == 'POST':
+        form = CombatLogForm(request.POST)
+
+        if form.is_valid():
+            # TODO adjust to handle AOE abilities where mulitiple enemies are hit
+            print("form submitted")
+            player = GameUser.objects.get(game_id=game_id, user=request.user)
+            enemy = GameEnemy.objects.get(game_id=game_id, enemy=Enemy(form.cleaned_data['enemy'].id))
+            ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
+            game = Game.objects.get(pk=game_id)
+            print("player is:")
+            print(player)
+            print("enemy is:")
+            print(enemy)
+            print("ability is:")
+            print(ability)
+            print("ability min damage is " + str(ability.min_damage) + " and max damage is " + str(ability.max_damage))
+           
+            combat_log = CombatLog(
+                game = game,
+                player = player.user,
+                enemy = enemy.enemy,
+                player_or_enemy_took_action = "player",
+                ability = ability,
+                damage = ability.max_damage, # for testing do the max damage. will update later
+                unit_previous_hp = enemy.current_hp,
+                unit_resulting_hp = enemy.current_hp - ability.max_damage,
+                ability_mp_cost = ability.mp_cost,
+                unit_previous_mp = player.current_mp,
+                unit_resulting_mp = player.current_mp - ability.mp_cost,
+                ability_min_damage = ability.min_damage,
+                ability_max_damage = ability.max_damage,
+            )
+            combat_log.save()
+
+            enemy.current_hp = enemy.current_hp - ability.max_damage
+            enemy.save()
+
+            player.current_mp = player.current_mp - ability.mp_cost
+            player.save()
+
+
+    # else render form
+    else:
+        form = CombatLogForm()
+
+    game = Game.objects.get(pk=game_id)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
+
+    gameusers = GameUser.objects.filter(game_id=game_id)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id)
+
+    combat_log_for_debug_display = CombatLog.objects.filter(game=game)
+
+    context = {
+        'game_id': game_id,
+        'is_leader': is_leader,
+        'gameusers': gameusers,
+        'gameenemies': gameenemies,
+        'form': form,
+        'combat_log_for_debug_display': combat_log_for_debug_display
+    }
+
+    return render(request, 'tavern_app/act1/act1_battle1.html', context)

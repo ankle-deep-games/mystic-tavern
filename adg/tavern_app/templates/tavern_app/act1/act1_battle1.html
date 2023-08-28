@@ -1,0 +1,119 @@
+{% extends 'tavern_app/mt_base.html' %}
+
+{% block content %}
+{% load static %}
+    <div class="row my-2">
+        <h1 class="mb-3">This is battle 1 sandbox. Work in progress. game id {{ game_id }}</h1>
+        <hr>
+
+        <h2>combat log table</h2>
+        <table class="table text-white">
+            <thead>
+              <tr>
+                <th scope="col">player</th>
+                <th scope="col">enemy</th>
+                <th scope="col">who</th>
+                <th scope="col">ability</th>
+                <th scope="col">damage</th>
+                <th scope="col">unit_previous_hp</th>
+                <th scope="col">unit_resulting_hp</th>
+                <th scope="col">ability_mp_cost</th>
+                <th scope="col">unit_previous_mp</th>
+                <th scope="col">unit_resulting_mp</th>
+                <th scope="col">ability_min_damage</th>
+                <th scope="col">ability_max_damage</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for log in combat_log_for_debug_display %}
+              <tr>
+                <th scope="row">{{log.player.username}}</th>
+                <td>{{log.enemy.name}}</td>
+                <td>{{log.player_or_enemy_took_action}}</td>
+                <td>{{log.ability.name}}</td>
+                <td>{{log.damage}}</td>
+                <td>{{log.unit_previous_hp}}</td>
+                <td>{{log.unit_resulting_hp}}</td>
+                <td>{{log.ability_mp_cost}}</td>
+                <td>{{log.unit_previous_mp}}</td>
+                <td>{{log.unit_resulting_mp}}</td>
+                <td>{{log.ability_min_damage}}</td>
+                <td>{{log.ability_max_damage}}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+
+        {% comment %} TODO two buttons here are for testing purposes. Will clean up later {% endcomment %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="player" value="1" />
+            <input type="hidden" name="enemy" value="1" />
+            <input type="hidden" name="ability" value="1" />
+            <button type="submit" class="btn btn-secondary mt-3">John Attack Drunk Man 1</button>
+        </form>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="player" value="1" />
+            <input type="hidden" name="enemy" value="2" />
+            <input type="hidden" name="ability" value="1" />
+            <button type="submit" class="btn btn-secondary mt-3">John Attack Drunk Man 2</button>
+        </form>
+
+        <h2 class="text-white my-4">Enemies:</h2>
+        <div class="card-group">
+            {% for gameenemy in gameenemies %}
+            <div class="card text-white bg-secondary mb-3">
+            {% load static %}
+                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameenemy.enemy.image }}" alt="enemy picture">
+                <div class="card-body">
+                <h3 class="card-title text-white">{{ gameenemy.enemy.name }}</h3>
+                <hr>
+                <h6>Stats:</h6>
+                <ul>
+                    <li>Current HP: {{ gameenemy.current_hp }}</li>
+                    <li>Start HP: {{ gameenemy.enemy.start_hp }}</li>
+                    <li>MP: {{ gameenemy.current_mp }}</li>
+                    <li>Attack: {{ gameenemy.current_attack }}</li>
+                    <li>Defense: {{ gameenemy.current_defense }}</li>
+                    <li>Myst Attack: {{ gameenemy.current_myst_attack }}</li>
+                    <li>Myst Defense: {{ gameenemy.current_myst_defense }}</li>
+                    <li>Speed: {{ gameenemy.current_speed }}</li>
+                </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <br>
+        <hr>
+
+        <h2 class="text-white my-4">Players:</h2>
+        <div class="card-group">
+            {% for gameuser in gameusers %}
+            <div class="card text-white bg-secondary mb-3">
+            {% load static %}
+                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
+                <div class="card-body">
+                <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
+                <hr>
+                <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
+                <hr>
+                <h6>Stats:</h6>
+                <ul>
+                    <li>Current HP: {{ gameuser.current_hp }}</li>
+                    <li>Start HP: {{ gameuser.role.start_hp }}</li>
+                    <li>MP: {{ gameuser.current_mp }}</li>
+                    <li>Attack: {{ gameuser.current_attack }}</li>
+                    <li>Defense: {{ gameuser.current_defense }}</li>
+                    <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
+                    <li>Myst Defense: {{ gameuser.current_myst_defense }}</li>
+                    <li>Speed: {{ gameuser.current_speed }}</li>
+                </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}

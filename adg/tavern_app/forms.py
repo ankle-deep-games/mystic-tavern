@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Game, GameUser, Role, Gender, GameDialogue
+from .models import Game, GameUser, Role, Gender, GameDialogue, CombatLog
 
 
 class CreateGameForm(ModelForm):
@@ -63,3 +63,7 @@ class GameDialogueForm(ModelForm):
         model = GameDialogue
         fields = ['game', 'dialogue']
         
+class CombatLogForm(ModelForm):
+    class Meta:
+        model = CombatLog
+        fields = ['player', 'enemy', 'ability']
