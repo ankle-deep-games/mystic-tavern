@@ -382,11 +382,14 @@ def live_update_prototype_redirect_view(request):
     }
     return render(request, 'liveupdateprototyperedirect.html', context)
 
+
 class GameView(ListView):
     model = Game
     template_name = 'tavern_app/games.html'
     queryset = Game.objects.annotate(num_players=Count('gameuser'))
     context_object_name = 'games'
+
+    # TODO create list of user_ids in lobby (maybe dict per game e.g. game_id 1: [1,2,3,4]) for backend validation https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
 
 
 class GameDetailView(FormMixin, DetailView):

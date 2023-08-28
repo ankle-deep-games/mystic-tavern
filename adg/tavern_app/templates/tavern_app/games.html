@@ -10,12 +10,23 @@
       <div class="card-body">
         <h5 class="card-title">Game Name: {{ game.name }}</h5>
         <ul>
-          <li>players in lobby: {{ game.gameuser_set.count }}/4</li>
+          <li>players in lobby: {{ game.num_players }}/4</li>
           <li>game top secret password: {{ game.password }}</li>
         </ul>
         <p class="card-text">This is game <u>{{ game.name }}</u>.</p>
 
-        {% if game.gameuser_set.count == 4 %}
+        Current Logged In Gameuser Info: <br>
+        Username: {{ request.user }} <br>
+        User ID: {{ request.user.id }} <br> <br>
+
+        Users in Lobby: <br>
+          {% for gameuser in game.gameuser_set.all %}
+            gameuser user_id: {{ gameuser.user_id }} <br>
+          {% endfor %}
+
+        <!-- TODO create frontend validation to allow players currently in the lobby that left for any reason to rejoin. Delete test code above lines 18-25 https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views -->
+
+        {% if game.num_players == 4 %}
           <a class="btn btn-primary disabled">Lobby is Full</a>
         {% else %}
           <a href="{% url 'tavern_app:game_detail' game.pk  %}" class="btn btn-primary">Join</a>
