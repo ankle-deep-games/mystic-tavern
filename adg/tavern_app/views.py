@@ -16,7 +16,8 @@ def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
 
-def leeroy(request):
+# TODO https://trello.com/c/xTOGwl8m/169-protect-seed-route-behind-admin-only
+def seed(request):
     # users are special because they get created with a hashed password with create_user
     user1 = User.objects.create_user(username='john', email='jlennon@beatles.com', password='imagine')
     user2 = User.objects.create_user(username='paul', email='pmccartney@beatles.com', password='let it be')
@@ -485,7 +486,7 @@ def leeroy(request):
         node62,
     ])
 
-    return render(request, 'leeroy.html')
+    return render(request, 'seed.html')
 
 def live_update_prototype(request):
     games = Game.objects.all()
@@ -503,6 +504,8 @@ def live_update_prototype_redirect_view(request):
     }
     return render(request, 'liveupdateprototyperedirect.html', context)
 
+class CreateOrJoinView(TemplateView):
+    template_name = "tavern_app/home.html"
 
 class GameView(ListView):
     model = Game

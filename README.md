@@ -28,4 +28,4 @@ Superuser created successfully.
 
 http://127.0.0.1:8000/admin to log into dobby super user
 
-http://127.0.0.1:8000/tavern_app/leeroy/new to seed the data
+http://127.0.0.1:8000/seed to seed the data

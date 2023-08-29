@@ -17,12 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import CreateOrJoinView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('tavern_app/', include('tavern_app.urls')),
-    path('', LoginView.as_view(template_name='registration/login.html', next_page='home'), name='login'),
+    path('', include('tavern_app.urls')),
+    path('', LoginView.as_view(template_name='registration/login.html', next_page='tavern_app:home'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-    path('home/', CreateOrJoinView.as_view(), name='home'),
 ]
