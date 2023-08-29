@@ -99,8 +99,12 @@ def leeroy(request):
 
     # abilities
     ability1 = Ability(name="Attack", type=type6, mp_cost=0, threat=1, min_damage=1, max_damage=5)
+    ability2 = Ability(name="Myst Attack Test", type=type6, mp_cost=3, myst_attack_flag=True, threat=1, min_damage=1, max_damage=4)
+    ability3 = Ability(name="Reg Attack Test", type=type6, mp_cost=4, myst_attack_flag=False, threat=1, min_damage=1, max_damage=6)
     Ability.objects.bulk_create([
         ability1,
+        ability2,
+        ability3,
     ])
 
     # gameuser
@@ -118,6 +122,8 @@ def leeroy(request):
         current_myst_defense=role1.start_myst_defense,
         current_speed=role1.start_speed,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     gameuser2 = GameUser(
         game=game1,
@@ -133,6 +139,8 @@ def leeroy(request):
         current_myst_defense=role2.start_myst_defense,
         current_speed=role2.start_speed,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     gameuser3 = GameUser(
         game=game1,
@@ -148,6 +156,8 @@ def leeroy(request):
         current_myst_defense=role3.start_myst_defense,
         current_speed=role3.start_speed,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     gameuser4 = GameUser(
         game=game1,
@@ -163,6 +173,8 @@ def leeroy(request):
         current_myst_defense=role4.start_myst_defense,
         current_speed=role4.start_speed,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     gameuser5 = GameUser(
         game=game2,
@@ -178,6 +190,8 @@ def leeroy(request):
         current_myst_defense=role2.start_myst_defense,
         current_speed=role2.start_speed,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     GameUser.objects.bulk_create([
         gameuser1,
@@ -726,6 +740,8 @@ def act1_battle1(request, game_id):
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id)
 
+    player = GameUser.objects.get(game_id=game_id, user=request.user)
+
     combat_log_for_debug_display = CombatLog.objects.filter(game=game)
 
     context = {
@@ -734,7 +750,8 @@ def act1_battle1(request, game_id):
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
-        'combat_log_for_debug_display': combat_log_for_debug_display
+        'combat_log_for_debug_display': combat_log_for_debug_display,
+        'player': player,
     }
 
     return render(request, 'tavern_app/act1/act1_battle1.html', context)
