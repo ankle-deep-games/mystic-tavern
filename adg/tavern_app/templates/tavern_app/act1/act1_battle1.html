@@ -45,57 +45,39 @@
           </table>
 
         {% if player.ability_1 %}
+            {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="player" value="{{player.user.pk}}" />
-                <input type="hidden" name="enemy" value="1" />
+                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
                 <input type="hidden" name="ability" value="{{player.ability_1.pk}}" />
-                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_1.name}}</u> Drunk Man 1</button>
+                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_1.name}}</u> {{gameenemy.enemy.name}}</button>
             </form>
-
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="player" value="1" />
-                <input type="hidden" name="enemy" value="2" />
-                <input type="hidden" name="ability" value="{{player.ability_1.pk}}" />
-                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_1.name}}</u> Drunk Man 2</button>
-            </form>
+            {% endfor %}
         {% endif %}
 
         {% if player.ability_2 %}
+            {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="player" value="{{player.user.pk}}" />
-                <input type="hidden" name="enemy" value="1" />
+                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
                 <input type="hidden" name="ability" value="{{player.ability_2.pk}}" />
-                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_2.name}}</u> Drunk Man 1</button>
+                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_2.name}}</u> {{gameenemy.enemy.name}}</button>
             </form>
-
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="player" value="1" />
-                <input type="hidden" name="enemy" value="2" />
-                <input type="hidden" name="ability" value="{{player.ability_2.pk}}" />
-                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_2.name}}</u> Drunk Man 2</button>
-            </form>
+            {% endfor %}
         {% endif %}
 
         {% if player.ability_3 %}
+            {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="player" value="{{player.user.pk}}" />
-                <input type="hidden" name="enemy" value="1" />
+                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
                 <input type="hidden" name="ability" value="{{player.ability_3.pk}}" />
-                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_3.name}}</u> Drunk Man 1</button>
+                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_3.name}}</u> {{gameenemy.enemy.name}}</button>
             </form>
-
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="player" value="1" />
-                <input type="hidden" name="enemy" value="2" />
-                <input type="hidden" name="ability" value="{{player.ability_3.pk}}" />
-                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_3.name}}</u> Drunk Man 2</button>
-            </form>
+            {% endfor %}
         {% endif %}
 
         <h2 class="text-white my-4">Enemies:</h2>
