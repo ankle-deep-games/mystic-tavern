@@ -5,7 +5,7 @@
     <div class="row my-2">
         <h1 class="mb-3">This is battle 1 sandbox. Work in progress. game id {{ game_id }}</h1>
         <hr>
-
+        
         <h2>combat log table</h2>
         <table class="table text-white">
             <thead>
@@ -44,22 +44,41 @@
             </tbody>
           </table>
 
-        {% comment %} TODO two buttons here are for testing purposes. Will clean up later {% endcomment %}
-        <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="player" value="1" />
-            <input type="hidden" name="enemy" value="1" />
-            <input type="hidden" name="ability" value="1" />
-            <button type="submit" class="btn btn-secondary mt-3">John Attack Drunk Man 1</button>
-        </form>
+        {% if player.ability_1 %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="player" value="{{player.user.pk}}" />
+                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
+                <input type="hidden" name="ability" value="{{player.ability_1.pk}}" />
+                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_1.name}}</u> {{gameenemy.enemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
 
-        <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="player" value="1" />
-            <input type="hidden" name="enemy" value="2" />
-            <input type="hidden" name="ability" value="1" />
-            <button type="submit" class="btn btn-secondary mt-3">John Attack Drunk Man 2</button>
-        </form>
+        {% if player.ability_2 %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="player" value="{{player.user.pk}}" />
+                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
+                <input type="hidden" name="ability" value="{{player.ability_2.pk}}" />
+                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_2.name}}</u> {{gameenemy.enemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if player.ability_3 %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="player" value="{{player.user.pk}}" />
+                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
+                <input type="hidden" name="ability" value="{{player.ability_3.pk}}" />
+                <button type="submit" class="btn btn-secondary mt-3">{{player.user.username}} <u>{{player.ability_3.name}}</u> {{gameenemy.enemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
 
         <h2 class="text-white my-4">Enemies:</h2>
         <div class="card-group">
@@ -103,7 +122,8 @@
                 <ul>
                     <li>Current HP: {{ gameuser.current_hp }}</li>
                     <li>Start HP: {{ gameuser.role.start_hp }}</li>
-                    <li>MP: {{ gameuser.current_mp }}</li>
+                    <li>Current MP: {{ gameuser.current_mp }}</li>
+                    <li>Start MP: {{ gameuser.role.start_mp }}</li>
                     <li>Attack: {{ gameuser.current_attack }}</li>
                     <li>Defense: {{ gameuser.current_defense }}</li>
                     <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
