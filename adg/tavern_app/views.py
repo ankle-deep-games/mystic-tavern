@@ -84,17 +84,77 @@ def leeroy(request):
     weapon2 = Weapon(name="Wood Sword", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
     weapon3 = Weapon(name="Wood Bow", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
     weapon4 = Weapon(name="Wood Flute", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5)
+    weapon5 = Weapon(name="Longsword", attack_mod=26, myst_attack_mod=12, speed_mod=10, mp_mod=12)
+    weapon6 = Weapon(name="Longbow", attack_mod=26, myst_attack_mod=10, speed_mod=12, mp_mod=12)
+    weapon7 = Weapon(name="Ivory Rod", attack_mod=10, myst_attack_mod=20, speed_mod=10, mp_mod=20)
+    weapon8 = Weapon(name="Obsidian Wand", attack_mod=10, myst_attack_mod=22, speed_mod=10, mp_mod=18)
+    weapon9 = Weapon(name="Melodious Lute", attack_mod=10, myst_attack_mod=20, speed_mod=12, mp_mod=18)
+    weapon10 = Weapon(name="Holy Avenger", attack_mod=30, myst_attack_mod=25, speed_mod=15, mp_mod=20)
+    weapon11 = Weapon(name="Shadowstrike", attack_mod=35, myst_attack_mod=15, speed_mod=20, mp_mod=20)
+    weapon12 = Weapon(name="Divine Scepter", attack_mod=15, myst_attack_mod=30, speed_mod=15, mp_mod=30)
+    weapon13 = Weapon(name="Voidcaller", attack_mod=15, myst_attack_mod=30, speed_mod=15, mp_mod=30)
+    weapon14 = Weapon(name="Symphony Harp", attack_mod=15, myst_attack_mod=30, speed_mod=17, mp_mod=28)
+    weapon15 = Weapon(name="Excalibur", attack_mod=45, myst_attack_mod=30, speed_mod=20, mp_mod=25)
+    weapon16 = Weapon(name="Arbalest", attack_mod=53, myst_attack_mod=20, speed_mod=22, mp_mod=25)
+    weapon17 = Weapon(name="Seraph's Wand", attack_mod=20, myst_attack_mod=40, speed_mod=20, mp_mod=40)
+    weapon18 = Weapon(name="Ulrich Tome", attack_mod=20, myst_attack_mod=40, speed_mod=20, mp_mod=40)
+    weapon19 = Weapon(name="Seranade Baton", attack_mod=20, myst_attack_mod=38, speed_mod=22, mp_mod=40)
     Weapon.objects.bulk_create([
         weapon1,
         weapon2,
         weapon3,
         weapon4,
+        weapon5,
+        weapon6,
+        weapon7,
+        weapon8,
+        weapon9,
+        weapon10,
+        weapon11,
+        weapon12,
+        weapon13,
+        weapon14,
+        weapon15,
+        weapon16,
+        weapon17,
+        weapon18,
+        weapon19,
     ])
 
     # armor
     armor1 = Armor(name="Cloth Tunic", defense_mod=5, myst_defense_mod=5, speed_mod=5, hp_mod=5, mp_mod=5)
+    armor2 = Armor(name="Steel Plate Armor", defense_mod=20, myst_defense_mod=20, speed_mod=10, hp_mod=15, mp_mod=10)
+    armor3 = Armor(name="Leather Armor", defense_mod=15, myst_defense_mod=15, speed_mod=15, hp_mod=15, mp_mod=15)
+    armor4 = Armor(name="Acolyte's Robes", defense_mod=18, myst_defense_mod=20, speed_mod=10, hp_mod=12, mp_mod=15)
+    armor5 = Armor(name="Sorcerer's Robes", defense_mod=10, myst_defense_mod=20, speed_mod=15, hp_mod=10, mp_mod=20)
+    armor6 = Armor(name="Harmonist's Cummerbund", defense_mod=10, myst_defense_mod=20, speed_mod=15, hp_mod=10, mp_mod=20)
+    armor7 = Armor(name="Radiant Valor Plate", defense_mod=20, myst_defense_mod=25, speed_mod=15, hp_mod=30, mp_mod=23)
+    armor8 = Armor(name="Elven Windwrap", defense_mod=20, myst_defense_mod=20, speed_mod=30, hp_mod=25, mp_mod=18)
+    armor9 = Armor(name="Archmage's Vestments", defense_mod=25, myst_defense_mod=18, speed_mod=20, hp_mod=25, mp_mod=25)
+    armor10 = Armor(name="Warlock's Cloak", defense_mod=25, myst_defense_mod=20, speed_mod=20, hp_mod=20, mp_mod=28)
+    armor11 = Armor(name="Virtuoso's Ensemble", defense_mod=25, myst_defense_mod=20, speed_mod=23, hp_mod=20, mp_mod=25)
+    armor12 = Armor(name="Divine Warplate", defense_mod=40, myst_defense_mod=40, speed_mod=20, hp_mod=30, mp_mod=20)
+    armor13 = Armor(name="Galestrider Vest", defense_mod=35, myst_defense_mod=35, speed_mod=35, hp_mod=25, mp_mod=20)
+    armor14 = Armor(name="Celestrial Regalia", defense_mod=25, myst_defense_mod=40, speed_mod=30, hp_mod=25, mp_mod=30)
+    armor15 = Armor(name="Shadowweave Cape", defense_mod=20, myst_defense_mod=40, speed_mod=35, hp_mod=20, mp_mod=35)
+    armor16 = Armor(name="Maestro's Tailcoat", defense_mod=20, myst_defense_mod=40, speed_mod=35, hp_mod=20, mp_mod=35)
     Armor.objects.bulk_create([
         armor1,
+        armor2,
+        armor3,
+        armor4,
+        armor5,
+        armor6,
+        armor7,
+        armor8,
+        armor9,
+        armor10,
+        armor11,
+        armor12,
+        armor13,
+        armor14,
+        armor15,
+        armor16,
     ])
 
     # abilities
