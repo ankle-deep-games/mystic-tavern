@@ -1,13 +1,14 @@
 from django.urls import path
 from . import views
-from .views import GameView, GameDetailView, CreateGameView, RoleAssignmentView
+from .views import CreateOrJoinView, GameView, GameDetailView, CreateGameView, RoleAssignmentView
 
 app_name = 'tavern_app'
 
 # domain.com/tavern_app/
 urlpatterns = [
+    path('home/', CreateOrJoinView.as_view(), name='home'),
     path('leeroy/og', views.simple_view),
-    path('leeroy/new', views.leeroy),
+    path('seed/', views.seed),
     path('create/', CreateGameView.as_view(), name='create_game'),
     path('games/', GameView.as_view(), name='games'),
     path('games/<int:pk>', GameDetailView.as_view(), name='game_detail'),
