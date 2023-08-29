@@ -581,6 +581,15 @@ class RoleAssignmentView(FormView):
 
             player.role = player_role
             player.gender = player_gender
+
+            player.current_hp = player.role.start_hp
+            player.current_mp = player.role.start_mp
+            player.current_attack = player.role.start_attack
+            player.current_defense = player.role.start_defense
+            player.current_myst_attack = player.role.start_myst_attack
+            player.current_myst_defense = player.role.start_myst_defense
+            player.current_speed = player.role.start_speed
+
             player.save()
 
         return super().form_valid(form)
