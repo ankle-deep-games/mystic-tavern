@@ -517,7 +517,39 @@ def lobby(request, game_id):
             starting_game_dialogue = GameDialogue(game=game, dialogue=Dialogue.objects.get(pk=1))
             starting_game_dialogue.save()
 
-            # TODO https://trello.com/c/QCw13ncw/154-lobby-start-game-form-submit-populate-enemies-for-that-game
+            # TODO improve later: query all enemies and loop through adding them all into the game
+            enemy1 = Enemy.objects.get(pk=1)
+            enemy2 = Enemy.objects.get(pk=2)
+            gameenemy1 = GameEnemy(
+                game=game,
+                enemy=enemy1,
+                act=1,
+                battle=1,
+                current_hp=enemy1.start_hp,
+                current_mp=enemy1.start_mp,
+                current_attack=enemy1.start_attack,
+                current_defense=enemy1.start_defense,
+                current_myst_attack=enemy1.start_myst_attack,
+                current_myst_defense=enemy1.start_myst_defense,
+                current_speed=enemy1.start_speed,
+            )
+            gameenemy2 = GameEnemy(
+                game=game,
+                enemy=enemy2,
+                act=1,
+                battle=1,
+                current_hp=enemy2.start_hp,
+                current_mp=enemy2.start_mp,
+                current_attack=enemy2.start_attack,
+                current_defense=enemy2.start_defense,
+                current_myst_attack=enemy2.start_myst_attack,
+                current_myst_defense=enemy2.start_myst_defense,
+                current_speed=enemy2.start_speed,
+            )
+            GameEnemy.objects.bulk_create([
+                gameenemy1,
+                gameenemy2,
+            ])
 
             game.game_started = True
             game.save()
