@@ -120,10 +120,16 @@
                 <hr>
                 <h6>Stats:</h6>
                 <ul>
-                    <li>Current HP: {{ gameuser.current_hp }}</li>
-                    <li>Start HP: {{ gameuser.role.start_hp }}</li>
-                    <li>Current MP: {{ gameuser.current_mp }}</li>
-                    <li>Start MP: {{ gameuser.role.start_mp }}</li>
+                    <li>HP: {{ gameuser.current_hp }} / {{ gameuser.role.start_hp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%"></div>
+                    </div>
+                    
+                    <li>MP: {{ gameuser.current_mp }} / {{ gameuser.role.start_mp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%"></div>
+                    </div>
+
                     <li>Attack: {{ gameuser.current_attack }}</li>
                     <li>Defense: {{ gameuser.current_defense }}</li>
                     <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>

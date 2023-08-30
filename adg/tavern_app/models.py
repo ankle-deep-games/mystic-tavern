@@ -143,6 +143,12 @@ class GameUser(models.Model):
     def image(self):
         return f'{self.role}-{self.gender}.png'
 
+    def hp_percentage(self):
+        return round((self.current_hp / self.role.start_hp) * 100)
+    
+    def mp_percentage(self):
+        return round((self.current_mp / self.role.start_mp) * 100)
+
     def __str__(self):
         game_name = self.game.name if self.game else 'Unknown Game'
         username = self.user.username if self.user else 'Unknown User'
