@@ -91,9 +91,16 @@
                 <hr>
                 <h6>Stats:</h6>
                 <ul>
-                    <li>Current HP: {{ gameenemy.current_hp }}</li>
-                    <li>Start HP: {{ gameenemy.enemy.start_hp }}</li>
-                    <li>MP: {{ gameenemy.current_mp }}</li>
+                    <li>HP: {{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%"></div>
+                    </div>
+
+                    <li>MP: {{ gameenemy.current_mp }} / {{ gameenemy.enemy.start_mp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{gameenemy.mp_percentage}}%"></div>
+                    </div>
+
                     <li>Attack: {{ gameenemy.current_attack }}</li>
                     <li>Defense: {{ gameenemy.current_defense }}</li>
                     <li>Myst Attack: {{ gameenemy.current_myst_attack }}</li>

@@ -218,6 +218,12 @@ class GameEnemy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def hp_percentage(self):
+        return round((self.current_hp / self.enemy.start_hp) * 100)
+
+    def mp_percentage(self):
+        return round((self.current_mp / self.enemy.start_mp) * 100)
+
     def __str__(self):
         return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
 
