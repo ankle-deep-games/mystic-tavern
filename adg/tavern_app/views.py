@@ -695,13 +695,6 @@ class RoleAssignmentView(FormView):
 
 def scene(request, game_id, act, scene):
 
-    print("act is:")
-    print(act)
-    print("scene is:")
-    print(scene)
-
-    # todo update dialogue model for act/scene fields and filter in here.
-
     # form submission if game owner clicked next button or dialogue option
     if request.method == 'POST':
         form = GameDialogueForm(request.POST)
@@ -749,40 +742,44 @@ def scene(request, game_id, act, scene):
     game_dialogue_progress_list = []
     game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
     for game_dialogue in game_dialogue_progress:
-        name = ""
-        image = ""
-        for char in character_list:
-            if char['speaker'] == game_dialogue.dialogue.speaker:
-                name = char['name']
-                image = char['image']
-        
-        game_dialogue_progress_list.append({
-            'id': game_dialogue.dialogue.pk,
-            'node_type': game_dialogue.dialogue.node_type,
-            'name': name,
-            'text': game_dialogue.dialogue.text,
-            'image': image,
-            })
+        # only build the list for the current act and scene
+        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene:
+            name = ""
+            image = ""
+            for char in character_list:
+                if char['speaker'] == game_dialogue.dialogue.speaker:
+                    name = char['name']
+                    image = char['image']
+            
+            game_dialogue_progress_list.append({
+                'id': game_dialogue.dialogue.pk,
+                'node_type': game_dialogue.dialogue.node_type,
+                'name': name,
+                'text': game_dialogue.dialogue.text,
+                'image': image,
+                })
         
     # next_dialogue_list queries the game dialogue progress for the next single dialogue or multiple player dialogue choices
     next_dialogue_list = []
-    next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'])
-    for dialogue in next_dialogue:
-        name = ""
-        image = ""
-        for char in character_list:
-            if char['speaker'] == dialogue.speaker:
-                name = char['name']
-                image = char['image']
-        
-        next_dialogue_list.append({
-            'id': dialogue.pk,
-            'from_node_id': dialogue.from_node_id,
-            'node_type': dialogue.node_type,
-            'name': name,
-            'text': dialogue.text,
-            'image': image,
-            })
+    # make sure this act/scene has at least 1 node to prevent errors. filter by act and scene.
+    if len(game_dialogue_progress_list) > 0:
+        next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'], act=act, scene=scene)
+        for dialogue in next_dialogue:
+            name = ""
+            image = ""
+            for char in character_list:
+                if char['speaker'] == dialogue.speaker:
+                    name = char['name']
+                    image = char['image']
+            
+            next_dialogue_list.append({
+                'id': dialogue.pk,
+                'from_node_id': dialogue.from_node_id,
+                'node_type': dialogue.node_type,
+                'name': name,
+                'text': dialogue.text,
+                'image': image,
+                })
         
     # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
 
