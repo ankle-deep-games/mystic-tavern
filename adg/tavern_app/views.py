@@ -569,19 +569,23 @@ def lobby(request, game_id):
 
     if request.method == 'POST':
         form = StartGameForm(request.POST)
-        
+        has_error = False
+
         if form.is_valid():
-            # TODO add better error messaging for any players not ready https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
             if any_player_not_ready == True:
-                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+                messages.error(request, 'All players must be ready to start the game.', extra_tags="alert alert-danger")
+                has_error = True
 
-            # TODO add better error messaging for not started by creator https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
             if game.creator != request.user:
-                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+                messages.error(request, 'Game can only be started by party leader.', extra_tags="alert alert-danger")
+                has_error = True
 
-            # TODO add better error messaging if game wasn't started from lobby with same game_id in url https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-            if form.cleaned_data['game_id'] != game.pk:
-                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+            if num_players_in_lobby != 4:
+                messages.error(request, 'Game can only be started with 4 players.', extra_tags="alert alert-danger")
+                has_error = True
+
+            if has_error:
+                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game_id}))
 
             # Write first dialogue node for this game, populate game enemies, game_started True
             starting_game_dialogue = GameDialogue(game=game, dialogue=Dialogue.objects.get(pk=1))
@@ -630,7 +634,7 @@ def lobby(request, game_id):
             return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
 
         else:
-            # TODO better handling of if form is not valid https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            messages.error(request, 'Something in the form was not valid.', extra_tags="alert alert-danger")
             return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
             
     else:

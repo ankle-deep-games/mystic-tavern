@@ -3,6 +3,15 @@
 {% block content %}
     <h1 class="text-danger my-4">Game Lobby - {{ game.name }}</h1>
     <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     {% if is_leader == True %}
         <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
         {% if any_player_not_ready or num_players_in_lobby != 4 %}
