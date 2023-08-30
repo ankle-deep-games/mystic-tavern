@@ -539,7 +539,7 @@ class GameDetailView(FormMixin, DetailView):
                 messages.success(self.request, 'You have successfully joined the game!')
             return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
         else:
-            messages.error(self.request, 'Incorrect password. Please try again.')
+            messages.error(self.request, 'Incorrect password. Please try again.', extra_tags="alert alert-danger")
             return self.form_invalid(form)
 
     def post(self, request, *args, **kwargs):
