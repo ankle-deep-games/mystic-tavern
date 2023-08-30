@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm, CombatLogForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy, CombatLog
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy, CombatLog, GameScene
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
@@ -558,7 +558,8 @@ def lobby(request, game_id):
     num_players_in_lobby = gameusers.count()
 
     if game.game_started == True:
-        return redirect(reverse('tavern_app:scene', kwargs={'game_id': game.id, 'act': 1, 'scene': 1}))
+        gamescene = GameScene.objects.get(game=game)
+        return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
 
     if request.method == 'POST':
         form = StartGameForm(request.POST)
@@ -616,6 +617,9 @@ def lobby(request, game_id):
 
             game.game_started = True
             game.save()
+
+            gamescene = GameScene(game=game, act=1, scene_type="scene", scene=1)
+            gamescene.save()
 
             return redirect(reverse('tavern_app:scene', kwargs={'game_id': game.id, 'act': 1, 'scene': 1}))
 
