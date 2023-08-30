@@ -158,6 +158,8 @@ class Dialogue(models.Model):
     speaker = models.CharField(max_length=255)
     # npc name | Group Leader     | narator
     text = models.TextField()
+    act = models.IntegerField(default=0)
+    scene = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -233,4 +235,13 @@ class CombatLog(models.Model):
 
     def __str__(self):
         return f'Combat Log player: {self.player.username}, enemy: {self.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
+    
+class GameScene(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    act = models.IntegerField(default=0)
+    scene_type = models.CharField(max_length=255) # "scene" or "battle"
+    scene = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'Game Name: {self.game.name}, act: {self.act}, scene_type: {self.scene_type}, scene: {self.scene}'
     
