@@ -521,12 +521,19 @@ class GameDetailView(FormMixin, DetailView):
     template_name = 'tavern_app/game_detail.html'
     form_class = JoinGameForm
 
+    # TODO if user is already in the game, redirect them to the lobby
+    # TODO if user is not logged in, redirect them somewhere else (not sure which page) with an error message.
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class()
         return context
 
     def form_valid(self, form):
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, 'Must be logged in to join a game.', extra_tags="alert alert-danger")
+            return self.form_invalid(form)
+            
         game = self.get_object()
         password = form.cleaned_data.get('password')
         if password == game.password:
@@ -536,10 +543,9 @@ class GameDetailView(FormMixin, DetailView):
             else:
                 # Add the user to the GameUser table
                 GameUser.objects.create(user=self.request.user, game=game)
-                messages.success(self.request, 'You have successfully joined the game!')
             return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
         else:
-            messages.error(self.request, 'Incorrect password. Please try again.')
+            messages.error(self.request, 'Incorrect password. Please try again.', extra_tags="alert alert-danger")
             return self.form_invalid(form)
 
     def post(self, request, *args, **kwargs):
@@ -563,19 +569,23 @@ def lobby(request, game_id):
 
     if request.method == 'POST':
         form = StartGameForm(request.POST)
-        
+        has_error = False
+
         if form.is_valid():
-            # TODO add better error messaging for any players not ready https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
             if any_player_not_ready == True:
-                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+                messages.error(request, 'All players must be ready to start the game.', extra_tags="alert alert-danger")
+                has_error = True
 
-            # TODO add better error messaging for not started by creator https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
             if game.creator != request.user:
-                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+                messages.error(request, 'Game can only be started by party leader.', extra_tags="alert alert-danger")
+                has_error = True
 
-            # TODO add better error messaging if game wasn't started from lobby with same game_id in url https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-            if form.cleaned_data['game_id'] != game.pk:
-                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+            if num_players_in_lobby != 4:
+                messages.error(request, 'Game can only be started with 4 players.', extra_tags="alert alert-danger")
+                has_error = True
+
+            if has_error:
+                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game_id}))
 
             # Write first dialogue node for this game, populate game enemies, game_started True
             starting_game_dialogue = GameDialogue(game=game, dialogue=Dialogue.objects.get(pk=1))
@@ -624,7 +634,7 @@ def lobby(request, game_id):
             return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
 
         else:
-            # TODO better handling of if form is not valid https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
+            messages.error(request, 'Something in the form was not valid.', extra_tags="alert alert-danger")
             return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
             
     else:
