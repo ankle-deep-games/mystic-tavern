@@ -521,12 +521,19 @@ class GameDetailView(FormMixin, DetailView):
     template_name = 'tavern_app/game_detail.html'
     form_class = JoinGameForm
 
+    # TODO if user is already in the game, redirect them to the lobby
+    # TODO if user is not logged in, redirect them somewhere else (not sure which page) with an error message.
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class()
         return context
 
     def form_valid(self, form):
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, 'Must be logged in to join a game.', extra_tags="alert alert-danger")
+            return self.form_invalid(form)
+            
         game = self.get_object()
         password = form.cleaned_data.get('password')
         if password == game.password:
@@ -536,7 +543,6 @@ class GameDetailView(FormMixin, DetailView):
             else:
                 # Add the user to the GameUser table
                 GameUser.objects.create(user=self.request.user, game=game)
-                messages.success(self.request, 'You have successfully joined the game!')
             return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
         else:
             messages.error(self.request, 'Incorrect password. Please try again.', extra_tags="alert alert-danger")
