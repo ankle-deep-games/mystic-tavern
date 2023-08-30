@@ -621,7 +621,7 @@ def lobby(request, game_id):
             gamescene = GameScene(game=game, act=1, scene_type="scene", scene=1)
             gamescene.save()
 
-            return redirect(reverse('tavern_app:scene', kwargs={'game_id': game.id, 'act': 1, 'scene': 1}))
+            return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
 
         else:
             # TODO better handling of if form is not valid https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
