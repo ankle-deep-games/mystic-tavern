@@ -4,6 +4,14 @@
 {% load static %}
     <div class="row my-2">
         <h1 class="mb-3">game id {{ game_id }}</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <hr>
 
         {% comment %} this game's dialogue so far from game_dialogue table {% endcomment %}
@@ -31,7 +39,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="game" value="{{ game_id }}" />
                     <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
-                    <button type="submit" class="btn btn-secondary mt-3" {% if is_leader == False %} disabled {% endif %}>Next</button>
+                    <button type="submit" class="btn btn-primary mt-3" {% if is_leader == False %} disabled {% endif %}>Next</button>
                 </form>
             {% elif dialogue.node_type == "player response" %}
                 <div class="mt-3">
@@ -39,7 +47,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="game" value="{{ game_id }}" />
                         <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
-                        <button type="submit" class="btn btn-secondary mb-3" {% if is_leader == False %} disabled {% endif %}>{{ dialogue.text }}</button>
+                        <button type="submit" class="btn btn-primary mb-3" {% if is_leader == False %} disabled {% endif %}>{{ dialogue.text }}</button>
                     </form>
                 </div>
             {% endif %}

@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>Log In</h1>
-<div class="form-group">
+<div class="form-group mb-3">
   {% comment %} Added p manually so we can apply bootstrap form-control class to inputs {% endcomment %}
   {% comment %} TODO add error messaging when incorrect info {% endcomment %}
   <form method="POST">
@@ -16,7 +16,16 @@
       <label for="id_password">Password:</label>
       <input class="form-control" type="password" name="password" autocomplete="current-password" required="" id="id_password">
     </p>
-    <button class="btn btn-secondary" type="submit">Log In</button>
+    <button class="btn btn-primary" type="submit">Log In</button>
   </form>
 </div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 {% endblock %}

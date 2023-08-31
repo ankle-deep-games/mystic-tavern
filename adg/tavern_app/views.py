@@ -16,8 +16,10 @@ def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
 
-# TODO https://trello.com/c/xTOGwl8m/169-protect-seed-route-behind-admin-only
 def seed(request):
+    if request.user.is_superuser == False:
+        return redirect('tavern_app:home')
+
     # users are special because they get created with a hashed password with create_user
     user1 = User.objects.create_user(username='john', email='jlennon@beatles.com', password='imagine')
     user2 = User.objects.create_user(username='paul', email='pmccartney@beatles.com', password='let it be')
@@ -513,16 +515,14 @@ class GameView(ListView):
     queryset = Game.objects.annotate(num_players=Count('gameuser'))
     context_object_name = 'games'
 
-    # TODO create list of user_ids in lobby (maybe dict per game e.g. game_id 1: [1,2,3,4]) for backend validation https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-
-
 class GameDetailView(FormMixin, DetailView):
     model = Game
     template_name = 'tavern_app/game_detail.html'
     form_class = JoinGameForm
 
+    # TODO https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
     # TODO if user is already in the game, redirect them to the lobby
-    # TODO if user is not logged in, redirect them somewhere else (not sure which page) with an error message.
+    # TODO if user is not logged in, redirect them to login page
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -557,6 +557,14 @@ class GameDetailView(FormMixin, DetailView):
             return self.form_invalid(form)
 
 def lobby(request, game_id):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
+    
     game = Game.objects.get(id=game_id)
     gameusers = GameUser.objects.filter(game_id=game_id)
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
@@ -708,29 +716,47 @@ class RoleAssignmentView(FormView):
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
 def scene(request, game_id, act, scene):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
+    
+    # bool: is current user the party leader
+    game = Game.objects.get(pk=game_id)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == 'POST':
         form = GameDialogueForm(request.POST)
 
         if form.is_valid():
-            # TODO validation: https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-            # that the submitted node is a child of current dialogue progress / prevent dupelicate submissions
-            # that submission from game owner 
-
             # get the next dialogue from form values and write to db
             game = Game.objects.get(pk=game_id)
             dialogue = Dialogue.objects.get(pk=form.cleaned_data['dialogue'].id)
+
+            # make sure submission is valid
+            latest_game_dialogue_id = GameDialogue.objects.filter(game=game).latest('id').dialogue.id
+            gamescene = GameScene.objects.get(game=game)
+            if dialogue.from_node_id != latest_game_dialogue_id:
+                messages.error(request, 'Invalid dialogue choice. Must be connected to previous dialogue.', extra_tags="alert alert-danger")
+                return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+            
+            if is_leader == False:
+                messages.error(request, 'Only the party leader can progress dialogue.', extra_tags="alert alert-danger")
+                return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
+
+        else:
+            messages.error(request, 'Something in the dialogue was not valid.', extra_tags="alert alert-danger")
 
     # else render form
     else:
         form = GameDialogueForm()
-
-    # bool: is current user the party leader
-    game = Game.objects.get(pk=game_id)
-    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     # character_list combines players and npcs into a single list that can later be used to add names and images to dialogues
     character_list = []
