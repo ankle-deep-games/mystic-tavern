@@ -739,13 +739,14 @@ def scene(request, game_id, act, scene):
 
             # make sure submission is valid
             latest_game_dialogue_id = GameDialogue.objects.filter(game=game).latest('id').dialogue.id
+            gamescene = GameScene.objects.get(game=game)
             if dialogue.from_node_id != latest_game_dialogue_id:
                 messages.error(request, 'Invalid dialogue choice. Must be connected to previous dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:scene", kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+                return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
             
             if is_leader == False:
                 messages.error(request, 'Only the party leader can progress dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:scene", kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+                return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
 
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
