@@ -751,6 +751,9 @@ def scene(request, game_id, act, scene):
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
 
+        else:
+            messages.error(request, 'Something in the form was not valid.', extra_tags="alert alert-danger")
+
     # else render form
     else:
         form = GameDialogueForm()
