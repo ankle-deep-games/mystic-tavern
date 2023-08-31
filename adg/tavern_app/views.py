@@ -15,7 +15,6 @@ from django.http import JsonResponse
 def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
-
 def seed(request):
     if request.user.is_superuser == False:
         return redirect('tavern_app:home')
@@ -509,11 +508,29 @@ def live_update_prototype_redirect_view(request):
 class CreateOrJoinView(TemplateView):
     template_name = "tavern_app/home.html"
 
-class GameView(ListView):
-    model = Game
-    template_name = 'tavern_app/games.html'
-    queryset = Game.objects.annotate(num_players=Count('gameuser'))
-    context_object_name = 'games'
+def games(request):
+    game_list = []
+    games = Game.objects.filter(game_over=False).annotate(num_players=Count('gameuser'))
+
+    for game in games:
+        is_user_in_game = True if GameUser.objects.filter(game=game, user=request.user) else False
+        is_full = True if game.num_players == 4 else False
+        is_started = True if game.game_started == True else False
+        game_list.append({
+            'creator': game.creator,
+            'id': game.id,
+            'is_full': is_full,
+            'is_started': is_started,
+            'is_user_in_game': is_user_in_game,
+            'name': game.name,
+            'num_players': game.num_players,
+            })
+
+    context = {
+        'game_list': game_list,
+    }
+    
+    return render(request, 'tavern_app/games.html', context)  
 
 class GameDetailView(FormMixin, DetailView):
     model = Game
@@ -673,7 +690,6 @@ class CreateGameView(CreateView):
         GameUser.objects.create(user=self.request.user, game=game)
 
         return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
-
 
 class RoleAssignmentView(FormView):
     template_name = 'tavern_app/role_assignment.html'
