@@ -515,9 +515,6 @@ class GameView(ListView):
     queryset = Game.objects.annotate(num_players=Count('gameuser'))
     context_object_name = 'games'
 
-    # TODO create list of user_ids in lobby (maybe dict per game e.g. game_id 1: [1,2,3,4]) for backend validation https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-
-
 class GameDetailView(FormMixin, DetailView):
     model = Game
     template_name = 'tavern_app/game_detail.html'
@@ -559,6 +556,14 @@ class GameDetailView(FormMixin, DetailView):
             return self.form_invalid(form)
 
 def lobby(request, game_id):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
+    
     game = Game.objects.get(id=game_id)
     gameusers = GameUser.objects.filter(game_id=game_id)
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
