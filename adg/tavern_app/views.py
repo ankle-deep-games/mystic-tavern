@@ -16,8 +16,10 @@ def simple_view(request):
     return HttpResponse("LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023")
 
 
-# TODO https://trello.com/c/xTOGwl8m/169-protect-seed-route-behind-admin-only
 def seed(request):
+    if request.user.is_superuser == False:
+        return redirect('tavern_app:home')
+
     # users are special because they get created with a hashed password with create_user
     user1 = User.objects.create_user(username='john', email='jlennon@beatles.com', password='imagine')
     user2 = User.objects.create_user(username='paul', email='pmccartney@beatles.com', password='let it be')
