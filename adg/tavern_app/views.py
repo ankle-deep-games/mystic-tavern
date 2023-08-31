@@ -520,8 +520,9 @@ class GameDetailView(FormMixin, DetailView):
     template_name = 'tavern_app/game_detail.html'
     form_class = JoinGameForm
 
+    # TODO https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
     # TODO if user is already in the game, redirect them to the lobby
-    # TODO if user is not logged in, redirect them somewhere else (not sure which page) with an error message.
+    # TODO if user is not logged in, redirect them to login page
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
