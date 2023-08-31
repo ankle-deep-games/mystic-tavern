@@ -717,29 +717,36 @@ def scene(request, game_id, act, scene):
     if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
         messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
         return redirect('tavern_app:games')
+    
+    # bool: is current user the party leader
+    game = Game.objects.get(pk=game_id)
+    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == 'POST':
         form = GameDialogueForm(request.POST)
 
         if form.is_valid():
-            # TODO validation: https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-            # that the submitted node is a child of current dialogue progress / prevent dupelicate submissions
-            # that submission from game owner 
-
             # get the next dialogue from form values and write to db
             game = Game.objects.get(pk=game_id)
             dialogue = Dialogue.objects.get(pk=form.cleaned_data['dialogue'].id)
+
+            # make sure submission is valid
+            latest_game_dialogue_id = GameDialogue.objects.filter(game=game).latest('id').dialogue.id
+            if dialogue.from_node_id != latest_game_dialogue_id:
+                messages.error(request, 'Invalid dialogue choice. Must be connected to previous dialogue.', extra_tags="alert alert-danger")
+                return redirect(reverse("tavern_app:scene", kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+            
+            if is_leader == False:
+                messages.error(request, 'Only the party leader can progress dialogue.', extra_tags="alert alert-danger")
+                return redirect(reverse("tavern_app:scene", kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
 
     # else render form
     else:
         form = GameDialogueForm()
-
-    # bool: is current user the party leader
-    game = Game.objects.get(pk=game_id)
-    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     # character_list combines players and npcs into a single list that can later be used to add names and images to dialogues
     character_list = []
