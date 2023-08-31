@@ -2,6 +2,15 @@
 {% block content %}
 
 <h1 class="text-primary my-4">Games</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 <hr>
 
   {% for game in object_list %}

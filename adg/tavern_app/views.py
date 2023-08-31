@@ -708,6 +708,13 @@ class RoleAssignmentView(FormView):
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
 def scene(request, game_id, act, scene):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == 'POST':
