@@ -509,6 +509,10 @@ class CreateOrJoinView(TemplateView):
     template_name = "tavern_app/home.html"
 
 def games(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see games.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
     game_list = []
     games = Game.objects.filter(game_over=False).annotate(num_players=Count('gameuser'))
 
