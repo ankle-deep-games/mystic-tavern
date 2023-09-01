@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
-from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
+from django.views.generic import CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm, CombatLogForm
 from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy, CombatLog, GameScene
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.views.generic.edit import FormMixin
 from django.db.models import Count
 from django.http import JsonResponse
 
@@ -570,47 +569,6 @@ def join_game(request, pk):
     }
 
     return render(request, 'tavern_app/game_detail.html', context)
-
-class GameDetailView(FormMixin, DetailView):
-    model = Game
-    template_name = 'tavern_app/game_detail.html'
-    form_class = JoinGameForm
-
-    # TODO https://trello.com/c/tkGuaIp0/114-add-validation-to-all-forms-views
-    # TODO if user is already in the game, redirect them to the lobby
-    # TODO if user is not logged in, redirect them to login page
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = self.form_class()
-        return context
-
-    def form_valid(self, form):
-        if not self.request.user.is_authenticated:
-            messages.error(self.request, 'Must be logged in to join a game.', extra_tags="alert alert-danger")
-            return self.form_invalid(form)
-            
-        game = self.get_object()
-        password = form.cleaned_data.get('password')
-        if password == game.password:
-            existing_game_user = GameUser.objects.filter(user_id=self.request.user, game_id=game).exists()
-            if existing_game_user:
-                pass
-            else:
-                # Add the user to the GameUser table
-                GameUser.objects.create(user=self.request.user, game=game)
-            return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
-        else:
-            messages.error(self.request, 'Incorrect password. Please try again.', extra_tags="alert alert-danger")
-            return self.form_invalid(form)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
 
 def lobby(request, game_id):
     if not request.user.is_authenticated:
