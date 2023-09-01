@@ -61,7 +61,7 @@ class RoleAssignmentForm(ModelForm):
 class GameDialogueForm(ModelForm):
     class Meta:
         model = GameDialogue
-        fields = ['game', 'dialogue']
+        fields = ['dialogue']
         
 class CombatLogForm(ModelForm):
     class Meta:
