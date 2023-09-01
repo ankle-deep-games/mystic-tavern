@@ -555,7 +555,7 @@ def join_game(request, pk):
                 return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
             else:
                 messages.error(request, 'Incorrect password. Please try again.', extra_tags="alert alert-danger")
-                return redirect(reverse('tavern_app:game_detail', kwargs={'pk': pk}))
+                return redirect(reverse('tavern_app:join_game', kwargs={'pk': pk}))
 
         else:
             messages.error(request, 'Something in the form was not valid.', extra_tags="alert alert-danger")
@@ -568,7 +568,7 @@ def join_game(request, pk):
         'form': form,
     }
 
-    return render(request, 'tavern_app/game_detail.html', context)
+    return render(request, 'tavern_app/join_game.html', context)
 
 def lobby(request, game_id):
     if not request.user.is_authenticated:
