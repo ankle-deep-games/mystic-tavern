@@ -11,7 +11,7 @@ urlpatterns = [
     path('seed/', views.seed),
     path('create/', CreateGameView.as_view(), name='create_game'),
     path('games/', views.games, name='games'),
-    path('games/<int:pk>', GameDetailView.as_view(), name='game_detail'),
+    path('games/<int:pk>', views.join_game, name='game_detail'),#update this
     path('games/<int:game_id>/lobby', views.lobby, name='lobby'),
     path('games/<int:game_id>/lobby/role_assignment', RoleAssignmentView.as_view(), name='role_assignment'),
     path('games/<int:game_id>/act/<int:act>/scene/<int:scene>', views.scene, name='scene'),

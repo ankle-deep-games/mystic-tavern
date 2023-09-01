@@ -536,6 +536,41 @@ def games(request):
     
     return render(request, 'tavern_app/games.html', context)  
 
+def join_game(request, pk):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to join a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    game = Game.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = JoinGameForm(request.POST)
+
+        if form.is_valid():
+            password = form.cleaned_data.get('password')
+            if password == game.password:
+                existing_game_user = GameUser.objects.filter(user_id=request.user, game_id=game).exists()
+                if not existing_game_user:
+                    GameUser.objects.create(user=request.user, game=game)
+                
+                return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+            else:
+                messages.error(request, 'Incorrect password. Please try again.', extra_tags="alert alert-danger")
+                return redirect(reverse('tavern_app:game_detail', kwargs={'pk': pk}))
+
+        else:
+            messages.error(request, 'Something in the form was not valid.', extra_tags="alert alert-danger")
+
+    # else render form
+    else:
+        form = JoinGameForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'tavern_app/game_detail.html', context)
+
 class GameDetailView(FormMixin, DetailView):
     model = Game
     template_name = 'tavern_app/game_detail.html'
