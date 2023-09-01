@@ -540,7 +540,20 @@ def join_game(request, pk):
         messages.error(request, 'Must be logged in to join a game.', extra_tags="alert alert-danger")
         return redirect('login')
     
+    game_exists = Game.objects.filter(pk=pk).exists()
+    if not game_exists:
+        messages.error(request, 'Game does not exist.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
+    
     game = Game.objects.get(pk=pk)
+    is_user_in_game = True if GameUser.objects.filter(game=game, user=request.user) else False
+    if is_user_in_game:
+        return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
+    
+    is_full = True if GameUser.objects.filter(game_id=pk).count() == 4 else False
+    if is_full:
+        messages.error(request, 'Game is full.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
 
     if request.method == 'POST':
         form = JoinGameForm(request.POST)
