@@ -91,6 +91,7 @@ class Armor(models.Model):
 
 class Ability(models.Model):
     name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     mp_cost = models.IntegerField(default=0)
     is_myst_attack = models.BooleanField(default=False)
