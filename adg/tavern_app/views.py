@@ -561,8 +561,7 @@ def join_game(request, pk):
         if form.is_valid():
             password = form.cleaned_data.get('password')
             if password == game.password:
-                existing_game_user = GameUser.objects.filter(user_id=request.user, game_id=game).exists()
-                if not existing_game_user:
+                if not is_user_in_game:
                     GameUser.objects.create(user=request.user, game=game)
                 
                 return redirect(reverse('tavern_app:lobby', kwargs={'game_id': game.id}))
