@@ -33,13 +33,9 @@ def seed(request):
     # games
     game1 = Game(name="Game Seed 1", creator=user1, game_started=False, game_over=False, password="apple")
     game2 = Game(name="Game Seed 2", creator=user2, game_started=False, game_over=False, password="banana")
-    game3 = Game(name="Game Seed 3", creator=user3, game_started=False, game_over=False, password="carrot")
-    game4 = Game(name="Game Seed 4", creator=user4, game_started=False, game_over=False, password="date")
     Game.objects.bulk_create([
         game1,
         game2,
-        game3,
-        game4,
     ])
 
     # types
@@ -159,9 +155,9 @@ def seed(request):
     ])
 
     # abilities
-    ability1 = Ability(name="Attack", type=type6, mp_cost=0, threat=1, min_damage=1, max_damage=5)
-    ability2 = Ability(name="Myst Attack Test", type=type6, mp_cost=3, myst_attack_flag=True, threat=1, min_damage=1, max_damage=4)
-    ability3 = Ability(name="Reg Attack Test", type=type6, mp_cost=4, myst_attack_flag=False, threat=1, min_damage=1, max_damage=6)
+    ability1 = Ability(name="Attack", type=type6, mp_cost=0, min_damage=1, max_damage=5)
+    ability2 = Ability(name="Myst Attack Test", type=type6, mp_cost=3, is_myst_attack=True, min_damage=1, max_damage=4)
+    ability3 = Ability(name="Reg Attack Test", type=type6, mp_cost=4, is_myst_attack=False, min_damage=1, max_damage=6)
     Ability.objects.bulk_create([
         ability1,
         ability2,
