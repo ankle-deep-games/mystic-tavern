@@ -2,9 +2,18 @@
 
 {% block content %}
 {% load static %}
-    <div class="row my-2 w-50 mx-auto">
+    <div class="row my-2 w-75 mx-auto">
         <h1 class="mb-3">game id {{ game_id }}</h1>
         <hr>
+
+        <h2>turn order</h2>
+        {% for order in game_turn_order %}
+            {% if order.is_their_turn == True %}
+                <p class="text-primary">{{order}}</p>
+            {% else %}
+                <p>{{order}}</p>
+            {% endif %}
+        {% endfor %}
 
         <h2 class="text-white my-3">Enemies:</h2>
         <div class="card-group">
