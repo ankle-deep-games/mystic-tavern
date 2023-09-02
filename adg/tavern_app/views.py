@@ -822,6 +822,13 @@ def scene(request, game_id, act, scene):
     return render(request, 'tavern_app/scene.html', context)
 
 def battle(request, game_id, act, battle):
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
