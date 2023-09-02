@@ -253,6 +253,8 @@ class GameScene(models.Model):
     act = models.IntegerField(default=0)
     scene_type = models.CharField(max_length=255) # "scene" or "battle"
     scene = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Game Name: {self.game.name}, act: {self.act}, scene_type: {self.scene_type}, scene: {self.scene}'
