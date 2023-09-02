@@ -617,7 +617,7 @@ def lobby(request, game_id):
                 current_myst_defense=enemy2.start_myst_defense,
                 current_speed=enemy2.start_speed,
             )
-            ganemenemies = GameEnemy.objects.bulk_create([
+            GameEnemy.objects.bulk_create([
                 gameenemy1,
                 gameenemy2,
             ])
@@ -627,15 +627,6 @@ def lobby(request, game_id):
 
             gamescene = GameScene(game=game, act=1, scene_type="scene", scene=1)
             gamescene.save()
-
-            # populate starting turn order
-            for gameuser in gameusers:
-                gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
-                gu_turn_order.save()
-            
-            for gameenemy in ganemenemies:
-                ge_turn_order =  GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
-                ge_turn_order.save()
 
             return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
 
@@ -896,91 +887,84 @@ def battle(request, game_id, act, battle):
     # TODO delete combat display for debug
     combat_log_for_debug_display = CombatLog.objects.filter(game=game)
 
+    # if there is not a turn order yet
+    game_turn_order = GameTurnOrder.objects.filter(game=game)
+    if not game_turn_order:
+        print("populating the game turn order in the battle")
+        for gameuser in gameusers:
+            gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
+            gu_turn_order.save()
+        
+        for gameenemy in gameenemies:
+            ge_turn_order =  GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
+            ge_turn_order.save()
+    else:
+        print("gameturnover table is populated")
+
     print("*TURN ORDER*:")
 
     ep_list = []
 
-    game_turn_order = GameTurnOrder.objects.filter(game=game)
+    is_someones_turn = False
+    anyone_over_100 = False
+
+    
     for unit_order in game_turn_order:
+        if unit_order.is_their_turn == True:
+            is_someones_turn = True
+
+        if unit_order.accum_speed >= 100:
+            anyone_over_100 = True
+        
         print(unit_order)
 
-    anyone_over_100 = False
+    if is_someones_turn == True:
+        print("it is someons turn")
+    else:
+        print("not someones turn yet")
+
+    if anyone_over_100 == True:
+        print("someone is over 100")
+    else:
+        print("noone is over 100")
 
     for gameuser in gameusers:
         ep_list.append({'name': gameuser.user.username, 'speed': gameuser.current_speed, "accum": gameuser.current_speed})
     for gameenemy in gameenemies:
         ep_list.append({'name': gameenemy.enemy.name, 'speed': gameenemy.current_speed, "accum": gameenemy.current_speed})
 
-    print("UNSORTED:")
-    for e in ep_list:
-        if e['accum'] > 100:
-            anyone_over_100 = True
-            print("yes someone over 100")
-        else:
-            print("no one over 100")
-        print(e)
 
-    ep_list_sorted = sorted(ep_list, key=lambda d: d['accum'], reverse=True) 
-    print("SORTED:")
-    for ep in ep_list_sorted:
-        ep['accum'] = ep['accum'] + ep['speed']
-        print(ep)
+    # print("UNSORTED:")
+    # for e in ep_list:
+    #     if e['accum'] > 100:
+    #         anyone_over_100 = True
+    #         print("yes someone over 100")
+    #     else:
+    #         print("no one over 100")
+    #     print(e)
+
+    # ep_list_sorted = sorted(ep_list, key=lambda d: d['accum'], reverse=True) 
+    # print("SORTED:")
+    # for ep in ep_list_sorted:
+    #     ep['accum'] = ep['accum'] + ep['speed']
+    #     print(ep)
         
-    for ep in ep_list_sorted:
-        if ep['accum'] >= 100:
-            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-        else:
-            print("not over 100")
+    # for ep in ep_list_sorted:
+    #     if ep['accum'] >= 100:
+    #         print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+    #     else:
+    #         print("not over 100")
     
-    for ep in ep_list_sorted:
-        ep['accum'] = ep['accum'] + ep['speed']
-        print(ep)
+    # for ep in ep_list_sorted:
+    #     ep['accum'] = ep['accum'] + ep['speed']
+    #     print(ep)
 
-    for ep in ep_list_sorted:
-        if ep['accum'] >= 100:
-            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-        else:
-            print("not over 100")
+    # for ep in ep_list_sorted:
+    #     if ep['accum'] >= 100:
+    #         print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+    #     else:
+    #         print("not over 100")
 
-    for ep in ep_list_sorted:
-        ep['accum'] = ep['accum'] + ep['speed']
-        print(ep)
-
-    for ep in ep_list_sorted:
-        if ep['accum'] >= 100:
-            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-        else:
-            print("not over 100")
-    
-    for ep in ep_list_sorted:
-        ep['accum'] = ep['accum'] + ep['speed']
-        print(ep)
-
-    for ep in ep_list_sorted:
-        if ep['accum'] >= 100:
-            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-        else:
-            print("not over 100")
-
-    for ep in ep_list_sorted:
-        ep['accum'] = ep['accum'] + ep['speed']
-        print(ep)
-
-    for ep in ep_list_sorted:
-        if ep['accum'] >= 100:
-            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-        else:
-            print("not over 100")
-
-    for ep in ep_list_sorted:
-        ep['accum'] = ep['accum'] + ep['speed']
-        print(ep)
-
-    for ep in ep_list_sorted:
-        if ep['accum'] >= 100:
-            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-        else:
-            print("not over 100")
 
     context = {
         'game_id': game_id,
