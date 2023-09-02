@@ -877,6 +877,9 @@ def battle(request, game_id, act, battle):
 
                 player.current_mp = player.current_mp - ability.mp_cost
                 player.save()
+
+                unit_turn.is_their_turn = False
+                unit_turn.save()
             else:
                 print("NOPE NOT THEIR TURN")
                 messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
@@ -913,7 +916,7 @@ def battle(request, game_id, act, battle):
     else:
         print("gameturnover table is populated \n")
 
-    unit_turn = GameTurnOrder.objects.get(is_their_turn=True)
+    unit_turn = GameTurnOrder.objects.filter(is_their_turn=True)
     if unit_turn:
         print("Unit turn on page load:")
         print(unit_turn)
