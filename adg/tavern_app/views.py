@@ -706,7 +706,7 @@ class RoleAssignmentView(FormView):
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
 def scene(request, game_id, act, number):
-    scene = number
+    scene_num = number
     if not request.user.is_authenticated:
         messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
         return redirect('login')
@@ -733,11 +733,11 @@ def scene(request, game_id, act, number):
             gamelocation = GameLocation.objects.get(game=game)
             if dialogue.from_node_id != latest_game_dialogue_id:
                 messages.error(request, 'Invalid dialogue choice. Must be connected to previous dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene}))
+                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
             
             if is_leader == False:
                 messages.error(request, 'Only the party leader can progress dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene}))
+                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
 
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
@@ -774,7 +774,7 @@ def scene(request, game_id, act, number):
     game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
     for game_dialogue in game_dialogue_progress:
         # only build the list for the current act and scene
-        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene:
+        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene_num:
             name = ""
             image = ""
             for char in character_list:
@@ -794,7 +794,7 @@ def scene(request, game_id, act, number):
     next_dialogue_list = []
     # make sure this act/scene has at least 1 node to prevent errors. filter by act and scene.
     if len(game_dialogue_progress_list) > 0:
-        next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'], act=act, scene=scene)
+        next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'], act=act, scene=scene_num)
         for dialogue in next_dialogue:
             name = ""
             image = ""
