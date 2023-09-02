@@ -2,9 +2,63 @@
 
 {% block content %}
 {% load static %}
-    <div class="row my-2">
-        <h1 class="mb-3">This is battle 1 sandbox. Work in progress. game id {{ game_id }}</h1>
+    <div class="row my-2 w-50 mx-auto">
+        <h1 class="mb-3">game id {{ game_id }}</h1>
         <hr>
+
+        <h2 class="text-white my-3">Enemies:</h2>
+        <div class="card-group">
+            {% for gameenemy in gameenemies %}
+            <div class="card text-white bg-secondary mb-3">
+            {% load static %}
+                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameenemy.enemy.image }}" alt="enemy picture">
+                <div class="card-body">
+                <h3 class="card-title text-white">{{ gameenemy.enemy.name }}</h3>
+                <hr>
+                <h6>Stats:</h6>
+                <ul>
+                    <li>HP: {{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%"></div>
+                    </div>
+
+                    <li>MP: {{ gameenemy.current_mp }} / {{ gameenemy.enemy.start_mp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{gameenemy.mp_percentage}}%"></div>
+                    </div>
+                </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <br>
+        <hr>
+
+        <h2 class="text-white my-3">Players:</h2>
+        <div class="card-group">
+            {% for gameuser in gameusers %}
+            <div class="card text-white bg-secondary mb-3">
+            {% load static %}
+                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
+                <div class="card-body">
+                <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
+                <hr>
+                <h6>Stats:</h6>
+                <ul>
+                    <li>HP: {{ gameuser.current_hp }} / {{ gameuser.role.start_hp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%"></div>
+                    </div>
+                    
+                    <li>MP: {{ gameuser.current_mp }} / {{ gameuser.role.start_mp }}</li>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%"></div>
+                    </div>
+                </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
         {% if player.ability_1 %}
             {% for gameenemy in gameenemies %}
@@ -41,74 +95,6 @@
             </form>
             {% endfor %}
         {% endif %}
-
-        <h2 class="text-white my-4">Enemies:</h2>
-        <div class="card-group">
-            {% for gameenemy in gameenemies %}
-            <div class="card text-white bg-secondary mb-3">
-            {% load static %}
-                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameenemy.enemy.image }}" alt="enemy picture">
-                <div class="card-body">
-                <h3 class="card-title text-white">{{ gameenemy.enemy.name }}</h3>
-                <hr>
-                <h6>Stats:</h6>
-                <ul>
-                    <li>HP: {{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</li>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%"></div>
-                    </div>
-
-                    <li>MP: {{ gameenemy.current_mp }} / {{ gameenemy.enemy.start_mp }}</li>
-                    <div class="progress">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: {{gameenemy.mp_percentage}}%"></div>
-                    </div>
-
-                    <li>Attack: {{ gameenemy.current_attack }}</li>
-                    <li>Defense: {{ gameenemy.current_defense }}</li>
-                    <li>Myst Attack: {{ gameenemy.current_myst_attack }}</li>
-                    <li>Myst Defense: {{ gameenemy.current_myst_defense }}</li>
-                    <li>Speed: {{ gameenemy.current_speed }}</li>
-                </ul>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        <br>
-        <hr>
-
-        <h2 class="text-white my-4">Players:</h2>
-        <div class="card-group">
-            {% for gameuser in gameusers %}
-            <div class="card text-white bg-secondary mb-3">
-            {% load static %}
-                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
-                <div class="card-body">
-                <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
-                <hr>
-                <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
-                <hr>
-                <h6>Stats:</h6>
-                <ul>
-                    <li>HP: {{ gameuser.current_hp }} / {{ gameuser.role.start_hp }}</li>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%"></div>
-                    </div>
-                    
-                    <li>MP: {{ gameuser.current_mp }} / {{ gameuser.role.start_mp }}</li>
-                    <div class="progress">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%"></div>
-                    </div>
-
-                    <li>Attack: {{ gameuser.current_attack }}</li>
-                    <li>Defense: {{ gameuser.current_defense }}</li>
-                    <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
-                    <li>Myst Defense: {{ gameuser.current_myst_defense }}</li>
-                    <li>Speed: {{ gameuser.current_speed }}</li>
-                </ul>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
 
         <h2>combat log table</h2>
         <table class="table text-white">
