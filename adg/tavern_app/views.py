@@ -822,7 +822,7 @@ def scene(request, game_id, act, scene):
 
     return render(request, 'tavern_app/scene.html', context)
 
-def battle(request, game_id, act, scene):
+def battle(request, game_id, act, battle):
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
@@ -874,10 +874,11 @@ def battle(request, game_id, act, scene):
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle)
 
     player = GameUser.objects.get(game_id=game_id, user=request.user)
 
+    # TODO delete combat display for debug
     combat_log_for_debug_display = CombatLog.objects.filter(game=game)
 
     context = {
