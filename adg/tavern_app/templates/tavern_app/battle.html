@@ -5,44 +5,6 @@
     <div class="row my-2">
         <h1 class="mb-3">This is battle 1 sandbox. Work in progress. game id {{ game_id }}</h1>
         <hr>
-        
-        <h2>combat log table</h2>
-        <table class="table text-white">
-            <thead>
-              <tr>
-                <th scope="col">player</th>
-                <th scope="col">enemy</th>
-                <th scope="col">who</th>
-                <th scope="col">ability</th>
-                <th scope="col">damage</th>
-                <th scope="col">unit_previous_hp</th>
-                <th scope="col">unit_resulting_hp</th>
-                <th scope="col">ability_mp_cost</th>
-                <th scope="col">unit_previous_mp</th>
-                <th scope="col">unit_resulting_mp</th>
-                <th scope="col">ability_min_damage</th>
-                <th scope="col">ability_max_damage</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for log in combat_log_for_debug_display %}
-              <tr>
-                <th scope="row">{{log.player.username}}</th>
-                <td>{{log.enemy.name}}</td>
-                <td>{{log.player_or_enemy_took_action}}</td>
-                <td>{{log.ability.name}}</td>
-                <td>{{log.damage}}</td>
-                <td>{{log.unit_previous_hp}}</td>
-                <td>{{log.unit_resulting_hp}}</td>
-                <td>{{log.ability_mp_cost}}</td>
-                <td>{{log.unit_previous_mp}}</td>
-                <td>{{log.unit_resulting_mp}}</td>
-                <td>{{log.ability_min_damage}}</td>
-                <td>{{log.ability_max_damage}}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
 
         {% if player.ability_1 %}
             {% for gameenemy in gameenemies %}
@@ -147,6 +109,44 @@
             </div>
             {% endfor %}
         </div>
+
+        <h2>combat log table</h2>
+        <table class="table text-white">
+            <thead>
+              <tr>
+                <th scope="col">player</th>
+                <th scope="col">enemy</th>
+                <th scope="col">who</th>
+                <th scope="col">ability</th>
+                <th scope="col">damage</th>
+                <th scope="col">unit_previous_hp</th>
+                <th scope="col">unit_resulting_hp</th>
+                <th scope="col">ability_mp_cost</th>
+                <th scope="col">unit_previous_mp</th>
+                <th scope="col">unit_resulting_mp</th>
+                <th scope="col">ability_min_damage</th>
+                <th scope="col">ability_max_damage</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for log in combat_log_for_debug_display %}
+              <tr>
+                <th scope="row">{{log.player.username}}</th>
+                <td>{{log.enemy.name}}</td>
+                <td>{{log.player_or_enemy_took_action}}</td>
+                <td>{{log.ability.name}}</td>
+                <td>{{log.damage}}</td>
+                <td>{{log.unit_previous_hp}}</td>
+                <td>{{log.unit_resulting_hp}}</td>
+                <td>{{log.ability_mp_cost}}</td>
+                <td>{{log.unit_previous_mp}}</td>
+                <td>{{log.unit_resulting_mp}}</td>
+                <td>{{log.ability_min_damage}}</td>
+                <td>{{log.ability_max_damage}}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
 
     </div>
 {% endblock %}

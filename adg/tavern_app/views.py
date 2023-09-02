@@ -305,38 +305,6 @@ def seed(request):
         enemy2,
     ])
 
-    # GameEnemy
-    gameenemy1 = GameEnemy(
-        game=game1,
-        enemy=enemy1,
-        act=1,
-        battle=1,
-        current_hp=enemy1.start_hp,
-        current_mp=enemy1.start_mp,
-        current_attack=enemy1.start_attack,
-        current_defense=enemy1.start_defense,
-        current_myst_attack=enemy1.start_myst_attack,
-        current_myst_defense=enemy1.start_myst_defense,
-        current_speed=enemy1.start_speed,
-    )
-    gameenemy2 = GameEnemy(
-        game=game1,
-        enemy=enemy2,
-        act=1,
-        battle=1,
-        current_hp=enemy2.start_hp,
-        current_mp=enemy2.start_mp,
-        current_attack=enemy2.start_attack,
-        current_defense=enemy2.start_defense,
-        current_myst_attack=enemy2.start_myst_attack,
-        current_myst_defense=enemy2.start_myst_defense,
-        current_speed=enemy2.start_speed,
-    )
-    GameEnemy.objects.bulk_create([
-        gameenemy1,
-        gameenemy2,
-    ])
-
     # dialogue Act 1 Scene 1
     node1 = Dialogue(from_node_id=0, node_type="narration", speaker="Narrator", text="Your group finds themselves teleported to an abandoned alleyway in what looks like a quaint old village. The narrow passage is dimly lit, and the silence is broken by the distant sounds of chatter and laughter. Suddenly, two drunk men spot your group and stagger towards you, their eyes gleaming with mischief.", act=1, scene=1)
     node2 = Dialogue(from_node_id=1, node_type="talk", speaker="Drunk Man 1", text="Blimey, would ya look at this lot! Fancied themselves lost tourists, do they?", act=1, scene=1)
@@ -854,8 +822,7 @@ def scene(request, game_id, act, scene):
 
     return render(request, 'tavern_app/scene.html', context)
 
-# TODO This entire view is Work in Progress purely for testing. Will be lots of upcoming cleanup.
-def act1_battle1(request, game_id):
+def battle(request, game_id, act, battle):
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
@@ -907,10 +874,11 @@ def act1_battle1(request, game_id):
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle)
 
     player = GameUser.objects.get(game_id=game_id, user=request.user)
 
+    # TODO delete combat display for debug
     combat_log_for_debug_display = CombatLog.objects.filter(game=game)
 
     context = {
@@ -923,4 +891,4 @@ def act1_battle1(request, game_id):
         'player': player,
     }
 
-    return render(request, 'tavern_app/act1/act1_battle1.html', context)
+    return render(request, 'tavern_app/battle.html', context)
