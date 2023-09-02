@@ -267,3 +267,8 @@ class GameTurnOrder(models.Model):
     accum_speed = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        player = self.gameuser.user.username if self.gameuser else 'Null'
+        enemy = self.gameenemy.enemy.name if self.gameenemy else 'Null'
+        return f'game: {self.game.name}, player: {player}, enemy: {enemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed},'
