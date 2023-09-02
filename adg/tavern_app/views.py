@@ -847,8 +847,15 @@ def battle(request, game_id, act, battle):
             print("ability is:")
             print(ability)
             print("ability min damage is " + str(ability.min_damage) + " and max damage is " + str(ability.max_damage))
-           
-            combat_log = CombatLog(
+
+            unit_turn = GameTurnOrder.objects.get(is_their_turn=True)
+            is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+            print("IS IT THE USERS TURN?")
+            if is_request_user_turn:
+                print("WHY YES IT IS THEIR TURN!")
+                messages.success(request, 'Yes! It was that users turn to attack', extra_tags="alert alert-success")
+
+                combat_log = CombatLog(
                 game = game,
                 player = player.user,
                 enemy = enemy.enemy,
@@ -862,15 +869,20 @@ def battle(request, game_id, act, battle):
                 unit_resulting_mp = player.current_mp - ability.mp_cost,
                 ability_min_damage = ability.min_damage,
                 ability_max_damage = ability.max_damage,
-            )
-            combat_log.save()
+                )
+                combat_log.save()
 
-            enemy.current_hp = enemy.current_hp - ability.max_damage
-            enemy.save()
+                enemy.current_hp = enemy.current_hp - ability.max_damage
+                enemy.save()
 
-            player.current_mp = player.current_mp - ability.mp_cost
-            player.save()
+                player.current_mp = player.current_mp - ability.mp_cost
+                player.save()
+            else:
+                print("NOPE NOT THEIR TURN")
+                messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
 
+            # TODO update redirect to current battle
+            return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'battle': 1}))
 
     # else render form
     else:
