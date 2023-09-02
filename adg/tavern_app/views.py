@@ -901,7 +901,7 @@ def battle(request, game_id, act, battle):
     else:
         print("gameturnover table is populated \n")
 
-    unit_turn = GameTurnOrder.objects.filter(is_their_turn=True)
+    unit_turn = GameTurnOrder.objects.get(is_their_turn=True)
     if unit_turn:
         print("Unit turn on page load:")
         print(unit_turn)
@@ -962,9 +962,11 @@ def battle(request, game_id, act, battle):
                     unit.save()
             unit.save()
 
-    unit_turn = GameTurnOrder.objects.filter(is_their_turn=True)
+    unit_turn = GameTurnOrder.objects.get(is_their_turn=True)
     print("Unit turn at the end:")
     print(unit_turn)
+
+    is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
 
     context = {
         'game_id': game_id,
@@ -975,6 +977,8 @@ def battle(request, game_id, act, battle):
         'combat_log_for_debug_display': combat_log_for_debug_display,
         'player': player,
         'game_turn_order': game_turn_order,
+        'unit_turn': unit_turn,
+        'is_request_user_turn': is_request_user_turn,
     }
 
     return render(request, 'tavern_app/battle.html', context)
