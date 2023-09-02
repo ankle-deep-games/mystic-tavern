@@ -4,7 +4,7 @@ from .views import CreateOrJoinView, CreateGameView, RoleAssignmentView
 
 app_name = 'tavern_app'
 
-# domain.com/tavern_app/
+# domain.com/
 urlpatterns = [
     path('home/', CreateOrJoinView.as_view(), name='home'),
     path('leeroy/og', views.simple_view),
