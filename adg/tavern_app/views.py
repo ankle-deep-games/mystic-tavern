@@ -903,8 +903,6 @@ def battle(request, game_id, act, battle):
 
     print("*TURN ORDER*:")
 
-    ep_list = []
-
     is_someones_turn = False
     anyone_over_100 = False
 
@@ -928,43 +926,31 @@ def battle(request, game_id, act, battle):
     else:
         print("noone is over 100")
 
-    for gameuser in gameusers:
-        ep_list.append({'name': gameuser.user.username, 'speed': gameuser.current_speed, "accum": gameuser.current_speed})
-    for gameenemy in gameenemies:
-        ep_list.append({'name': gameenemy.enemy.name, 'speed': gameenemy.current_speed, "accum": gameenemy.current_speed})
 
+    while anyone_over_100 == False:
+        if is_someones_turn == False:
+            print("since not anyones turn start looping to get to whose turn it is")
+            for gameuser in gameusers:
+                for unit in game_turn_order:
+                    if gameuser == unit.gameuser:
+                        unit.accum_speed = unit.accum_speed + gameuser.current_speed
+                        print("FOUND A MATCH gameuser and unit for " + unit.gameuser.user.username + " and their new speed is " + str(unit.accum_speed))
+                        if unit.accum_speed >= 100:
+                            anyone_over_100 = True
+                            print("this user is ready to take a turn because they are over 100 speed")
+            for gameenemy in gameenemies:
+                for unit in game_turn_order:
+                    if gameenemy == unit.gameenemy:
+                        unit.accum_speed = unit.accum_speed + gameenemy.current_speed
+                        print("FOUND A MATCH gameenemy and unit for " + unit.gameenemy.enemy.name + " and their new speed is " + str(unit.accum_speed))
+                        if unit.accum_speed >= 100:
+                            anyone_over_100 = True
+                            print("this user is ready to take a turn because they are over 100 speed")
 
-    # print("UNSORTED:")
-    # for e in ep_list:
-    #     if e['accum'] > 100:
-    #         anyone_over_100 = True
-    #         print("yes someone over 100")
-    #     else:
-    #         print("no one over 100")
-    #     print(e)
-
-    # ep_list_sorted = sorted(ep_list, key=lambda d: d['accum'], reverse=True) 
-    # print("SORTED:")
-    # for ep in ep_list_sorted:
-    #     ep['accum'] = ep['accum'] + ep['speed']
-    #     print(ep)
-        
-    # for ep in ep_list_sorted:
-    #     if ep['accum'] >= 100:
-    #         print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-    #     else:
-    #         print("not over 100")
-    
-    # for ep in ep_list_sorted:
-    #     ep['accum'] = ep['accum'] + ep['speed']
-    #     print(ep)
-
-    # for ep in ep_list_sorted:
-    #     if ep['accum'] >= 100:
-    #         print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
-    #     else:
-    #         print("not over 100")
-
+    if anyone_over_100 == True:
+        print("After Loop: someone is over 100")
+    else:
+        print("After Loop: noone is over 100")
 
     context = {
         'game_id': game_id,
