@@ -892,19 +892,67 @@ def battle(request, game_id, act, battle):
     ep_list = []
 
     for gameuser in gameusers:
-        print("gameuser: " + gameuser.user.username + " speed: " + str(gameuser.current_speed))
-        ep_list.append({'name': gameuser.user.username, 'speed': gameuser.current_speed})
-
+        ep_list.append({'name': gameuser.user.username, 'speed': gameuser.current_speed, "accum": gameuser.current_speed})
     for gameenemy in gameenemies:
-        print("gameenemy: " + gameenemy.enemy.name + " speed: " + str(gameenemy.current_speed))
-        ep_list.append({'name': gameenemy.enemy.name, 'speed': gameenemy.current_speed})
+        ep_list.append({'name': gameenemy.enemy.name, 'speed': gameenemy.current_speed, "accum": gameuser.current_speed})
 
-    print("unsorted:")
-    print(ep_list)
+    print("UNSORTED:")
+    for e in ep_list:
+        print(e)
 
-    ep_list_sorted = sorted(ep_list, key=lambda d: d['speed'], reverse=True) 
-    print("sorted:")
-    print(ep_list_sorted)
+    anyone_over_100 = False
+
+    ep_list_sorted = sorted(ep_list, key=lambda d: d['accum'], reverse=True) 
+    print("SORTED:")
+    for ep in ep_list_sorted:
+        ep['accum'] = ep['accum'] + ep['speed']
+        print(ep)
+        
+    for ep in ep_list_sorted:
+        if ep['accum'] >= 100:
+            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+        else:
+            print("not over 100")
+    
+    for ep in ep_list_sorted:
+        ep['accum'] = ep['accum'] + ep['speed']
+        print(ep)
+
+    for ep in ep_list_sorted:
+        if ep['accum'] >= 100:
+            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+        else:
+            print("not over 100")
+
+    for ep in ep_list_sorted:
+        ep['accum'] = ep['accum'] + ep['speed']
+        print(ep)
+
+    for ep in ep_list_sorted:
+        if ep['accum'] >= 100:
+            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+        else:
+            print("not over 100")
+    
+    for ep in ep_list_sorted:
+        ep['accum'] = ep['accum'] + ep['speed']
+        print(ep)
+
+    for ep in ep_list_sorted:
+        if ep['accum'] >= 100:
+            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+        else:
+            print("not over 100")
+
+    for ep in ep_list_sorted:
+        ep['accum'] = ep['accum'] + ep['speed']
+        print(ep)
+
+    for ep in ep_list_sorted:
+        if ep['accum'] >= 100:
+            print("YES " + ep['name'] + " is over 100 with accum of " + str(ep['accum']))
+        else:
+            print("not over 100")
 
     context = {
         'game_id': game_id,
