@@ -628,6 +628,8 @@ def lobby(request, game_id):
             gamescene = GameScene(game=game, act=1, scene_type="scene", scene=1)
             gamescene.save()
 
+            # TODO give all gameusers attack
+
             return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
 
         else:
@@ -848,7 +850,7 @@ def battle(request, game_id, act, battle):
             print(ability)
             print("ability min damage is " + str(ability.min_damage) + " and max damage is " + str(ability.max_damage))
 
-            unit_turn = GameTurnOrder.objects.get(is_their_turn=True)
+            unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
             print("IS IT THE USERS TURN?")
             if is_request_user_turn:
@@ -916,7 +918,7 @@ def battle(request, game_id, act, battle):
     else:
         print("gameturnover table is populated \n")
 
-    unit_turn = GameTurnOrder.objects.filter(is_their_turn=True)
+    unit_turn = GameTurnOrder.objects.filter(game=game, is_their_turn=True)
     if unit_turn:
         print("Unit turn on page load:")
         print(unit_turn)
@@ -977,7 +979,7 @@ def battle(request, game_id, act, battle):
                     unit.save()
             unit.save()
 
-    unit_turn = GameTurnOrder.objects.get(is_their_turn=True)
+    unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
     print("Unit turn at the end:")
     print(unit_turn)
 
