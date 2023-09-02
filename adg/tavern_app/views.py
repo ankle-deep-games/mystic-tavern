@@ -277,26 +277,26 @@ def seed(request):
         name="Drunk Man 1",
         image="drunk-man-1.png",
         type=type1,
-        start_hp=100,
-        start_mp=99,
-        start_attack=98,
-        start_defense=97,
-        start_myst_attack=96,
-        start_myst_defense=95,
-        start_speed=94,
+        start_hp=50,
+        start_mp=50,
+        start_attack=10,
+        start_defense=10,
+        start_myst_attack=10,
+        start_myst_defense=10,
+        start_speed=10,
         ability_1=ability1,
     )
     enemy2 = Enemy(
         name="Drunk Man 2",
         image="drunk-man-2.png",
         type=type2,
-        start_hp=100,
-        start_mp=99,
-        start_attack=98,
-        start_defense=97,
-        start_myst_attack=96,
-        start_myst_defense=95,
-        start_speed=94,
+        start_hp=50,
+        start_mp=50,
+        start_attack=10,
+        start_defense=10,
+        start_myst_attack=10,
+        start_myst_defense=10,
+        start_speed=15,
         ability_1=ability1,
     )
     Enemy.objects.bulk_create([
@@ -886,6 +886,25 @@ def battle(request, game_id, act, battle):
 
     # TODO delete combat display for debug
     combat_log_for_debug_display = CombatLog.objects.filter(game=game)
+
+    print("*TURN ORDER*:")
+
+    ep_list = []
+
+    for gameuser in gameusers:
+        print("gameuser: " + gameuser.user.username + " speed: " + str(gameuser.current_speed))
+        ep_list.append({'name': gameuser.user.username, 'speed': gameuser.current_speed})
+
+    for gameenemy in gameenemies:
+        print("gameenemy: " + gameenemy.enemy.name + " speed: " + str(gameenemy.current_speed))
+        ep_list.append({'name': gameenemy.enemy.name, 'speed': gameenemy.current_speed})
+
+    print("unsorted:")
+    print(ep_list)
+
+    ep_list_sorted = sorted(ep_list, key=lambda d: d['speed'], reverse=True) 
+    print("sorted:")
+    print(ep_list_sorted)
 
     context = {
         'game_id': game_id,
