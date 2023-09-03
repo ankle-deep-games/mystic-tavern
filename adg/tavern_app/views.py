@@ -939,12 +939,10 @@ def battle(request, game_id, act, number):
                     unit.accum_speed = unit.accum_speed + unit.gameuser.current_speed
                     if unit.accum_speed >= 100:
                         is_someone_over_100 = True
-            for gameenemy in gameenemies:
-                for unit in game_turn_order:
-                    if gameenemy == unit.gameenemy:
-                        unit.accum_speed = unit.accum_speed + gameenemy.current_speed
-                        if unit.accum_speed >= 100:
-                            is_someone_over_100 = True
+                if unit.gameenemy:
+                    unit.accum_speed = unit.accum_speed + unit.gameenemy.current_speed
+                    if unit.accum_speed >= 100:
+                        is_someone_over_100 = True
         
         # now is_someone_over_100 is True
         for unit in game_turn_order:
