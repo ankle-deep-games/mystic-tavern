@@ -902,10 +902,10 @@ def battle(request, game_id, act, number):
         form = CombatLogForm()
 
     combat_log_debug = CombatLog.objects.filter(game=game)
-    print("***Combat Log***")
+    print("***COMBAT LOG***")
     for log in combat_log_debug:
         print(log)
-    print("***Combat Log***\n")
+    print("***COMBAT LOG***\n")
 
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
@@ -961,13 +961,19 @@ def battle(request, game_id, act, number):
     else:
         is_request_user_turn = False
 
+    print("***TURN ORDER***")
+    for turn_order in game_turn_order:
+        print(turn_order)
+        if turn_order.is_their_turn:
+            print("-----^ their turn ^-----")
+    print("***TURN ORDER***")
+
     context = {
         'game_id': game_id,
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
         'player': player,
-        'game_turn_order': game_turn_order,
         'unit_turn': unit_turn,
         'is_request_user_turn': is_request_user_turn,
     }

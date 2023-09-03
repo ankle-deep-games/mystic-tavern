@@ -28,15 +28,6 @@
             <h2 class="text-danger">NOT request users turn</h2>
         {%endif%}
 
-        <h2>turn order</h2>
-        {% for order in game_turn_order %}
-            {% if order.is_their_turn == True %}
-                <p class="text-primary">{{order}}</p>
-            {% else %}
-                <p>{{order}}</p>
-            {% endif %}
-        {% endfor %}
-
         <h2 class="text-white my-3">Enemies:</h2>
         <div class="card-group">
             {% for gameenemy in gameenemies %}
