@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm, CombatLogForm
-from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy, CombatLog, GameScene, GameTurnOrder
+from .models import Game, GameUser, Role, Gender, Dialogue, GameDialogue, NPC, Type, Weapon, Armor, Ability, Enemy, GameEnemy, CombatLog, GameLocation, GameTurnOrder
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -561,8 +561,8 @@ def lobby(request, game_id):
     num_players_in_lobby = gameusers.count()
 
     if game.game_started == True:
-        gamescene = GameScene.objects.get(game=game)
-        return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
+        gamelocation = GameLocation.objects.get(game=game)
+        return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number}))
 
     if request.method == 'POST':
         form = StartGameForm(request.POST)
@@ -625,12 +625,10 @@ def lobby(request, game_id):
             game.game_started = True
             game.save()
 
-            gamescene = GameScene(game=game, act=1, scene_type="scene", scene=1)
-            gamescene.save()
+            gamelocation = GameLocation(game=game, act=1, location_type="scene", number=1)
+            gamelocation.save()
 
-            # TODO give all gameusers attack
-
-            return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game.id, 'act': gamescene.act, 'scene': gamescene.scene}))
+            return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number}))
 
         else:
             messages.error(request, 'Something in the form was not valid.', extra_tags="alert alert-danger")
@@ -678,6 +676,7 @@ class RoleAssignmentView(FormView):
     def form_valid(self, form):
         game = Game.objects.get(pk=self.kwargs['game_id'])
         num_players = form.initial['num_players']
+        attack_ability = Ability.objects.get(pk=1)
 
         for i in range(1, num_players + 1):
             player_name = form.cleaned_data[f'player_{i}_name']
@@ -697,6 +696,8 @@ class RoleAssignmentView(FormView):
             player.current_myst_defense = player.role.start_myst_defense
             player.current_speed = player.role.start_speed
 
+            player.ability_1 = attack_ability
+
             player.save()
 
         return super().form_valid(form)
@@ -705,7 +706,8 @@ class RoleAssignmentView(FormView):
         game_id = self.kwargs['game_id']
         return reverse('tavern_app:lobby', kwargs={'game_id': game_id})
 
-def scene(request, game_id, act, scene):
+def scene(request, game_id, act, number):
+    scene_num = number
     if not request.user.is_authenticated:
         messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
         return redirect('login')
@@ -729,14 +731,14 @@ def scene(request, game_id, act, scene):
 
             # make sure submission is valid
             latest_game_dialogue_id = GameDialogue.objects.filter(game=game).latest('id').dialogue.id
-            gamescene = GameScene.objects.get(game=game)
+            gamelocation = GameLocation.objects.get(game=game)
             if dialogue.from_node_id != latest_game_dialogue_id:
                 messages.error(request, 'Invalid dialogue choice. Must be connected to previous dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
             
             if is_leader == False:
                 messages.error(request, 'Only the party leader can progress dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:" + gamescene.scene_type, kwargs={'game_id': game_id, 'act': act, 'scene': scene}))
+                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
 
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
@@ -773,7 +775,7 @@ def scene(request, game_id, act, scene):
     game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
     for game_dialogue in game_dialogue_progress:
         # only build the list for the current act and scene
-        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene:
+        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene_num:
             name = ""
             image = ""
             for char in character_list:
@@ -793,7 +795,7 @@ def scene(request, game_id, act, scene):
     next_dialogue_list = []
     # make sure this act/scene has at least 1 node to prevent errors. filter by act and scene.
     if len(game_dialogue_progress_list) > 0:
-        next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'], act=act, scene=scene)
+        next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'], act=act, scene=scene_num)
         for dialogue in next_dialogue:
             name = ""
             image = ""
@@ -823,7 +825,8 @@ def scene(request, game_id, act, scene):
 
     return render(request, 'tavern_app/scene.html', context)
 
-def battle(request, game_id, act, battle):
+def battle(request, game_id, act, number):
+    battle_num = number
     if not request.user.is_authenticated:
         messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
         return redirect('login')
@@ -887,7 +890,7 @@ def battle(request, game_id, act, battle):
                 messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
 
             # TODO update redirect to current battle
-            return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'battle': 1}))
+            return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
     # else render form
     else:
@@ -897,7 +900,7 @@ def battle(request, game_id, act, battle):
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     player = GameUser.objects.get(game_id=game_id, user=request.user)
 
