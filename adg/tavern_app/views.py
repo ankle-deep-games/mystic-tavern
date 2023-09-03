@@ -897,19 +897,18 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
-
     combat_log_debug = CombatLog.objects.filter(game=game)
     print("***Combat Log***")
     for log in combat_log_debug:
         print(log)
-    print("***Combat Log***")
+    print("***Combat Log***\n")
+
+    gameusers = GameUser.objects.filter(game_id=game_id)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
-        print("populating the game turn order in the battle \n")
         for gameuser in gameusers:
             gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
             gu_turn_order.save()
@@ -917,60 +916,33 @@ def battle(request, game_id, act, number):
             ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
             ge_turn_order.save()
         game_turn_order = GameTurnOrder.objects.filter(game=game)
-    else:
-        print("gameturnover table is populated \n")
 
-    unit_turn = GameTurnOrder.objects.filter(game=game, is_their_turn=True)
-    if unit_turn:
-        print("Unit turn on page load:")
-        print(unit_turn)
-    else:
-        print("no unit turn assigned yet.")
     is_someones_turn = False
-    anyone_over_100 = False
-
-    for unit_order in game_turn_order:
-        if unit_order.is_their_turn == True:
+    is_someone_over_100 = False
+    for unit in game_turn_order:
+        if unit.is_their_turn == True:
             is_someones_turn = True
-        if unit_order.accum_speed >= 100:
-            anyone_over_100 = True
+        if unit.accum_speed >= 100:
+            is_someone_over_100 = True
 
-    if is_someones_turn == True:
-        print("it is someones turn")
-    else:
-        print("not someones turn yet")
-
-    if anyone_over_100 == True:
-        print("someone is over 100 \n")
-    else:
-        print("noone is over 100 \n")
-
+    # if not someone's turn we need to run calculations to make it someone's turn
     if is_someones_turn == False:
-        while anyone_over_100 == False:
-            print("not someones turn and noone over 100. loop until at least 1 over 100\n ")
-            for gameuser in gameusers:
-                for unit in game_turn_order:
-                    if gameuser == unit.gameuser:
-                        unit.accum_speed = unit.accum_speed + gameuser.current_speed
-                        if unit.accum_speed >= 100:
-                            print("***TURN READY PLAYER: " + unit.gameuser.user.username + " and their new accum is " + str(unit.accum_speed))
-                            anyone_over_100 = True
-                        else:
-                            print("PLAYER: " + unit.gameuser.user.username + " and their new accum is " + str(unit.accum_speed))
+
+        # nobody over 100 so we don't know who to give turn. increase all units accum_speed by current_speed until at least 1 is over 100.
+        while is_someone_over_100 == False:
+            for unit in game_turn_order:
+                if unit.gameuser:
+                    unit.accum_speed = unit.accum_speed + unit.gameuser.current_speed
+                    if unit.accum_speed >= 100:
+                        is_someone_over_100 = True
             for gameenemy in gameenemies:
                 for unit in game_turn_order:
                     if gameenemy == unit.gameenemy:
                         unit.accum_speed = unit.accum_speed + gameenemy.current_speed
                         if unit.accum_speed >= 100:
-                            print("***TURN READY ENEMY " + unit.gameenemy.enemy.name + " and their new accum is " + str(unit.accum_speed))
-                            anyone_over_100 = True
-                        else:
-                            print("ENEMY " + unit.gameenemy.enemy.name + " and their new accum is " + str(unit.accum_speed))
-        print("end while anyone_over_100 loop because someone is over 100-----------------\n")
-
-    # assign is_their_turn True to the first player returned with over 100
-    if is_someones_turn == False and anyone_over_100 == True:
-        print("inside assign turn loop")
+                            is_someone_over_100 = True
+        
+        # now is_someone_over_100 is True
         for unit in game_turn_order:
             # only update reduce the speed and assign turn to 1 unit. save the rest
             if unit.accum_speed >= 100:
