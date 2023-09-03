@@ -858,7 +858,11 @@ def battle(request, game_id, act, number):
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-            is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+            if unit_turn.gameuser:
+                is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+            else:
+                is_request_user_turn = False
+            
             if is_request_user_turn:
                 messages.success(request, 'Yes! It was that users turn to attack', extra_tags="alert alert-success")
 
@@ -954,7 +958,10 @@ def battle(request, game_id, act, number):
             unit.save()
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-    is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+    if unit_turn.gameuser:
+        is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+    else:
+        is_request_user_turn = False
 
     context = {
         'game_id': game_id,
