@@ -825,7 +825,7 @@ def scene(request, game_id, act, number):
     return render(request, 'tavern_app/scene.html', context)
 
 def battle(request, game_id, act, number):
-    battle = number
+    battle_num = number
     if not request.user.is_authenticated:
         messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
         return redirect('login')
@@ -889,7 +889,7 @@ def battle(request, game_id, act, number):
                 messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
 
             # TODO update redirect to current battle
-            return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'battle': 1}))
+            return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
     # else render form
     else:
@@ -899,7 +899,7 @@ def battle(request, game_id, act, number):
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     player = GameUser.objects.get(game_id=game_id, user=request.user)
 
