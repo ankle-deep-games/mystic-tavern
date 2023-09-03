@@ -846,29 +846,20 @@ def battle(request, game_id, act, number):
         messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
         return redirect('tavern_app:games')
 
+    game = Game.objects.get(pk=game_id)
+    player = GameUser.objects.get(game_id=game_id, user=request.user)
+
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
             # TODO adjust to handle AOE abilities where mulitiple enemies are hit
-            print("form submitted")
-            player = GameUser.objects.get(game_id=game_id, user=request.user)
             enemy = GameEnemy.objects.get(game_id=game_id, enemy=Enemy(form.cleaned_data['enemy'].id))
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
-            game = Game.objects.get(pk=game_id)
-            print("player is:")
-            print(player)
-            print("enemy is:")
-            print(enemy)
-            print("ability is:")
-            print(ability)
-            print("ability min damage is " + str(ability.min_damage) + " and max damage is " + str(ability.max_damage))
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
-            print("IS IT THE USERS TURN?")
             if is_request_user_turn:
-                print("WHY YES IT IS THEIR TURN!")
                 messages.success(request, 'Yes! It was that users turn to attack', extra_tags="alert alert-success")
 
                 combat_log = CombatLog(
@@ -897,7 +888,6 @@ def battle(request, game_id, act, number):
                 unit_turn.is_their_turn = False
                 unit_turn.save()
             else:
-                print("NOPE NOT THEIR TURN")
                 messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
 
             # TODO update redirect to current battle
@@ -907,13 +897,8 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    game = Game.objects.get(pk=game_id)
-    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
-
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
-
-    player = GameUser.objects.get(game_id=game_id, user=request.user)
 
     combat_log_debug = CombatLog.objects.filter(game=game)
     print("***Combat Log***")
@@ -997,14 +982,10 @@ def battle(request, game_id, act, number):
             unit.save()
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-    print("Unit turn at the end:")
-    print(unit_turn)
-
     is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
 
     context = {
         'game_id': game_id,
-        'is_leader': is_leader,
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
