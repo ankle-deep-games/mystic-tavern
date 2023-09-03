@@ -271,4 +271,4 @@ class GameTurnOrder(models.Model):
     def __str__(self):
         player = self.gameuser.user.username if self.gameuser else 'Null'
         enemy = self.gameenemy.enemy.name if self.gameenemy else 'Null'
-        return f'game: {self.game.name}, player: {player}, enemy: {enemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed},'
+        return f'game: {self.game.name}, player: {player}, enemy: {enemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed}'
