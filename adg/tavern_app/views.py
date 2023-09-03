@@ -628,8 +628,6 @@ def lobby(request, game_id):
             gamelocation = GameLocation(game=game, act=1, location_type="scene", number=1)
             gamelocation.save()
 
-            # TODO give all gameusers attack
-
             return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number}))
 
         else:
@@ -678,6 +676,7 @@ class RoleAssignmentView(FormView):
     def form_valid(self, form):
         game = Game.objects.get(pk=self.kwargs['game_id'])
         num_players = form.initial['num_players']
+        attack_ability = Ability.objects.get(pk=1)
 
         for i in range(1, num_players + 1):
             player_name = form.cleaned_data[f'player_{i}_name']
@@ -696,6 +695,8 @@ class RoleAssignmentView(FormView):
             player.current_myst_attack = player.role.start_myst_attack
             player.current_myst_defense = player.role.start_myst_defense
             player.current_speed = player.role.start_speed
+
+            player.ability_1 = attack_ability
 
             player.save()
 
