@@ -451,6 +451,17 @@ def seed(request):
 
     return render(request, 'seed.html')
 
+# /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
+def add_three_users_to_game(request, game_id):
+    if request.user.is_superuser == False:
+        return redirect('tavern_app:home')
+    
+    game = Game(pk=game_id)
+    GameUser(game=game,user=User(pk=2)).save()
+    GameUser(game=game,user=User(pk=3)).save()
+    GameUser(game=game,user=User(pk=4)).save()  
+    return HttpResponse("3 users added to game " + str(game_id))
+
 def live_update_prototype(request):
     games = Game.objects.all()
     return JsonResponse({"games":list(games.values())})
@@ -835,46 +846,41 @@ def battle(request, game_id, act, number):
         messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
         return redirect('tavern_app:games')
 
+    game = Game.objects.get(pk=game_id)
+    player = GameUser.objects.get(game_id=game_id, user=request.user)
+
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
             # TODO adjust to handle AOE abilities where mulitiple enemies are hit
-            print("form submitted")
-            player = GameUser.objects.get(game_id=game_id, user=request.user)
             enemy = GameEnemy.objects.get(game_id=game_id, enemy=Enemy(form.cleaned_data['enemy'].id))
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
-            game = Game.objects.get(pk=game_id)
-            print("player is:")
-            print(player)
-            print("enemy is:")
-            print(enemy)
-            print("ability is:")
-            print(ability)
-            print("ability min damage is " + str(ability.min_damage) + " and max damage is " + str(ability.max_damage))
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-            is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
-            print("IS IT THE USERS TURN?")
+            if unit_turn.gameuser:
+                is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+            else:
+                is_request_user_turn = False
+            
             if is_request_user_turn:
-                print("WHY YES IT IS THEIR TURN!")
                 messages.success(request, 'Yes! It was that users turn to attack', extra_tags="alert alert-success")
 
                 combat_log = CombatLog(
-                game = game,
-                player = player.user,
-                enemy = enemy.enemy,
-                player_or_enemy_took_action = "player",
-                ability = ability,
-                damage = ability.max_damage, # for testing do the max damage. will update later
-                unit_previous_hp = enemy.current_hp,
-                unit_resulting_hp = enemy.current_hp - ability.max_damage,
-                ability_mp_cost = ability.mp_cost,
-                unit_previous_mp = player.current_mp,
-                unit_resulting_mp = player.current_mp - ability.mp_cost,
-                ability_min_damage = ability.min_damage,
-                ability_max_damage = ability.max_damage,
-                )
+                    game = game,
+                    player = player.user,
+                    enemy = enemy.enemy,
+                    player_or_enemy_took_action = "player",
+                    ability = ability,
+                    damage = ability.max_damage, # for testing do the max damage. will update later
+                    unit_previous_hp = enemy.current_hp,
+                    unit_resulting_hp = enemy.current_hp - ability.max_damage,
+                    ability_mp_cost = ability.mp_cost,
+                    unit_previous_mp = player.current_mp,
+                    unit_resulting_mp = player.current_mp - ability.mp_cost,
+                    ability_min_damage = ability.min_damage,
+                    ability_max_damage = ability.max_damage,
+                    )
                 combat_log.save()
 
                 enemy.current_hp = enemy.current_hp - ability.max_damage
@@ -886,7 +892,6 @@ def battle(request, game_id, act, number):
                 unit_turn.is_their_turn = False
                 unit_turn.save()
             else:
-                print("NOPE NOT THEIR TURN")
                 messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
 
             # TODO update redirect to current battle
@@ -896,21 +901,18 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    game = Game.objects.get(pk=game_id)
-    is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
+    combat_log_debug = CombatLog.objects.filter(game=game)
+    print("***COMBAT LOG***")
+    for log in combat_log_debug:
+        print(log)
+    print("***COMBAT LOG***\n")
 
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
-    player = GameUser.objects.get(game_id=game_id, user=request.user)
-
-    # TODO delete combat display for debug
-    combat_log_for_debug_display = CombatLog.objects.filter(game=game)
-
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
-        print("populating the game turn order in the battle \n")
         for gameuser in gameusers:
             gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
             gu_turn_order.save()
@@ -918,60 +920,31 @@ def battle(request, game_id, act, number):
             ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
             ge_turn_order.save()
         game_turn_order = GameTurnOrder.objects.filter(game=game)
-    else:
-        print("gameturnover table is populated \n")
 
-    unit_turn = GameTurnOrder.objects.filter(game=game, is_their_turn=True)
-    if unit_turn:
-        print("Unit turn on page load:")
-        print(unit_turn)
-    else:
-        print("no unit turn assigned yet.")
     is_someones_turn = False
-    anyone_over_100 = False
-
-    for unit_order in game_turn_order:
-        if unit_order.is_their_turn == True:
+    is_someone_over_100 = False
+    for unit in game_turn_order:
+        if unit.is_their_turn == True:
             is_someones_turn = True
-        if unit_order.accum_speed >= 100:
-            anyone_over_100 = True
+        if unit.accum_speed >= 100:
+            is_someone_over_100 = True
 
-    if is_someones_turn == True:
-        print("it is someones turn")
-    else:
-        print("not someones turn yet")
-
-    if anyone_over_100 == True:
-        print("someone is over 100 \n")
-    else:
-        print("noone is over 100 \n")
-
+    # if not someone's turn we need to run calculations to make it someone's turn
     if is_someones_turn == False:
-        while anyone_over_100 == False:
-            print("not someones turn and noone over 100. loop until at least 1 over 100\n ")
-            for gameuser in gameusers:
-                for unit in game_turn_order:
-                    if gameuser == unit.gameuser:
-                        unit.accum_speed = unit.accum_speed + gameuser.current_speed
-                        if unit.accum_speed >= 100:
-                            print("***TURN READY PLAYER: " + unit.gameuser.user.username + " and their new accum is " + str(unit.accum_speed))
-                            anyone_over_100 = True
-                        else:
-                            print("PLAYER: " + unit.gameuser.user.username + " and their new accum is " + str(unit.accum_speed))
-            for gameenemy in gameenemies:
-                for unit in game_turn_order:
-                    if gameenemy == unit.gameenemy:
-                        unit.accum_speed = unit.accum_speed + gameenemy.current_speed
-                        if unit.accum_speed >= 100:
-                            print("***TURN READY ENEMY " + unit.gameenemy.enemy.name + " and their new accum is " + str(unit.accum_speed))
-                            anyone_over_100 = True
-                        else:
-                            print("ENEMY " + unit.gameenemy.enemy.name + " and their new accum is " + str(unit.accum_speed))
-        print("end while anyone_over_100 loop because someone is over 100-----------------\n")
 
-    # assign is_their_turn True to the first player returned with over 100
-    if is_someones_turn == False and anyone_over_100 == True:
-        print("inside assign turn loop")
+        # nobody over 100 so we don't know who to give turn. increase all units accum_speed by current_speed until at least 1 is over 100.
+        while is_someone_over_100 == False:
+            for unit in game_turn_order:
+                if unit.gameuser:
+                    unit.accum_speed = unit.accum_speed + unit.gameuser.current_speed
+                    if unit.accum_speed >= 100:
+                        is_someone_over_100 = True
+                if unit.gameenemy:
+                    unit.accum_speed = unit.accum_speed + unit.gameenemy.current_speed
+                    if unit.accum_speed >= 100:
+                        is_someone_over_100 = True
+        
+        # now is_someone_over_100 is True
         for unit in game_turn_order:
             # only update reduce the speed and assign turn to 1 unit. save the rest
             if unit.accum_speed >= 100:
@@ -983,20 +956,24 @@ def battle(request, game_id, act, number):
             unit.save()
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-    print("Unit turn at the end:")
-    print(unit_turn)
+    if unit_turn.gameuser:
+        is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+    else:
+        is_request_user_turn = False
 
-    is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+    print("***TURN ORDER***")
+    for turn_order in game_turn_order:
+        print(turn_order)
+        if turn_order.is_their_turn:
+            print("-----^ their turn ^-----")
+    print("***TURN ORDER***")
 
     context = {
         'game_id': game_id,
-        'is_leader': is_leader,
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
-        'combat_log_for_debug_display': combat_log_for_debug_display,
         'player': player,
-        'game_turn_order': game_turn_order,
         'unit_turn': unit_turn,
         'is_request_user_turn': is_request_user_turn,
     }

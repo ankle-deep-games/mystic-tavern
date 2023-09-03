@@ -9,6 +9,7 @@ urlpatterns = [
     path('home/', CreateOrJoinView.as_view(), name='home'),
     path('leeroy/og', views.simple_view),
     path('seed/', views.seed),
+    path('seed/game/<int:game_id>', views.add_three_users_to_game, name='add_three_users_to_game'),
     path('create/', CreateGameView.as_view(), name='create_game'),
     path('games/', views.games, name='games'),
     path('games/<int:pk>', views.join_game, name='join_game'),

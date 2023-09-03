@@ -30,3 +30,10 @@ Superuser created successfully.
 http://127.0.0.1:8000/admin to log into dobby super user
 
 http://127.0.0.1:8000/seed to seed the data
+
+### create a game for testing
+Once signed in as dobby - create a game http://127.0.0.1:8000/create/
+
+In another tab visit http://127.0.0.1:8000/seed/game/:id to add 3 test users to the game
+
+Refresh game lobby page to assign roles. Then start game.
