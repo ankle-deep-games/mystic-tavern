@@ -872,20 +872,20 @@ def battle(request, game_id, act, number):
                 messages.success(request, 'Yes! It was that users turn to attack', extra_tags="alert alert-success")
 
                 combat_log = CombatLog(
-                game = game,
-                player = player.user,
-                enemy = enemy.enemy,
-                player_or_enemy_took_action = "player",
-                ability = ability,
-                damage = ability.max_damage, # for testing do the max damage. will update later
-                unit_previous_hp = enemy.current_hp,
-                unit_resulting_hp = enemy.current_hp - ability.max_damage,
-                ability_mp_cost = ability.mp_cost,
-                unit_previous_mp = player.current_mp,
-                unit_resulting_mp = player.current_mp - ability.mp_cost,
-                ability_min_damage = ability.min_damage,
-                ability_max_damage = ability.max_damage,
-                )
+                    game = game,
+                    player = player.user,
+                    enemy = enemy.enemy,
+                    player_or_enemy_took_action = "player",
+                    ability = ability,
+                    damage = ability.max_damage, # for testing do the max damage. will update later
+                    unit_previous_hp = enemy.current_hp,
+                    unit_resulting_hp = enemy.current_hp - ability.max_damage,
+                    ability_mp_cost = ability.mp_cost,
+                    unit_previous_mp = player.current_mp,
+                    unit_resulting_mp = player.current_mp - ability.mp_cost,
+                    ability_min_damage = ability.min_damage,
+                    ability_max_damage = ability.max_damage,
+                    )
                 combat_log.save()
 
                 enemy.current_hp = enemy.current_hp - ability.max_damage
@@ -915,8 +915,11 @@ def battle(request, game_id, act, number):
 
     player = GameUser.objects.get(game_id=game_id, user=request.user)
 
-    # TODO delete combat display for debug
-    combat_log_for_debug_display = CombatLog.objects.filter(game=game)
+    combat_log_debug = CombatLog.objects.filter(game=game)
+    print("***Combat Log***")
+    for log in combat_log_debug:
+        print(log)
+    print("***Combat Log***")
 
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
@@ -1005,7 +1008,6 @@ def battle(request, game_id, act, number):
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
-        'combat_log_for_debug_display': combat_log_for_debug_display,
         'player': player,
         'game_turn_order': game_turn_order,
         'unit_turn': unit_turn,
