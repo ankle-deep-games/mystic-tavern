@@ -451,6 +451,17 @@ def seed(request):
 
     return render(request, 'seed.html')
 
+# /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
+def add_three_users_to_game(request, game_id):
+    if request.user.is_superuser == False:
+        return redirect('tavern_app:home')
+    
+    game = Game(pk=game_id)
+    GameUser(game=game,user=User(pk=2)).save()
+    GameUser(game=game,user=User(pk=3)).save()
+    GameUser(game=game,user=User(pk=4)).save()  
+    return HttpResponse("3 users added to game " + str(game_id))
+
 def live_update_prototype(request):
     games = Game.objects.all()
     return JsonResponse({"games":list(games.values())})
