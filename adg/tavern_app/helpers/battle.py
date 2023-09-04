@@ -55,13 +55,6 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         player_or_enemy_took_action = "player",
         ability = ability,
         damage = ability.max_damage, # for testing do the max damage. will update later
-        unit_previous_hp = gameenemy.current_hp,
-        unit_resulting_hp = gameenemy.current_hp - ability.max_damage,
-        ability_mp_cost = ability.mp_cost,
-        unit_previous_mp = gameuser.current_mp,
-        unit_resulting_mp = gameuser.current_mp - ability.mp_cost,
-        ability_min_damage = ability.min_damage,
-        ability_max_damage = ability.max_damage,
         )
     combat_log.save()
 
@@ -86,13 +79,6 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
         player_or_enemy_took_action = "enemy",
         ability = ability,
         damage = ability.max_damage, # for testing do the max damage. will update later
-        unit_previous_hp = gameuser.current_hp,
-        unit_resulting_hp = gameuser.current_hp - ability.max_damage,
-        ability_mp_cost = ability.mp_cost,
-        unit_previous_mp = gameenemy.current_mp,
-        unit_resulting_mp = gameenemy.current_mp - ability.mp_cost,
-        ability_min_damage = ability.min_damage,
-        ability_max_damage = ability.max_damage,
         )
     combat_log.save()
 
