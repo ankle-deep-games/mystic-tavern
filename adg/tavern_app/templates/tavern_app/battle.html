@@ -119,5 +119,17 @@
             {% endfor %}
         {% endif %}
 
+        {% if gameuser.ability_4 %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u> {{gameenemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
     </div>
 {% endblock %}

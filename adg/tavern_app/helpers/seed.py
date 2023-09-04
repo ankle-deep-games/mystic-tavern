@@ -142,10 +142,12 @@ def seed_data():
     ability1 = Ability(name="Attack", description="Basic Attack. Nuff Said.", type=type6, mp_cost=0, min_damage=1, max_damage=5)
     ability2 = Ability(name="Myst Attack Test", description="Super cool MYSTIC attack.", type=type6, mp_cost=3, is_myst_attack=True, min_damage=1, max_damage=4)
     ability3 = Ability(name="Reg Attack Test", description="Moderately cool regular attack.", type=type6, mp_cost=4, is_myst_attack=False, min_damage=1, max_damage=6)
+    ability4 = Ability(name="Super Attack Test", description="Super cool regular attack.", type=type6, mp_cost=4, is_myst_attack=False, min_damage=1, max_damage=6)
     Ability.objects.bulk_create([
         ability1,
         ability2,
         ability3,
+        ability4,
     ])
 
     # gameuser
@@ -162,9 +164,6 @@ def seed_data():
         current_myst_attack=role1.start_myst_attack,
         current_myst_defense=role1.start_myst_defense,
         current_speed=role1.start_speed,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
     )
     gameuser2 = GameUser(
         game=game1,
@@ -179,9 +178,6 @@ def seed_data():
         current_myst_attack=role2.start_myst_attack,
         current_myst_defense=role2.start_myst_defense,
         current_speed=role2.start_speed,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
     )
     gameuser3 = GameUser(
         game=game1,
@@ -196,9 +192,6 @@ def seed_data():
         current_myst_attack=role3.start_myst_attack,
         current_myst_defense=role3.start_myst_defense,
         current_speed=role3.start_speed,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
     )
     gameuser4 = GameUser(
         game=game1,
@@ -213,9 +206,6 @@ def seed_data():
         current_myst_attack=role4.start_myst_attack,
         current_myst_defense=role4.start_myst_defense,
         current_speed=role4.start_speed,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
     )
     gameuser5 = GameUser(
         game=game2,
@@ -230,9 +220,6 @@ def seed_data():
         current_myst_attack=role2.start_myst_attack,
         current_myst_defense=role2.start_myst_defense,
         current_speed=role2.start_speed,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
     )
     GameUser.objects.bulk_create([
         gameuser1,
@@ -272,6 +259,7 @@ def seed_data():
         ability_1=ability1,
         ability_2=ability2,
         ability_3=ability3,
+        ability_4=ability4,
     )
     enemy2 = Enemy(
         name="Drunk Man 2",
@@ -287,6 +275,7 @@ def seed_data():
         ability_1=ability1,
         ability_2=ability2,
         ability_3=ability3,
+        ability_4=ability4,
     )
     Enemy.objects.bulk_create([
         enemy1,
