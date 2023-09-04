@@ -73,4 +73,29 @@ def gameuser_attack_single_gameenemy_and_save(game, gameuser, gameenemy, ability
     unit_turn.is_their_turn = False
     unit_turn.save()
     
-# def gameenemy_attack_single_gameuser_and_save(game, gameuser, gameenemy, ability, unit_turn):
+def gameenemy_attack_single_gameuser_and_save(game, gameuser, gameenemy, ability, unit_turn):
+    combat_log = CombatLog(
+        game = game,
+        gameuser = gameuser,
+        gameenemy = gameenemy,
+        player_or_enemy_took_action = "enemy",
+        ability = ability,
+        damage = ability.max_damage, # for testing do the max damage. will update later
+        unit_previous_hp = gameuser.current_hp,
+        unit_resulting_hp = gameuser.current_hp - ability.max_damage,
+        ability_mp_cost = ability.mp_cost,
+        unit_previous_mp = gameenemy.current_mp,
+        unit_resulting_mp = gameenemy.current_mp - ability.mp_cost,
+        ability_min_damage = ability.min_damage,
+        ability_max_damage = ability.max_damage,
+        )
+    combat_log.save()
+
+    gameuser.current_hp = gameuser.current_hp - ability.max_damage
+    gameuser.save()
+
+    gameenemy.current_mp = gameenemy.current_mp - ability.mp_cost
+    gameenemy.save()
+
+    unit_turn.is_their_turn = False
+    unit_turn.save()

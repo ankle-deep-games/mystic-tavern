@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save
 
 
 def simple_view(request):
@@ -468,31 +468,7 @@ def battle(request, game_id, act, number):
             attacking_enemey_target_player = gameuser
 
         ## do damage to that player and update combat log
-        combat_log = CombatLog(
-            game = game,
-            gameuser = attacking_enemey_target_player,
-            gameenemy = attacking_enemy.gameenemy,
-            player_or_enemy_took_action = "enemy",
-            ability = attacking_enemy_ability,
-            damage = attacking_enemy_ability.max_damage, # for testing do the max damage. will update later
-            unit_previous_hp = attacking_enemey_target_player.current_hp,
-            unit_resulting_hp = attacking_enemey_target_player.current_hp - attacking_enemy_ability.max_damage,
-            ability_mp_cost = attacking_enemy_ability.mp_cost,
-            unit_previous_mp = attacking_enemy.gameenemy.current_mp,
-            unit_resulting_mp = attacking_enemy.gameenemy.current_mp - attacking_enemy_ability.mp_cost,
-            ability_min_damage = attacking_enemy_ability.min_damage,
-            ability_max_damage = attacking_enemy_ability.max_damage,
-            )
-        combat_log.save()
-
-        attacking_enemey_target_player.current_hp = attacking_enemey_target_player.current_hp - attacking_enemy_ability.max_damage
-        attacking_enemey_target_player.save()
-
-        attacking_enemy.gameenemy.current_mp = attacking_enemy.gameenemy.current_mp - attacking_enemy_ability.mp_cost
-        attacking_enemy.save()
-
-        unit_turn.is_their_turn = False
-        unit_turn.save()
+        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser, gameenemy=attacking_enemy.gameenemy, ability=attacking_enemy_ability, unit_turn=unit_turn)
 
         messages.info(request, f'{attacking_enemy.gameenemy.name()} attacked {attacking_enemey_target_player.name()} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
 
