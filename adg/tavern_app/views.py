@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save
 
 
 def simple_view(request):
@@ -424,7 +424,7 @@ def battle(request, game_id, act, number):
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
-            # TODO adjust to handle AOE abilities where mulitiple enemies are hit
+            # TODO adjust to handle AOE abilities where mulitiple enemies are hit https://trello.com/c/OMCCkbSO/188-combat-single-target-aoe-dots
             gameenemy = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
 
@@ -435,35 +435,9 @@ def battle(request, game_id, act, number):
                 is_request_user_turn = False
             
             if is_request_user_turn:
-                messages.success(request, 'Yes! It was that users turn to attack', extra_tags="alert alert-success")
-
-                combat_log = CombatLog(
-                    game = game,
-                    gameuser = gameuser,
-                    gameenemy = gameenemy,
-                    player_or_enemy_took_action = "player",
-                    ability = ability,
-                    damage = ability.max_damage, # for testing do the max damage. will update later
-                    unit_previous_hp = gameenemy.current_hp,
-                    unit_resulting_hp = gameenemy.current_hp - ability.max_damage,
-                    ability_mp_cost = ability.mp_cost,
-                    unit_previous_mp = gameuser.current_mp,
-                    unit_resulting_mp = gameuser.current_mp - ability.mp_cost,
-                    ability_min_damage = ability.min_damage,
-                    ability_max_damage = ability.max_damage,
-                    )
-                combat_log.save()
-
-                gameenemy.current_hp = gameenemy.current_hp - ability.max_damage
-                gameenemy.save()
-
-                gameuser.current_mp = gameuser.current_mp - ability.mp_cost
-                gameuser.save()
-
-                unit_turn.is_their_turn = False
-                unit_turn.save()
+                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
             else:
-                messages.error(request, 'IT IS NOT YOUR TURN TO ATTACK!', extra_tags="alert alert-danger")
+                messages.error(request, 'It is not your turn to attack.', extra_tags="alert alert-danger")
 
             # TODO update redirect to current battle
             return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
@@ -484,20 +458,14 @@ def battle(request, game_id, act, number):
     # TODO clean up after working
     if unit_turn.gameenemy:
         attacking_enemy = unit_turn
-        print("enemy turn is:")
-        print(attacking_enemy)
 
         ## start by only using regular attack - later choose one of their abilities to cast
         attacking_enemy_ability = attacking_enemy.gameenemy.enemy.ability_1
-        print("attacking enemy attack:")
-        print(attacking_enemy_ability)
 
         ## start by attacking first player in loop - then select an alive player to attack at random
         attacking_enemey_target_player = '' # TODO instantiate this as an empty <class 'tavern_app.models.GameUser'>
         for gameuser in gameusers:
             attacking_enemey_target_player = gameuser
-        print("target player is")
-        print(attacking_enemey_target_player)
 
         ## do damage to that player and update combat log
         combat_log = CombatLog(
