@@ -243,14 +243,6 @@ class CombatLog(models.Model):
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     damage = models.IntegerField(default=0)
-    # fields for debugging below that we'll likely delete later
-    unit_previous_hp = models.IntegerField(default=0)
-    unit_resulting_hp = models.IntegerField(default=0)
-    ability_mp_cost = models.IntegerField(default=0)
-    unit_previous_mp = models.IntegerField(default=0)
-    unit_resulting_mp = models.IntegerField(default=0)
-    ability_min_damage = models.IntegerField(default=0)
-    ability_max_damage = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

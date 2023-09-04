@@ -433,6 +433,16 @@ def battle(request, game_id, act, number):
                 is_request_user_turn = True if unit_turn.gameuser == gameuser else False
             else:
                 is_request_user_turn = False
+
+            if gameenemy_target.current_hp == 0:
+                messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
+                # TODO update redirect to current battle
+                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+            
+            if gameuser.current_mp < ability.mp_cost:
+                messages.error(request, 'Not enough MP to cast that ability.', extra_tags="alert alert-danger")
+                # TODO update redirect to current battle
+                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
             if is_request_user_turn:
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
