@@ -526,7 +526,7 @@ def battle(request, game_id, act, number):
         unit_turn.is_their_turn = False
         unit_turn.save()
 
-        messages.info(request, f'{attacking_enemy.gameenemy.enemy.name} attacked {attacking_enemey_target_player.name()} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
+        messages.info(request, f'{attacking_enemy.gameenemy.name()} attacked {attacking_enemey_target_player.name()} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
 
         ## split out the assign turn order function and rerun it to assign a new turn order.
         assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)

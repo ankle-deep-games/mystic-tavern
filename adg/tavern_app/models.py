@@ -221,6 +221,12 @@ class GameEnemy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def name(self):
+        return self.enemy.name
+    
+    def image(self):
+        return self.enemy.image
+    
     def hp_percentage(self):
         return round((self.current_hp / self.enemy.start_hp) * 100)
 
@@ -228,7 +234,7 @@ class GameEnemy(models.Model):
         return round((self.current_mp / self.enemy.start_mp) * 100)
 
     def __str__(self):
-        return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
+        return f'Game Name: {self.game.name}, Enemy Name: {self.name()}, Act: {self.act}, Battle: {self.battle}'
 
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
@@ -249,7 +255,7 @@ class CombatLog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'who: {self.player_or_enemy_took_action}, player: {self.gameuser.user.username}, enemy: {self.gameenemy.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
+        return f'who: {self.player_or_enemy_took_action}, player: {self.gameuser.user.username}, enemy: {self.gameenemy.name()}, ability: {self.ability.name}, damage: {self.damage}'
     
 class GameLocation(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
@@ -272,6 +278,6 @@ class GameTurnOrder(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        player = self.gameuser.user.username if self.gameuser else 'Null'
-        enemy = self.gameenemy.enemy.name if self.gameenemy else 'Null'
-        return f'game: {self.game.name}, player: {player}, enemy: {enemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed}'
+        gameuser = self.gameuser.name() if self.gameuser else 'Null'
+        gameenemy = self.gameenemy.name() if self.gameenemy else 'Null'
+        return f'game: {self.game.name}, gameuser: {gameuser}, gameenemy: {gameenemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed}'
