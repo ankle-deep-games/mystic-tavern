@@ -106,3 +106,10 @@ def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
     # TODO change to rand of 4 when we add fourth ability https://trello.com/c/jzFIFAaP/189-4-abilities-to-enemies-and-players-instead-of-3
     random_ability = "ability_" + str(random.randint(1, 3))
     return getattr(gameenemy.enemy, random_ability)
+
+def enemey_choose_random_alive_target(gameusers) -> GameUser:
+    gameuser_list = []
+    for gameuser in gameusers:
+        if gameuser.current_hp > 0:
+            gameuser_list.append(gameuser)
+    return random.choice(gameuser_list)
