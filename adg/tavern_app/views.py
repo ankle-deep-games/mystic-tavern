@@ -457,20 +457,20 @@ def battle(request, game_id, act, number):
 
     # TODO clean up after working
     if unit_turn.gameenemy:
-        attacking_enemy = unit_turn
+        gameenemy = unit_turn.gameenemy
 
         ## start by only using regular attack - later choose one of their abilities to cast
-        attacking_enemy_ability = attacking_enemy.gameenemy.enemy.ability_1
+        ability = gameenemy.enemy.ability_1
 
         ## start by attacking first player in loop - then select an alive player to attack at random
-        attacking_enemey_target_player = '' # TODO instantiate this as an empty <class 'tavern_app.models.GameUser'>
+        gameuser_target = '' # TODO instantiate this as an empty <class 'tavern_app.models.GameUser'>
         for gameuser in gameusers:
-            attacking_enemey_target_player = gameuser
+            gameuser_target = gameuser
 
         ## do damage to that player and update combat log
-        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser, gameenemy=attacking_enemy.gameenemy, ability=attacking_enemy_ability, unit_turn=unit_turn)
+        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
 
-        messages.info(request, f'{attacking_enemy.gameenemy.name()} attacked {attacking_enemey_target_player.name()} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
+        messages.info(request, f'{gameenemy.name()} attacked {gameuser_target.name()} for {ability.max_damage} as well', extra_tags="alert alert-info")
 
         ## split out the assign turn order function and rerun it to assign a new turn order.
         calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
