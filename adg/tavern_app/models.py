@@ -229,8 +229,8 @@ class GameEnemy(models.Model):
 
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
-    player = models.ForeignKey(User, on_delete=models.PROTECT)
-    enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT)
+    player = models.ForeignKey(User, on_delete=models.PROTECT) # TODO change to gameuser?
+    enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT) # TODO change to gameenemy?
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     damage = models.IntegerField(default=0)
