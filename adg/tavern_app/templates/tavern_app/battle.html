@@ -16,7 +16,7 @@
 
         <h1 class="text-primary">TURN: 
             {%if unit_turn.gameuser %}
-                {{unit_turn.gameuser.user.username}}
+                {{unit_turn.gameuser.name}}
             {% else %}
                 {{unit_turn.gameenemy.enemy.name}}
             </h1>
@@ -63,7 +63,7 @@
             {% load static %}
                 <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
                 <div class="card-body">
-                <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
+                <h3 class="card-title text-white">{{ gameuser.name }}</h3>
                 <hr>
                 <h6>Stats:</h6>
                 <ul>
@@ -90,7 +90,7 @@
                 <input type="hidden" name="gameuser" value="{{gameuser.user.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.enemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
-                <button type="submit" class="btn btn-primary mt-3">{{gameuser.user.username}} <u>{{gameuser.ability_1.name}}</u> {{gameenemy.enemy.name}}</button>
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u> {{gameenemy.enemy.name}}</button>
             </form>
             {% endfor %}
         {% endif %}
@@ -102,7 +102,7 @@
                 <input type="hidden" name="gameuser" value="{{gameuser.user.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.enemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
-                <button type="submit" class="btn btn-primary mt-3">{{gameuser.user.username}} <u>{{gameuser.ability_2.name}}</u> {{gameenemy.enemy.name}}</button>
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u> {{gameenemy.enemy.name}}</button>
             </form>
             {% endfor %}
         {% endif %}
@@ -114,7 +114,7 @@
                 <input type="hidden" name="gameuser" value="{{gameuser.user.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.enemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
-                <button type="submit" class="btn btn-primary mt-3">{{gameuser.user.username}} <u>{{gameuser.ability_3.name}}</u> {{gameenemy.enemy.name}}</button>
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u> {{gameenemy.enemy.name}}</button>
             </form>
             {% endfor %}
         {% endif %}

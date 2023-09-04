@@ -346,7 +346,7 @@ def scene(request, game_id, act, number):
             speaker = "Group Member 1"
         elif idx == 2:
             speaker = "Group Member 2"
-        character_list.append({'name': game_user.user.username, 'image': game_user.image(), 'speaker': speaker})
+        character_list.append({'name': game_user.name(), 'image': game_user.image(), 'speaker': speaker})
 
     npcs = NPC.objects.all()
     for npc in npcs:
@@ -526,7 +526,7 @@ def battle(request, game_id, act, number):
         unit_turn.is_their_turn = False
         unit_turn.save()
 
-        messages.info(request, f'{attacking_enemy.gameenemy.enemy.name} attacked {attacking_enemey_target_player.user.username} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
+        messages.info(request, f'{attacking_enemy.gameenemy.enemy.name} attacked {attacking_enemey_target_player.name()} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
 
         ## split out the assign turn order function and rerun it to assign a new turn order.
         assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)

@@ -140,6 +140,9 @@ class GameUser(models.Model):
         self.update_is_ready_field()
         super().save(*args, **kwargs)
 
+    def name(self):
+        return self.user.username
+    
     def image(self):
         return f'{self.role}-{self.gender}.png'
 
