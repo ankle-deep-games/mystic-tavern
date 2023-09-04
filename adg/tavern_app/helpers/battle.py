@@ -1,6 +1,7 @@
-from ..models import GameTurnOrder
+from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
+import random
 
-def assign_turn_order(game, gameusers, gameenemies):
+def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
@@ -45,3 +46,63 @@ def assign_turn_order(game, gameusers, gameenemies):
                     is_someones_turn = True
                     unit.save()
             unit.save()
+
+def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
+    combat_log = CombatLog(
+        game = game,
+        gameuser = gameuser,
+        gameenemy = gameenemy,
+        player_or_enemy_took_action = "player",
+        ability = ability,
+        damage = ability.max_damage, # for testing do the max damage. will update later
+        unit_previous_hp = gameenemy.current_hp,
+        unit_resulting_hp = gameenemy.current_hp - ability.max_damage,
+        ability_mp_cost = ability.mp_cost,
+        unit_previous_mp = gameuser.current_mp,
+        unit_resulting_mp = gameuser.current_mp - ability.mp_cost,
+        ability_min_damage = ability.min_damage,
+        ability_max_damage = ability.max_damage,
+        )
+    combat_log.save()
+
+    gameenemy.current_hp = gameenemy.current_hp - ability.max_damage
+    gameenemy.save()
+
+    gameuser.current_mp = gameuser.current_mp - ability.mp_cost
+    gameuser.save()
+
+    unit_turn.is_their_turn = False
+    unit_turn.save()
+    
+def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
+    combat_log = CombatLog(
+        game = game,
+        gameuser = gameuser,
+        gameenemy = gameenemy,
+        player_or_enemy_took_action = "enemy",
+        ability = ability,
+        damage = ability.max_damage, # for testing do the max damage. will update later
+        unit_previous_hp = gameuser.current_hp,
+        unit_resulting_hp = gameuser.current_hp - ability.max_damage,
+        ability_mp_cost = ability.mp_cost,
+        unit_previous_mp = gameenemy.current_mp,
+        unit_resulting_mp = gameenemy.current_mp - ability.mp_cost,
+        ability_min_damage = ability.min_damage,
+        ability_max_damage = ability.max_damage,
+        )
+    combat_log.save()
+
+    gameuser.current_hp = gameuser.current_hp - ability.max_damage
+    gameuser.save()
+
+    gameenemy.current_mp = gameenemy.current_mp - ability.mp_cost
+    gameenemy.save()
+
+    unit_turn.is_their_turn = False
+    unit_turn.save()
+
+def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
+    # TODO enemy must have mp needed for ability? or give them unlimited MP
+    # TODO change to rand of 4 when we add fourth ability https://trello.com/c/jzFIFAaP/189-4-abilities-to-enemies-and-players-instead-of-3
+    random_ability = "ability_" + str(random.randint(1, 3))
+    return getattr(gameenemy.enemy, random_ability)
