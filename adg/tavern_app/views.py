@@ -453,23 +453,21 @@ def battle(request, game_id, act, number):
 
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
-    unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
+    if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
+        is_enemy_turn_next = True
+        while is_enemy_turn_next:
+            unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
+            gameenemy = unit_turn.gameenemy
+            ability = enemey_choose_random_ability(gameenemy)
+            gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
 
-    # TODO clean up after working
-    if unit_turn.gameenemy:
-        gameenemy = unit_turn.gameenemy
-        ability = enemey_choose_random_ability(gameenemy)
-        gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
+            gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+            messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.', extra_tags="alert alert-info")
 
-        ## do damage to that player and update combat log
-        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
-
-        messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage} as well', extra_tags="alert alert-info")
-
-        calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
-
-        ## TODO if next enemy one to attack in an enemy do it again
-
+            calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
+            
+            # if enemy will go after current enemy - have that enemy attack by looping again
+            is_enemy_turn_next = True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False
 
     combat_log_debug = CombatLog.objects.filter(game=game)
     print("***COMBAT LOG***")
