@@ -471,12 +471,6 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    combat_log_debug = CombatLog.objects.filter(game=game)
-    print("***COMBAT LOG***")
-    for log in combat_log_debug:
-        print(log)
-    print("***COMBAT LOG***\n")
-
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
@@ -530,6 +524,62 @@ def battle(request, game_id, act, number):
         is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
     else:
         is_request_user_turn = False
+
+    # TODO clean up after working
+    if unit_turn.gameenemy:
+        attacking_enemy = unit_turn
+        print("enemy turn is:")
+        print(attacking_enemy)
+
+        ## start by only using regular attack - later choose one of their abilities to cast
+        attacking_enemy_ability = attacking_enemy.gameenemy.enemy.ability_1
+        print("attacking enemy attack:")
+        print(attacking_enemy_ability)
+
+        ## start by attacking first player in loop - then select an alive player to attack at random
+        attacking_enemey_target_player = '' # TODO instantiate this as an empty <class 'tavern_app.models.GameUser'>
+        for gameuser in gameusers:
+            attacking_enemey_target_player = gameuser
+        print("target player is")
+        print(attacking_enemey_target_player)
+
+        ## do damage to that player and update combat log
+        combat_log = CombatLog(
+            game = game,
+            player = attacking_enemey_target_player.user,
+            enemy = attacking_enemy.gameenemy.enemy,
+            player_or_enemy_took_action = "enemy",
+            ability = attacking_enemy_ability,
+            damage = attacking_enemy_ability.max_damage, # for testing do the max damage. will update later
+            unit_previous_hp = attacking_enemey_target_player.current_hp,
+            unit_resulting_hp = attacking_enemey_target_player.current_hp - attacking_enemy_ability.max_damage,
+            ability_mp_cost = attacking_enemy_ability.mp_cost,
+            unit_previous_mp = attacking_enemy.gameenemy.current_mp,
+            unit_resulting_mp = attacking_enemy.gameenemy.current_mp - attacking_enemy_ability.mp_cost,
+            ability_min_damage = attacking_enemy_ability.min_damage,
+            ability_max_damage = attacking_enemy_ability.max_damage,
+            )
+        combat_log.save()
+
+        attacking_enemey_target_player.current_hp = attacking_enemey_target_player.current_hp - attacking_enemy_ability.max_damage
+        attacking_enemey_target_player.save()
+
+        attacking_enemy.gameenemy.current_mp = attacking_enemy.gameenemy.current_mp - attacking_enemy_ability.mp_cost
+        attacking_enemy.save()
+
+        unit_turn.is_their_turn = False
+        unit_turn.save()
+
+        ## split out the assign turn order function and rerun it to assign a new turn order.
+
+        ## if next enemy one to attack in an enemy do it again
+
+
+    combat_log_debug = CombatLog.objects.filter(game=game)
+    print("***COMBAT LOG***")
+    for log in combat_log_debug:
+        print(log)
+    print("***COMBAT LOG***\n")
 
     print("***TURN ORDER***")
     for turn_order in game_turn_order:
