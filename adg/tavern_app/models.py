@@ -154,10 +154,10 @@ class GameUser(models.Model):
 
     def __str__(self):
         game_name = self.game.name if self.game else 'Unknown Game'
-        username = self.user.username if self.user else 'Unknown User'
+        gameuser = self.name() if self.user else 'Unknown User'
         role_name = self.role.name if self.role else 'Unknown Role'
 
-        return f'Game Name: {game_name}, Player: {username}, Role: {role_name}'
+        return f'Game Name: {game_name}, GameUser Name: {gameuser}, Role: {role_name}'
 
 
 class Dialogue(models.Model):
@@ -255,7 +255,7 @@ class CombatLog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'who: {self.player_or_enemy_took_action}, player: {self.gameuser.user.username}, enemy: {self.gameenemy.name()}, ability: {self.ability.name}, damage: {self.damage}'
+        return f'who: {self.player_or_enemy_took_action}, gameuser: {self.gameuser.name()}, gameenemy: {self.gameenemy.name()}, ability: {self.ability.name}, damage: {self.damage}'
     
 class GameLocation(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)

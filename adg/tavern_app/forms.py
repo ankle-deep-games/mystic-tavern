@@ -41,7 +41,7 @@ class RoleAssignmentForm(ModelForm):
 
         for i, player in enumerate(players, start=1):
             self.fields[f'player_{i}_name'] = forms.ChoiceField(
-                choices=[(player.user.username, player.user.username) for player in players],
+                choices=[(player.name(), player.name()) for player in players],
                 label=f'Player {i} Name')
             self.fields[f'player_{i}_role'] = forms.ModelChoiceField(queryset=roles,
                                                                      empty_label=None,
@@ -50,7 +50,7 @@ class RoleAssignmentForm(ModelForm):
                                                                        empty_label=None,
                                                                        label=f'Player {i} Gender')
 
-            self.initial[f'player_{i}_name'] = player.user.username
+            self.initial[f'player_{i}_name'] = player.name()
             self.initial[f'player_{i}_role'] = player.role.id if player.role else None
             self.initial[f'player_{i}_gender'] = player.gender.id if player.gender else None
 
