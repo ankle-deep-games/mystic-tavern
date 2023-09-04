@@ -418,14 +418,14 @@ def battle(request, game_id, act, number):
         return redirect('tavern_app:games')
 
     game = Game.objects.get(pk=game_id)
-    player = GameUser.objects.get(game_id=game_id, user=request.user)
+    gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
             # TODO adjust to handle AOE abilities where mulitiple enemies are hit
-            enemy = GameEnemy.objects.get(game_id=game_id, enemy=Enemy(form.cleaned_data['enemy'].id))
+            gameenemy = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
@@ -439,26 +439,26 @@ def battle(request, game_id, act, number):
 
                 combat_log = CombatLog(
                     game = game,
-                    player = player.user,
-                    enemy = enemy.enemy,
+                    gameuser = gameuser,
+                    gameenemy = gameenemy,
                     player_or_enemy_took_action = "player",
                     ability = ability,
                     damage = ability.max_damage, # for testing do the max damage. will update later
-                    unit_previous_hp = enemy.current_hp,
-                    unit_resulting_hp = enemy.current_hp - ability.max_damage,
+                    unit_previous_hp = gameenemy.current_hp,
+                    unit_resulting_hp = gameenemy.current_hp - ability.max_damage,
                     ability_mp_cost = ability.mp_cost,
-                    unit_previous_mp = player.current_mp,
-                    unit_resulting_mp = player.current_mp - ability.mp_cost,
+                    unit_previous_mp = gameuser.current_mp,
+                    unit_resulting_mp = gameuser.current_mp - ability.mp_cost,
                     ability_min_damage = ability.min_damage,
                     ability_max_damage = ability.max_damage,
                     )
                 combat_log.save()
 
-                enemy.current_hp = enemy.current_hp - ability.max_damage
-                enemy.save()
+                gameenemy.current_hp = gameenemy.current_hp - ability.max_damage
+                gameenemy.save()
 
-                player.current_mp = player.current_mp - ability.mp_cost
-                player.save()
+                gameuser.current_mp = gameuser.current_mp - ability.mp_cost
+                gameuser.save()
 
                 unit_turn.is_their_turn = False
                 unit_turn.save()
@@ -467,6 +467,8 @@ def battle(request, game_id, act, number):
 
             # TODO update redirect to current battle
             return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+        else:
+            messages.error(request, 'Something in combat form not valid', extra_tags="alert alert-danger")
 
     # else render form
     else:
@@ -500,8 +502,8 @@ def battle(request, game_id, act, number):
         ## do damage to that player and update combat log
         combat_log = CombatLog(
             game = game,
-            player = attacking_enemey_target_player.user,
-            enemy = attacking_enemy.gameenemy.enemy,
+            gameuser = attacking_enemey_target_player,
+            gameenemy = attacking_enemy.gameenemy,
             player_or_enemy_took_action = "enemy",
             ability = attacking_enemy_ability,
             damage = attacking_enemy_ability.max_damage, # for testing do the max damage. will update later
@@ -546,7 +548,6 @@ def battle(request, game_id, act, number):
             print("-----^ their turn ^-----")
     print("***TURN ORDER***")
 
-    ## TODO reassign unit_turn for debugging on frontend
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
     if unit_turn.gameuser:
         is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
@@ -558,7 +559,7 @@ def battle(request, game_id, act, number):
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
-        'player': player,
+        'gameuser': gameuser,
         'unit_turn': unit_turn,
         'is_request_user_turn': is_request_user_turn,
     }

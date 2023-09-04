@@ -229,8 +229,8 @@ class GameEnemy(models.Model):
 
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
-    player = models.ForeignKey(User, on_delete=models.PROTECT) # TODO change to gameuser?
-    enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT) # TODO change to gameenemy?
+    gameuser = models.ForeignKey(GameUser, on_delete=models.PROTECT)
+    gameenemy = models.ForeignKey(GameEnemy, on_delete=models.PROTECT)
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     damage = models.IntegerField(default=0)
@@ -246,7 +246,7 @@ class CombatLog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'who: {self.player_or_enemy_took_action}, player: {self.player.username}, enemy: {self.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
+        return f'who: {self.player_or_enemy_took_action}, player: {self.gameuser.user.username}, enemy: {self.gameenemy.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
     
 class GameLocation(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
