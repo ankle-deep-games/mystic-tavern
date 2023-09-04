@@ -64,8 +64,6 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
     gameenemy.save()
 
     gameuser.current_mp = gameuser.current_mp - ability.mp_cost
-    if gameenemy.current_mp < 0:
-        gameenemy.current_mp = 0
     gameuser.save()
 
     unit_turn.is_their_turn = False
@@ -88,8 +86,6 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
     gameuser.save()
 
     gameenemy.current_mp = gameenemy.current_mp - ability.mp_cost
-    if gameuser.current_mp < 0:
-        gameuser.current_mp = 0
     gameenemy.save()
 
     unit_turn.is_their_turn = False
