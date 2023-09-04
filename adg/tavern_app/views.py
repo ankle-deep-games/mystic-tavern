@@ -478,10 +478,6 @@ def battle(request, game_id, act, number):
     assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-    if unit_turn.gameuser:
-        is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
-    else:
-        is_request_user_turn = False
 
     # TODO clean up after working
     if unit_turn.gameenemy:
@@ -549,6 +545,13 @@ def battle(request, game_id, act, number):
         if turn_order.is_their_turn:
             print("-----^ their turn ^-----")
     print("***TURN ORDER***")
+
+    ## TODO reassign unit_turn for debugging on frontend
+    unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
+    if unit_turn.gameuser:
+        is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+    else:
+        is_request_user_turn = False
 
     context = {
         'game_id': game_id,
