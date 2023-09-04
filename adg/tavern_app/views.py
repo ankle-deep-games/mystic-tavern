@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
+from .helpers.battle import assign_turn_order
 
 
 def simple_view(request):
@@ -474,50 +475,7 @@ def battle(request, game_id, act, number):
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
-    # get the game turn order. if it doesn't exist yet - populate the table and requery.
-    game_turn_order = GameTurnOrder.objects.filter(game=game)
-    if not game_turn_order:
-        for gameuser in gameusers:
-            gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
-            gu_turn_order.save()
-        for gameenemy in gameenemies:
-            ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
-            ge_turn_order.save()
-        game_turn_order = GameTurnOrder.objects.filter(game=game)
-
-    is_someones_turn = False
-    is_someone_over_100 = False
-    for unit in game_turn_order:
-        if unit.is_their_turn == True:
-            is_someones_turn = True
-        if unit.accum_speed >= 100:
-            is_someone_over_100 = True
-
-    # if not someone's turn we need to run calculations to make it someone's turn
-    if is_someones_turn == False:
-
-        # nobody over 100 so we don't know who to give turn. increase all units accum_speed by current_speed until at least 1 is over 100.
-        while is_someone_over_100 == False:
-            for unit in game_turn_order:
-                if unit.gameuser:
-                    unit.accum_speed = unit.accum_speed + unit.gameuser.current_speed
-                    if unit.accum_speed >= 100:
-                        is_someone_over_100 = True
-                if unit.gameenemy:
-                    unit.accum_speed = unit.accum_speed + unit.gameenemy.current_speed
-                    if unit.accum_speed >= 100:
-                        is_someone_over_100 = True
-        
-        # now is_someone_over_100 is True
-        for unit in game_turn_order:
-            # only update reduce the speed and assign turn to 1 unit. save the rest
-            if unit.accum_speed >= 100:
-                if is_someones_turn == False:
-                    unit.is_their_turn = True
-                    unit.accum_speed = unit.accum_speed - 100
-                    is_someones_turn = True
-                    unit.save()
-            unit.save()
+    assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
     if unit_turn.gameuser:
@@ -570,7 +528,10 @@ def battle(request, game_id, act, number):
         unit_turn.is_their_turn = False
         unit_turn.save()
 
+        messages.info(request, f'{attacking_enemy.gameenemy.enemy.name} attacked {attacking_enemey_target_player.user.username} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
+
         ## split out the assign turn order function and rerun it to assign a new turn order.
+        assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
         ## if next enemy one to attack in an enemy do it again
 
@@ -581,6 +542,7 @@ def battle(request, game_id, act, number):
         print(log)
     print("***COMBAT LOG***\n")
 
+    game_turn_order = GameTurnOrder.objects.filter(game=game)
     print("***TURN ORDER***")
     for turn_order in game_turn_order:
         print(turn_order)
