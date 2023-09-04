@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target
 
 
 def simple_view(request):
@@ -458,23 +458,17 @@ def battle(request, game_id, act, number):
     # TODO clean up after working
     if unit_turn.gameenemy:
         gameenemy = unit_turn.gameenemy
-
         ability = enemey_choose_random_ability(gameenemy)
-
-        ## start by attacking first player in loop - then select an alive player to attack at random
-        gameuser_target = '' # TODO instantiate this as an empty <class 'tavern_app.models.GameUser'>
-        for gameuser in gameusers:
-            gameuser_target = gameuser
+        gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
 
         ## do damage to that player and update combat log
         gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
 
         messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage} as well', extra_tags="alert alert-info")
 
-        ## split out the assign turn order function and rerun it to assign a new turn order.
         calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
-        ## if next enemy one to attack in an enemy do it again
+        ## TODO if next enemy one to attack in an enemy do it again
 
 
     combat_log_debug = CombatLog.objects.filter(game=game)
