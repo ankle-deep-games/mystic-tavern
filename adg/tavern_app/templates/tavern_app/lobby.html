@@ -32,7 +32,7 @@
           {% if gameuser.is_ready %}
             <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
             <div class="card-body">
-              <h3 class="card-title text-white">{{ gameuser.user.username }} - READY</h3>
+              <h3 class="card-title text-white">{{ gameuser.name }} - READY</h3>
               <hr>
               <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
               <hr>
@@ -50,7 +50,7 @@
           {% else %}
             <img class="card-img-top" src ="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body">
-              <h3 class="card-title text-white">{{ gameuser.user.username }} - NOT READY</h3>
+              <h3 class="card-title text-white">{{ gameuser.name }} - NOT READY</h3>
               <hr>
               <h3 class="card-title text-white">Role: ???</h3>
               <hr>

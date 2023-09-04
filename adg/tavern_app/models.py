@@ -140,6 +140,9 @@ class GameUser(models.Model):
         self.update_is_ready_field()
         super().save(*args, **kwargs)
 
+    def name(self):
+        return self.user.username
+    
     def image(self):
         return f'{self.role}-{self.gender}.png'
 
@@ -151,10 +154,10 @@ class GameUser(models.Model):
 
     def __str__(self):
         game_name = self.game.name if self.game else 'Unknown Game'
-        username = self.user.username if self.user else 'Unknown User'
+        gameuser = self.name() if self.user else 'Unknown User'
         role_name = self.role.name if self.role else 'Unknown Role'
 
-        return f'Game Name: {game_name}, Player: {username}, Role: {role_name}'
+        return f'Game Name: {game_name}, GameUser Name: {gameuser}, Role: {role_name}'
 
 
 class Dialogue(models.Model):
@@ -218,6 +221,12 @@ class GameEnemy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def name(self):
+        return self.enemy.name
+    
+    def image(self):
+        return self.enemy.image
+    
     def hp_percentage(self):
         return round((self.current_hp / self.enemy.start_hp) * 100)
 
@@ -225,12 +234,12 @@ class GameEnemy(models.Model):
         return round((self.current_mp / self.enemy.start_mp) * 100)
 
     def __str__(self):
-        return f'Game Name: {self.game.name}, Enemy Name: {self.enemy.name}, Act: {self.act}, Battle: {self.battle}'
+        return f'Game Name: {self.game.name}, Enemy Name: {self.name()}, Act: {self.act}, Battle: {self.battle}'
 
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
-    player = models.ForeignKey(User, on_delete=models.PROTECT) # TODO change to gameuser?
-    enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT) # TODO change to gameenemy?
+    gameuser = models.ForeignKey(GameUser, on_delete=models.PROTECT)
+    gameenemy = models.ForeignKey(GameEnemy, on_delete=models.PROTECT)
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     damage = models.IntegerField(default=0)
@@ -246,7 +255,7 @@ class CombatLog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'who: {self.player_or_enemy_took_action}, player: {self.player.username}, enemy: {self.enemy.name}, ability: {self.ability.name}, damage: {self.damage}'
+        return f'who: {self.player_or_enemy_took_action}, gameuser: {self.gameuser.name()}, gameenemy: {self.gameenemy.name()}, ability: {self.ability.name}, damage: {self.damage}'
     
 class GameLocation(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
@@ -269,6 +278,6 @@ class GameTurnOrder(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        player = self.gameuser.user.username if self.gameuser else 'Null'
-        enemy = self.gameenemy.enemy.name if self.gameenemy else 'Null'
-        return f'game: {self.game.name}, player: {player}, enemy: {enemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed}'
+        gameuser = self.gameuser.name() if self.gameuser else 'Null'
+        gameenemy = self.gameenemy.name() if self.gameenemy else 'Null'
+        return f'game: {self.game.name}, gameuser: {gameuser}, gameenemy: {gameenemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed}'

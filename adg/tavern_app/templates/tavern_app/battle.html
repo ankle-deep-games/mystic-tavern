@@ -16,9 +16,9 @@
 
         <h1 class="text-primary">TURN: 
             {%if unit_turn.gameuser %}
-                {{unit_turn.gameuser.user.username}}
+                {{unit_turn.gameuser.name}}
             {% else %}
-                {{unit_turn.gameenemy.enemy.name}}
+                {{unit_turn.gameenemy.name}}
             </h1>
             {% endif %}
 
@@ -28,14 +28,14 @@
             <h2 class="text-danger">NOT request users turn</h2>
         {%endif%}
 
-        <h2 class="text-white my-3">Enemies:</h2>
+        <h2 class="text-white my-3">Gameenemies:</h2>
         <div class="card-group">
             {% for gameenemy in gameenemies %}
             <div class="card text-white bg-secondary mb-3">
             {% load static %}
-                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameenemy.enemy.image }}" alt="enemy picture">
+                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameenemy.image }}" alt="enemy picture">
                 <div class="card-body">
-                <h3 class="card-title text-white">{{ gameenemy.enemy.name }}</h3>
+                <h3 class="card-title text-white">{{ gameenemy.name }}</h3>
                 <hr>
                 <h6>Stats:</h6>
                 <ul>
@@ -56,14 +56,14 @@
         <br>
         <hr>
 
-        <h2 class="text-white my-3">Players:</h2>
+        <h2 class="text-white my-3">Gameusers:</h2>
         <div class="card-group">
             {% for gameuser in gameusers %}
             <div class="card text-white bg-secondary mb-3">
             {% load static %}
                 <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
                 <div class="card-body">
-                <h3 class="card-title text-white">{{ gameuser.user.username }}</h3>
+                <h3 class="card-title text-white">{{ gameuser.name }}</h3>
                 <hr>
                 <h6>Stats:</h6>
                 <ul>
@@ -83,38 +83,38 @@
         </div>
 
         {% comment %} TODO https://trello.com/c/wX36jJPx/168-combat-ui-what-players-see-when-it-is-not-their-turn-in-combat {% endcomment %}
-        {% if player.ability_1 %}
+        {% if gameuser.ability_1 %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="player" value="{{player.user.pk}}" />
-                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
-                <input type="hidden" name="ability" value="{{player.ability_1.pk}}" />
-                <button type="submit" class="btn btn-primary mt-3">{{player.user.username}} <u>{{player.ability_1.name}}</u> {{gameenemy.enemy.name}}</button>
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u> {{gameenemy.name}}</button>
             </form>
             {% endfor %}
         {% endif %}
 
-        {% if player.ability_2 %}
+        {% if gameuser.ability_2 %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="player" value="{{player.user.pk}}" />
-                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
-                <input type="hidden" name="ability" value="{{player.ability_2.pk}}" />
-                <button type="submit" class="btn btn-primary mt-3">{{player.user.username}} <u>{{player.ability_2.name}}</u> {{gameenemy.enemy.name}}</button>
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u> {{gameenemy.name}}</button>
             </form>
             {% endfor %}
         {% endif %}
 
-        {% if player.ability_3 %}
+        {% if gameuser.ability_3 %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="player" value="{{player.user.pk}}" />
-                <input type="hidden" name="enemy" value="{{gameenemy.enemy.pk}}" />
-                <input type="hidden" name="ability" value="{{player.ability_3.pk}}" />
-                <button type="submit" class="btn btn-primary mt-3">{{player.user.username}} <u>{{player.ability_3.name}}</u> {{gameenemy.enemy.name}}</button>
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u> {{gameenemy.name}}</button>
             </form>
             {% endfor %}
         {% endif %}
