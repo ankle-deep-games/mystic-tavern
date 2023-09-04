@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import assign_turn_order
+from .helpers.battle import calc_and_save_turn_order
 
 
 def simple_view(request):
@@ -430,7 +430,7 @@ def battle(request, game_id, act, number):
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             if unit_turn.gameuser:
-                is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
+                is_request_user_turn = True if unit_turn.gameuser == gameuser else False
             else:
                 is_request_user_turn = False
             
@@ -477,7 +477,7 @@ def battle(request, game_id, act, number):
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
-    assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
+    calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
 
@@ -529,7 +529,7 @@ def battle(request, game_id, act, number):
         messages.info(request, f'{attacking_enemy.gameenemy.name()} attacked {attacking_enemey_target_player.name()} for {attacking_enemy_ability.max_damage} as well', extra_tags="alert alert-info")
 
         ## split out the assign turn order function and rerun it to assign a new turn order.
-        assign_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
+        calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
         ## if next enemy one to attack in an enemy do it again
 

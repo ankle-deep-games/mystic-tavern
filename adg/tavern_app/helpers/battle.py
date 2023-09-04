@@ -1,6 +1,6 @@
 from ..models import GameTurnOrder
 
-def assign_turn_order(game, gameusers, gameenemies):
+def calc_and_save_turn_order(game, gameusers, gameenemies):
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
