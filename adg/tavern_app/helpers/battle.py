@@ -103,5 +103,6 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
 
 def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
     # TODO enemy must have mp needed for ability? or give them unlimited MP
+    # TODO change to rand of 4 when we add fourth ability https://trello.com/c/jzFIFAaP/189-4-abilities-to-enemies-and-players-instead-of-3
     random_ability = "ability_" + str(random.randint(1, 3))
     return getattr(gameenemy.enemy, random_ability)
