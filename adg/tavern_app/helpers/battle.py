@@ -1,6 +1,7 @@
-from ..models import GameTurnOrder, CombatLog
+from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
+import random
 
-def calc_and_save_turn_order(game, gameusers, gameenemies):
+def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
@@ -46,7 +47,7 @@ def calc_and_save_turn_order(game, gameusers, gameenemies):
                     unit.save()
             unit.save()
 
-def gameuser_attack_single_gameenemy_and_save(game, gameuser, gameenemy, ability, unit_turn):
+def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
     combat_log = CombatLog(
         game = game,
         gameuser = gameuser,
@@ -73,7 +74,7 @@ def gameuser_attack_single_gameenemy_and_save(game, gameuser, gameenemy, ability
     unit_turn.is_their_turn = False
     unit_turn.save()
     
-def gameenemy_attack_single_gameuser_and_save(game, gameuser, gameenemy, ability, unit_turn):
+def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
     combat_log = CombatLog(
         game = game,
         gameuser = gameuser,
@@ -99,3 +100,8 @@ def gameenemy_attack_single_gameuser_and_save(game, gameuser, gameenemy, ability
 
     unit_turn.is_their_turn = False
     unit_turn.save()
+
+def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
+    # TODO enemy must have mp needed for ability? or give them unlimited MP
+    random_ability = "ability_" + str(random.randint(1, 3))
+    return getattr(gameenemy.enemy, random_ability)

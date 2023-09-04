@@ -270,6 +270,8 @@ def seed_data():
         start_myst_defense=10,
         start_speed=10,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     enemy2 = Enemy(
         name="Drunk Man 2",
@@ -283,6 +285,8 @@ def seed_data():
         start_myst_defense=10,
         start_speed=15,
         ability_1=ability1,
+        ability_2=ability2,
+        ability_3=ability3,
     )
     Enemy.objects.bulk_create([
         enemy1,

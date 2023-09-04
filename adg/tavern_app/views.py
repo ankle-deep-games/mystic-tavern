@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability
 
 
 def simple_view(request):
@@ -425,7 +425,7 @@ def battle(request, game_id, act, number):
 
         if form.is_valid():
             # TODO adjust to handle AOE abilities where mulitiple enemies are hit https://trello.com/c/OMCCkbSO/188-combat-single-target-aoe-dots
-            gameenemy = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
+            gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
@@ -435,7 +435,7 @@ def battle(request, game_id, act, number):
                 is_request_user_turn = False
             
             if is_request_user_turn:
-                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
             else:
                 messages.error(request, 'It is not your turn to attack.', extra_tags="alert alert-danger")
 
@@ -459,8 +459,7 @@ def battle(request, game_id, act, number):
     if unit_turn.gameenemy:
         gameenemy = unit_turn.gameenemy
 
-        ## start by only using regular attack - later choose one of their abilities to cast
-        ability = gameenemy.enemy.ability_1
+        ability = enemey_choose_random_ability(gameenemy)
 
         ## start by attacking first player in loop - then select an alive player to attack at random
         gameuser_target = '' # TODO instantiate this as an empty <class 'tavern_app.models.GameUser'>
@@ -470,7 +469,7 @@ def battle(request, game_id, act, number):
         ## do damage to that player and update combat log
         gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
 
-        messages.info(request, f'{gameenemy.name()} attacked {gameuser_target.name()} for {ability.max_damage} as well', extra_tags="alert alert-info")
+        messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage} as well', extra_tags="alert alert-info")
 
         ## split out the assign turn order function and rerun it to assign a new turn order.
         calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
