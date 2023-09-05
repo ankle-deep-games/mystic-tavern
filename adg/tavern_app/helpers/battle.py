@@ -149,8 +149,6 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         )
     combat_log.save()
 
-    # TODO - don't heal over max hp. Think we need to add max_hp to models after calculating stat increases from weapons/armor
-
     gameuser.current_mp = gameuser.current_mp - ability.mp_cost
     gameuser.save()
 
