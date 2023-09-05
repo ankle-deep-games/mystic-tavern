@@ -61,7 +61,7 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         )
     combat_log.save()
 
-    gameenemy.current_hp = gameenemy.current_hp - ability.max_damage
+    gameenemy.current_hp = gameenemy.current_hp - calculated_damage
     if gameenemy.current_hp < 0:
         gameenemy.current_hp = 0
     gameenemy.save()
@@ -86,7 +86,7 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
         )
     combat_log.save()
 
-    gameuser.current_hp = gameuser.current_hp - ability.max_damage
+    gameuser.current_hp = gameuser.current_hp - calculated_damage
     if gameuser.current_hp < 0:
         gameuser.current_hp = 0
     gameuser.save()
@@ -134,3 +134,44 @@ def enemey_choose_random_alive_target(gameusers) -> GameUser:
         if gameuser.current_hp > 0:
             gameuser_list.append(gameuser)
     return random.choice(gameuser_list)
+
+def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder) -> None:
+    who_attacking = "player"
+    calculated_healing = calculate_healing(gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability)
+
+    combat_log = CombatLog(
+        game = game,
+        gameuser = gameuser,
+        defensive_gameuser_target = defensive_gameuser_target,
+        player_or_enemy_took_action = who_attacking,
+        ability = ability,
+        damage = calculated_healing
+        )
+    combat_log.save()
+
+    # TODO - don't heal over max hp. Think we need to add max_hp to models after calculating stat increases from weapons/armor
+
+    gameuser.current_mp = gameuser.current_mp - ability.mp_cost
+    gameuser.save()
+
+    defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
+    defensive_gameuser_target.save()
+
+    unit_turn.is_their_turn = False
+    unit_turn.save()
+
+def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability):
+    attacker = gameuser
+    target = defensive_gameuser_target
+
+    # TODO ticket for calculating healing
+
+    print("attacker is: " + attacker.name())
+    print("target is: " + target.name())
+    print("target type is: " + target.unit_type().name)
+    print("ability is: " + ability.name)
+    print("ability type is: " + ability.type.name)
+
+    final_healing = ability.max_damage
+    print("final calculated damage is: " + str(final_healing))
+    return final_healing
