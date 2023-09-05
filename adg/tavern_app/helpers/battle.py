@@ -113,7 +113,9 @@ def calculate_damage(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability,
 
     print("attacker is: " + attacker.name())
     print("target is: " + target.name())
+    print("target type is: " + target.unit_type().name)
     print("ability is: " + ability.name)
+    print("ability type is: " + ability.type.name)
 
     final_damage = ability.max_damage
     print("final calculated damage is: " + str(final_damage))
