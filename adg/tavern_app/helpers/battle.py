@@ -48,13 +48,16 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
             unit.save()
 
 def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
+    who_attacking = "player"
+    calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
+    
     combat_log = CombatLog(
         game = game,
         gameuser = gameuser,
         gameenemy = gameenemy,
-        player_or_enemy_took_action = "player",
+        player_or_enemy_took_action = who_attacking,
         ability = ability,
-        damage = ability.max_damage, # for testing do the max damage. will update later
+        damage = calculated_damage
         )
     combat_log.save()
 
@@ -70,13 +73,16 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
     unit_turn.save()
     
 def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
+    who_attacking = "enemy"
+    calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
+
     combat_log = CombatLog(
         game = game,
         gameuser = gameuser,
         gameenemy = gameenemy,
-        player_or_enemy_took_action = "enemy",
+        player_or_enemy_took_action = who_attacking,
         ability = ability,
-        damage = ability.max_damage, # for testing do the max damage. will update later
+        damage = calculated_damage
         )
     combat_log.save()
 
@@ -90,6 +96,31 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
 
     unit_turn.is_their_turn = False
     unit_turn.save()
+
+def calculate_damage(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str):
+    if who_attacking == "player":
+        attacker = gameuser
+        target = gameenemy
+    elif who_attacking == "enemy":
+        attacker = gameenemy
+        target = gameuser
+
+    # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
+    
+    # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
+
+    # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
+
+    print("attacker is: " + attacker.name())
+    print("target is: " + target.name())
+    print("target type is: " + target.unit_type().name)
+    print("ability is: " + ability.name)
+    print("ability type is: " + ability.type.name)
+
+    final_damage = ability.max_damage
+    print("final calculated damage is: " + str(final_damage))
+    return final_damage
+    
 
 def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
     # TODO enemy must have mp needed for ability? or give them unlimited MP
