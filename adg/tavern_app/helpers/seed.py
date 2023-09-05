@@ -139,10 +139,10 @@ def seed_data():
     ])
 
     # abilities
-    ability1 = Ability(name="Attack", description="Basic Attack. Nuff Said.", type=type6, mp_cost=0, min_damage=1, max_damage=5)
-    ability2 = Ability(name="Myst Attack Test", description="Super cool MYSTIC attack.", type=type6, mp_cost=3, is_myst_attack=True, min_damage=1, max_damage=4)
-    ability3 = Ability(name="Reg Attack Test", description="Moderately cool regular attack.", type=type6, mp_cost=4, is_myst_attack=False, min_damage=1, max_damage=6)
-    ability4 = Ability(name="Super Attack Test", description="Super cool regular attack.", type=type6, mp_cost=4, is_myst_attack=False, min_damage=1, max_damage=6)
+    ability1 = Ability(name="Attack", description="Basic Attack. Nuff Said.", type=type6, mp_cost=0, is_myst_attack=False, is_heal=False, min_damage=1, max_damage=5)
+    ability2 = Ability(name="Myst Attack Test", description="Super cool MYSTIC attack.", type=type6, mp_cost=3, is_myst_attack=True, is_heal=False, min_damage=1, max_damage=4)
+    ability3 = Ability(name="Reg Attack Test", description="Moderately cool regular attack.", type=type6, mp_cost=4, is_myst_attack=False, is_heal=False, min_damage=1, max_damage=6)
+    ability4 = Ability(name="Heal Test", description="Flippin sweet heal.", type=type6, mp_cost=4, is_myst_attack=True, is_heal=True, min_damage=1, max_damage=6)
     Ability.objects.bulk_create([
         ability1,
         ability2,

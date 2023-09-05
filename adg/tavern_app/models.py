@@ -95,6 +95,7 @@ class Ability(models.Model):
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     mp_cost = models.IntegerField(default=0)
     is_myst_attack = models.BooleanField(default=False)
+    is_heal = models.BooleanField(default=False)
     min_damage = models.IntegerField(default=0)
     max_damage = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
