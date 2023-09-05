@@ -247,9 +247,10 @@ class GameEnemy(models.Model):
 
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
-    gameuser = models.ForeignKey(GameUser, on_delete=models.PROTECT)
+    gameuser = models.ForeignKey(GameUser, on_delete=models.PROTECT, related_name='combat_log_gameuser')
     gameenemy = models.ForeignKey(GameEnemy, on_delete=models.PROTECT)
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
+    defensive_gameuser_target = models.ForeignKey(GameUser, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='combat_log_defensive_gameuser_target')
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     damage = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

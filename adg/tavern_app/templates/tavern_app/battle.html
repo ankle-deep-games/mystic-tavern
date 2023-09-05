@@ -28,7 +28,7 @@
             <h2 class="text-danger">NOT request users turn</h2>
         {%endif%}
 
-        <h2 class="text-white my-3">Gameenemies:</h2>
+        <h2 class="text-white my-3">Enemies:</h2>
         <div class="card-group">
             {% for gameenemy in gameenemies %}
             <div class="card text-white bg-secondary mb-3">
@@ -56,7 +56,7 @@
         <br>
         <hr>
 
-        <h2 class="text-white my-3">Gameusers:</h2>
+        <h2 class="text-white my-3">Players:</h2>
         <div class="card-group">
             {% for gameuser in gameusers %}
             <div class="card text-white bg-secondary mb-3">
@@ -83,7 +83,8 @@
         </div>
 
         {% comment %} TODO https://trello.com/c/wX36jJPx/168-combat-ui-what-players-see-when-it-is-not-their-turn-in-combat {% endcomment %}
-        {% if gameuser.ability_1 %}
+        <h4 class="text-white my-3">Single Target Attacks:</h4>
+        {% if gameuser.ability_1.is_heal == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -95,7 +96,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if gameuser.ability_2 %}
+        {% if gameuser.ability_2.is_heal == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -107,7 +108,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if gameuser.ability_3 %}
+        {% if gameuser.ability_3.is_heal == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -119,7 +120,56 @@
             {% endfor %}
         {% endif %}
 
-        {% if gameuser.ability_4 %}
+        {% if gameuser.ability_4.is_heal == False %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u> {{gameenemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        <h4 class="text-white my-3">Single Target Heals:</h4>
+        {% if gameuser.ability_1.is_heal == True %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u> {{gameenemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if gameuser.ability_2.is_heal == True %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u> {{gameenemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if gameuser.ability_3.is_heal == True %}
+            {% for gameenemy in gameenemies %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u> {{gameenemy.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if gameuser.ability_4.is_heal == True %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
