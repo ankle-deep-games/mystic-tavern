@@ -248,7 +248,7 @@ class GameEnemy(models.Model):
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     gameuser = models.ForeignKey(GameUser, on_delete=models.PROTECT, related_name='combat_log_gameuser')
-    gameenemy = models.ForeignKey(GameEnemy, on_delete=models.PROTECT)
+    gameenemy = models.ForeignKey(GameEnemy, on_delete=models.PROTECT, default=None, blank=True, null=True)
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
     defensive_gameuser_target = models.ForeignKey(GameUser, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='combat_log_defensive_gameuser_target')
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
@@ -257,7 +257,10 @@ class CombatLog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'who: {self.player_or_enemy_took_action}, gameuser: {self.gameuser.name()}, gameenemy: {self.gameenemy.name()}, ability: {self.ability.name}, damage: {self.damage}'
+        gameuser = self.gameuser.name() if self.gameuser else 'Null'
+        gameenemy = self.gameenemy.name() if self.gameenemy else 'Null'
+        defensive_gameuser_target = self.defensive_gameuser_target.name() if self.defensive_gameuser_target else 'Null'
+        return f'who: {self.player_or_enemy_took_action}, gameuser: {gameuser}, gameenemy: {gameenemy}, defensive_gameuser_target: {defensive_gameuser_target}, ability: {self.ability.name}, damage: {self.damage}'
     
 class GameLocation(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)

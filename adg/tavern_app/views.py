@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save
 
 
 def simple_view(request):
@@ -425,8 +425,7 @@ def battle(request, game_id, act, number):
 
         if form.is_valid():
             # TODO adjust to handle AOE abilities where mulitiple enemies are hit https://trello.com/c/OMCCkbSO/188-combat-single-target-aoe-dots
-            gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
-            ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)
+            ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)        
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             if unit_turn.gameuser:
@@ -434,18 +433,25 @@ def battle(request, game_id, act, number):
             else:
                 is_request_user_turn = False
 
-            if gameenemy_target.current_hp == 0:
-                messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
-                # TODO update redirect to current battle
-                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
-            
             if gameuser.current_mp < ability.mp_cost:
                 messages.error(request, 'Not enough MP to cast that ability.', extra_tags="alert alert-danger")
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
-            if is_request_user_turn:
+            if is_request_user_turn and ability.is_heal == False:
+                gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
+                if gameenemy_target.current_hp == 0:
+                    messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+                
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
+            elif is_request_user_turn and ability.is_heal == True:
+                defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
+                gameuser_heal_single_gameuser_and_save(game=game, gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                
+                # TODO update redirect to current battle
+                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             else:
                 messages.error(request, 'It is not your turn to attack.', extra_tags="alert alert-danger")
 
