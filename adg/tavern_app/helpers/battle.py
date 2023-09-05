@@ -164,7 +164,7 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
     attacker = gameuser
     target = defensive_gameuser_target
 
-    # TODO ticket for calculating healing
+    # TODO https://trello.com/c/6PCoXQ5O/196-combat-calculate-healing-done
 
     print("attacker is: " + attacker.name())
     print("target is: " + target.name())
