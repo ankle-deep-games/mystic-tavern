@@ -118,6 +118,13 @@ class GameUser(models.Model):
     current_myst_attack = models.IntegerField(default=0)
     current_myst_defense = models.IntegerField(default=0)
     current_speed = models.IntegerField(default=0)
+    with_gear_hp = models.IntegerField(default=0)
+    with_gear_mp = models.IntegerField(default=0)
+    with_gear_attack = models.IntegerField(default=0)
+    with_gear_defense = models.IntegerField(default=0)
+    with_gear_myst_attack = models.IntegerField(default=0)
+    with_gear_myst_defense = models.IntegerField(default=0)
+    with_gear_speed = models.IntegerField(default=0)
     ability_1 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_1')
     ability_2 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_2')
     ability_3 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_3')
@@ -149,10 +156,10 @@ class GameUser(models.Model):
         return f'{self.role}-{self.gender}.png'
 
     def hp_percentage(self):
-        return round((self.current_hp / self.role.start_hp) * 100)
+        return round((self.current_hp / self.with_gear_hp) * 100)
     
     def mp_percentage(self):
-        return round((self.current_mp / self.role.start_mp) * 100)
+        return round((self.current_mp / self.with_gear_mp) * 100)
     
     def unit_type(self):
         return self.role.type

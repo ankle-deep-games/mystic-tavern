@@ -278,6 +278,14 @@ class RoleAssignmentView(FormView):
             player.current_myst_defense = player.role.start_myst_defense
             player.current_speed = player.role.start_speed
 
+            player.with_gear_hp = player.role.start_hp
+            player.with_gear_mp = player.role.start_mp
+            player.with_gear_attack = player.role.start_attack
+            player.with_gear_defense = player.role.start_defense
+            player.with_gear_myst_attack = player.role.start_myst_attack
+            player.with_gear_myst_defense = player.role.start_myst_defense
+            player.with_gear_speed = player.role.start_speed
+
             player.ability_1 = attack_ability
 
             player.save()
