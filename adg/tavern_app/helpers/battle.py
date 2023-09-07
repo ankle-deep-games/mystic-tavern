@@ -160,18 +160,95 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     unit_turn.is_their_turn = False
     unit_turn.save()
 
-def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability):
-    attacker = gameuser
-    target = defensive_gameuser_target
 
-    # TODO https://trello.com/c/6PCoXQ5O/196-combat-calculate-healing-done
+def calculate_healing(attacker: GameUser, target: GameUser, ability: Ability):
+    """
+    Once a healing ability is chosen by a player, this function will be called to determine the healing amount. The
+    returned value is how much hp should be added to the target.
+    """
+    print("attacker is: " + attacker.name())
+    print("target is: " + target.name())
+    print("ability is: " + ability.name)
+    print("ability min healing: " + ability.min_damage)
+    print("ability max healing: " + ability.max_damage)
 
+    healing_amount = random.uniform(ability.min_damage, ability.max_damage)
+    print("final calculated damage is: " + str(healing_amount))
+
+    return healing_amount
+
+
+def calculate_combat_damage(attacker: GameUser, target: GameUser, ability: Ability):
+    """
+    Once an offensive ability is chosen by a player or enemy, this function will take in all necessary stats and output
+    the ability combat damage. The returned value is how much hp should be deducted from the target.
+    """
     print("attacker is: " + attacker.name())
     print("target is: " + target.name())
     print("target type is: " + target.unit_type().name)
     print("ability is: " + ability.name)
+    print("ability myst attack is: " + ability.is_myst_attack)
     print("ability type is: " + ability.type.name)
+    print("ability type strength is: " + ability.type.strength)
+    print("ability type weakness is: " + ability.type.weakness)
+    print("attacker physical attack stats: " + attacker.with_gear_attack)
+    print("attacker myst attack stats: " + attacker.with_gear_myst_attack)
+    print("target physical defense stats: " + target.with_gear_defense)
+    print("target myst defense stats: " + target.with_gear_myst_defense)
 
-    final_healing = ability.max_damage
-    print("final calculated damage is: " + str(final_healing))
-    return final_healing
+    # Step 1: Determine if ability is physical or myst and determine strength of attack based on base stats + equipment
+    if ability.is_myst_attack == 1:
+        attack = attacker.with_gear_myst_attack
+        defense = target.with_gear_myst_defense
+    else:
+        attack = attacker.with_gear_attack
+        defense = target.with_gear_defense
+
+    print("attack value based on stats + equip: " + attack)
+    print("defense value based on stats + equip: " + defense)
+
+    # Step 2: Modify strength of attack based on type strength/weakness
+    attack_type_strength = ability.type.strength
+    attack_type_weakness = ability.type.weakness
+    defense_type = target.role.type_id
+
+    if defense_type == attack_type_strength:
+        attack = attack * 1.25
+    elif defense_type == attack_type_weakness:
+        attack = attack * .75
+
+    print("attack value with type modifier: " + attack)
+
+    # Step 4: Determine whether Attack or Defense is stronger, and by how much
+    diff = attack - defense
+
+    print("diff value: " + diff)
+
+    # Step 5: Determine which quintant to put the value, which assigns a combat damage value
+    avg_combat_damage = (ability.max_damage + ability.min_damage) / 2
+    quintant_separator = (ability.max_damage - avg_combat_damage) / 2
+
+    print("avg_combat_damage: " + avg_combat_damage)
+    print("quintant separator: " + quintant_separator)
+
+    if diff >= 45:
+        combat_damage = ability.max_damage
+    elif diff < 45 and diff >= 15:
+        combat_damage = ability.max_damage - quintant_separator
+    elif diff < 15 and diff >= -15:
+        combat_damage = avg_combat_damage
+    elif diff < -15 and diff >= -45:
+        combat_damage = ability.min_damage + quintant_separator
+    elif diff < -45:
+        combat_damage = ability.min_damage
+
+    print("calculated damage before randomization is: " + str(combat_damage))
+
+    # Step 6: Randomize combat damage value by 10%
+    percentage_change = random.uniform(-0.1, 0.1)
+
+    combat_damage = combat_damage * (1 + percentage_change)
+
+    print("final calculated damage is: " + str(combat_damage))
+
+    return combat_damage
