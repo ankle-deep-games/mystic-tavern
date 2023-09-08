@@ -299,7 +299,8 @@ def seed_data():
     ])
 
     # Enemies
-    # TODO https://trello.com/c/WUxbo4qF/153-create-all-enemies-and-add-them-to-database - in this ticket we'll update drunk men stats
+    # TODO https://trello.com/c/0vbGueR2/204-chuck-create-enemy-images - Add enemy images
+    # TODO https://trello.com/c/as5ukze5/203-create-enemy-abilities - Modify enemy abilities
     enemy1 = Enemy(
         name="Drunk Man 1",
         image="drunk-man-1.png",
@@ -380,7 +381,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy6 = Enemy(
         name="Highland Scion",
         image="drunk-man-2.png",
         type=type3,
@@ -396,7 +397,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy7 = Enemy(
         name="Primordial Anomaly",
         image="creature.png",
         type=type4,
@@ -412,7 +413,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy8 = Enemy(
         name="Luminar Sentinel",
         image="drunk-man-2.png",
         type=type1,
@@ -428,7 +429,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy9 = Enemy(
         name="Umbral Harbinger",
         image="drunk-man-2.png",
         type=type2,
@@ -444,7 +445,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy10 = Enemy(
         name="Granite Warden",
         image="drunk-man-2.png",
         type=type3,
@@ -460,7 +461,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy11 = Enemy(
         name="Sylvan Enchanter",
         image="drunk-man-2.png",
         type=type4,
@@ -476,7 +477,7 @@ def seed_data():
         ability_3=ability3,
         ability_4=ability4,
     )
-    enemy5 = Enemy(
+    enemy12 = Enemy(
         name="Galewing Shaman",
         image="drunk-man-2.png",
         type=type5,
@@ -496,6 +497,16 @@ def seed_data():
     Enemy.objects.bulk_create([
         enemy1,
         enemy2,
+        enemy3,
+        enemy4,
+        enemy5,
+        enemy6,
+        enemy7,
+        enemy8,
+        enemy9,
+        enemy10,
+        enemy11,
+        enemy12,
     ])
 
     # dialogue Act 1 Scene 1
