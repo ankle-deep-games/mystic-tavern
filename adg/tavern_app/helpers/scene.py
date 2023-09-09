@@ -1,6 +1,6 @@
-from ..models import Game, GameUser, NPC
+from ..models import Game, GameUser, NPC, GameDialogue
 
-def get_character_list(game: Game):
+def get_character_list(game: Game) -> list:
     """combines players and npcs into a single list that can later be used to add names and images to dialogues"""
     character_list = []
     game_users = GameUser.objects.filter(game=game)
@@ -24,3 +24,27 @@ def get_character_list(game: Game):
         character_list.append({'name': npc.name, 'image': npc.image, 'speaker': npc.name})
 
     return character_list
+
+def get_game_dialogue_progress_list(character_list: list, game_id: int, act: int, scene_num: int) -> list:
+    """current game/act/scene dialogue + names and images"""
+    game_dialogue_progress_list = []
+    game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
+    for game_dialogue in game_dialogue_progress:
+        # only build the list for the current act and scene
+        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene_num:
+            name = ""
+            image = ""
+            for char in character_list:
+                if char['speaker'] == game_dialogue.dialogue.speaker:
+                    name = char['name']
+                    image = char['image']
+            
+            game_dialogue_progress_list.append({
+                'id': game_dialogue.dialogue.pk,
+                'node_type': game_dialogue.dialogue.node_type,
+                'name': name,
+                'text': game_dialogue.dialogue.text,
+                'image': image,
+                })
+            
+    return game_dialogue_progress_list

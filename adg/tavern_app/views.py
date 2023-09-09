@@ -10,7 +10,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
 from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save
-from .helpers.scene import get_character_list
+from .helpers.scene import get_character_list, get_game_dialogue_progress_list
 
 
 def simple_view(request):
@@ -342,27 +342,7 @@ def scene(request, game_id, act, number):
         form = GameDialogueForm()
 
     character_list = get_character_list(game=game)
-        
-    # game_dialogue_progress_list is the current game's dialogue + names and images
-    game_dialogue_progress_list = []
-    game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
-    for game_dialogue in game_dialogue_progress:
-        # only build the list for the current act and scene
-        if game_dialogue.dialogue.act == act and game_dialogue.dialogue.scene == scene_num:
-            name = ""
-            image = ""
-            for char in character_list:
-                if char['speaker'] == game_dialogue.dialogue.speaker:
-                    name = char['name']
-                    image = char['image']
-            
-            game_dialogue_progress_list.append({
-                'id': game_dialogue.dialogue.pk,
-                'node_type': game_dialogue.dialogue.node_type,
-                'name': name,
-                'text': game_dialogue.dialogue.text,
-                'image': image,
-                })
+    game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
         
     # next_dialogue_list queries the game dialogue progress for the next single dialogue or multiple player dialogue choices
     next_dialogue_list = []
