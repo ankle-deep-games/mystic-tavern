@@ -10,7 +10,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
 from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save
-from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list
+from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list, plant_seed_decision
 
 
 def simple_view(request):
@@ -333,6 +333,14 @@ def scene(request, game_id, act, number):
 
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
+
+            # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
+            # change act/scene/dialogue to execute at correct place
+            # adding here now as an example of how we'll execute decisions in dialogue
+            # when we get here we might add func params to pland_seed_decision func
+            # this approach will also be used for fork in road decision for forest/mountain choice. conditionally execute a scene helper func
+            if act == 1 and scene_num == 1 and dialogue.id == 5:
+                plant_seed_decision()
 
         else:
             messages.error(request, 'Something in the dialogue was not valid.', extra_tags="alert alert-danger")
