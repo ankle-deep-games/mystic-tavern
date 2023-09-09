@@ -15,6 +15,8 @@ def get_character_list(game: Game):
             speaker = "Group Member 1"
         elif idx == 2:
             speaker = "Group Member 2"
+        elif idx == 3:
+            speaker = "Group Member 3"
         character_list.append({'name': game_user.name(), 'image': game_user.image(), 'speaker': speaker})
 
     npcs = NPC.objects.all()
