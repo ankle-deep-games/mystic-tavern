@@ -10,6 +10,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
 from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save
+from .helpers.scene import get_character_list
 
 
 def simple_view(request):
@@ -340,25 +341,7 @@ def scene(request, game_id, act, number):
     else:
         form = GameDialogueForm()
 
-    # character_list combines players and npcs into a single list that can later be used to add names and images to dialogues
-    character_list = []
-    game_users = GameUser.objects.filter(game=game)
-    
-    # in dialogue we save speakers as "Group Leader" or "Group Member 1"
-    # at run time compare those against players in the game so we can display the player username
-    for idx, game_user in enumerate(game_users):
-        speaker = ""
-        if idx == 0:
-            speaker = "Group Leader"
-        elif idx == 1:
-            speaker = "Group Member 1"
-        elif idx == 2:
-            speaker = "Group Member 2"
-        character_list.append({'name': game_user.name(), 'image': game_user.image(), 'speaker': speaker})
-
-    npcs = NPC.objects.all()
-    for npc in npcs:
-        character_list.append({'name': npc.name, 'image': npc.image, 'speaker': npc.name})
+    character_list = get_character_list(game=game)
         
     # game_dialogue_progress_list is the current game's dialogue + names and images
     game_dialogue_progress_list = []
