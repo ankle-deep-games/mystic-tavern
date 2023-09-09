@@ -10,7 +10,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
 from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save
-from .helpers.scene import get_character_list, get_game_dialogue_progress_list
+from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list
 
 
 def simple_view(request):
@@ -343,28 +343,7 @@ def scene(request, game_id, act, number):
 
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
-        
-    # next_dialogue_list queries the game dialogue progress for the next single dialogue or multiple player dialogue choices
-    next_dialogue_list = []
-    # make sure this act/scene has at least 1 node to prevent errors. filter by act and scene.
-    if len(game_dialogue_progress_list) > 0:
-        next_dialogue = Dialogue.objects.filter(from_node_id=game_dialogue_progress_list[-1]['id'], act=act, scene=scene_num)
-        for dialogue in next_dialogue:
-            name = ""
-            image = ""
-            for char in character_list:
-                if char['speaker'] == dialogue.speaker:
-                    name = char['name']
-                    image = char['image']
-            
-            next_dialogue_list.append({
-                'id': dialogue.pk,
-                'from_node_id': dialogue.from_node_id,
-                'node_type': dialogue.node_type,
-                'name': name,
-                'text': dialogue.text,
-                'image': image,
-                })
+    next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
         
     # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
 
