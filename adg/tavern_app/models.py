@@ -203,7 +203,6 @@ class Enemy(models.Model):
     image = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
-    start_mp = models.IntegerField(default=0)
     start_attack = models.IntegerField(default=0)
     start_defense = models.IntegerField(default=0)
     start_myst_attack = models.IntegerField(default=0)
@@ -225,7 +224,6 @@ class GameEnemy(models.Model):
     act = models.IntegerField(default=0)
     battle = models.IntegerField(default=0)
     current_hp = models.IntegerField(default=0)
-    current_mp = models.IntegerField(default=0)
     current_attack = models.IntegerField(default=0)
     current_defense = models.IntegerField(default=0)
     current_myst_attack = models.IntegerField(default=0)
@@ -242,9 +240,6 @@ class GameEnemy(models.Model):
     
     def hp_percentage(self):
         return round((self.current_hp / self.enemy.start_hp) * 100)
-
-    def mp_percentage(self):
-        return round((self.current_mp / self.enemy.start_mp) * 100)
     
     def unit_type(self):
         return self.enemy.type
