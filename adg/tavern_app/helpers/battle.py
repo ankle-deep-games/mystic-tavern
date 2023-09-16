@@ -66,11 +66,12 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         gameenemy.current_hp = 0
     gameenemy.save()
 
-    gameuser.current_mp = gameuser.current_mp - ability.mp_cost
-    gameuser.save()
-
     unit_turn.is_their_turn = False
     unit_turn.save()
+
+def gameuser_deduct_ability_mp_and_save(gameuser: GameUser, ability: Ability):
+    gameuser.current_mp -= ability.mp_cost
+    gameuser.save()
     
 def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
     who_attacking = "enemy"
