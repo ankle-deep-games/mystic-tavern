@@ -375,6 +375,7 @@ def battle(request, game_id, act, number):
 
     game = Game.objects.get(pk=game_id)
     gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
@@ -395,6 +396,17 @@ def battle(request, game_id, act, number):
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
             if is_request_user_turn and ability.is_heal == False:
+
+                if ability.is_aoe == True:
+                    messages.info(request, 'AOE damage cast', extra_tags="alert alert-info")
+                    for gameenemy in gameenemies:
+                        if gameenemy.current_hp > 0:
+                            gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                            # todo fix deducting MP multiple times
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+
+
                 gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
                 if gameenemy_target.current_hp == 0:
                     messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
@@ -421,7 +433,6 @@ def battle(request, game_id, act, number):
         form = CombatLogForm()
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
