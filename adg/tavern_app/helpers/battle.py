@@ -66,11 +66,12 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         gameenemy.current_hp = 0
     gameenemy.save()
 
-    gameuser.current_mp = gameuser.current_mp - ability.mp_cost
-    gameuser.save()
-
     unit_turn.is_their_turn = False
     unit_turn.save()
+
+def gameuser_deduct_ability_mp_and_save(gameuser: GameUser, ability: Ability):
+    gameuser.current_mp -= ability.mp_cost
+    gameuser.save()
     
 def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
     who_attacking = "enemy"
@@ -120,9 +121,7 @@ def calculate_damage(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability,
     
 
 def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
-    # TODO enemy must have mp needed for ability? or give them unlimited MP
-    # TODO change to rand of 4 when we add fourth ability https://trello.com/c/jzFIFAaP/189-4-abilities-to-enemies-and-players-instead-of-3
-    random_ability = "ability_" + str(random.randint(1, 3))
+    random_ability = "ability_" + str(random.randint(1, 4))
     return getattr(gameenemy.enemy, random_ability)
 
 def enemey_choose_random_alive_target(gameusers) -> GameUser:

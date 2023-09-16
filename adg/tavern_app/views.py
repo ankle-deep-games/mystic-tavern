@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save
 from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list, plant_seed_decision
 
 
@@ -375,6 +375,7 @@ def battle(request, game_id, act, number):
 
     game = Game.objects.get(pk=game_id)
     gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
@@ -395,6 +396,17 @@ def battle(request, game_id, act, number):
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
             if is_request_user_turn and ability.is_heal == False:
+                # AOE Damage
+                if ability.is_aoe == True:
+                    for gameenemy in gameenemies:
+                        if gameenemy.current_hp > 0:
+                            gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                    # only deduct MP once
+                    gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+
+                # Single Target Damage
                 gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
                 if gameenemy_target.current_hp == 0:
                     messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
@@ -402,7 +414,9 @@ def battle(request, game_id, act, number):
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
+                gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
             elif is_request_user_turn and ability.is_heal == True:
+                # Single Target Heal
                 defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
                 gameuser_heal_single_gameuser_and_save(game=game, gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
                 
@@ -421,7 +435,6 @@ def battle(request, game_id, act, number):
         form = CombatLogForm()
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
@@ -431,10 +444,20 @@ def battle(request, game_id, act, number):
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             gameenemy = unit_turn.gameenemy
             ability = enemey_choose_random_ability(gameenemy)
-            gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
 
-            gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
-            messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.', extra_tags="alert alert-info")
+            # Enemies can only AOE or single target damage. They cannot heal or buff.
+            if ability.is_aoe == True:
+                # AOE Damage
+                messages.info(request, f'{gameenemy.name()} used AOE ability {ability} on all players with health above 0.', extra_tags="alert alert-info")
+                for gameuser in gameusers:
+                    if gameuser.current_hp > 0:
+                        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+            else:
+                # Single Target Damage
+                gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
+                gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.', extra_tags="alert alert-info")
+                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
 
             calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
             
