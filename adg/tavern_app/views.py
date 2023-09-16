@@ -444,10 +444,20 @@ def battle(request, game_id, act, number):
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             gameenemy = unit_turn.gameenemy
             ability = enemey_choose_random_ability(gameenemy)
-            gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
 
-            gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
-            messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.', extra_tags="alert alert-info")
+            # Enemies can only AOE or single target damage. They cannot heal or buff.
+            if ability.is_aoe == True:
+                # AOE Damage
+                messages.info(request, f'{gameenemy.name()} used AOE ability {ability} on all players with health above 0.', extra_tags="alert alert-info")
+                for gameuser in gameusers:
+                    if gameuser.current_hp > 0:
+                        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+            else:
+                # Single Target Damage
+                gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
+                gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.', extra_tags="alert alert-info")
+                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
 
             calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
             
