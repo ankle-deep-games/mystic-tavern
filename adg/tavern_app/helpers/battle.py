@@ -199,18 +199,50 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
 def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder) -> None:
     who_attacking = "player"
 
-    combat_log = CombatLog(
-        game = game,
-        gameuser = gameuser,
-        defensive_gameuser_target = defensive_gameuser_target,
-        player_or_enemy_took_action = who_attacking,
-        ability = ability,
-        amount = 0,
-        damage_or_heal_or_buff = "buff",
-        )
-    combat_log.save()
+    print("THE TARGET:*******************")
+    print("current_hp: " + str(defensive_gameuser_target.current_hp))
+    print("current_mp: " + str(defensive_gameuser_target.current_mp))
+    print("current_attack: " + str(defensive_gameuser_target.current_attack))
+    print("current_defense: " + str(defensive_gameuser_target.current_defense))
+    print("current_myst_attack: " + str(defensive_gameuser_target.current_myst_attack))
+    print("current_myst_defense: " + str(defensive_gameuser_target.current_myst_defense))
+    print("current_speed: " + str(defensive_gameuser_target.current_speed))
+    print("with_gear_hp: " + str(defensive_gameuser_target.with_gear_hp))
+    print("with_gear_mp: " + str(defensive_gameuser_target.with_gear_mp))
+    print("with_gear_attack: " + str(defensive_gameuser_target.with_gear_attack))
+    print("with_gear_defense: " + str(defensive_gameuser_target.with_gear_defense))
+    print("with_gear_myst_attack: " + str(defensive_gameuser_target.with_gear_myst_attack))
+    print("with_gear_myst_defense: " + str(defensive_gameuser_target.with_gear_myst_defense))
+    print("with_gear_speed: " + str(defensive_gameuser_target.with_gear_speed))
 
+    print("THE BUFF NUMBERS:*******************")
+    print("buff_hp_mod: " + str(ability.buff_hp_mod))
+    print("buff_mp_mod: " + str(ability.buff_mp_mod))
+    print("buff_attack_mod: " + str(ability.buff_attack_mod))
+    print("buff_defense_mod: " + str(ability.buff_defense_mod))
+    print("buff_myst_attack_mod: " + str(ability.buff_myst_attack_mod))
+    print("buff_myst_defense_mod: " + str(ability.buff_myst_defense_mod))
+    print("buff_speed_mod: " + str(ability.buff_speed_mod))
+
+    if ability.buff_attack_mod > 0:
+        buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * (ability.buff_attack_mod/100))
+        if buffed_attack > defensive_gameuser_target.current_attack:
+            defensive_gameuser_target.current_attack = buffed_attack
+
+    defensive_gameuser_target.save()
+
+    # TODO UNCOMMENT AFTER WORKING
+    # combat_log = CombatLog(
+    #     game = game,
+    #     gameuser = gameuser,
+    #     defensive_gameuser_target = defensive_gameuser_target,
+    #     player_or_enemy_took_action = who_attacking,
+    #     ability = ability,
+    #     amount = 0,
+    #     damage_or_heal_or_buff = "buff",
+    #     )
+    # combat_log.save()
+
+    # TODO UNCOMMENT AFTER WORKING
     # unit_turn.is_their_turn = False
     # unit_turn.save()
-
-
