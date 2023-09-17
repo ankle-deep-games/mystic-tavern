@@ -83,7 +83,6 @@
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u> {{gameenemy.name}}</button>
@@ -95,7 +94,6 @@
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u> {{gameenemy.name}}</button>
@@ -107,7 +105,6 @@
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u> {{gameenemy.name}}</button>
@@ -119,7 +116,6 @@
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="gameenemy" value="{{gameenemy.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u> {{gameenemy.name}}</button>
@@ -131,7 +127,6 @@
         {% if gameuser.ability_1.is_heal == False and gameuser.ability_1.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u></button>
             </form>
@@ -140,7 +135,6 @@
         {% if gameuser.ability_2.is_heal == False and gameuser.ability_2.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u></button>
             </form>
@@ -149,7 +143,6 @@
         {% if gameuser.ability_3.is_heal == False and gameuser.ability_3.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u></button>
             </form>
@@ -158,7 +151,6 @@
         {% if gameuser.ability_4.is_heal == False and gameuser.ability_4.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u></button>
             </form>
@@ -169,7 +161,6 @@
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u> {{defensive_gameuser_target.name}}</button>
@@ -181,7 +172,6 @@
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u> {{defensive_gameuser_target.name}}</button>
@@ -193,7 +183,6 @@
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u> {{defensive_gameuser_target.name}}</button>
@@ -205,7 +194,6 @@
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u> {{defensive_gameuser_target.name}}</button>
@@ -217,7 +205,6 @@
         {% if gameuser.ability_1.is_heal == True and gameuser.ability_1.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u></button>
             </form>
@@ -226,7 +213,6 @@
         {% if gameuser.ability_2.is_heal == True and gameuser.ability_2.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u></button>
             </form>
@@ -235,7 +221,6 @@
         {% if gameuser.ability_3.is_heal == True and gameuser.ability_3.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u></button>
             </form>
@@ -244,7 +229,6 @@
         {% if gameuser.ability_4.is_heal == True and gameuser.ability_4.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
                 <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u></button>
             </form>

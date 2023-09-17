@@ -66,4 +66,4 @@ class GameDialogueForm(ModelForm):
 class CombatLogForm(ModelForm):
     class Meta:
         model = CombatLog
-        fields = ['gameuser', 'gameenemy', 'ability', 'defensive_gameuser_target']
+        fields = ['gameenemy', 'ability', 'defensive_gameuser_target']
