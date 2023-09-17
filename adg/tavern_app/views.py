@@ -414,7 +414,13 @@ def battle(request, game_id, act, number):
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
                 # Single Target Damage
-                gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
+                is_enemy_in_this_battle = True if GameEnemy.objects.filter(game=game, pk=form.cleaned_data['gameenemy'].id, act=act, battle=battle_num) else False
+                if is_enemy_in_this_battle == False:
+                    messages.error(request, 'You may only attack enemies in this battle', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+
+                gameenemy_target = GameEnemy.objects.get(game=game, pk=form.cleaned_data['gameenemy'].id)
                 if gameenemy_target.current_hp == 0:
                     messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
