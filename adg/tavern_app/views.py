@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save, calc_is_request_user_turn
 from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list, plant_seed_decision
 
 
@@ -386,10 +386,7 @@ def battle(request, game_id, act, number):
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)        
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-            if unit_turn.gameuser:
-                is_request_user_turn = True if unit_turn.gameuser == request_gameuser else False
-            else:
-                is_request_user_turn = False
+            is_request_user_turn = calc_is_request_user_turn(request_gameuser=request_gameuser, unit_turn=unit_turn)
 
             if request_gameuser.current_mp < ability.mp_cost:
                 messages.error(request, 'Not enough MP to cast that ability.', extra_tags="alert alert-danger")
@@ -517,10 +514,7 @@ def battle(request, game_id, act, number):
     print("***TURN ORDER***")
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-    if unit_turn.gameuser:
-        is_request_user_turn = True if unit_turn.gameuser.user == request.user else False
-    else:
-        is_request_user_turn = False
+    is_request_user_turn = calc_is_request_user_turn(request_gameuser=request_gameuser, unit_turn=unit_turn)
 
     context = {
         'game_id': game_id,
