@@ -374,11 +374,11 @@ def battle(request, game_id, act, number):
         return redirect('tavern_app:games')
 
     game = Game.objects.get(pk=game_id)
-    gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
-    request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    gameuser = GameUser.objects.get(game=game, user=request.user)
+    request_gameuser = GameUser.objects.get(game=game, user=request.user)
     # TODO https://trello.com/c/IhNvbLiQ/215-refactor-battle-function-clearer-variable-names
-    gameusers = GameUser.objects.filter(game_id=game_id)
-    gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
+    gameusers = GameUser.objects.filter(game=game)
+    gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle_num)
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
@@ -397,6 +397,11 @@ def battle(request, game_id, act, number):
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
+            if ability not in [request_gameuser.ability_1, request_gameuser.ability_2, request_gameuser.ability_3, request_gameuser.ability_4]:
+                messages.error(request, 'You may only cast abilities that you know.', extra_tags="alert alert-danger")
+                # TODO update redirect to current battle
+                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+            
             if is_request_user_turn and ability.is_heal == False:
                 # AOE Damage
                 if ability.is_aoe == True:
@@ -409,7 +414,13 @@ def battle(request, game_id, act, number):
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
                 # Single Target Damage
-                gameenemy_target = GameEnemy.objects.get(game_id=game_id, pk=form.cleaned_data['gameenemy'].id)
+                is_enemy_in_this_battle = True if GameEnemy.objects.filter(game=game, pk=form.cleaned_data['gameenemy'].id, act=act, battle=battle_num) else False
+                if is_enemy_in_this_battle == False:
+                    messages.error(request, 'You may only attack enemies in this battle.', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+
+                gameenemy_target = GameEnemy.objects.get(game=game, pk=form.cleaned_data['gameenemy'].id)
                 if gameenemy_target.current_hp == 0:
                     messages.error(request, 'Cannot single target enemy with 0 hp.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
@@ -424,20 +435,29 @@ def battle(request, game_id, act, number):
                         if gameuser.current_hp > 0:
                             gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
                     # requery the request gameuser who cast the heal since their HP just increased.
-                    request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
                     # only deduct MP once
                     gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
                 # Single Target Heal
-                defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
+                is_player_in_this_game = True if GameUser.objects.filter(game=game, pk=form.cleaned_data['defensive_gameuser_target'].id) else False
+                if is_player_in_this_game == False:
+                    messages.error(request, 'You may only heal players in this game.', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+
+                defensive_gameuser_target = GameUser.objects.get(game=game, pk=form.cleaned_data['defensive_gameuser_target'].id)
                 if defensive_gameuser_target.current_hp == 0:
                     messages.error(request, 'Cannot single target heal player with 0 hp.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
-                gameuser_heal_single_gameuser_and_save(game=game, gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
-                gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
+                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                if defensive_gameuser_target == request_gameuser:
+                    # requery the request gameuser who cast the heal since their HP just increased.
+                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
+                gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                 
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
