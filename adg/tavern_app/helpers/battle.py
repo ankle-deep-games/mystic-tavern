@@ -81,7 +81,7 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         player_or_enemy_took_action = who_attacking,
         ability = ability,
         amount = calculated_damage,
-        damage_or_heal = "damage",
+        damage_or_heal_or_buff = "damage",
         )
     combat_log.save()
 
@@ -108,7 +108,7 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
         player_or_enemy_took_action = who_attacking,
         ability = ability,
         amount = calculated_damage,
-        damage_or_heal = "damage",
+        damage_or_heal_or_buff = "damage",
         )
     combat_log.save()
 
@@ -167,7 +167,7 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         player_or_enemy_took_action = who_attacking,
         ability = ability,
         amount = calculated_healing,
-        damage_or_heal = "heal",
+        damage_or_heal_or_buff = "heal",
         )
     combat_log.save()
 
