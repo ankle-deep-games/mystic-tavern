@@ -423,6 +423,8 @@ def battle(request, game_id, act, number):
                     for gameuser in gameusers:
                         if gameuser.current_hp > 0:
                             gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                    # requery the request gameuser who cast the heal since their HP just increased.
+                    request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
                     # only deduct MP once
                     gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                     # TODO update redirect to current battle
