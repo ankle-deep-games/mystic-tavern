@@ -398,7 +398,7 @@ def battle(request, game_id, act, number):
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
-            if is_request_user_turn and ability.is_heal == False:
+            if is_request_user_turn and ability.is_heal == False and ability.is_buff == False:
                 # AOE Damage
                 if ability.is_aoe == True:
                     for gameenemy in gameenemies:
@@ -455,6 +455,17 @@ def battle(request, game_id, act, number):
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                 
+                # TODO update redirect to current battle
+                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+            elif is_request_user_turn and ability.is_buff == True:
+                # AOE Buff
+                if ability.is_aoe == True:
+                    messages.info(request, 'AOE Buff cast.', extra_tags="alert alert-info")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+                
+                # Single Target Buff
+                messages.info(request, 'Single Target Buff cast.', extra_tags="alert alert-info")
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             else:
