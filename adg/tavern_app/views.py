@@ -397,6 +397,11 @@ def battle(request, game_id, act, number):
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
+            if ability not in [request_gameuser.ability_1, request_gameuser.ability_2, request_gameuser.ability_3, request_gameuser.ability_4]:
+                messages.error(request, 'You may only cast abilities that you know.', extra_tags="alert alert-danger")
+                # TODO update redirect to current battle
+                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+            
             if is_request_user_turn and ability.is_heal == False:
                 # AOE Damage
                 if ability.is_aoe == True:
