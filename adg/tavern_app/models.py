@@ -264,7 +264,7 @@ class CombatLog(models.Model):
     defensive_gameuser_target = models.ForeignKey(GameUser, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='combat_log_defensive_gameuser_target')
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     amount = models.IntegerField(default=0)
-    damage_or_heal_or_buff = models.CharField(max_length=255) # 'damage' or 'heal' string - could improve later
+    damage_or_heal_or_buff = models.CharField(max_length=255) # 'damage' or 'heal' or 'buff' string - could improve later
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
