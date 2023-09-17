@@ -6,11 +6,13 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
         for gameuser in gameusers:
-            gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
-            gu_turn_order.save()
+            if gameuser.current_hp > 0:
+                gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
+                gu_turn_order.save()
         for gameenemy in gameenemies:
-            ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
-            ge_turn_order.save()
+            if gameenemy.current_hp > 0:
+                ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
+                ge_turn_order.save()
         game_turn_order = GameTurnOrder.objects.filter(game=game)
 
     is_someones_turn = False
