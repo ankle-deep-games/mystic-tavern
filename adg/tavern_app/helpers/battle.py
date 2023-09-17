@@ -6,11 +6,27 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
         for gameuser in gameusers:
-            gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
-            gu_turn_order.save()
+            if gameuser.current_hp > 0:
+                gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
+                gu_turn_order.save()
         for gameenemy in gameenemies:
-            ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
-            ge_turn_order.save()
+            if gameenemy.current_hp > 0:
+                ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
+                ge_turn_order.save()
+        game_turn_order = GameTurnOrder.objects.filter(game=game)
+
+    # check for units who have fainted by reaching 0 hp and remove them from the turn order
+    any_units_fainted = False
+    for unit in game_turn_order:
+        if unit.gameuser:
+            if unit.gameuser.current_hp == 0:
+                any_units_fainted = True
+                unit.delete()
+        if unit.gameenemy:
+            if unit.gameenemy.current_hp == 0:
+                any_units_fainted = True
+                unit.delete()
+    if any_units_fainted:
         game_turn_order = GameTurnOrder.objects.filter(game=game)
 
     is_someones_turn = False
