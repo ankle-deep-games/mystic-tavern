@@ -369,14 +369,13 @@ def battle(request, game_id, act, number):
         messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
         return redirect('login')
     
-    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+    game = Game.objects.get(pk=game_id)
+    
+    if GameUser.objects.filter(user_id=request.user, game=game).exists() == False:
         messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
         return redirect('tavern_app:games')
 
-    game = Game.objects.get(pk=game_id)
-    gameuser = GameUser.objects.get(game=game, user=request.user)
     request_gameuser = GameUser.objects.get(game=game, user=request.user)
-    # TODO https://trello.com/c/IhNvbLiQ/215-refactor-battle-function-clearer-variable-names
     gameusers = GameUser.objects.filter(game=game)
     gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle_num)
 
@@ -388,11 +387,11 @@ def battle(request, game_id, act, number):
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             if unit_turn.gameuser:
-                is_request_user_turn = True if unit_turn.gameuser == gameuser else False
+                is_request_user_turn = True if unit_turn.gameuser == request_gameuser else False
             else:
                 is_request_user_turn = False
 
-            if gameuser.current_mp < ability.mp_cost:
+            if request_gameuser.current_mp < ability.mp_cost:
                 messages.error(request, 'Not enough MP to cast that ability.', extra_tags="alert alert-danger")
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
@@ -407,9 +406,9 @@ def battle(request, game_id, act, number):
                 if ability.is_aoe == True:
                     for gameenemy in gameenemies:
                         if gameenemy.current_hp > 0:
-                            gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                            gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
                     # only deduct MP once
-                    gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
+                    gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
@@ -426,8 +425,8 @@ def battle(request, game_id, act, number):
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
-                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
-                gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
+                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
+                gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
             elif is_request_user_turn and ability.is_heal == True:
                 # AOE Heal
                 if ability.is_aoe == True:
@@ -528,7 +527,7 @@ def battle(request, game_id, act, number):
         'gameusers': gameusers,
         'gameenemies': gameenemies,
         'form': form,
-        'gameuser': gameuser,
+        'request_gameuser': request_gameuser,
         'unit_turn': unit_turn,
         'is_request_user_turn': is_request_user_turn,
     }
