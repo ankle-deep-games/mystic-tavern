@@ -416,7 +416,7 @@ def battle(request, game_id, act, number):
                 # Single Target Damage
                 is_enemy_in_this_battle = True if GameEnemy.objects.filter(game=game, pk=form.cleaned_data['gameenemy'].id, act=act, battle=battle_num) else False
                 if is_enemy_in_this_battle == False:
-                    messages.error(request, 'You may only attack enemies in this battle', extra_tags="alert alert-danger")
+                    messages.error(request, 'You may only attack enemies in this battle.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
@@ -444,7 +444,7 @@ def battle(request, game_id, act, number):
                 # Single Target Heal
                 is_player_in_this_game = True if GameUser.objects.filter(game=game, pk=form.cleaned_data['defensive_gameuser_target'].id) else False
                 if is_player_in_this_game == False:
-                    messages.error(request, 'You may only heal players in this game', extra_tags="alert alert-danger")
+                    messages.error(request, 'You may only heal players in this game.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
