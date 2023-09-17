@@ -375,13 +375,15 @@ def battle(request, game_id, act, number):
 
     game = Game.objects.get(pk=game_id)
     gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    # TODO https://trello.com/c/IhNvbLiQ/215-refactor-battle-function-clearer-variable-names
+    gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     if request.method == 'POST':
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
-            # TODO adjust to handle AOE abilities where mulitiple enemies are hit https://trello.com/c/OMCCkbSO/188-combat-single-target-aoe-dots
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)        
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
@@ -416,9 +418,26 @@ def battle(request, game_id, act, number):
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
                 gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
             elif is_request_user_turn and ability.is_heal == True:
+                # AOE Heal
+                if ability.is_aoe == True:
+                    for gameuser in gameusers:
+                        if gameuser.current_hp > 0:
+                            gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                    # requery the request gameuser who cast the heal since their HP just increased.
+                    request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+                    # only deduct MP once
+                    gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+                
                 # Single Target Heal
                 defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
+                if defensive_gameuser_target.current_hp == 0:
+                    messages.error(request, 'Cannot single target heal player with 0 hp.', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 gameuser_heal_single_gameuser_and_save(game=game, gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
                 
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
@@ -434,8 +453,6 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    gameusers = GameUser.objects.filter(game_id=game_id)
-
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
     if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
@@ -445,7 +462,9 @@ def battle(request, game_id, act, number):
             gameenemy = unit_turn.gameenemy
             ability = enemey_choose_random_ability(gameenemy)
 
-            # Enemies can only AOE or single target damage. They cannot heal or buff.
+            # Enemies can only AOE or single target damage.
+            # Enemies cannot heal or buff.
+            # Enemies do not use MP.
             if ability.is_aoe == True:
                 # AOE Damage
                 messages.info(request, f'{gameenemy.name()} used AOE ability {ability} on all players with health above 0.', extra_tags="alert alert-info")
