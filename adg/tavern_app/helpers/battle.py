@@ -47,6 +47,13 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
                     unit.save()
             unit.save()
 
+def calc_is_request_user_turn(request_gameuser: GameUser, unit_turn: GameTurnOrder) -> bool:
+    if unit_turn.gameuser:
+        is_request_user_turn = True if unit_turn.gameuser == request_gameuser else False
+    else:
+        is_request_user_turn = False
+    return is_request_user_turn
+
 def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
     who_attacking = "player"
     calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
