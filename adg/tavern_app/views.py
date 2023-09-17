@@ -381,7 +381,6 @@ def battle(request, game_id, act, number):
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
-            # TODO adjust to handle AOE abilities where mulitiple enemies are hit https://trello.com/c/OMCCkbSO/188-combat-single-target-aoe-dots
             ability = Ability.objects.get(pk=form.cleaned_data['ability'].id)        
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
@@ -419,6 +418,7 @@ def battle(request, game_id, act, number):
                 # Single Target Heal
                 defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
                 gameuser_heal_single_gameuser_and_save(game=game, gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
                 
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
@@ -445,7 +445,9 @@ def battle(request, game_id, act, number):
             gameenemy = unit_turn.gameenemy
             ability = enemey_choose_random_ability(gameenemy)
 
-            # Enemies can only AOE or single target damage. They cannot heal or buff.
+            # Enemies can only AOE or single target damage.
+            # Enemies cannot heal or buff.
+            # Enemies do not use MP.
             if ability.is_aoe == True:
                 # AOE Damage
                 messages.info(request, f'{gameenemy.name()} used AOE ability {ability} on all players with health above 0.', extra_tags="alert alert-info")
