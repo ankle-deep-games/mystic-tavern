@@ -159,7 +159,8 @@ def seed_data():
     # TODO https://trello.com/c/BKxfLrtR/218-combat-buffs-add-update-seed-data
     ability6 = Ability(name="Anthem of Valor",
                        description="Empowers a single ally with a medium physical attack boost and a defensive buff, enhancing their strength and resilience.",
-                       type=type5, mp_cost=10, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=True, min_damage=0, max_damage=0)
+                       type=type5, mp_cost=10, is_myst_attack=False, is_heal=False,
+                       is_aoe=False, is_buff=True, buff_attack_mod=10, buff_defense_mod=10)
     # Tier 3 - Light
     ability7 = Ability(name="Divine Strike",
                        description="Launches a medium mystic attack, harnessing the power of light to strike a single target with celestial force.",
@@ -241,7 +242,8 @@ def seed_data():
     # TODO https://trello.com/c/BKxfLrtR/218-combat-buffs-add-update-seed-data
     ability31 = Ability(name="Ethereal Crescendo",
                         description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon a single target, elevating them to an ethereal peak of strength and grace.",
-                        type=type5, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=True, min_damage=0, max_damage=0)
+                        type=type5, mp_cost=30, is_myst_attack=False, is_heal=False,
+                        is_aoe=True, is_buff=True, buff_hp_mod=50, buff_mp_mod=50, buff_attack_mod=50, buff_defense_mod=50, buff_myst_attack_mod=50, buff_myst_defense_mod=50, buff_speed_mod=50)
     
     # AOE test abilities TODO https://trello.com/c/jYTBJRi6/210-combat-aoe-add-update-aoe-abilities-in-abilities-seed-data
     ability32 = Ability(name="AOE Damage",
