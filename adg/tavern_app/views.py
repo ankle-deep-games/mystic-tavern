@@ -442,7 +442,11 @@ def battle(request, game_id, act, number):
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
                 # Single Target Heal
-                # TODO heal validation
+                is_player_in_this_game = True if GameUser.objects.filter(game=game, pk=form.cleaned_data['defensive_gameuser_target'].id) else False
+                if is_player_in_this_game == False:
+                    messages.error(request, 'You may only heal players in this game', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
 
                 defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
                 if defensive_gameuser_target.current_hp == 0:
