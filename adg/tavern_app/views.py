@@ -376,6 +376,7 @@ def battle(request, game_id, act, number):
     game = Game.objects.get(pk=game_id)
     gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
     request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    # TODO https://trello.com/c/IhNvbLiQ/215-refactor-battle-function-clearer-variable-names
     gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
