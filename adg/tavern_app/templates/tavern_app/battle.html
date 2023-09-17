@@ -165,7 +165,7 @@
         {% endif %}
 
         <h4 class="text-white my-3">Single Target Heals:</h4>
-        {% if gameuser.ability_1.is_heal == True %}
+        {% if gameuser.ability_1.is_heal == True and gameuser.ability_1.is_aoe == False %}
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
@@ -177,7 +177,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if gameuser.ability_2.is_heal == True %}
+        {% if gameuser.ability_2.is_heal == True and gameuser.ability_2.is_aoe == False %}
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
@@ -189,7 +189,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if gameuser.ability_3.is_heal == True %}
+        {% if gameuser.ability_3.is_heal == True and gameuser.ability_3.is_aoe == False %}
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
@@ -201,7 +201,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if gameuser.ability_4.is_heal == True %}
+        {% if gameuser.ability_4.is_heal == True and gameuser.ability_4.is_aoe == False %}
             {% for defensive_gameuser_target in gameusers %}
             <form method="POST">
                 {% csrf_token %}
@@ -211,6 +211,43 @@
                 <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u> {{defensive_gameuser_target.name}}</button>
             </form>
             {% endfor %}
+        {% endif %}
+
+        <h4 class="text-white my-3">AOE Heal:</h4>
+        {% if gameuser.ability_1.is_heal == True and gameuser.ability_1.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_1.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_1.name}}</u></button>
+            </form>
+        {% endif %}
+
+        {% if gameuser.ability_2.is_heal == True and gameuser.ability_2.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_2.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_2.name}}</u></button>
+            </form>
+        {% endif %}
+
+        {% if gameuser.ability_3.is_heal == True and gameuser.ability_3.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_3.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_3.name}}</u></button>
+            </form>
+        {% endif %}
+
+        {% if gameuser.ability_4.is_heal == True and gameuser.ability_4.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="gameuser" value="{{gameuser.pk}}" />
+                <input type="hidden" name="ability" value="{{gameuser.ability_4.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{gameuser.name}} <u>{{gameuser.ability_4.name}}</u></button>
+            </form>
         {% endif %}
 
     </div>
