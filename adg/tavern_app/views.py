@@ -375,6 +375,8 @@ def battle(request, game_id, act, number):
 
     game = Game.objects.get(pk=game_id)
     gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    request_gameuser = GameUser.objects.get(game_id=game_id, user=request.user)
+    gameusers = GameUser.objects.filter(game_id=game_id)
     gameenemies = GameEnemy.objects.filter(game_id=game_id, act=act, battle=battle_num)
 
     if request.method == 'POST':
@@ -415,6 +417,16 @@ def battle(request, game_id, act, number):
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
                 gameuser_deduct_ability_mp_and_save(gameuser=gameuser, ability=ability)
             elif is_request_user_turn and ability.is_heal == True:
+                # AOE Heal
+                if ability.is_aoe == True:
+                    for gameuser in gameusers:
+                        if gameuser.current_hp > 0:
+                            gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                    # only deduct MP once
+                    gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+                
                 # Single Target Heal
                 defensive_gameuser_target = GameUser.objects.get(game_id=game_id, pk=form.cleaned_data['defensive_gameuser_target'].id)
                 gameuser_heal_single_gameuser_and_save(game=game, gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
@@ -433,8 +445,6 @@ def battle(request, game_id, act, number):
     # else render form
     else:
         form = CombatLogForm()
-
-    gameusers = GameUser.objects.filter(game_id=game_id)
 
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
 
