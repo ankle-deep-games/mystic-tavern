@@ -457,9 +457,15 @@ def battle(request, game_id, act, number):
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
 
             elif is_request_user_turn and ability.is_buff == True:
-                # TODO AOE Buff
+                # AOE Buff
                 if ability.is_aoe == True:
-                    messages.info(request, 'AOE Buff cast.', extra_tags="alert alert-info")
+                    for gameuser in gameusers:
+                        if gameuser.current_hp > 0:
+                            gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                    # requery the request gameuser who cast the buff since their stats changed
+                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
+                    # only deduct MP once
+                    gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
@@ -480,11 +486,6 @@ def battle(request, game_id, act, number):
                     # requery the request gameuser who cast the buff since their stats changed
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
-
-                # TODO REMOVE THIS TESTING ALERT AFTER WORKING
-                messages.info(request, 'Single Target Buff cast.', extra_tags="alert alert-info")
-                # TODO update redirect to current battle
-                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             else:
                 messages.error(request, 'It is not your turn to attack.', extra_tags="alert alert-danger")
 

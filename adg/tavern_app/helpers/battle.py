@@ -230,18 +230,16 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     defensive_gameuser_target.save()
 
-    # TODO UNCOMMENT AFTER WORKING
-    # combat_log = CombatLog(
-    #     game = game,
-    #     gameuser = gameuser,
-    #     defensive_gameuser_target = defensive_gameuser_target,
-    #     player_or_enemy_took_action = who_attacking,
-    #     ability = ability,
-    #     amount = 0,
-    #     damage_or_heal_or_buff = "buff",
-    #     )
-    # combat_log.save()
+    combat_log = CombatLog(
+        game = game,
+        gameuser = gameuser,
+        defensive_gameuser_target = defensive_gameuser_target,
+        player_or_enemy_took_action = who_attacking,
+        ability = ability,
+        amount = 0,
+        damage_or_heal_or_buff = "buff",
+        )
+    combat_log.save()
 
-    # TODO UNCOMMENT AFTER WORKING
-    # unit_turn.is_their_turn = False
-    # unit_turn.save()
+    unit_turn.is_their_turn = False
+    unit_turn.save()
