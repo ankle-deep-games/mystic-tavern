@@ -241,6 +241,11 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         if buffed_myst_attack > defensive_gameuser_target.current_myst_attack:
             defensive_gameuser_target.current_myst_attack = buffed_myst_attack
 
+    if ability.buff_myst_defense_mod > 0:
+        buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(defensive_gameuser_target.with_gear_myst_defense * (ability.buff_myst_defense_mod/100))
+        if buffed_myst_defense > defensive_gameuser_target.current_myst_defense:
+            defensive_gameuser_target.current_myst_defense = buffed_myst_defense
+
     defensive_gameuser_target.save()
 
     # TODO UNCOMMENT AFTER WORKING
