@@ -224,10 +224,17 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     print("buff_myst_defense_mod: " + str(ability.buff_myst_defense_mod))
     print("buff_speed_mod: " + str(ability.buff_speed_mod))
 
+    # TODO come back to hp and mp at the end
+
     if ability.buff_attack_mod > 0:
         buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * (ability.buff_attack_mod/100))
         if buffed_attack > defensive_gameuser_target.current_attack:
             defensive_gameuser_target.current_attack = buffed_attack
+
+    if ability.buff_defense_mod > 0:
+        buffed_defense = defensive_gameuser_target.with_gear_defense + round(defensive_gameuser_target.with_gear_defense * (ability.buff_defense_mod/100))
+        if buffed_defense > defensive_gameuser_target.current_defense:
+            defensive_gameuser_target.current_defense = buffed_defense
 
     defensive_gameuser_target.save()
 
