@@ -79,7 +79,7 @@
 
         {% comment %} TODO https://trello.com/c/wX36jJPx/168-combat-ui-what-players-see-when-it-is-not-their-turn-in-combat {% endcomment %}
         <h4 class="text-white my-3">Single Target Damage:</h4>
-        {% if request_gameuser.ability_1.is_heal == False and request_gameuser.ability_1.is_aoe == False %}
+        {% if request_gameuser.ability_1.is_heal == False and request_gameuser.ability_1.is_buff == False and request_gameuser.ability_1.is_aoe == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -90,7 +90,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if request_gameuser.ability_2.is_heal == False and request_gameuser.ability_2.is_aoe == False %}
+        {% if request_gameuser.ability_2.is_heal == False and request_gameuser.ability_2.is_buff == False and request_gameuser.ability_2.is_aoe == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -101,7 +101,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if request_gameuser.ability_3.is_heal == False and request_gameuser.ability_3.is_aoe == False %}
+        {% if request_gameuser.ability_3.is_heal == False and request_gameuser.ability_3.is_buff == False and request_gameuser.ability_3.is_aoe == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -112,7 +112,7 @@
             {% endfor %}
         {% endif %}
 
-        {% if request_gameuser.ability_4.is_heal == False and request_gameuser.ability_4.is_aoe == False %}
+        {% if request_gameuser.ability_4.is_heal == False and request_gameuser.ability_4.is_buff == False and request_gameuser.ability_4.is_aoe == False %}
             {% for gameenemy in gameenemies %}
             <form method="POST">
                 {% csrf_token %}
@@ -124,7 +124,7 @@
         {% endif %}
 
         <h4 class="text-white my-3">AOE Damage:</h4>
-        {% if request_gameuser.ability_1.is_heal == False and request_gameuser.ability_1.is_aoe == True %}
+        {% if request_gameuser.ability_1.is_heal == False and request_gameuser.ability_1.is_buff == False and request_gameuser.ability_1.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="ability" value="{{request_gameuser.ability_1.pk}}" />
@@ -132,7 +132,7 @@
             </form>
         {% endif %}
 
-        {% if request_gameuser.ability_2.is_heal == False and request_gameuser.ability_2.is_aoe == True %}
+        {% if request_gameuser.ability_2.is_heal == False and request_gameuser.ability_2.is_buff == False and request_gameuser.ability_2.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="ability" value="{{request_gameuser.ability_2.pk}}" />
@@ -140,7 +140,7 @@
             </form>
         {% endif %}
 
-        {% if request_gameuser.ability_3.is_heal == False and request_gameuser.ability_3.is_aoe == True %}
+        {% if request_gameuser.ability_3.is_heal == False and request_gameuser.ability_3.is_buff == False and request_gameuser.ability_3.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="ability" value="{{request_gameuser.ability_3.pk}}" />
@@ -148,7 +148,7 @@
             </form>
         {% endif %}
 
-        {% if request_gameuser.ability_4.is_heal == False and request_gameuser.ability_4.is_aoe == True %}
+        {% if request_gameuser.ability_4.is_heal == False and request_gameuser.ability_4.is_buff == False and request_gameuser.ability_4.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="ability" value="{{request_gameuser.ability_4.pk}}" />
@@ -227,6 +227,84 @@
         {% endif %}
 
         {% if request_gameuser.ability_4.is_heal == True and request_gameuser.ability_4.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_4.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_4.name}}</u></button>
+            </form>
+        {% endif %}
+
+        <h4 class="text-white my-3">Single Target Buff:</h4>
+        {% if request_gameuser.ability_1.is_buff == True and request_gameuser.ability_1.is_aoe == False %}
+            {% for defensive_gameuser_target in gameusers %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_1.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_1.name}}</u> {{defensive_gameuser_target.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if request_gameuser.ability_2.is_buff == True and request_gameuser.ability_2.is_aoe == False %}
+            {% for defensive_gameuser_target in gameusers %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_2.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_2.name}}</u> {{defensive_gameuser_target.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if request_gameuser.ability_3.is_buff == True and request_gameuser.ability_3.is_aoe == False %}
+            {% for defensive_gameuser_target in gameusers %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_3.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_3.name}}</u> {{defensive_gameuser_target.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if request_gameuser.ability_4.is_buff == True and request_gameuser.ability_4.is_aoe == False %}
+            {% for defensive_gameuser_target in gameusers %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="defensive_gameuser_target" value="{{defensive_gameuser_target.pk}}" />
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_4.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_4.name}}</u> {{defensive_gameuser_target.name}}</button>
+            </form>
+            {% endfor %}
+        {% endif %}
+
+        <h4 class="text-white my-3">AOE Buff:</h4>
+        {% if request_gameuser.ability_1.is_buff == True and request_gameuser.ability_1.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_1.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_1.name}}</u></button>
+            </form>
+        {% endif %}
+
+        {% if request_gameuser.ability_2.is_buff == True and request_gameuser.ability_2.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_2.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_2.name}}</u></button>
+            </form>
+        {% endif %}
+
+        {% if request_gameuser.ability_3.is_buff == True and request_gameuser.ability_3.is_aoe == True %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="ability" value="{{request_gameuser.ability_3.pk}}" />
+                <button type="submit" class="btn btn-primary mt-3">{{request_gameuser.name}} <u>{{request_gameuser.ability_3.name}}</u></button>
+            </form>
+        {% endif %}
+
+        {% if request_gameuser.ability_4.is_buff == True and request_gameuser.ability_4.is_aoe == True %}
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="ability" value="{{request_gameuser.ability_4.pk}}" />

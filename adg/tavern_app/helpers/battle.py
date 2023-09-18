@@ -81,7 +81,7 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         player_or_enemy_took_action = who_attacking,
         ability = ability,
         amount = calculated_damage,
-        damage_or_heal = "damage",
+        damage_or_heal_or_buff = "damage",
         )
     combat_log.save()
 
@@ -108,7 +108,7 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
         player_or_enemy_took_action = who_attacking,
         ability = ability,
         amount = calculated_damage,
-        damage_or_heal = "damage",
+        damage_or_heal_or_buff = "damage",
         )
     combat_log.save()
 
@@ -167,7 +167,7 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         player_or_enemy_took_action = who_attacking,
         ability = ability,
         amount = calculated_healing,
-        damage_or_heal = "heal",
+        damage_or_heal_or_buff = "heal",
         )
     combat_log.save()
 
@@ -194,3 +194,52 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
     final_healing = ability.max_damage
     print("final calculated damage is: " + str(final_healing))
     return final_healing
+
+
+def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder) -> None:
+    who_attacking = "player"
+
+    # TODO buff hp: https://trello.com/c/PVHHYPpu/221-buffs-hp-and-mp
+
+    # TODO buff mp: https://trello.com/c/PVHHYPpu/221-buffs-hp-and-mp
+
+    if ability.buff_attack_mod > 0:
+        buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * (ability.buff_attack_mod/100))
+        if buffed_attack > defensive_gameuser_target.current_attack:
+            defensive_gameuser_target.current_attack = buffed_attack
+
+    if ability.buff_defense_mod > 0:
+        buffed_defense = defensive_gameuser_target.with_gear_defense + round(defensive_gameuser_target.with_gear_defense * (ability.buff_defense_mod/100))
+        if buffed_defense > defensive_gameuser_target.current_defense:
+            defensive_gameuser_target.current_defense = buffed_defense
+
+    if ability.buff_myst_attack_mod > 0:
+        buffed_myst_attack = defensive_gameuser_target.with_gear_myst_attack + round(defensive_gameuser_target.with_gear_myst_attack * (ability.buff_myst_attack_mod/100))
+        if buffed_myst_attack > defensive_gameuser_target.current_myst_attack:
+            defensive_gameuser_target.current_myst_attack = buffed_myst_attack
+
+    if ability.buff_myst_defense_mod > 0:
+        buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(defensive_gameuser_target.with_gear_myst_defense * (ability.buff_myst_defense_mod/100))
+        if buffed_myst_defense > defensive_gameuser_target.current_myst_defense:
+            defensive_gameuser_target.current_myst_defense = buffed_myst_defense
+
+    if ability.buff_speed_mod > 0:
+        buffed_speed = defensive_gameuser_target.with_gear_speed + round(defensive_gameuser_target.with_gear_speed * (ability.buff_speed_mod/100))
+        if buffed_speed > defensive_gameuser_target.current_speed:
+            defensive_gameuser_target.current_speed = buffed_speed
+
+    defensive_gameuser_target.save()
+
+    combat_log = CombatLog(
+        game = game,
+        gameuser = gameuser,
+        defensive_gameuser_target = defensive_gameuser_target,
+        player_or_enemy_took_action = who_attacking,
+        ability = ability,
+        amount = 0,
+        damage_or_heal_or_buff = "buff",
+        )
+    combat_log.save()
+
+    unit_turn.is_their_turn = False
+    unit_turn.save()

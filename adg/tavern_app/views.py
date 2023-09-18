@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.http import JsonResponse
 from .helpers.seed import seed_data
-from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save, calc_is_request_user_turn
+from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save, calc_is_request_user_turn, gameuser_buff_single_gameuser_and_save
 from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list, plant_seed_decision
 
 
@@ -398,7 +398,7 @@ def battle(request, game_id, act, number):
                 # TODO update redirect to current battle
                 return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
             
-            if is_request_user_turn and ability.is_heal == False:
+            if is_request_user_turn and ability.is_heal == False and ability.is_buff == False:
                 # AOE Damage
                 if ability.is_aoe == True:
                     for gameenemy in gameenemies:
@@ -424,6 +424,7 @@ def battle(request, game_id, act, number):
                 
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+
             elif is_request_user_turn and ability.is_heal == True:
                 # AOE Heal
                 if ability.is_aoe == True:
@@ -454,9 +455,37 @@ def battle(request, game_id, act, number):
                     # requery the request gameuser who cast the heal since their HP just increased.
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+
+            elif is_request_user_turn and ability.is_buff == True:
+                # AOE Buff
+                if ability.is_aoe == True:
+                    for gameuser in gameusers:
+                        if gameuser.current_hp > 0:
+                            gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                    # requery the request gameuser who cast the buff since their stats changed
+                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
+                    # only deduct MP once
+                    gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
-                # TODO update redirect to current battle
-                return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+                # Single Target Buff
+                is_player_in_this_game = True if GameUser.objects.filter(game=game, pk=form.cleaned_data['defensive_gameuser_target'].id) else False
+                if is_player_in_this_game == False:
+                    messages.error(request, 'You may only buff players in this game.', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+
+                defensive_gameuser_target = GameUser.objects.get(game=game, pk=form.cleaned_data['defensive_gameuser_target'].id)
+                if defensive_gameuser_target.current_hp == 0:
+                    messages.error(request, 'Cannot single target buff player with 0 hp.', extra_tags="alert alert-danger")
+                    # TODO update redirect to current battle
+                    return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+                gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                if defensive_gameuser_target == request_gameuser:
+                    # requery the request gameuser who cast the buff since their stats changed
+                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
+                gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
             else:
                 messages.error(request, 'It is not your turn to attack.', extra_tags="alert alert-danger")
 
