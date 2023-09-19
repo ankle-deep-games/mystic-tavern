@@ -121,7 +121,9 @@ class GameUser(models.Model):
     gender = models.ForeignKey(Gender, on_delete=models.PROTECT, default=None, blank=True, null=True)
     is_ready = models.BooleanField(default=False)
     current_hp = models.IntegerField(default=0)
+    current_max_hp = models.IntegerField(default=0)
     current_mp = models.IntegerField(default=0)
+    current_max_mp = models.IntegerField(default=0)
     current_attack = models.IntegerField(default=0)
     current_defense = models.IntegerField(default=0)
     current_myst_attack = models.IntegerField(default=0)
@@ -165,10 +167,10 @@ class GameUser(models.Model):
         return f'{self.role}-{self.gender}.png'
 
     def hp_percentage(self):
-        return round((self.current_hp / self.with_gear_hp) * 100)
+        return round((self.current_hp / self.current_max_hp) * 100)
     
     def mp_percentage(self):
-        return round((self.current_mp / self.with_gear_mp) * 100)
+        return round((self.current_mp / self.current_max_mp) * 100)
     
     def unit_type(self):
         return self.role.type

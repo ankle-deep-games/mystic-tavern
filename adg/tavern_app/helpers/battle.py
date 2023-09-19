@@ -172,8 +172,8 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     combat_log.save()
 
     defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
-    if defensive_gameuser_target.current_hp > defensive_gameuser_target.with_gear_hp:
-        defensive_gameuser_target.current_hp = defensive_gameuser_target.with_gear_hp
+    if defensive_gameuser_target.current_hp > defensive_gameuser_target.current_max_hp:
+        defensive_gameuser_target.current_hp = defensive_gameuser_target.current_max_hp
     defensive_gameuser_target.save()
 
     unit_turn.is_their_turn = False
@@ -199,9 +199,19 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
 def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder) -> None:
     who_attacking = "player"
 
-    # TODO buff hp: https://trello.com/c/PVHHYPpu/221-buffs-hp-and-mp
+    if ability.buff_hp_percent > 0:
+        buffed_hp = defensive_gameuser_target.with_gear_hp + round(defensive_gameuser_target.with_gear_hp * ability.buff_hp_percent)
+        if buffed_hp > defensive_gameuser_target.current_max_hp:
+            hp_increase_delta = buffed_hp - defensive_gameuser_target.current_max_hp
+            defensive_gameuser_target.current_max_hp = buffed_hp
+            defensive_gameuser_target.current_hp += hp_increase_delta
 
-    # TODO buff mp: https://trello.com/c/PVHHYPpu/221-buffs-hp-and-mp
+    if ability.buff_mp_percent > 0:
+        buffed_mp = defensive_gameuser_target.with_gear_mp + round(defensive_gameuser_target.with_gear_mp * ability.buff_mp_percent)
+        if buffed_mp > defensive_gameuser_target.current_max_mp:
+            mp_increase_delta = buffed_mp - defensive_gameuser_target.current_max_mp
+            defensive_gameuser_target.current_max_mp = buffed_mp
+            defensive_gameuser_target.current_mp += mp_increase_delta
 
     if ability.buff_attack_percent > 0:
         buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * ability.buff_attack_percent)
