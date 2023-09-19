@@ -98,13 +98,13 @@ class Ability(models.Model):
     is_heal = models.BooleanField(default=False)
     is_aoe = models.BooleanField(default=False)
     is_buff = models.BooleanField(default=False)
-    buff_hp_mod = models.IntegerField(default=0)
-    buff_mp_mod = models.IntegerField(default=0)
-    buff_attack_mod = models.IntegerField(default=0)
-    buff_defense_mod = models.IntegerField(default=0)
-    buff_myst_attack_mod = models.IntegerField(default=0)
-    buff_myst_defense_mod = models.IntegerField(default=0)
-    buff_speed_mod = models.IntegerField(default=0)
+    buff_hp_percent = models.FloatField(default=0) # between 0 and 1
+    buff_mp_percent = models.FloatField(default=0) # between 0 and 1
+    buff_attack_percent = models.FloatField(default=0) # between 0 and 1
+    buff_defense_percent = models.FloatField(default=0) # between 0 and 1
+    buff_myst_attack_percent = models.FloatField(default=0) # between 0 and 1
+    buff_myst_defense_percent = models.FloatField(default=0) # between 0 and 1
+    buff_speed_percent = models.FloatField(default=0) # between 0 and 1
     min_damage = models.IntegerField(default=0)
     max_damage = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
