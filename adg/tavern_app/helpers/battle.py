@@ -203,28 +203,28 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     # TODO buff mp: https://trello.com/c/PVHHYPpu/221-buffs-hp-and-mp
 
-    if ability.buff_attack_mod > 0:
-        buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * (ability.buff_attack_mod/100))
+    if ability.buff_attack_percent > 0:
+        buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * ability.buff_attack_percent)
         if buffed_attack > defensive_gameuser_target.current_attack:
             defensive_gameuser_target.current_attack = buffed_attack
 
-    if ability.buff_defense_mod > 0:
-        buffed_defense = defensive_gameuser_target.with_gear_defense + round(defensive_gameuser_target.with_gear_defense * (ability.buff_defense_mod/100))
+    if ability.buff_defense_percent > 0:
+        buffed_defense = defensive_gameuser_target.with_gear_defense + round(defensive_gameuser_target.with_gear_defense * ability.buff_defense_percent)
         if buffed_defense > defensive_gameuser_target.current_defense:
             defensive_gameuser_target.current_defense = buffed_defense
 
-    if ability.buff_myst_attack_mod > 0:
-        buffed_myst_attack = defensive_gameuser_target.with_gear_myst_attack + round(defensive_gameuser_target.with_gear_myst_attack * (ability.buff_myst_attack_mod/100))
+    if ability.buff_myst_attack_percent > 0:
+        buffed_myst_attack = defensive_gameuser_target.with_gear_myst_attack + round(defensive_gameuser_target.with_gear_myst_attack * ability.buff_myst_attack_percent)
         if buffed_myst_attack > defensive_gameuser_target.current_myst_attack:
             defensive_gameuser_target.current_myst_attack = buffed_myst_attack
 
-    if ability.buff_myst_defense_mod > 0:
-        buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(defensive_gameuser_target.with_gear_myst_defense * (ability.buff_myst_defense_mod/100))
+    if ability.buff_myst_defense_percent > 0:
+        buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(defensive_gameuser_target.with_gear_myst_defense * ability.buff_myst_defense_percent)
         if buffed_myst_defense > defensive_gameuser_target.current_myst_defense:
             defensive_gameuser_target.current_myst_defense = buffed_myst_defense
 
-    if ability.buff_speed_mod > 0:
-        buffed_speed = defensive_gameuser_target.with_gear_speed + round(defensive_gameuser_target.with_gear_speed * (ability.buff_speed_mod/100))
+    if ability.buff_speed_percent > 0:
+        buffed_speed = defensive_gameuser_target.with_gear_speed + round(defensive_gameuser_target.with_gear_speed * ability.buff_speed_percent)
         if buffed_speed > defensive_gameuser_target.current_speed:
             defensive_gameuser_target.current_speed = buffed_speed
 
