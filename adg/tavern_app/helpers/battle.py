@@ -206,7 +206,12 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
             defensive_gameuser_target.current_max_hp = buffed_hp
             defensive_gameuser_target.current_hp += hp_increase_delta
 
-    # TODO buff mp: https://trello.com/c/PVHHYPpu/221-buffs-hp-and-mp
+    if ability.buff_mp_percent > 0:
+        buffed_mp = defensive_gameuser_target.with_gear_mp + round(defensive_gameuser_target.with_gear_mp * ability.buff_mp_percent)
+        if buffed_mp > defensive_gameuser_target.current_max_mp:
+            mp_increase_delta = buffed_mp - defensive_gameuser_target.current_max_mp
+            defensive_gameuser_target.current_max_mp = buffed_mp
+            defensive_gameuser_target.current_mp += mp_increase_delta
 
     if ability.buff_attack_percent > 0:
         buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * ability.buff_attack_percent)
