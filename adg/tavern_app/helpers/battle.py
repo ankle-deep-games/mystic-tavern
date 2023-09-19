@@ -172,8 +172,8 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     combat_log.save()
 
     defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
-    if defensive_gameuser_target.current_hp > defensive_gameuser_target.with_gear_hp:
-        defensive_gameuser_target.current_hp = defensive_gameuser_target.with_gear_hp
+    if defensive_gameuser_target.current_hp > defensive_gameuser_target.current_max_hp:
+        defensive_gameuser_target.current_hp = defensive_gameuser_target.current_max_hp
     defensive_gameuser_target.save()
 
     unit_turn.is_their_turn = False

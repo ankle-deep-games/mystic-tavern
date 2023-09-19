@@ -270,7 +270,9 @@ class RoleAssignmentView(FormView):
             player.gender = player_gender
 
             player.current_hp = player.role.start_hp
+            player.current_max_hp = player.role.start_hp
             player.current_mp = player.role.start_mp
+            player.current_max_mp = player.role.start_mp
             player.current_attack = player.role.start_attack
             player.current_defense = player.role.start_defense
             player.current_myst_attack = player.role.start_myst_attack
