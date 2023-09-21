@@ -18,6 +18,16 @@ def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
     gameuser.with_gear_defense = new_geared_defense
     gameuser.current_defense = new_geared_defense
 
+    new_geared_myst_defense = gameuser.role.start_myst_defense
+    if gameuser.armor_1:
+        new_geared_myst_defense += gameuser.armor_1.myst_defense_mod
+    if gameuser.armor_2:
+        new_geared_myst_defense += gameuser.armor_2.myst_defense_mod
+    if gameuser.armor_3:
+        new_geared_myst_defense += gameuser.armor_3.myst_defense_mod
+    gameuser.with_gear_myst_defense = new_geared_myst_defense
+    gameuser.current_myst_defense = new_geared_myst_defense
+
     gameuser.save()
 
     # shared func with weapons to get all weapons and armor. tally up the total increases, and apply those increases
