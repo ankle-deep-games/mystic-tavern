@@ -1,6 +1,6 @@
 from ..models import GameUser, Armor, Weapon
 
-def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
+def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int) -> None:
     gameuser = GameUser.objects.get(pk=gameuser.pk)
     if slot == 1:
         gameuser.armor_1 = armor
@@ -11,7 +11,7 @@ def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
     
     gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
 
-def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon, slot: int):
+def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon, slot: int) -> None:
     gameuser = GameUser.objects.get(pk=gameuser.pk)
     if slot == 1:
         gameuser.weapon_1 = weapon
@@ -22,7 +22,7 @@ def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon, slot: int):
     
     gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
 
-def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser):
+def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser) -> None:
     new_geared_attack = gameuser.role.start_attack
     if gameuser.weapon_1:
         new_geared_attack += gameuser.weapon_1.attack_mod
@@ -110,5 +110,3 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser):
     gameuser.current_mp += mp_delta
 
     gameuser.save()
-
-    # shared func with weapons to get all weapons and armor. tally up the total increases, and apply those increases
