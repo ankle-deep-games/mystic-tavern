@@ -91,6 +91,24 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser):
     gameuser.current_max_hp = new_geared_hp
     gameuser.current_hp += hp_delta
 
+    new_geared_mp = gameuser.role.start_mp
+    if gameuser.armor_1:
+        new_geared_mp += gameuser.armor_1.mp_mod
+    if gameuser.armor_2:
+        new_geared_mp += gameuser.armor_2.mp_mod
+    if gameuser.armor_3:
+        new_geared_mp += gameuser.armor_3.mp_mod
+    if gameuser.weapon_1:
+        new_geared_mp += gameuser.weapon_1.mp_mod
+    if gameuser.weapon_2:
+        new_geared_mp += gameuser.weapon_2.mp_mod
+    if gameuser.weapon_3:
+        new_geared_mp += gameuser.weapon_3.mp_mod
+    mp_delta = new_geared_mp - gameuser.current_max_mp
+    gameuser.with_gear_mp = new_geared_mp
+    gameuser.current_max_mp = new_geared_mp
+    gameuser.current_mp += mp_delta
+
     gameuser.save()
 
     # shared func with weapons to get all weapons and armor. tally up the total increases, and apply those increases
