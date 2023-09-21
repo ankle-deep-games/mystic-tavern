@@ -1,6 +1,7 @@
 from ..models import GameUser, Armor, Weapon
 
 def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
+    gameuser = GameUser.objects.get(pk=gameuser.pk)
     if slot == 1:
         gameuser.armor_1 = armor
     elif slot == 2:
@@ -11,6 +12,7 @@ def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
     gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
 
 def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon, slot: int):
+    gameuser = GameUser.objects.get(pk=gameuser.pk)
     if slot == 1:
         gameuser.weapon_1 = weapon
     elif slot == 2:
@@ -40,6 +42,22 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser):
         new_geared_myst_defense += gameuser.armor_3.myst_defense_mod
     gameuser.with_gear_myst_defense = new_geared_myst_defense
     gameuser.current_myst_defense = new_geared_myst_defense
+
+    new_geared_speed = gameuser.role.start_speed
+    if gameuser.armor_1:
+        new_geared_speed += gameuser.armor_1.speed_mod
+    if gameuser.armor_2:
+        new_geared_speed += gameuser.armor_2.speed_mod
+    if gameuser.armor_3:
+        new_geared_speed += gameuser.armor_3.speed_mod
+    if gameuser.weapon_1:
+        new_geared_speed += gameuser.weapon_1.speed_mod
+    if gameuser.weapon_2:
+        new_geared_speed += gameuser.weapon_2.speed_mod
+    if gameuser.weapon_3:
+        new_geared_speed += gameuser.weapon_3.speed_mod
+    gameuser.with_gear_speed = new_geared_speed
+    gameuser.current_speed = new_geared_speed
 
     gameuser.save()
 
