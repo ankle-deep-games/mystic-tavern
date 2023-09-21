@@ -23,6 +23,26 @@ def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon, slot: int):
     gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
 
 def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser):
+    new_geared_attack = gameuser.role.start_attack
+    if gameuser.weapon_1:
+        new_geared_attack += gameuser.weapon_1.attack_mod
+    if gameuser.weapon_2:
+        new_geared_attack += gameuser.weapon_2.attack_mod
+    if gameuser.weapon_3:
+        new_geared_attack += gameuser.weapon_3.attack_mod
+    gameuser.with_gear_attack = new_geared_attack
+    gameuser.current_attack = new_geared_attack
+
+    new_geared_myst_attack = gameuser.role.start_myst_attack
+    if gameuser.weapon_1:
+        new_geared_myst_attack += gameuser.weapon_1.myst_attack_mod
+    if gameuser.weapon_2:
+        new_geared_myst_attack += gameuser.weapon_2.myst_attack_mod
+    if gameuser.weapon_3:
+        new_geared_myst_attack += gameuser.weapon_3.myst_attack_mod
+    gameuser.with_gear_myst_attack = new_geared_myst_attack
+    gameuser.current_myst_attack = new_geared_myst_attack
+    
     new_geared_defense = gameuser.role.start_defense
     if gameuser.armor_1:
         new_geared_defense += gameuser.armor_1.defense_mod
