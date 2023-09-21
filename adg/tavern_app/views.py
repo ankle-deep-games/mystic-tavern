@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.views.generic import CreateView, FormView, TemplateView
 from .forms import CreateGameForm, JoinGameForm, RoleAssignmentForm, GameDialogueForm, StartGameForm, CombatLogForm
-from .models import Game, GameUser, Dialogue, GameDialogue, Ability, Enemy, GameEnemy, CombatLog, GameLocation, GameTurnOrder, Armor
+from .models import Game, GameUser, Dialogue, GameDialogue, Ability, Enemy, GameEnemy, CombatLog, GameLocation, GameTurnOrder, Armor, Weapon
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from .helpers.seed import seed_data
 from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save, calc_is_request_user_turn, gameuser_buff_single_gameuser_and_save
 from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list, plant_seed_decision
-from .helpers.equipment import gameuser_equip_armor
+from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 
 
 def simple_view(request):
@@ -54,7 +54,9 @@ def live_update_prototype_redirect_view(request):
 def equip_placeholder(request):
     gameuser = GameUser.objects.get(pk=6)
     armor = Armor.objects.get(pk=16)
+    weapon = Weapon.objects.get(pk=1)
     gameuser_equip_armor(gameuser=gameuser, armor=armor, slot=1)
+    gameuser_equip_weapon(gameuser=gameuser, weapon=weapon, slot=1)
     return HttpResponse("updated weapons and armor for " + gameuser.name() + " in game " + gameuser.game.name + ". check admin for that gameuser to see changes.")
 
 class CreateOrJoinView(TemplateView):

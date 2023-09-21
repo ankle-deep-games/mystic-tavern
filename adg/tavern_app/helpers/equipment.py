@@ -1,4 +1,4 @@
-from ..models import GameUser, Armor
+from ..models import GameUser, Armor, Weapon
 
 def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
     if slot == 1:
@@ -7,7 +7,20 @@ def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int):
         gameuser.armor_2 = armor
     elif slot == 3:
         gameuser.armor_3 = armor
+    
+    gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
 
+def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon, slot: int):
+    if slot == 1:
+        gameuser.weapon_1 = weapon
+    elif slot == 2:
+        gameuser.weapon_2 = weapon
+    elif slot == 3:
+        gameuser.weapon_3 = weapon
+    
+    gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
+
+def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser):
     new_geared_defense = gameuser.role.start_defense
     if gameuser.armor_1:
         new_geared_defense += gameuser.armor_1.defense_mod
