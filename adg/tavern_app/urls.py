@@ -20,4 +20,5 @@ urlpatterns = [
     path('liveupdateprototype', views.live_update_prototype, name='liveupdateprototype'),
     path('liveupdateprototypeview', views.live_update_prototype_view, name='liveupdateprototypeview'),
     path('liveupdateprototyperedirectview', views.live_update_prototype_redirect_view, name='liveupdateprototyperedirectview'),
+    path('equipplaceholder', views.equip_placeholder, name='equipplaceholder'),
 ]
