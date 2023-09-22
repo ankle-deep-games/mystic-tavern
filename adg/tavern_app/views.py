@@ -343,6 +343,12 @@ def scene(request, game_id, act, number):
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
 
+            # TODO update to real dialogue id
+            if act == 1 and scene_num == 1 and dialogue.id == 3:
+                gamelocation.location_type = "battle"
+                gamelocation.save()
+                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
+
             # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
             # change act/scene/dialogue to execute at correct place
             # adding here now as an example of how we'll execute decisions in dialogue
