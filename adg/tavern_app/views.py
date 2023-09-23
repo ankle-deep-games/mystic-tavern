@@ -408,6 +408,29 @@ def scene(request, game_id, act, number):
 
     return render(request, 'tavern_app/scene.html', context)
 
+def scene_get_updates(request, game_id, act, number):
+    scene_num = number
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
+    
+    game = Game.objects.get(pk=game_id)
+
+    character_list = get_character_list(game=game)
+    game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
+    next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
+    data = {
+        "game_dialogue_progress_list": game_dialogue_progress_list,
+        "next_dialogue_list": next_dialogue_list,
+        "error": "",
+        "action": "",
+    }
+    return JsonResponse(data)
+
 def battle(request, game_id, act, number):
     battle_num = number
     if not request.user.is_authenticated:
