@@ -12,7 +12,6 @@ from .helpers.seed import seed_data
 from .helpers.battle import calc_and_save_turn_order, gameuser_attack_single_gameenemy_and_save, gameenemy_attack_single_gameuser_and_save, enemey_choose_random_ability, enemey_choose_random_alive_target, gameuser_heal_single_gameuser_and_save, gameuser_deduct_ability_mp_and_save, calc_is_request_user_turn, gameuser_buff_single_gameuser_and_save
 from .helpers.scene import get_character_list, get_game_dialogue_progress_list, get_next_dialogue_list, plant_seed_decision
 from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
-from django.conf import settings
 
 
 def simple_view(request):

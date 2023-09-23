@@ -58,6 +58,7 @@
 {% comment %} TODO move jquery cdn elsewhere {% endcomment %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
     $(document).on('submit', '#dialogue-post-form', function(e) {
         e.preventDefault();
         
@@ -86,10 +87,21 @@
 
                 // TODO conditional for next_dialogue_list
                 for (var key in response.next_dialogue_list){
-                    var temp="<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
-                    $("#dialogue-container").append(temp);
-                }
+                    var element = "<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
 
+                    if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
+                        var element = "<div class='d-flex mt-3'>" +
+                            "<img src='/static/tavern_app/" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
+                            "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                            "</div>" +
+                            "<form method='POST' id='dialogue-post-form'>" +
+                            "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
+                            "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
+                            "<button type='submit' class='btn btn-primary mt-3'>Next</button>" +
+                            "</form>";
+                    }
+                    $("#dialogue-container").append(element);
+                }
             }
         })
 
