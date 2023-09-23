@@ -35,22 +35,6 @@ def add_three_users_to_game(request, game_id):
     GameUser(game=game,user=User(pk=4)).save()  
     return HttpResponse("3 users added to game " + str(game_id))
 
-def live_update_prototype(request):
-    games = Game.objects.all()
-    return JsonResponse({"games":list(games.values())})
-
-def live_update_prototype_view(request):
-    context = {
-        'games': Game.objects.all()
-    }
-    return render(request, 'liveupdateprototype.html', context)
-
-def live_update_prototype_redirect_view(request):
-    context = {
-        'gameCount': Game.objects.all().count()
-    }
-    return render(request, 'liveupdateprototyperedirect.html', context)
-
 def equip_placeholder(request):
     gameuser = GameUser.objects.get(pk=6)
     armor = Armor.objects.get(pk=16)
