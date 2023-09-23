@@ -332,16 +332,39 @@ def scene(request, game_id, act, number):
             # make sure submission is valid
             latest_game_dialogue_id = GameDialogue.objects.filter(game=game).latest('id').dialogue.id
             gamelocation = GameLocation.objects.get(game=game)
+            has_error = False
+            error_msg = ""
             if dialogue.from_node_id != latest_game_dialogue_id:
-                messages.error(request, 'Invalid dialogue choice. Must be connected to previous dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
+                has_error = True
+                error_msg = "Invalid dialogue choice. Must be connected to previous dialogue."
             
             if is_leader == False:
-                messages.error(request, 'Only the party leader can progress dialogue.', extra_tags="alert alert-danger")
-                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
+                has_error = True
+                error_msg = "Only the party leader can progress dialogue."
 
-            game_dialogue = GameDialogue(game=game, dialogue=dialogue)
-            game_dialogue.save()
+            if has_error == False:
+                game_dialogue = GameDialogue(game=game, dialogue=dialogue)
+                game_dialogue.save()
+
+            character_list = get_character_list(game=game)
+            game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
+            next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
+            data = {
+                "game_dialogue_progress_list": game_dialogue_progress_list,
+                "next_dialogue_list": next_dialogue_list,
+                "error": error_msg,
+                "action": "",
+            }
+            return JsonResponse(data)
+
+            # TODO move these higher up and make them work with javascript "action" section
+            # first going to work on the other players getting javascript updates
+
+            # TODO update to real dialogue id
+            if act == 1 and scene_num == 1 and dialogue.id == 3:
+                gamelocation.location_type = "battle"
+                gamelocation.save()
+                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
 
             # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
             # change act/scene/dialogue to execute at correct place
@@ -352,7 +375,16 @@ def scene(request, game_id, act, number):
                 plant_seed_decision()
 
         else:
-            messages.error(request, 'Something in the dialogue was not valid.', extra_tags="alert alert-danger")
+            character_list = get_character_list(game=game)
+            game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
+            next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
+            data = {
+                "game_dialogue_progress_list": game_dialogue_progress_list,
+                "next_dialogue_list": next_dialogue_list,
+                "error": "Something in the dialogue was not valid.",
+                "action": "",
+            }
+            return JsonResponse(data)
 
     # else render form
     else:
@@ -370,6 +402,8 @@ def scene(request, game_id, act, number):
         'next_dialogue_list': next_dialogue_list,
         'form': form,
         'is_leader': is_leader,
+        'act': act,
+        'scene_num': scene_num,
     }
 
     return render(request, 'tavern_app/scene.html', context)

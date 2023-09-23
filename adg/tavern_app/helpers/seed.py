@@ -23,27 +23,27 @@ def seed_data():
     ])
 
     # types
-    type1 = Type(name="Light", strength=2, weakness=5)
-    type2 = Type(name="Dark", strength=3, weakness=1)
-    type3 = Type(name="Stone", strength=4, weakness=2)
-    type4 = Type(name="Forest", strength=5, weakness=3)
-    type5 = Type(name="Wind", strength=1, weakness=4)
-    type6 = Type(name="Normal", strength=6, weakness=6)
+    type_light = Type(name="Light", strength=2, weakness=5)
+    type_dark = Type(name="Dark", strength=3, weakness=1)
+    type_stone = Type(name="Stone", strength=4, weakness=2)
+    type_forest = Type(name="Forest", strength=5, weakness=3)
+    type_wind = Type(name="Wind", strength=1, weakness=4)
+    type_normal = Type(name="Normal", strength=6, weakness=6)
     Type.objects.bulk_create([
-        type1,
-        type2,
-        type3,
-        type4,
-        type5,
-        type6,
+        type_light,
+        type_dark,
+        type_stone,
+        type_forest,
+        type_wind,
+        type_normal,
     ])
 
     # roles
-    role1 = Role(name="WHITEMAGE", type=type1, start_hp=100, start_mp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
-    role2 = Role(name="BLACKMAGE", type=type2, start_hp=80, start_mp=120, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
-    role3 = Role(name="PALADIN", type=type3, start_hp=120, start_mp=80, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
-    role4 = Role(name="ARCHER", type=type4, start_hp=110, start_mp=90, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
-    role5 = Role(name="BARD", type=type5, start_hp=90, start_mp=110, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
+    role1 = Role(name="WHITEMAGE", type=type_light, start_hp=100, start_mp=100, start_attack=10, start_defense=20, start_myst_attack=15, start_myst_defense=20, start_speed=25)
+    role2 = Role(name="BLACKMAGE", type=type_dark, start_hp=80, start_mp=120, start_attack=15, start_defense=10, start_myst_attack=35, start_myst_defense=10, start_speed=30)
+    role3 = Role(name="PALADIN", type=type_stone, start_hp=120, start_mp=80, start_attack=20, start_defense=30, start_myst_attack=10, start_myst_defense=20, start_speed=20)
+    role4 = Role(name="ARCHER", type=type_forest, start_hp=110, start_mp=90, start_attack=35, start_defense=15, start_myst_attack=10, start_myst_defense=10, start_speed=30)
+    role5 = Role(name="BARD", type=type_wind, start_hp=90, start_mp=110, start_attack=20, start_defense=20, start_myst_attack=20, start_myst_defense=20, start_speed=20)
     Role.objects.bulk_create([
         role1,
         role2,
@@ -142,117 +142,117 @@ def seed_data():
     # Tier 1
     ability1 = Ability(name="Attack",
                        description="A basic single-target physical attack that inflicts low damage without consuming MP.",
-                       type=type6, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=1, max_damage=5)
+                       type=type_normal, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=1, max_damage=5)
     # Tier 2
     ability2 = Ability(name="Shield Bash",
                        description="A physical attack that deals low damage to one enemy by thrusting a shield into the enemy.",
-                       type=type3, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_stone, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
     ability3 = Ability(name="Shatter Shot",
                        description="A precise single-target physical attack that delivers medium damage to one enemy with a precisely aimed arrow.",
-                       type=type4, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
     ability4 = Ability(name="Divine Light",
                        description="A single-target healing spell that provides a gentle, low-level healing effect to one ally with a radiant burst of light.",
-                       type=type1, mp_cost=10, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_light, mp_cost=10, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
     ability5 = Ability(name="Shadow Blast",
                        description="A focused single-target attack that inflicts medium damage on one enemy through a powerful surge of arcane energy.",
-                       type=type2, mp_cost=10, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_dark, mp_cost=10, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
     # TODO https://trello.com/c/BKxfLrtR/218-combat-buffs-add-update-seed-data
     ability6 = Ability(name="Anthem of Valor",
                        description="Empowers a single ally with a medium physical attack boost and a defensive buff, enhancing their strength and resilience.",
-                       type=type5, mp_cost=10, is_myst_attack=False, is_heal=False,
+                       type=type_wind, mp_cost=10, is_myst_attack=False, is_heal=False,
                        is_aoe=False, is_buff=True, buff_attack_percent=0.1, buff_defense_percent=0.1)
     # Tier 3 - Light
     ability7 = Ability(name="Divine Strike",
                        description="Launches a medium mystic attack, harnessing the power of light to strike a single target with celestial force.",
-                       type=type1, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability8 = Ability(name="Nature's Embrace",
                        description="Invokes the light of the natural world to deliver a medium mystic attack, enveloping a single target in the gentle yet powerful embrace of nature's energy.",
-                       type=type1, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability9 = Ability(name="Radiant Surge",
                        description="Casts forth a medium mystic attack that surges with blinding light, striking a single target with intense brilliance and energy.",
-                       type=type1, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability10 = Ability(name="Luminous Sonata",
                         description="Creates a harmoneous performance that conjures a medium mystic attack that envelopes a single target in a symphony of luminescent power.",
-                        type=type1, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                        type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     # Tier 3 - Dark
     ability11 = Ability(name="Shadow Strike",
                        description="Unleashes a medium mystic attack with dark energy, striking a single target with shadowy force.",
-                       type=type2, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability12 = Ability(name="Shadow Volley",
                        description="Fires a barrage of dark-infused arrows in a medium mystic attack that targets a single enemy.",
-                       type=type2, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability13 = Ability(name="Dark Embrace",
                        description="Bestows a medium mystic attack infused with dark power upon a single target, enshrouding them in malevolent energy.",
-                       type=type2, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability14 = Ability(name="Ebon Serenade",
                         description="Performs a haunting serenade to conjure a medium mystic attack, enveloping a single target in a melody of darkness.",
-                        type=type2, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                        type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     # Tier 3 - Forest
     ability15 = Ability(name="Timber Slam",
                        description="Delivers a medium mystic attack imbued with the essence of the forest, striking a single target with the force of nature.",
-                       type=type4, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability16 = Ability(name="Thorned Grasp",
                        description="Casts a medium mystic attack infused with the untamed power of the forest, enveloping a single target in thorny vines and natural wrath.",
-                       type=type4, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability17 = Ability(name="Sylvan Whispers",
                        description="Unleashes a medium mystic attack that channels the secrets of the forest, enveloping a single target in whispers of natural power.",
-                       type=type4, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability18 = Ability(name="Enchanted Grove",
                         description="Evokes the magic of the forest with a medium mystic attack, creating an enchanting grove that envelops a single target.",
-                        type=type4, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                        type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     # Tier 3 - Stone
     ability19 = Ability(name="Piercing Arrow",
                        description="Fires a precise medium mystic attack in the form of a piercing arrow, targeting a single enemy.",
-                       type=type3, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability20 = Ability(name="Stoneguard",
                        description="Conjures a medium mystic attack that fractures the very earth, targeting a single enemy with a devastating quake of stone and debris.",
-                       type=type3, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability21 = Ability(name="Petrifying Blast",
                        description="Unleashes a medium mystic attack that carries the power to petrify, encasing a single target in stone-like rigidity.",
-                       type=type3, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability22 = Ability(name="Resonant Stones",
                         description="Conjures a medium mystic attack with resonating stones, creating a harmonious symphony that engulfs a single target.",
-                        type=type3, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                        type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     # Tier 3 - Wind
     ability23 = Ability(name="Cyclone Slash",
                        description="Executes a medium mystic attack, wielding the power of the wind to unleash a cyclonic strike upon a single target.",
-                       type=type5, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability24 = Ability(name="Storm of Arrows",
                        description="Unleashes a tempestuous barrage of arrows in a medium mystic attack, targeting a single enemy.",
-                       type=type5, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability25 = Ability(name="Gale Fury",
                        description="Commands a medium mystic attack imbued with the tempest's might, releasing a raging windstorm upon a single target, inflicting swirling damage.",
-                       type=type5, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                       type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     ability26 = Ability(name="Tempest Nova",
                         description="Casts forth a medium mystic attack that erupts with the fury of a tempest, striking a single target with turbulent force.",
-                        type=type5, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+                        type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     # Tier 4
     ability27 = Ability(name="Holy Wrath",
                        description="Summons divine fury, delivering a devastating high physical attack that channels holy energy to smite a single target with righteous force.",
-                       type=type3, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
+                       type=type_stone, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
     ability28 = Ability(name="Grove's Vengeance",
                        description="Harnesses the fury of the forest, unleashing a potent high physical attack that embodies the wrath of nature upon a single target.",
-                       type=type4, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
+                       type=type_forest, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
     ability29 = Ability(name="Sanctuary",
                        description="Invokes a healing haven, granting a substantial high-level heal that envelops a single target in a protective aura of rejuvenation.",
-                       type=type1, mp_cost=30, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
+                       type=type_light, mp_cost=30, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
     ability30 = Ability(name="Arcane Darkness",
                         description="Conjures dark mystic forces, casting a formidable high mystic attack that shrouds a single target in shadowy, unpredictable energies.",
-                        type=type2, mp_cost=30, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
+                        type=type_dark, mp_cost=30, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
     # TODO https://trello.com/c/BKxfLrtR/218-combat-buffs-add-update-seed-data
     ability31 = Ability(name="Ethereal Crescendo",
                         description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon a single target, elevating them to an ethereal peak of strength and grace.",
-                        type=type5, mp_cost=30, is_myst_attack=False, is_heal=False,
+                        type=type_wind, mp_cost=30, is_myst_attack=False, is_heal=False,
                         is_aoe=True, is_buff=True, buff_hp_percent=0.5, buff_mp_percent=0.5, buff_attack_percent=0.5, buff_defense_percent=0.5, buff_myst_attack_percent=0.5, buff_myst_defense_percent=0.5, buff_speed_percent=0.5)
     
     # AOE test abilities TODO https://trello.com/c/jYTBJRi6/210-combat-aoe-add-update-aoe-abilities-in-abilities-seed-data
     ability32 = Ability(name="AOE Damage",
                        description="AOE Damage Test. Used by both players and enemies.",
-                       type=type4, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
+                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
     
     ability33 = Ability(name="AOE Heal",
                        description="AOE Heal Test. Used only by players.",
-                       type=type4, mp_cost=5, is_myst_attack=False, is_heal=True, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
+                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=True, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
 
     Ability.objects.bulk_create([
         ability1,
@@ -454,7 +454,7 @@ def seed_data():
     enemy1 = Enemy(
         name="Drunk Man 1",
         image="drunk-man-1.png",
-        type=type1,
+        type=type_light,
         start_hp=150,
         start_attack=50,
         start_defense=50,
@@ -469,7 +469,7 @@ def seed_data():
     enemy2 = Enemy(
         name="Drunk Man 2",
         image="drunk-man-2.png",
-        type=type2,
+        type=type_dark,
         start_hp=150,
         start_attack=50,
         start_defense=50,
@@ -484,7 +484,7 @@ def seed_data():
     enemy3 = Enemy(
         name="Arachnid Sovereign",
         image="drunk-man-2.png",
-        type=type4,
+        type=type_forest,
         start_hp=200,
         start_attack=60,
         start_defense=60,
@@ -499,7 +499,7 @@ def seed_data():
     enemy4 = Enemy(
         name="Arachnid Minion",
         image="drunk-man-2.png",
-        type=type4,
+        type=type_forest,
         start_hp=80,
         start_attack=40,
         start_defense=40,
@@ -514,7 +514,7 @@ def seed_data():
     enemy5 = Enemy(
         name="Highland Revenant",
         image="drunk-man-2.png",
-        type=type3,
+        type=type_stone,
         start_hp=200,
         start_attack=60,
         start_defense=60,
@@ -529,7 +529,7 @@ def seed_data():
     enemy6 = Enemy(
         name="Highland Scion",
         image="drunk-man-2.png",
-        type=type3,
+        type=type_stone,
         start_hp=80,
         start_attack=40,
         start_defense=40,
@@ -544,7 +544,7 @@ def seed_data():
     enemy7 = Enemy(
         name="Primordial Anomaly",
         image="creature.png",
-        type=type4,
+        type=type_forest,
         start_hp=300,
         start_attack=100,
         start_defense=100,
@@ -559,7 +559,7 @@ def seed_data():
     enemy8 = Enemy(
         name="Luminar Sentinel",
         image="drunk-man-2.png",
-        type=type1,
+        type=type_light,
         start_hp=100,
         start_attack=50,
         start_defense=50,
@@ -574,7 +574,7 @@ def seed_data():
     enemy9 = Enemy(
         name="Umbral Harbinger",
         image="drunk-man-2.png",
-        type=type2,
+        type=type_dark,
         start_hp=100,
         start_attack=50,
         start_defense=50,
@@ -589,7 +589,7 @@ def seed_data():
     enemy10 = Enemy(
         name="Granite Warden",
         image="drunk-man-2.png",
-        type=type3,
+        type=type_stone,
         start_hp=100,
         start_attack=75,
         start_defense=75,
@@ -604,7 +604,7 @@ def seed_data():
     enemy11 = Enemy(
         name="Sylvan Enchanter",
         image="drunk-man-2.png",
-        type=type4,
+        type=type_forest,
         start_hp=100,
         start_attack=75,
         start_defense=75,
@@ -619,7 +619,7 @@ def seed_data():
     enemy12 = Enemy(
         name="Galewing Shaman",
         image="drunk-man-2.png",
-        type=type5,
+        type=type_wind,
         start_hp=100,
         start_attack=50,
         start_defense=50,
@@ -646,6 +646,14 @@ def seed_data():
         enemy11,
         enemy12,
     ])
+
+    # commenting this first version of act 1 scene 1
+    # so we can test hooking up act 1 multiple dialoge scenes and battles
+    # using shorter dialogue scenes for test data
+    # will ultimatly replace with real dialogue: 
+    # TODO https://trello.com/c/BGEnFtQK/147-hardcode-dialogue-for-act-1-to-match-all-4-players-in-the-game
+    # TODO https://trello.com/c/WG4PwvLG/148-create-act-2-dialogue
+    # TODO https://trello.com/c/mY9nRdLe/149-create-act-3-dialogue
 
     # dialogue Act 1 Scene 1
     node1 = Dialogue(from_node_id=0, node_type="narration", speaker="Narrator", text="Your group finds themselves teleported to an abandoned alleyway in what looks like a quaint old village. The narrow passage is dimly lit, and the silence is broken by the distant sounds of chatter and laughter. Suddenly, two drunk men spot your group and stagger towards you, their eyes gleaming with mischief.", act=1, scene=1)
@@ -791,3 +799,29 @@ def seed_data():
         node61,
         node62,
     ])
+
+    # node1 = Dialogue(from_node_id=0, node_type="talk", speaker="Old Man", text="You there! I have a quest for you.", act=1, scene=1)
+    # node2 = Dialogue(from_node_id=1, node_type="talk", speaker="Group Leader", text="We gladly accept your quest.", act=1, scene=1)
+    # node3 = Dialogue(from_node_id=2, node_type="talk", speaker="Drunk Man 1", text="But first, we gonna kick yo butts.", act=1, scene=1)
+
+    # # somehow after a scene ends or before scene starts - write the initial next dialogue node with from_node_id=0
+    # # that way if the previous scene has branch decisions, the new scene starts from a single point.
+    # # only need to do this if previous scene has branched.
+    # node4 = Dialogue(from_node_id=0, node_type="talk", speaker="Old Man", text="Well that was sad. Go upstairs and get some rest.", act=1, scene=2)
+    # node5 = Dialogue(from_node_id=4, node_type="talk", speaker="Group Leader", text="Yea rest would be good...", act=1, scene=2)
+
+    # node6 = Dialogue(from_node_id=0, node_type="talk", speaker="Old Man", text="Rise and shine. I've just given each of you a new MYSTIC ability, one weapon, and one armor. Use it wisely.", act=1, scene=3)
+    # node7 = Dialogue(from_node_id=6, node_type="talk", speaker="Group Leader", text="Thanks so much mister.", act=1, scene=3)
+    # node8 = Dialogue(from_node_id=7, node_type="talk", speaker="Drunk Man 2", text="Let's RUMBLE!", act=1, scene=3)
+
+    # node9 = Dialogue(from_node_id=0, node_type="talk", speaker="Old Man", text="Wowza. I'm somehow going to conditionally give you gold or not if you won or lost. But I will always have just given you full health and mp with elixers.", act=1, scene=4)
+    # node10 = Dialogue(from_node_id=9, node_type="talk", speaker="Group Leader", text="Gracious as always, old man.", act=1, scene=4)
+    # node11 = Dialogue(from_node_id=10, node_type="talk", speaker="Old Man", text="Walk with me to the edge of town.", act=1, scene=4)
+
+    # node12 = Dialogue(from_node_id=0, node_type="talk", speaker="Old Man", text="Now, we're going to do some really cool crystal shit.", act=1, scene=5)
+    # node13 = Dialogue(from_node_id=12, node_type="talk", speaker="Group Leader", text="That sounds fun.", act=1, scene=5)
+    # node14 = Dialogue(from_node_id=13, node_type="talk", speaker="Old Man", text="It is, now.. ONWARDS TO ACT TWO!", act=1, scene=5)
+
+    # node15 = Dialogue(from_node_id=0, node_type="talk", speaker="Group Leader", text="Oh snap we are in act 2.", act=2, scene=1)
+    # node16 = Dialogue(from_node_id=15, node_type="narration", speaker="Narrator", text="Indeed, the group is in act 2", act=2, scene=1)
+    # Dialogue.objects.bulk_create([node1, node2, node3, node4, node5, node6, node7, node8, node9, node10, node11, node12, node13, node14, node15, node16])

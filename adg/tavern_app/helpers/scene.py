@@ -26,7 +26,7 @@ def get_character_list(game: Game) -> list:
     return character_list
 
 def get_game_dialogue_progress_list(character_list: list, game_id: int, act: int, scene_num: int) -> list:
-    """current game/act/scene dialogue + names and images"""
+    """current game/act/scene dialogue + names and images LAST 2 NODES"""
     game_dialogue_progress_list = []
     game_dialogue_progress = GameDialogue.objects.filter(game=game_id)
     for game_dialogue in game_dialogue_progress:
@@ -47,7 +47,7 @@ def get_game_dialogue_progress_list(character_list: list, game_id: int, act: int
                 'image': image,
                 })
             
-    return game_dialogue_progress_list
+    return game_dialogue_progress_list[-2:]
 
 def get_next_dialogue_list(game_dialogue_progress_list: list, character_list: list, act: int, scene_num: int) -> list:
     """queries the game dialogue progress for the next single dialogue or multiple player dialogue choices"""
