@@ -70,14 +70,26 @@
             },
             success: function(response) {
                 $("#dialogue-container").empty();
-                for (var key in response.game_dialogue_progress_list){
-                    var temp="<li>"+ response.game_dialogue_progress_list[key].text +"</li>";
-                    $("#dialogue-container").append(temp);
+                for (var key in response.game_dialogue_progress_list) {
+                    if (response.game_dialogue_progress_list[key].node_type == "player response") {
+                        var element = "<div class='mt-3'>" +
+                                        "<p class='text-warning'>" + response.game_dialogue_progress_list[key].text + "</p>" +
+                                        "</div>";
+                    } else {
+                        var element = "<div class='d-flex mt-3'>" +
+                            "<img src='/static/tavern_app/" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
+                            "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                            "</div>";
+                    }
+                    $("#dialogue-container").append(element);
                 }
+
+                // TODO conditional for next_dialogue_list
                 for (var key in response.next_dialogue_list){
                     var temp="<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
                     $("#dialogue-container").append(temp);
                 }
+
             }
         })
 
