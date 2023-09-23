@@ -127,51 +127,58 @@
         var is_leader
         {% if is_leader == True %} is_leader = true {% else %} is_leader = false {% endif %}
         if (!is_leader) {
-            console.log("THIS USER IS NOT THE LEADER")
+            let dialogueOldId = {{next_dialogue_list.0.id}};
+            let dialogueNewId;
             setInterval(function(){
                 $.ajax({
                     type: 'GET',
                     url: '/games/'+{{game_id}}+'/act/'+{{act}}+'/scene/'+{{scene_num}}+'/updates',
                     success: function(response) {
-                        // TODO ONLY MAKE THE UDPATES WHEN THERE HAVE BEEN CHANGES INSTEAD OF EVERY TIME
-                        $("#dialogue-container").empty();
-                        for (var key in response.game_dialogue_progress_list) {
-                            if (response.game_dialogue_progress_list[key].node_type == "player response") {
-                                var element = "<div class='mt-3'>" +
-                                                "<p class='text-warning'>" + response.game_dialogue_progress_list[key].text + "</p>" +
-                                                "</div>";
-                            } else {
-                                var element = "<div class='d-flex mt-3'>" +
-                                    "<img src='/static/tavern_app/" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                    "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
-                                    "</div>";
+                        dialogueNewId = response.next_dialogue_list[0].id;
+                        console.log("dialogueNewId is: " + dialogueNewId)
+                        if (dialogueOldId != dialogueNewId) {
+                            console.log("WITHIN THE IF"); // TODO fix - after first time within the IF it keeps running instead of stopping
+                            dialogueOldId = {{next_dialogue_list.0.id}};
+                            // TODO if no final node because we're going to battle or another scene next - do something else.
+                            $("#dialogue-container").empty();
+                            for (var key in response.game_dialogue_progress_list) {
+                                if (response.game_dialogue_progress_list[key].node_type == "player response") {
+                                    var element = "<div class='mt-3'>" +
+                                                    "<p class='text-warning'>" + response.game_dialogue_progress_list[key].text + "</p>" +
+                                                    "</div>";
+                                } else {
+                                    var element = "<div class='d-flex mt-3'>" +
+                                        "<img src='/static/tavern_app/" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
+                                        "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                                        "</div>";
+                                }
+                                $("#dialogue-container").append(element);
                             }
-                            $("#dialogue-container").append(element);
-                        }
-
-                        for (var key in response.next_dialogue_list){
-                            var element = "<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
-
-                            if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
-                                var element = "<div class='d-flex mt-3'>" +
-                                    "<img src='/static/tavern_app/" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                    "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
-                                    "</div>" +
-                                    "<form method='POST' class='dialogue-post-form'>" +
-                                    "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
-                                    "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
-                                    "<button type='submit' class='btn btn-primary mt-3 submit-button' disabled>Next</button>" +
-                                    "</form>";
-                            } else if (response.next_dialogue_list[key].node_type == "player response") {
-                                var element = "<div class='mt-3'>" +
-                                    "<form method='POST' class='dialogue-post-form'>" +
-                                    "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
-                                    "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
-                                    "<button type='submit' class='btn btn-primary mt-3 submit-button' disabled>" + response.next_dialogue_list[key].text + "</button>" +
-                                    "</form>" +
-                                    "</div>";
+    
+                            for (var key in response.next_dialogue_list){
+                                var element = "<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
+    
+                                if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
+                                    var element = "<div class='d-flex mt-3'>" +
+                                        "<img src='/static/tavern_app/" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
+                                        "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                                        "</div>" +
+                                        "<form method='POST' class='dialogue-post-form'>" +
+                                        "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
+                                        "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
+                                        "<button type='submit' class='btn btn-primary mt-3 submit-button' disabled>Next</button>" +
+                                        "</form>";
+                                } else if (response.next_dialogue_list[key].node_type == "player response") {
+                                    var element = "<div class='mt-3'>" +
+                                        "<form method='POST' class='dialogue-post-form'>" +
+                                        "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
+                                        "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
+                                        "<button type='submit' class='btn btn-primary mt-3 submit-button' disabled>" + response.next_dialogue_list[key].text + "</button>" +
+                                        "</form>" +
+                                        "</div>";
+                                }
+                                $("#dialogue-container").append(element);
                             }
-                            $("#dialogue-container").append(element);
                         }
 
                         if (response.error) {
@@ -191,7 +198,7 @@
                         console.log('error getting data');
                     }
                 });
-            },5000);
+            },1000);
         }
     });
 </script>
