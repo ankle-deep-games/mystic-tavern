@@ -360,7 +360,7 @@ def scene(request, game_id, act, number):
             # TODO move these higher up and make them work with javascript "action" section
             # first going to work on the other players getting javascript updates
 
-            # TODO update to real dialogue id
+            # TODO update to real dialogue id https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
             if act == 1 and scene_num == 1 and dialogue.id == 3:
                 gamelocation.location_type = "battle"
                 gamelocation.save()

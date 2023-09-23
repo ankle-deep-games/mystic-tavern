@@ -127,19 +127,18 @@
         var is_leader
         {% if is_leader == True %} is_leader = true {% else %} is_leader = false {% endif %}
         if (!is_leader) {
-            let dialogueOldId = {{next_dialogue_list.0.id}};
-            let dialogueNewId;
-            setInterval(function(){
+            var dialogueOldId = {{next_dialogue_list.0.id}};
+            var dialogueNewId;
+            setInterval(function() {
                 $.ajax({
                     type: 'GET',
                     url: '/games/'+{{game_id}}+'/act/'+{{act}}+'/scene/'+{{scene_num}}+'/updates',
                     success: function(response) {
                         dialogueNewId = response.next_dialogue_list[0].id;
-                        console.log("dialogueNewId is: " + dialogueNewId)
                         if (dialogueOldId != dialogueNewId) {
-                            console.log("WITHIN THE IF"); // TODO fix - after first time within the IF it keeps running instead of stopping
-                            dialogueOldId = {{next_dialogue_list.0.id}};
+                            dialogueOldId = response.next_dialogue_list[0].id;
                             // TODO if no final node because we're going to battle or another scene next - do something else.
+                            // https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
                             $("#dialogue-container").empty();
                             for (var key in response.game_dialogue_progress_list) {
                                 if (response.game_dialogue_progress_list[key].node_type == "player response") {
@@ -194,11 +193,11 @@
                         }
                         
                     },
-                    error: function(response){
+                    error: function(response) {
                         console.log('error getting data');
                     }
                 });
-            },1000);
+            },2000);
         }
     });
 </script>
