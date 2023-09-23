@@ -12,6 +12,8 @@
                 </div>
             {% endfor %}
         {% endif %}
+        <div id="dialogue-error-container">
+        </div>
         <hr>
 
         <div id="dialogue-container">
@@ -45,7 +47,7 @@
                 <div class="mt-3">
                     <form method="POST">
                         {% csrf_token %}
-                        <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
+                        <input type="hidden" name="dialogue" id="dialogue" value="{{ dialogue.id }}" />
                         <button type="submit" class="btn btn-primary mb-3" {% if is_leader == False %} disabled {% endif %}>{{ dialogue.text }}</button>
                     </form>
                 </div>
@@ -108,6 +110,18 @@
                             "</div>";
                     }
                     $("#dialogue-container").append(element);
+                }
+
+                if (response.error) {
+                    var alert_element = "<div class='alert alert-danger' role='alert'>" +
+                        response.error +
+                    "</div>";
+                    $("#dialogue-error-container").append(alert_element);
+
+                    // TODO could improve this with a fade in or out animation
+                    setTimeout(function() {
+                        $("#dialogue-error-container").empty();
+                    }, 4000);
                 }
             }
         })
