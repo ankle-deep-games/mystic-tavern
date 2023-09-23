@@ -5,15 +5,7 @@
     <div class="row my-2">
         <h1 class="mb-3">game id {{ game_id }}</h1>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        <div id="dialogue-error-container">
-        </div>
+        <div id="dialogue-error-container"></div>
         <hr>
 
         <div id="dialogue-container">

@@ -375,8 +375,16 @@ def scene(request, game_id, act, number):
                 plant_seed_decision()
 
         else:
-            # TODO get the form not valid working. likely force refresh so they see it.
-            messages.error(request, 'Something in the dialogue was not valid.', extra_tags="alert alert-danger")
+            character_list = get_character_list(game=game)
+            game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
+            next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
+            data = {
+                "game_dialogue_progress_list": game_dialogue_progress_list,
+                "next_dialogue_list": next_dialogue_list,
+                "error": "Something in the dialogue was not valid.",
+                "action": "",
+            }
+            return JsonResponse(data)
 
     # else render form
     else:
