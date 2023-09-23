@@ -85,7 +85,6 @@
                     $("#dialogue-container").append(element);
                 }
 
-                // TODO conditional for next_dialogue_list
                 for (var key in response.next_dialogue_list){
                     var element = "<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
 
@@ -99,6 +98,14 @@
                             "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
                             "<button type='submit' class='btn btn-primary mt-3'>Next</button>" +
                             "</form>";
+                    } else if (response.next_dialogue_list[key].node_type == "player response") {
+                        var element = "<div class='mt-3'>" +
+                            "<form method='POST' id='dialogue-post-form'>" +
+                            "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
+                            "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
+                            "<button type='submit' class='btn btn-primary mt-3'>" + response.next_dialogue_list[key].text + "</button>" +
+                            "</form>" +
+                            "</div>";
                     }
                     $("#dialogue-container").append(element);
                 }
