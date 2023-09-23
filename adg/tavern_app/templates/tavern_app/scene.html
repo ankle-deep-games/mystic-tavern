@@ -35,9 +35,9 @@
                     <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" style="width:100px;height:100px;">
                     <p><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
                 </div>
-                <form method="POST">
+                <form method="POST" id="dialogue-post-form">
                     {% csrf_token %}
-                    <input type="hidden" name="dialogue" value="{{ dialogue.id }}" />
+                    <input type="hidden" name="dialogue" id="dialogue" value="{{ dialogue.id }}" />
                     <button type="submit" class="btn btn-primary mt-3" {% if is_leader == False %} disabled {% endif %}>Next</button>
                 </form>
             {% elif dialogue.node_type == "player response" %}
@@ -51,4 +51,26 @@
             {% endif %}
         {% endfor %}
     </div>
+
+{% comment %} TODO move jquery cdn elsewhere {% endcomment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).on('submit', '#dialogue-post-form', function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            type: 'POST',
+            url: '/games/'+{{game_id}}+'/act/'+{{act}}+'/scene/'+{{scene_num}},
+            data: {
+                dialogue: $('#dialogue').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function() {
+                console.log('ajax dialogue submitted successfully');
+            }
+        })
+
+    })
+</script>
+
 {% endblock %}

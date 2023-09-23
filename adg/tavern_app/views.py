@@ -376,6 +376,8 @@ def scene(request, game_id, act, number):
         'next_dialogue_list': next_dialogue_list,
         'form': form,
         'is_leader': is_leader,
+        'act': act,
+        'scene_num': scene_num,
     }
 
     return render(request, 'tavern_app/scene.html', context)
