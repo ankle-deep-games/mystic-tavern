@@ -61,7 +61,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/games/'+{{game_id}}+'/act/'+{{act}}+'/scene/'+{{scene_num}},
+            url: "{% url 'tavern_app:scene' game_id=game_id act=act number=scene_num %}",
             data: {
                 dialogue: $(this).children("#dialogue").val(),
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
@@ -75,7 +75,7 @@
                                         "</div>";
                     } else {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='/static/tavern_app/" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
+                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
                             "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                             "</div>";
                     }
@@ -87,7 +87,7 @@
 
                     if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='/static/tavern_app/" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
+                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
                             "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                             "</div>" +
                             "<form method='POST' class='dialogue-post-form'>" +
@@ -132,7 +132,7 @@
             setInterval(function() {
                 $.ajax({
                     type: 'GET',
-                    url: '/games/'+{{game_id}}+'/act/'+{{act}}+'/scene/'+{{scene_num}}+'/updates',
+                    url: "{% url 'tavern_app:scene_get_updates' game_id=game_id act=act number=scene_num %}",
                     success: function(response) {
                         dialogueNewId = response.next_dialogue_list[0].id;
                         if (dialogueOldId != dialogueNewId) {
@@ -147,7 +147,7 @@
                                                     "</div>";
                                 } else {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='/static/tavern_app/" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
                                         "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                                         "</div>";
                                 }
@@ -159,7 +159,7 @@
     
                                 if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='/static/tavern_app/" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
                                         "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                                         "</div>" +
                                         "<form method='POST' class='dialogue-post-form'>" +

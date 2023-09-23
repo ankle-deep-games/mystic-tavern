@@ -18,8 +18,5 @@ urlpatterns = [
     path('games/<int:game_id>/act/<int:act>/scene/<int:number>', views.scene, name='scene'),
     path('games/<int:game_id>/act/<int:act>/scene/<int:number>/updates', views.scene_get_updates, name='scene_get_updates'),
     path('games/<int:game_id>/act/<int:act>/battle/<int:number>', views.battle, name='battle'),
-    path('liveupdateprototype', views.live_update_prototype, name='liveupdateprototype'),
-    path('liveupdateprototypeview', views.live_update_prototype_view, name='liveupdateprototypeview'),
-    path('liveupdateprototyperedirectview', views.live_update_prototype_redirect_view, name='liveupdateprototyperedirectview'),
     path('equipplaceholder', views.equip_placeholder, name='equipplaceholder'),
 ]
