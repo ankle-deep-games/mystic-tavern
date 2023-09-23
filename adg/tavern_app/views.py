@@ -343,6 +343,18 @@ def scene(request, game_id, act, number):
             game_dialogue = GameDialogue(game=game, dialogue=dialogue)
             game_dialogue.save()
 
+            # start by doing all the nodes. then change the BE http load and JS to show latest 2 dialogue and then the 1 new dialogue
+            character_list = get_character_list(game=game)
+            game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
+            next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
+            data = {
+                "game_dialogue_progress_list": game_dialogue_progress_list,
+                "next_dialogue_list": next_dialogue_list,
+                "error": "",
+                "action": "",
+            }
+            return JsonResponse(data, safe=False)
+
             # TODO update to real dialogue id
             if act == 1 and scene_num == 1 and dialogue.id == 3:
                 gamelocation.location_type = "battle"

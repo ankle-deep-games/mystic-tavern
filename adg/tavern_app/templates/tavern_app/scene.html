@@ -14,6 +14,7 @@
         {% endif %}
         <hr>
 
+        <div id="dialogue-container">
         {% comment %} this game's dialogue so far from game_dialogue table {% endcomment %}
         {% for game_dialogue in game_dialogue_progress_list %}
             {% if game_dialogue.node_type == "player response" %}
@@ -50,6 +51,8 @@
                 </div>
             {% endif %}
         {% endfor %}
+        </div>
+
     </div>
 
 {% comment %} TODO move jquery cdn elsewhere {% endcomment %}
@@ -65,8 +68,16 @@
                 dialogue: $('#dialogue').val(),
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             },
-            success: function() {
-                console.log('ajax dialogue submitted successfully');
+            success: function(response) {
+                $("#dialogue-container").empty();
+                for (var key in response.game_dialogue_progress_list){
+                    var temp="<li>"+ response.game_dialogue_progress_list[key].text +"</li>";
+                    $("#dialogue-container").append(temp);
+                }
+                for (var key in response.next_dialogue_list){
+                    var temp="<li class='text-primary'>"+ response.next_dialogue_list[key].text +"</li>";
+                    $("#dialogue-container").append(temp);
+                }
             }
         })
 
