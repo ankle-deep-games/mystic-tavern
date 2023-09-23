@@ -67,6 +67,11 @@
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function(response) {
+                if (response.new_url) {
+                    window.location = response.new_url
+                    return
+                }
+                
                 $("#dialogue-container").empty();
                 for (var key in response.game_dialogue_progress_list) {
                     if (response.game_dialogue_progress_list[key].node_type == "player response") {
@@ -134,6 +139,11 @@
                     type: 'GET',
                     url: "{% url 'tavern_app:scene_get_updates' game_id=game_id act=act number=scene_num %}",
                     success: function(response) {
+                        if (response.new_url) {
+                            window.location = response.new_url
+                            return
+                        }
+
                         dialogueNewId = response.next_dialogue_list[0].id;
                         if (dialogueOldId != dialogueNewId) {
                             dialogueOldId = response.next_dialogue_list[0].id;
@@ -191,7 +201,6 @@
                                 $("#dialogue-error-container").empty();
                             }, 4000);
                         }
-                        
                     },
                     error: function(response) {
                         console.log('error getting data');

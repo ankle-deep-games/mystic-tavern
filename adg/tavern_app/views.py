@@ -299,9 +299,13 @@ def scene(request, game_id, act, number):
     if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
         messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
         return redirect('tavern_app:games')
-    
-    # bool: is current user the party leader
+
     game = Game.objects.get(pk=game_id)
+
+    gamelocation = GameLocation.objects.get(game=game)
+    if gamelocation.game.pk != game_id and gamelocation.act != act and gamelocation.number != scene_num or gamelocation.location_type != "scene":
+        return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number}))
+
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     # form submission if game owner clicked next button or dialogue option
@@ -318,6 +322,7 @@ def scene(request, game_id, act, number):
             gamelocation = GameLocation.objects.get(game=game)
             has_error = False
             error_msg = ""
+            new_url = ""
             if dialogue.from_node_id != latest_game_dialogue_id:
                 has_error = True
                 error_msg = "Invalid dialogue choice. Must be connected to previous dialogue."
@@ -330,6 +335,12 @@ def scene(request, game_id, act, number):
                 game_dialogue = GameDialogue(game=game, dialogue=dialogue)
                 game_dialogue.save()
 
+            # TODO update to real dialogue id https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
+            if act == 1 and scene_num == 1 and dialogue.id == 3:
+                gamelocation.location_type = "battle"
+                gamelocation.save()
+                new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
+
             character_list = get_character_list(game=game)
             game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
             next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
@@ -337,18 +348,11 @@ def scene(request, game_id, act, number):
                 "game_dialogue_progress_list": game_dialogue_progress_list,
                 "next_dialogue_list": next_dialogue_list,
                 "error": error_msg,
-                "action": "",
+                "new_url": new_url,
             }
             return JsonResponse(data)
 
-            # TODO move these higher up and make them work with javascript "action" section
-            # first going to work on the other players getting javascript updates
-
-            # TODO update to real dialogue id https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
-            if act == 1 and scene_num == 1 and dialogue.id == 3:
-                gamelocation.location_type = "battle"
-                gamelocation.save()
-                return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game_id, 'act': act, 'number': scene_num}))
+            # TODO move higher up and make them work with javascript "new_url" section
 
             # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
             # change act/scene/dialogue to execute at correct place
@@ -366,7 +370,7 @@ def scene(request, game_id, act, number):
                 "game_dialogue_progress_list": game_dialogue_progress_list,
                 "next_dialogue_list": next_dialogue_list,
                 "error": "Something in the dialogue was not valid.",
-                "action": "",
+                "new_url": "",
             }
             return JsonResponse(data)
 
@@ -403,6 +407,11 @@ def scene_get_updates(request, game_id, act, number):
         return redirect('tavern_app:games')
     
     game = Game.objects.get(pk=game_id)
+    
+    new_url = ""
+    gamelocation = GameLocation.objects.get(game=game)
+    if gamelocation.game.pk != game_id and gamelocation.act != act and gamelocation.number != scene_num or gamelocation.location_type != "scene":
+        new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
 
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
@@ -411,7 +420,7 @@ def scene_get_updates(request, game_id, act, number):
         "game_dialogue_progress_list": game_dialogue_progress_list,
         "next_dialogue_list": next_dialogue_list,
         "error": "",
-        "action": "",
+        "new_url": new_url,
     }
     return JsonResponse(data)
 
