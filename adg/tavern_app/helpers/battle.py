@@ -179,6 +179,16 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     unit_turn.is_their_turn = False
     unit_turn.save()
 
+
+def randomize_ability_strength():
+    """
+    This function will be called when an ability is chosen to randomize the strength. The float value returned should
+    be applied to the ability strength determined in the main determine_ability_strength() function to provide some RNG.
+    return: float value between -10% and +10%
+    """
+    return random.uniform(-0.1, 0.1)
+
+
 def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability):
     attacker = gameuser
     target = defensive_gameuser_target
