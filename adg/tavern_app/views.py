@@ -301,11 +301,6 @@ def scene(request, game_id, act, number):
         return redirect('tavern_app:games')
 
     game = Game.objects.get(pk=game_id)
-
-    gamelocation = GameLocation.objects.get(game=game)
-    if gamelocation.game.pk != game_id and gamelocation.act != act and gamelocation.number != scene_num or gamelocation.location_type != "scene":
-        return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number}))
-
     is_leader = True if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user else False
 
     # form submission if game owner clicked next button or dialogue option
@@ -378,6 +373,11 @@ def scene(request, game_id, act, number):
     else:
         form = GameDialogueForm()
 
+    # redirect if they are not on this scene act/num
+    gamelocation = GameLocation.objects.get(game=game)
+    if gamelocation.game.pk != game_id and gamelocation.act != act and gamelocation.number != scene_num or gamelocation.location_type != "scene":
+        return redirect(reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number}))
+
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
     next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
@@ -410,6 +410,8 @@ def scene_get_updates(request, game_id, act, number):
     
     new_url = ""
     gamelocation = GameLocation.objects.get(game=game)
+
+    # if they are not on this scene act/num - populate new_url so front end can redirect them
     if gamelocation.game.pk != game_id and gamelocation.act != act and gamelocation.number != scene_num or gamelocation.location_type != "scene":
         new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
 
