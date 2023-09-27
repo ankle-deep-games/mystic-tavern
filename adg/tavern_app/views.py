@@ -336,6 +336,14 @@ def scene(request, game_id, act, number):
                 gamelocation.save()
                 new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
 
+            # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
+            # change act/scene/dialogue to execute at correct place
+            # adding here now as an example of how we'll execute decisions in dialogue
+            # when we get here we might add func params to pland_seed_decision func
+            # this approach will also be used for fork in road decision for forest/mountain choice. conditionally execute a scene helper func
+            if act == 1 and scene_num == 1 and dialogue.id == 5:
+                plant_seed_decision()
+
             character_list = get_character_list(game=game)
             game_dialogue_progress_list = get_game_dialogue_progress_list(character_list=character_list, game_id=game_id, act=act, scene_num=scene_num)
             next_dialogue_list = get_next_dialogue_list(game_dialogue_progress_list=game_dialogue_progress_list, character_list=character_list, act=act, scene_num=scene_num)
@@ -346,16 +354,6 @@ def scene(request, game_id, act, number):
                 "new_url": new_url,
             }
             return JsonResponse(data)
-
-            # TODO move higher up and make them work with javascript "new_url" section
-
-            # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
-            # change act/scene/dialogue to execute at correct place
-            # adding here now as an example of how we'll execute decisions in dialogue
-            # when we get here we might add func params to pland_seed_decision func
-            # this approach will also be used for fork in road decision for forest/mountain choice. conditionally execute a scene helper func
-            if act == 1 and scene_num == 1 and dialogue.id == 5:
-                plant_seed_decision()
 
         else:
             character_list = get_character_list(game=game)
