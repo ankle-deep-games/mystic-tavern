@@ -179,6 +179,36 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     unit_turn.is_their_turn = False
     unit_turn.save()
 
+
+def determine_type_strength_weakness(attack, attack_type_strength, attack_type_weakness, defense_type):
+    """
+    This function will be called when an ability is chosen to determine the ability type as compared to the opponent's
+    role type. If the ability is a strength against the opponent's role type, it will be X% more effective. If it is a
+    weakness, it will be Y% less effective. If there is no strength or weakness, the ability strength will not be
+    changed.
+    :param attack: either the with_gear_attack or with_gear_myst_attack depending on attack choice
+    :param attack_type_strength: ability.type.strength
+    :param attack_type_weakness: ability.type.weakness
+    :param defense_type: target.role.type_id
+    """
+    attack_type_strength_weight = 1.25
+    attack_type_weakness_weight = 0.75
+
+    if defense_type == attack_type_strength:
+        attack = attack * attack_type_strength_weight
+    elif defense_type == attack_type_weakness:
+        attack = attack * attack_type_weakness_weight
+
+    return attack
+
+def randomize_ability_strength():
+    """
+    This function will be called when an ability is chosen to randomize the strength. The float value returned should
+    be applied to the ability strength determined in the main determine_ability_strength() function to provide some RNG.
+    return: float value between -10% and +10%
+    """
+    return random.uniform(-0.1, 0.1)
+
 def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability):
     attacker = gameuser
     target = defensive_gameuser_target
