@@ -68,8 +68,8 @@
             },
             success: function(response) {
                 if (response.new_url) {
-                    window.location = response.new_url
-                    return
+                    window.location = response.new_url;
+                    return;
                 }
                 
                 $("#dialogue-container").empty();
@@ -129,7 +129,7 @@
     })
 
     $(document).ready(function() {
-        var is_leader
+        var is_leader;
         {% if is_leader == True %} is_leader = true {% else %} is_leader = false {% endif %}
         if (!is_leader) {
             var dialogueOldId = {{next_dialogue_list.0.id}};
@@ -140,8 +140,8 @@
                     url: "{% url 'tavern_app:scene_get_updates' game_id=game_id act=act number=scene_num %}",
                     success: function(response) {
                         if (response.new_url) {
-                            window.location = response.new_url
-                            return
+                            window.location = response.new_url;
+                            return;
                         }
 
                         dialogueNewId = response.next_dialogue_list[0].id;
