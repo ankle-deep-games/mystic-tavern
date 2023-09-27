@@ -283,3 +283,6 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     unit_turn.is_their_turn = False
     unit_turn.save()
+
+def is_any_player_alive(game: Game):
+    return True if GameUser.objects.filter(game=game, current_hp__gt=0) else False
