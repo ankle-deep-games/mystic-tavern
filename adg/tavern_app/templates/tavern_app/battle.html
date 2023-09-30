@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <hr>
+    <div class="my-3"></div>
 
     <div class="row">
         <div class="container d-flex justify-content-center">
@@ -46,6 +46,46 @@
         {% endfor %}
         </div>
     </div>
+
+    <div class="my-3"></div>
+
+    <div class="container combat-container bg-secondary text-center">
+        <h6 class="pt-3">Select Ability JAVASCRIPT PLACEHOLDER</h6>
+        <div class="row">
+            <div class="col py-3">
+                {{request_gameuser.ability_1.name}}
+            </div>
+            <div class="col py-3">
+                {{request_gameuser.ability_2.name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col py-3">
+                {{request_gameuser.ability_3.name}}
+            </div>
+            <div class="col py-3">
+                {{request_gameuser.ability_4.name}}
+            </div>
+        </div>
+    </div>
+
+    <div class="my-3"></div>
+
+    {% comment %} <div class="container combat-container bg-secondary text-center">
+        <h6 class="py-3">Choose Target</h6>
+        <div class="row">
+            {% for gameenemy in gameenemies %}
+            <div class="col py-3">
+                {{gameenemy.name}}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col py-3">
+                {{request_gameuser.ability_4.name}} - {{request_gameuser.ability_4.description}}
+            </div>
+        </div>
+    </div> {% endcomment %}
 
 
     <div class="row my-2 w-75 mx-auto">
@@ -73,43 +113,6 @@
         {%endif%}
 
         <hr>
-
-        <div class="container combat-container bg-secondary text-center">
-            <h6 class="mt-2">Select Ability</h6>
-            <div class="row">
-                <div class="col py-3">
-                    {{request_gameuser.ability_1.name}}
-                </div>
-                <div class="col py-3">
-                    {{request_gameuser.ability_2.name}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col py-3">
-                    {{request_gameuser.ability_3.name}}
-                </div>
-                <div class="col py-3">
-                    {{request_gameuser.ability_4.name}}
-                </div>
-              </div>
-          </div>
-
-          <hr>
-          <div class="container combat-container bg-secondary text-center">
-            <h6 class="mt-2">Choose Target</h6>
-            <div class="row">
-                {% for gameenemy in gameenemies %}
-                <div class="col py-3">
-                    {{gameenemy.name}}
-                </div>
-                {% endfor %}
-            </div>
-            <div class="row">
-                <div class="col py-3">
-                    {{request_gameuser.ability_4.name}} - {{request_gameuser.ability_4.description}}
-                </div>
-            </div>
-          </div>
 
         {% comment %} TODO https://trello.com/c/wX36jJPx/168-combat-ui-what-players-see-when-it-is-not-their-turn-in-combat {% endcomment %}
         <h4 class="text-white my-3">Single Target Damage:</h4>
