@@ -1,6 +1,7 @@
 {% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
+<div class="container">
 {% load static %}
     <div class="row my-2">
         <h1 class="mb-3">game id {{ game_id }}</h1>
@@ -49,6 +50,7 @@
 
     </div>
 
+</div>
 {% comment %} TODO move jquery cdn elsewhere {% endcomment %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
