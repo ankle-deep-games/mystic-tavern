@@ -2,6 +2,26 @@
 
 {% block content %}
 {% load static %}
+
+    <div class="row">
+        <div class="container d-flex">
+        {% for gameenemy in gameenemies %}
+        <div class="card bg-dark text-white border-0" style="width: 16rem;">
+            <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
+            <div class="card-img-overlay p-2">
+                <h6 class="card-title">{{ gameenemy.name }}</h6>
+            </div>
+            <div class="progress rounded-0">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%">
+                    {{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+
+
     <div class="row my-2 w-75 mx-auto">
 
         {% if messages %}
@@ -26,21 +46,6 @@
             <h6 class="text-danger">DEBUG: NOT request users turn</h6>
         {%endif%}
 
-        <div class="card-group">
-            {% for gameenemy in gameenemies %}
-            <div class="card text-white bg-secondary mb-3">
-            {% load static %}
-                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameenemy.image }}" alt="enemy picture">
-                <div class="card-body">
-                <h6 class="card-title text-white">{{ gameenemy.name }}</h6>
-                <div>HP: {{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</div>
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%"></div>
-                </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
         <br>
         <hr>
 
@@ -51,12 +56,12 @@
                 <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
                 <div class="card-body">
                 <h6 class="card-title text-white">{{ gameuser.name }}</h6>
-                <div>HP: {{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}</div>
+                <div>HP: <span class="d-none d-lg-block">{{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}</span></div>
                 <div class="progress">
                     <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%"></div>
                 </div>
                 
-                <div>MP: {{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}</div>
+                <div>MP: <span class="d-none d-lg-block">{{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}</span></div>
                 <div class="progress">
                     <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%"></div>
                 </div>
@@ -64,6 +69,43 @@
             </div>
             {% endfor %}
         </div>
+
+        <div class="container combat-container bg-secondary text-center">
+            <h6 class="mt-2">Select Ability</h6>
+            <div class="row">
+                <div class="col py-3">
+                    {{request_gameuser.ability_1.name}}
+                </div>
+                <div class="col py-3">
+                    {{request_gameuser.ability_2.name}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col py-3">
+                    {{request_gameuser.ability_3.name}}
+                </div>
+                <div class="col py-3">
+                    {{request_gameuser.ability_4.name}}
+                </div>
+              </div>
+          </div>
+
+          <hr>
+          <div class="container combat-container bg-secondary text-center">
+            <h6 class="mt-2">Choose Target</h6>
+            <div class="row">
+                {% for gameenemy in gameenemies %}
+                <div class="col py-3">
+                    {{gameenemy.name}}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col py-3">
+                    {{request_gameuser.ability_4.name}} - {{request_gameuser.ability_4.description}}
+                </div>
+            </div>
+          </div>
 
         {% comment %} TODO https://trello.com/c/wX36jJPx/168-combat-ui-what-players-see-when-it-is-not-their-turn-in-combat {% endcomment %}
         <h4 class="text-white my-3">Single Target Damage:</h4>
