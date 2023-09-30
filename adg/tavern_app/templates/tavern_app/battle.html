@@ -2,19 +2,19 @@
 
 {% block content %}
 {% load static %}
-<div class="container">
+<div class="container my-3">
 
     <div class="row">
-        <div class="container d-flex">
+        <div class="container d-flex justify-content-center">
         {% for gameenemy in gameenemies %}
-        <div class="card bg-dark text-white border-0" style="width: 16rem;">
+        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;">
             <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
             <div class="card-img-overlay p-2">
                 <h6 class="card-title">{{ gameenemy.name }}</h6>
             </div>
-            <div class="progress rounded-0">
+            <div class="progress rounded-0 position-relative" style="height: 23px;">
                 <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%">
-                    {{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</div>
                 </div>
             </div>
         </div>
@@ -25,21 +25,21 @@
     <hr>
 
     <div class="row">
-        <div class="container d-flex">
+        <div class="container d-flex justify-content-center">
         {% for gameuser in gameusers %}
-        <div class="card bg-dark text-white border-0" style="width: 16rem;">
+        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;">
             <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
             <div class="card-img-overlay p-2">
                 <h6 class="card-title">{{ gameuser.name }}</h6>
             </div>
-            <div class="progress rounded-0">
+            <div class="progress rounded-0 position-relative" style="height: 23px;">
                 <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%">
-                    {{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}</div>
                 </div>
             </div>
-            <div class="progress rounded-0">
+            <div class="progress rounded-0 position-relative" style="height: 23px;">
                 <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%">
-                    {{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}</div>
                 </div>
             </div>
         </div>
