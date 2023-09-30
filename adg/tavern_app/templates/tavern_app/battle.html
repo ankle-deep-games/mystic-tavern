@@ -21,6 +21,31 @@
         </div>
     </div>
 
+    <hr>
+
+    <div class="row">
+        <div class="container d-flex">
+        {% for gameuser in gameusers %}
+        <div class="card bg-dark text-white border-0" style="width: 16rem;">
+            <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
+            <div class="card-img-overlay p-2">
+                <h6 class="card-title">{{ gameuser.name }}</h6>
+            </div>
+            <div class="progress rounded-0">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%">
+                    {{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}
+                </div>
+            </div>
+            <div class="progress rounded-0">
+                <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%">
+                    {{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+
 
     <div class="row my-2 w-75 mx-auto">
 
@@ -46,29 +71,7 @@
             <h6 class="text-danger">DEBUG: NOT request users turn</h6>
         {%endif%}
 
-        <br>
         <hr>
-
-        <div class="card-group">
-            {% for gameuser in gameusers %}
-            <div class="card text-white bg-secondary mb-3">
-            {% load static %}
-                <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
-                <div class="card-body">
-                <h6 class="card-title text-white">{{ gameuser.name }}</h6>
-                <div>HP: <span class="d-none d-lg-block">{{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}</span></div>
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%"></div>
-                </div>
-                
-                <div>MP: <span class="d-none d-lg-block">{{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}</span></div>
-                <div class="progress">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%"></div>
-                </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
 
         <div class="container combat-container bg-secondary text-center">
             <h6 class="mt-2">Select Ability</h6>
