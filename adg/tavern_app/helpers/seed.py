@@ -254,6 +254,147 @@ def seed_data():
                        description="AOE Heal Test. Used only by players.",
                        type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=True, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
 
+    # Enemy Abilities
+    ability34 = Ability(name="Drunken Haymaker",
+                        description="N/A",
+                        type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=5, max_damage=10)
+
+    ability35 = Ability(name="Tankard Thrash",
+                        description="N/A",
+                        type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=5, max_damage=10)
+
+    ability36 = Ability(name="Ethereal Smite",
+                        description="N/A",
+                        type=type_light, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=5, max_damage=15)
+
+    ability37 = Ability(name="Bar Brawl Slam",
+                        description="N/A",
+                        type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=5, max_damage=10)
+
+    ability38 = Ability(name="Tavern Tumble",
+                        description="N/A",
+                        type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=5, max_damage=10)
+
+    ability39 = Ability(name="Abyssal Gloom",
+                        description="N/A",
+                        type=type_dark, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=5, max_damage=15)
+
+    ability40 = Ability(name="Pincer Assault",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=30)
+
+    ability41 = Ability(name="Veil of Vines",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=30)
+
+    ability42 = Ability(name="Arboreal Pulse",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=50)
+
+    ability43 = Ability(name="Venomous Bite",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=30)
+
+    ability44 = Ability(name="Mjolnir's Impact",
+                        description="N/A",
+                        type=type_stone, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=30)
+
+    ability45 = Ability(name="Petrifying Gaze",
+                        description="N/A",
+                        type=type_stone, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=30)
+
+    ability46 = Ability(name="Terraquake",
+                        description="N/A",
+                        type=type_stone, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=50)
+
+    ability47 = Ability(name="Rupture",
+                        description="N/A",
+                        type=type_stone, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=15, max_damage=30)
+
+    ability48 = Ability(name="Obliteration",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=30, max_damage=50)
+
+    ability49 = Ability(name="Eclipse",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=30, max_damage=50)
+
+    ability50 = Ability(name="Desolation",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=30, max_damage=50)
+
+    ability51 = Ability(name="Chaos",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=30, max_damage=75)
+
+    ability52 = Ability(name="Dawnblade",
+                        description="N/A",
+                        type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability53 = Ability(name="Angelic Conduit",
+                        description="N/A",
+                        type=type_light, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability54 = Ability(name="Voidclaw",
+                        description="N/A",
+                        type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability55 = Ability(name="Cataclysm",
+                        description="N/A",
+                        type=type_dark, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability56 = Ability(name="Stonebreaker",
+                        description="N/A",
+                        type=type_stone, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability57 = Ability(name="Eruption",
+                        description="N/A",
+                        type=type_stone, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability58 = Ability(name="Brambles",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability59 = Ability(name="Verdant Whisper",
+                        description="N/A",
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability60 = Ability(name="Whirlwind Assault",
+                        description="N/A",
+                        type=type_wind, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
+    ability61 = Ability(name="Aetheric Tempest",
+                        description="N/A",
+                        type=type_wind, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        min_damage=25, max_damage=50)
+
     Ability.objects.bulk_create([
         ability1,
         ability2,
@@ -288,6 +429,34 @@ def seed_data():
         ability31,
         ability32,
         ability33,
+        ability34,
+        ability35,
+        ability36,
+        ability37,
+        ability38,
+        ability39,
+        ability40,
+        ability41,
+        ability42,
+        ability43,
+        ability44,
+        ability45,
+        ability46,
+        ability47,
+        ability48,
+        ability49,
+        ability50,
+        ability51,
+        ability52,
+        ability53,
+        ability54,
+        ability55,
+        ability56,
+        ability57,
+        ability58,
+        ability59,
+        ability60,
+        ability61,
     ])
 
     # gameuser
@@ -450,7 +619,6 @@ def seed_data():
 
     # Enemies
     # TODO https://trello.com/c/0vbGueR2/204-chuck-create-enemy-images - Add enemy images
-    # TODO https://trello.com/c/as5ukze5/203-create-enemy-abilities - Modify enemy abilities
     enemy1 = Enemy(
         name="Drunk Man 1",
         image="drunk-man-1.png",
@@ -461,10 +629,10 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=50,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability34,
+        ability_2=ability34,
+        ability_3=ability35,
+        ability_4=ability36,
     )
     enemy2 = Enemy(
         name="Drunk Man 2",
@@ -476,10 +644,10 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=50,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability37,
+        ability_2=ability37,
+        ability_3=ability38,
+        ability_4=ability39,
     )
     enemy3 = Enemy(
         name="Arachnid Sovereign",
@@ -491,10 +659,10 @@ def seed_data():
         start_myst_attack=60,
         start_myst_defense=60,
         start_speed=60,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability40,
+        ability_2=ability40,
+        ability_3=ability41,
+        ability_4=ability42,
     )
     enemy4 = Enemy(
         name="Arachnid Minion",
@@ -506,10 +674,10 @@ def seed_data():
         start_myst_attack=40,
         start_myst_defense=40,
         start_speed=75,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability43,
+        ability_2=ability43,
+        ability_3=ability43,
+        ability_4=ability43,
     )
     enemy5 = Enemy(
         name="Highland Revenant",
@@ -521,10 +689,10 @@ def seed_data():
         start_myst_attack=60,
         start_myst_defense=60,
         start_speed=60,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability44,
+        ability_2=ability44,
+        ability_3=ability45,
+        ability_4=ability46,
     )
     enemy6 = Enemy(
         name="Highland Scion",
@@ -536,10 +704,10 @@ def seed_data():
         start_myst_attack=40,
         start_myst_defense=40,
         start_speed=75,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability47,
+        ability_2=ability47,
+        ability_3=ability47,
+        ability_4=ability47,
     )
     enemy7 = Enemy(
         name="Primordial Anomaly",
@@ -551,10 +719,10 @@ def seed_data():
         start_myst_attack=100,
         start_myst_defense=100,
         start_speed=100,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability48,
+        ability_2=ability49,
+        ability_3=ability50,
+        ability_4=ability51,
     )
     enemy8 = Enemy(
         name="Luminar Sentinel",
@@ -566,10 +734,10 @@ def seed_data():
         start_myst_attack=75,
         start_myst_defense=75,
         start_speed=50,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability52,
+        ability_2=ability52,
+        ability_3=ability53,
+        ability_4=ability53,
     )
     enemy9 = Enemy(
         name="Umbral Harbinger",
@@ -581,10 +749,10 @@ def seed_data():
         start_myst_attack=75,
         start_myst_defense=75,
         start_speed=50,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability54,
+        ability_2=ability54,
+        ability_3=ability55,
+        ability_4=ability55,
     )
     enemy10 = Enemy(
         name="Granite Warden",
@@ -596,10 +764,10 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=50,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability56,
+        ability_2=ability56,
+        ability_3=ability57,
+        ability_4=ability57,
     )
     enemy11 = Enemy(
         name="Sylvan Enchanter",
@@ -611,10 +779,10 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=75,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability58,
+        ability_2=ability58,
+        ability_3=ability59,
+        ability_4=ability59,
     )
     enemy12 = Enemy(
         name="Galewing Shaman",
@@ -626,10 +794,10 @@ def seed_data():
         start_myst_attack=75,
         start_myst_defense=75,
         start_speed=75,
-        ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_1=ability60,
+        ability_2=ability60,
+        ability_3=ability61,
+        ability_4=ability61,
     )
 
     Enemy.objects.bulk_create([
