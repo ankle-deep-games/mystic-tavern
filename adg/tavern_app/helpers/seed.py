@@ -142,255 +142,181 @@ def seed_data():
     # Tier 1
     ability1 = Ability(name="Attack",
                        description="A basic single-target physical attack that inflicts low damage without consuming MP.",
-                       type=type_normal, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=1, max_damage=5)
+                       type=type_normal, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                       min_damage=1, max_damage=5)
     # Tier 2
     ability2 = Ability(name="Shield Bash",
                        description="A physical attack that deals low damage to one enemy by thrusting a shield into the enemy.",
-                       type=type_stone, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_stone, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                       min_damage=5, max_damage=15)
     ability3 = Ability(name="Shatter Shot",
                        description="A precise single-target physical attack that delivers medium damage to one enemy with a precisely aimed arrow.",
-                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                       min_damage=5, max_damage=15)
     ability4 = Ability(name="Divine Light",
                        description="A single-target healing spell that provides a gentle, low-level healing effect to one ally with a radiant burst of light.",
-                       type=type_light, mp_cost=10, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
+                       type=type_light, mp_cost=10, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False,
+                       min_damage=5, max_damage=15)
     ability5 = Ability(name="Shadow Blast",
                        description="A focused single-target attack that inflicts medium damage on one enemy through a powerful surge of arcane energy.",
-                       type=type_dark, mp_cost=10, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=5, max_damage=15)
-    # TODO https://trello.com/c/BKxfLrtR/218-combat-buffs-add-update-seed-data
+                       type=type_dark, mp_cost=10, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                       min_damage=5, max_damage=15)
     ability6 = Ability(name="Anthem of Valor",
                        description="Empowers a single ally with a medium physical attack boost and a defensive buff, enhancing their strength and resilience.",
                        type=type_wind, mp_cost=10, is_myst_attack=False, is_heal=False,
                        is_aoe=False, is_buff=True, buff_attack_percent=0.1, buff_defense_percent=0.1)
-    # Tier 3 - Light
+    # Tier 3
     ability7 = Ability(name="Divine Strike",
                        description="Launches a medium mystic attack, harnessing the power of light to strike a single target with celestial force.",
-                       type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability8 = Ability(name="Nature's Embrace",
-                       description="Invokes the light of the natural world to deliver a medium mystic attack, enveloping a single target in the gentle yet powerful embrace of nature's energy.",
-                       type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability9 = Ability(name="Radiant Surge",
-                       description="Casts forth a medium mystic attack that surges with blinding light, striking a single target with intense brilliance and energy.",
-                       type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability10 = Ability(name="Luminous Sonata",
-                        description="Creates a harmoneous performance that conjures a medium mystic attack that envelopes a single target in a symphony of luminescent power.",
-                        type=type_light, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    # Tier 3 - Dark
-    ability11 = Ability(name="Shadow Strike",
-                       description="Unleashes a medium mystic attack with dark energy, striking a single target with shadowy force.",
-                       type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability12 = Ability(name="Shadow Volley",
+                       type=type_light, mp_cost=30, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                       min_damage=15, max_damage=30)
+    ability8 = Ability(name="Shadow Volley",
                        description="Fires a barrage of dark-infused arrows in a medium mystic attack that targets a single enemy.",
-                       type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability13 = Ability(name="Dark Embrace",
-                       description="Bestows a medium mystic attack infused with dark power upon a single target, enshrouding them in malevolent energy.",
-                       type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability14 = Ability(name="Ebon Serenade",
-                        description="Performs a haunting serenade to conjure a medium mystic attack, enveloping a single target in a melody of darkness.",
-                        type=type_dark, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    # Tier 3 - Forest
-    ability15 = Ability(name="Timber Slam",
-                       description="Delivers a medium mystic attack imbued with the essence of the forest, striking a single target with the force of nature.",
-                       type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability16 = Ability(name="Thorned Grasp",
-                       description="Casts a medium mystic attack infused with the untamed power of the forest, enveloping a single target in thorny vines and natural wrath.",
-                       type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability17 = Ability(name="Sylvan Whispers",
-                       description="Unleashes a medium mystic attack that channels the secrets of the forest, enveloping a single target in whispers of natural power.",
-                       type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability18 = Ability(name="Enchanted Grove",
+                       type=type_dark, mp_cost=30, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
+    ability9 = Ability(name="Enchanted Grove",
                         description="Evokes the magic of the forest with a medium mystic attack, creating an enchanting grove that envelops a single target.",
                         type=type_forest, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    # Tier 3 - Stone
-    ability19 = Ability(name="Piercing Arrow",
-                       description="Fires a precise medium mystic attack in the form of a piercing arrow, targeting a single enemy.",
-                       type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability20 = Ability(name="Stoneguard",
-                       description="Conjures a medium mystic attack that fractures the very earth, targeting a single enemy with a devastating quake of stone and debris.",
-                       type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability21 = Ability(name="Petrifying Blast",
-                       description="Unleashes a medium mystic attack that carries the power to petrify, encasing a single target in stone-like rigidity.",
-                       type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability22 = Ability(name="Resonant Stones",
+    ability10 = Ability(name="Resonant Stones",
                         description="Conjures a medium mystic attack with resonating stones, creating a harmonious symphony that engulfs a single target.",
                         type=type_stone, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    # Tier 3 - Wind
-    ability23 = Ability(name="Cyclone Slash",
-                       description="Executes a medium mystic attack, wielding the power of the wind to unleash a cyclonic strike upon a single target.",
-                       type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability24 = Ability(name="Storm of Arrows",
-                       description="Unleashes a tempestuous barrage of arrows in a medium mystic attack, targeting a single enemy.",
-                       type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability25 = Ability(name="Gale Fury",
+    ability11 = Ability(name="Gale Fury",
                        description="Commands a medium mystic attack imbued with the tempest's might, releasing a raging windstorm upon a single target, inflicting swirling damage.",
                        type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
-    ability26 = Ability(name="Tempest Nova",
-                        description="Casts forth a medium mystic attack that erupts with the fury of a tempest, striking a single target with turbulent force.",
-                        type=type_wind, mp_cost=20, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=15, max_damage=30)
     # Tier 4
-    ability27 = Ability(name="Holy Wrath",
-                       description="Summons divine fury, delivering a devastating high physical attack that channels holy energy to smite a single target with righteous force.",
-                       type=type_stone, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
-    ability28 = Ability(name="Grove's Vengeance",
-                       description="Harnesses the fury of the forest, unleashing a potent high physical attack that embodies the wrath of nature upon a single target.",
-                       type=type_forest, mp_cost=30, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
-    ability29 = Ability(name="Sanctuary",
-                       description="Invokes a healing haven, granting a substantial high-level heal that envelops a single target in a protective aura of rejuvenation.",
-                       type=type_light, mp_cost=30, is_myst_attack=True, is_heal=True, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
-    ability30 = Ability(name="Arcane Darkness",
-                        description="Conjures dark mystic forces, casting a formidable high mystic attack that shrouds a single target in shadowy, unpredictable energies.",
-                        type=type_dark, mp_cost=30, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False, min_damage=30, max_damage=45)
-    # TODO https://trello.com/c/BKxfLrtR/218-combat-buffs-add-update-seed-data
-    ability31 = Ability(name="Ethereal Crescendo",
-                        description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon a single target, elevating them to an ethereal peak of strength and grace.",
-                        type=type_wind, mp_cost=30, is_myst_attack=False, is_heal=False,
-                        is_aoe=True, is_buff=True, buff_hp_percent=0.5, buff_mp_percent=0.5, buff_attack_percent=0.5, buff_defense_percent=0.5, buff_myst_attack_percent=0.5, buff_myst_defense_percent=0.5, buff_speed_percent=0.5)
-    
-    # AOE test abilities TODO https://trello.com/c/jYTBJRi6/210-combat-aoe-add-update-aoe-abilities-in-abilities-seed-data
-    ability32 = Ability(name="AOE Damage",
-                       description="AOE Damage Test. Used by both players and enemies.",
-                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
-    
-    ability33 = Ability(name="AOE Heal",
-                       description="AOE Heal Test. Used only by players.",
-                       type=type_forest, mp_cost=5, is_myst_attack=False, is_heal=True, is_aoe=True, is_buff=False, min_damage=1, max_damage=5)
+    ability12 = Ability(name="Holy Wrath",
+                       description="Summons divine fury, delivering a devastating high physical attack that channels holy energy to smite multiple targets with righteous force.",
+                       type=type_stone, mp_cost=15, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False, min_damage=30, max_damage=45)
+    ability13 = Ability(name="Grove's Vengeance",
+                       description="Harnesses the fury of the forest, unleashing a potent high physical attack that embodies the wrath of nature upon multiple targets.",
+                       type=type_forest, mp_cost=15, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False, min_damage=30, max_damage=45)
+    ability14 = Ability(name="Sanctuary",
+                       description="Invokes a healing haven, granting a substantial high-level heal that envelops multiple targets in a protective aura of rejuvenation.",
+                       type=type_light, mp_cost=30, is_myst_attack=True, is_heal=True, is_aoe=True, is_buff=False, min_damage=30, max_damage=45)
+    ability15 = Ability(name="Arcane Darkness",
+                        description="Conjures dark mystic forces, casting a formidable high mystic attack that shrouds multiple targets in shadowy, unpredictable energies.",
+                        type=type_dark, mp_cost=30, is_myst_attack=True, is_heal=False, is_aoe=True, is_buff=False, min_damage=30, max_damage=45)
+    ability16 = Ability(name="Ethereal Crescendo",
+                        description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon multiple targets, elevating them to an ethereal peak of strength and grace.",
+                        type=type_wind, mp_cost=30, is_myst_attack=True, is_heal=False,
+                        is_aoe=True, is_buff=True, buff_hp_percent=0.1, buff_mp_percent=0.1, buff_attack_percent=0.1, buff_defense_percent=0.1, buff_myst_attack_percent=0.1, buff_myst_defense_percent=0.1, buff_speed_percent=0.1)
 
     # Enemy Abilities
-    ability34 = Ability(name="Drunken Haymaker",
+    ability17 = Ability(name="Drunken Haymaker",
                         description="N/A",
                         type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=5, max_damage=10)
 
-    ability35 = Ability(name="Tankard Thrash",
+    ability18 = Ability(name="Tankard Thrash",
                         description="N/A",
                         type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=5, max_damage=10)
 
-    ability36 = Ability(name="Ethereal Smite",
+    ability19 = Ability(name="Ethereal Smite",
                         description="N/A",
                         type=type_light, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=5, max_damage=15)
 
-    ability37 = Ability(name="Bar Brawl Slam",
+    ability20 = Ability(name="Bar Brawl Slam",
                         description="N/A",
                         type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=5, max_damage=10)
 
-    ability38 = Ability(name="Tavern Tumble",
+    ability21 = Ability(name="Tavern Tumble",
                         description="N/A",
                         type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=5, max_damage=10)
 
-    ability39 = Ability(name="Abyssal Gloom",
+    ability22 = Ability(name="Abyssal Gloom",
                         description="N/A",
                         type=type_dark, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=5, max_damage=15)
 
-    ability40 = Ability(name="Pincer Assault",
+    ability23 = Ability(name="Pincer Assault",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=15, max_damage=30)
 
-    ability41 = Ability(name="Veil of Vines",
+    ability24 = Ability(name="Veil of Vines",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=15, max_damage=30)
 
-    ability42 = Ability(name="Arboreal Pulse",
+    ability25 = Ability(name="Arboreal Pulse",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=15, max_damage=50)
 
-    ability43 = Ability(name="Venomous Bite",
+    ability26 = Ability(name="Venomous Bite",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=15, max_damage=30)
 
-    ability44 = Ability(name="Mjolnir's Impact",
-                        description="N/A",
-                        type=type_stone, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
-                        min_damage=15, max_damage=30)
-
-    ability45 = Ability(name="Petrifying Gaze",
-                        description="N/A",
-                        type=type_stone, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
-                        min_damage=15, max_damage=30)
-
-    ability46 = Ability(name="Terraquake",
-                        description="N/A",
-                        type=type_stone, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
-                        min_damage=15, max_damage=50)
-
-    ability47 = Ability(name="Rupture",
-                        description="N/A",
-                        type=type_stone, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
-                        min_damage=15, max_damage=30)
-
-    ability48 = Ability(name="Obliteration",
+    ability27 = Ability(name="Obliteration",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=30, max_damage=50)
 
-    ability49 = Ability(name="Eclipse",
+    ability28 = Ability(name="Eclipse",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=30, max_damage=50)
 
-    ability50 = Ability(name="Desolation",
+    ability29 = Ability(name="Desolation",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=30, max_damage=50)
 
-    ability51 = Ability(name="Chaos",
+    ability30 = Ability(name="Chaos",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=30, max_damage=75)
 
-    ability52 = Ability(name="Dawnblade",
+    ability31 = Ability(name="Dawnblade",
                         description="N/A",
                         type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability53 = Ability(name="Angelic Conduit",
+    ability32 = Ability(name="Angelic Conduit",
                         description="N/A",
                         type=type_light, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability54 = Ability(name="Voidclaw",
+    ability33 = Ability(name="Voidclaw",
                         description="N/A",
                         type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability55 = Ability(name="Cataclysm",
+    ability34 = Ability(name="Cataclysm",
                         description="N/A",
                         type=type_dark, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability56 = Ability(name="Stonebreaker",
+    ability35 = Ability(name="Stonebreaker",
                         description="N/A",
                         type=type_stone, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability57 = Ability(name="Eruption",
+    ability36 = Ability(name="Eruption",
                         description="N/A",
                         type=type_stone, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability58 = Ability(name="Brambles",
+    ability37 = Ability(name="Brambles",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability59 = Ability(name="Verdant Whisper",
+    ability38 = Ability(name="Verdant Whisper",
                         description="N/A",
                         type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability60 = Ability(name="Whirlwind Assault",
+    ability39 = Ability(name="Whirlwind Assault",
                         description="N/A",
                         type=type_wind, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
 
-    ability61 = Ability(name="Aetheric Tempest",
+    ability40 = Ability(name="Aetheric Tempest",
                         description="N/A",
                         type=type_wind, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
                         min_damage=25, max_damage=50)
@@ -436,27 +362,6 @@ def seed_data():
         ability38,
         ability39,
         ability40,
-        ability41,
-        ability42,
-        ability43,
-        ability44,
-        ability45,
-        ability46,
-        ability47,
-        ability48,
-        ability49,
-        ability50,
-        ability51,
-        ability52,
-        ability53,
-        ability54,
-        ability55,
-        ability56,
-        ability57,
-        ability58,
-        ability59,
-        ability60,
-        ability61,
     ])
 
     # gameuser
@@ -483,9 +388,9 @@ def seed_data():
         with_gear_myst_defense=role1.start_myst_defense,
         with_gear_speed=role1.start_speed,
         ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_2=ability4,
+        ability_3=ability9,
+        ability_4=ability14,
     )
     gameuser2 = GameUser(
         game=game1,
@@ -510,9 +415,9 @@ def seed_data():
         with_gear_myst_defense=role2.start_myst_defense,
         with_gear_speed=role2.start_speed,
         ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_2=ability5,
+        ability_3=ability10,
+        ability_4=ability15,
     )
     gameuser3 = GameUser(
         game=game1,
@@ -538,8 +443,8 @@ def seed_data():
         with_gear_speed=role3.start_speed,
         ability_1=ability1,
         ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_3=ability7,
+        ability_4=ability12,
     )
     gameuser4 = GameUser(
         game=game1,
@@ -564,9 +469,9 @@ def seed_data():
         with_gear_myst_defense=role4.start_myst_defense,
         with_gear_speed=role4.start_speed,
         ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_2=ability3,
+        ability_3=ability8,
+        ability_4=ability13,
     )
     gameuser5 = GameUser(
         game=game2,
@@ -591,9 +496,9 @@ def seed_data():
         with_gear_myst_defense=role2.start_myst_defense,
         with_gear_speed=role2.start_speed,
         ability_1=ability1,
-        ability_2=ability2,
-        ability_3=ability3,
-        ability_4=ability4,
+        ability_2=ability6,
+        ability_3=ability11,
+        ability_4=ability16,
     )
     GameUser.objects.bulk_create([
         gameuser1,
@@ -629,10 +534,10 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=50,
-        ability_1=ability34,
-        ability_2=ability34,
-        ability_3=ability35,
-        ability_4=ability36,
+        ability_1=ability17,
+        ability_2=ability17,
+        ability_3=ability18,
+        ability_4=ability19,
     )
     enemy2 = Enemy(
         name="Drunk Man 2",
@@ -644,10 +549,10 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=50,
-        ability_1=ability37,
-        ability_2=ability37,
-        ability_3=ability38,
-        ability_4=ability39,
+        ability_1=ability20,
+        ability_2=ability20,
+        ability_3=ability21,
+        ability_4=ability22,
     )
     enemy3 = Enemy(
         name="Arachnid Sovereign",
@@ -659,10 +564,10 @@ def seed_data():
         start_myst_attack=60,
         start_myst_defense=60,
         start_speed=60,
-        ability_1=ability40,
-        ability_2=ability40,
-        ability_3=ability41,
-        ability_4=ability42,
+        ability_1=ability23,
+        ability_2=ability23,
+        ability_3=ability24,
+        ability_4=ability25,
     )
     enemy4 = Enemy(
         name="Arachnid Minion",
@@ -674,42 +579,12 @@ def seed_data():
         start_myst_attack=40,
         start_myst_defense=40,
         start_speed=75,
-        ability_1=ability43,
-        ability_2=ability43,
-        ability_3=ability43,
-        ability_4=ability43,
+        ability_1=ability26,
+        ability_2=ability26,
+        ability_3=ability26,
+        ability_4=ability26,
     )
     enemy5 = Enemy(
-        name="Highland Revenant",
-        image="drunk-man-2.png",
-        type=type_stone,
-        start_hp=200,
-        start_attack=60,
-        start_defense=60,
-        start_myst_attack=60,
-        start_myst_defense=60,
-        start_speed=60,
-        ability_1=ability44,
-        ability_2=ability44,
-        ability_3=ability45,
-        ability_4=ability46,
-    )
-    enemy6 = Enemy(
-        name="Highland Scion",
-        image="drunk-man-2.png",
-        type=type_stone,
-        start_hp=80,
-        start_attack=40,
-        start_defense=40,
-        start_myst_attack=40,
-        start_myst_defense=40,
-        start_speed=75,
-        ability_1=ability47,
-        ability_2=ability47,
-        ability_3=ability47,
-        ability_4=ability47,
-    )
-    enemy7 = Enemy(
         name="Primordial Anomaly",
         image="creature.png",
         type=type_forest,
@@ -719,12 +594,12 @@ def seed_data():
         start_myst_attack=100,
         start_myst_defense=100,
         start_speed=100,
-        ability_1=ability48,
-        ability_2=ability49,
-        ability_3=ability50,
-        ability_4=ability51,
+        ability_1=ability27,
+        ability_2=ability28,
+        ability_3=ability29,
+        ability_4=ability30,
     )
-    enemy8 = Enemy(
+    enemy6 = Enemy(
         name="Luminar Sentinel",
         image="drunk-man-2.png",
         type=type_light,
@@ -734,12 +609,12 @@ def seed_data():
         start_myst_attack=75,
         start_myst_defense=75,
         start_speed=50,
-        ability_1=ability52,
-        ability_2=ability52,
-        ability_3=ability53,
-        ability_4=ability53,
+        ability_1=ability31,
+        ability_2=ability31,
+        ability_3=ability32,
+        ability_4=ability32,
     )
-    enemy9 = Enemy(
+    enemy7 = Enemy(
         name="Umbral Harbinger",
         image="drunk-man-2.png",
         type=type_dark,
@@ -749,12 +624,12 @@ def seed_data():
         start_myst_attack=75,
         start_myst_defense=75,
         start_speed=50,
-        ability_1=ability54,
-        ability_2=ability54,
-        ability_3=ability55,
-        ability_4=ability55,
+        ability_1=ability33,
+        ability_2=ability33,
+        ability_3=ability34,
+        ability_4=ability34,
     )
-    enemy10 = Enemy(
+    enemy8 = Enemy(
         name="Granite Warden",
         image="drunk-man-2.png",
         type=type_stone,
@@ -764,12 +639,12 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=50,
-        ability_1=ability56,
-        ability_2=ability56,
-        ability_3=ability57,
-        ability_4=ability57,
+        ability_1=ability35,
+        ability_2=ability35,
+        ability_3=ability36,
+        ability_4=ability36,
     )
-    enemy11 = Enemy(
+    enemy9 = Enemy(
         name="Sylvan Enchanter",
         image="drunk-man-2.png",
         type=type_forest,
@@ -779,12 +654,12 @@ def seed_data():
         start_myst_attack=50,
         start_myst_defense=50,
         start_speed=75,
-        ability_1=ability58,
-        ability_2=ability58,
-        ability_3=ability59,
-        ability_4=ability59,
+        ability_1=ability37,
+        ability_2=ability37,
+        ability_3=ability38,
+        ability_4=ability38,
     )
-    enemy12 = Enemy(
+    enemy10 = Enemy(
         name="Galewing Shaman",
         image="drunk-man-2.png",
         type=type_wind,
@@ -794,10 +669,10 @@ def seed_data():
         start_myst_attack=75,
         start_myst_defense=75,
         start_speed=75,
-        ability_1=ability60,
-        ability_2=ability60,
-        ability_3=ability61,
-        ability_4=ability61,
+        ability_1=ability39,
+        ability_2=ability39,
+        ability_3=ability40,
+        ability_4=ability40,
     )
 
     Enemy.objects.bulk_create([
@@ -811,8 +686,6 @@ def seed_data():
         enemy8,
         enemy9,
         enemy10,
-        enemy11,
-        enemy12,
     ])
 
     # commenting this first version of act 1 scene 1
