@@ -208,7 +208,7 @@ def seed_data():
 
     ability18 = Ability(name="Tankard Thrash",
                         description="N/A",
-                        type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        type=type_light, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False,
                         min_damage=5, max_damage=10)
 
     ability19 = Ability(name="Ethereal Smite",
@@ -223,7 +223,7 @@ def seed_data():
 
     ability21 = Ability(name="Tavern Tumble",
                         description="N/A",
-                        type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=False, is_buff=False,
+                        type=type_dark, mp_cost=0, is_myst_attack=False, is_heal=False, is_aoe=True, is_buff=False,
                         min_damage=5, max_damage=10)
 
     ability22 = Ability(name="Abyssal Gloom",
@@ -238,7 +238,7 @@ def seed_data():
 
     ability24 = Ability(name="Veil of Vines",
                         description="N/A",
-                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=True, is_buff=False,
                         min_damage=15, max_damage=30)
 
     ability25 = Ability(name="Arboreal Pulse",
@@ -268,7 +268,7 @@ def seed_data():
 
     ability30 = Ability(name="Chaos",
                         description="N/A",
-                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=False, is_buff=False,
+                        type=type_forest, mp_cost=0, is_myst_attack=True, is_heal=False, is_aoe=True, is_buff=False,
                         min_damage=30, max_damage=75)
 
     ability31 = Ability(name="Dawnblade",
