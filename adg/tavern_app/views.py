@@ -550,8 +550,18 @@ def battle(request, game_id, act, number):
             else:
                 messages.error(request, 'It is not your turn to attack.', extra_tags="alert alert-danger")
 
-            # TODO update redirect to current battle
-            return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
+            # how does this work with AOE?
+            # I'm going to also need to process changes to HP/MP of players and enemies.
+            combat_log_text = CombatLog.objects.filter(game=game).latest('pk')
+            data = {
+                "combat_log_text": combat_log_text.__str__(),
+            }
+            return JsonResponse(data)
+            # to not stop execution I could try returning the json from a battle function and not from the view itself
+        
+            # shapes
+            # do i return the entire combat log each time for that battle? add act and battle to the combat log model?
+            # on page load it could load the `current_state` for all enemies and players which would combine gameenemies and gameusers and then FE uses that
         else:
             messages.error(request, 'Something in combat form not valid', extra_tags="alert alert-danger")
 
