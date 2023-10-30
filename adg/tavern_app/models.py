@@ -141,8 +141,6 @@ class GameUser(models.Model):
     ability_3 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_3')
     ability_4 = models.ForeignKey(Ability, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='ability_4')
     weapon_1 = models.ForeignKey(Weapon, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='weapon_1')
-    weapon_2 = models.ForeignKey(Weapon, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='weapon_2')
-    weapon_3 = models.ForeignKey(Weapon, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='weapon_3')
     armor_1 = models.ForeignKey(Armor, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='armor_1')
     armor_2 = models.ForeignKey(Armor, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='armor_2')
     armor_3 = models.ForeignKey(Armor, on_delete=models.PROTECT, default=None, blank=True, null=True, related_name='armor_3')
