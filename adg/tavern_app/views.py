@@ -330,8 +330,7 @@ def scene(request, game_id, act, number):
                 game_dialogue = GameDialogue(game=game, dialogue=dialogue)
                 game_dialogue.save()
 
-            # TODO update to real dialogue id https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
-            if act == 1 and scene_num == 1 and dialogue.id == 3:
+            if (act == 1 and scene_num == 1 and dialogue.id == 58) or (act == 1 and scene_num == 1 and dialogue.id == 65) or (act == 1 and scene_num == 1 and dialogue.id == 72):
                 gamelocation.location_type = "battle"
                 gamelocation.save()
                 new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
