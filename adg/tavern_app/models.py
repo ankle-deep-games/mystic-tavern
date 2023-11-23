@@ -258,6 +258,8 @@ class GameEnemy(models.Model):
 
 class CombatLog(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    act = models.IntegerField(default=0)
+    battle = models.IntegerField(default=0)
     gameuser = models.ForeignKey(GameUser, on_delete=models.PROTECT, related_name='combat_log_gameuser')
     gameenemy = models.ForeignKey(GameEnemy, on_delete=models.PROTECT, default=None, blank=True, null=True)
     player_or_enemy_took_action = models.CharField(max_length=255) # 'player' or 'enemy' string - could improve later
@@ -272,7 +274,7 @@ class CombatLog(models.Model):
         gameuser = self.gameuser.name() if self.gameuser else 'Null'
         gameenemy = self.gameenemy.name() if self.gameenemy else 'Null'
         defensive_gameuser_target = self.defensive_gameuser_target.name() if self.defensive_gameuser_target else 'Null'
-        return f'who: {self.player_or_enemy_took_action}, gameuser: {gameuser}, gameenemy: {gameenemy}, defensive_gameuser_target: {defensive_gameuser_target}, ability: {self.ability.name}, amount: {self.amount}, damage_or_heal_or_buff: {self.damage_or_heal_or_buff}'
+        return f'who: {self.player_or_enemy_took_action}, act: {self.act}, battle: {self.battle}, gameuser: {gameuser}, gameenemy: {gameenemy}, defensive_gameuser_target: {defensive_gameuser_target}, ability: {self.ability.name}, amount: {self.amount}, damage_or_heal_or_buff: {self.damage_or_heal_or_buff}'
     
 class GameLocation(models.Model):
     game = models.ForeignKey(Game, on_delete=models.PROTECT)

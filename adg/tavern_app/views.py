@@ -463,7 +463,7 @@ def battle(request, game_id, act, number):
                 if ability.is_aoe == True:
                     for gameenemy in gameenemies:
                         if gameenemy.current_hp > 0:
-                            gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                            gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                     # only deduct MP once
                     gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                     # TODO update redirect to current battle
@@ -482,7 +482,7 @@ def battle(request, game_id, act, number):
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
-                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn)
+                gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
 
             elif is_request_user_turn and ability.is_heal == True:
@@ -490,7 +490,7 @@ def battle(request, game_id, act, number):
                 if ability.is_aoe == True:
                     for gameuser in gameusers:
                         if gameuser.current_hp > 0:
-                            gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                            gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                     # requery the request gameuser who cast the heal since their HP just increased.
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
                     # only deduct MP once
@@ -510,7 +510,7 @@ def battle(request, game_id, act, number):
                     messages.error(request, 'Cannot single target heal player with 0 hp.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
-                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                 if defensive_gameuser_target == request_gameuser:
                     # requery the request gameuser who cast the heal since their HP just increased.
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
@@ -521,7 +521,7 @@ def battle(request, game_id, act, number):
                 if ability.is_aoe == True:
                     for gameuser in gameusers:
                         if gameuser.current_hp > 0:
-                            gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn)
+                            gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                     # requery the request gameuser who cast the buff since their stats changed
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
                     # only deduct MP once
@@ -541,7 +541,7 @@ def battle(request, game_id, act, number):
                     messages.error(request, 'Cannot single target buff player with 0 hp.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
-                gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn)
+                gameuser_buff_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                 if defensive_gameuser_target == request_gameuser:
                     # requery the request gameuser who cast the buff since their stats changed
                     request_gameuser = GameUser.objects.get(game=game, user=request.user)
@@ -578,11 +578,11 @@ def battle(request, game_id, act, number):
                 messages.info(request, f'{gameenemy.name()} used AOE ability {ability} on all players with health above 0.', extra_tags="alert alert-info")
                 for gameuser in gameusers:
                     if gameuser.current_hp > 0:
-                        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                        gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
             else:
                 # Single Target Damage
                 gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
-                gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn)
+                gameenemy_attack_single_gameuser_and_save(game=game, gameuser=gameuser_target, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                 messages.info(request, f'{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.', extra_tags="alert alert-info")
                 # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
 

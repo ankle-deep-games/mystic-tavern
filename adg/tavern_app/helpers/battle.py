@@ -70,12 +70,14 @@ def calc_is_request_user_turn(request_gameuser: GameUser, unit_turn: GameTurnOrd
         is_request_user_turn = False
     return is_request_user_turn
 
-def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
+def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
     who_attacking = "player"
     calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
     
     combat_log = CombatLog(
         game = game,
+        act=act,
+        battle=battle,
         gameuser = gameuser,
         gameenemy = gameenemy,
         player_or_enemy_took_action = who_attacking,
@@ -97,12 +99,14 @@ def gameuser_deduct_ability_mp_and_save(gameuser: GameUser, ability: Ability):
     gameuser.current_mp -= ability.mp_cost
     gameuser.save()
     
-def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder) -> None:
+def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
     who_attacking = "enemy"
     calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
 
     combat_log = CombatLog(
         game = game,
+        act=act,
+        battle=battle,
         gameuser = gameuser,
         gameenemy = gameenemy,
         player_or_enemy_took_action = who_attacking,
@@ -156,12 +160,14 @@ def enemey_choose_random_alive_target(gameusers) -> GameUser:
             gameuser_list.append(gameuser)
     return random.choice(gameuser_list)
 
-def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder) -> None:
+def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
     who_attacking = "player"
     calculated_healing = calculate_healing(gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability)
 
     combat_log = CombatLog(
         game = game,
+        act=act,
+        battle=battle,
         gameuser = gameuser,
         defensive_gameuser_target = defensive_gameuser_target,
         player_or_enemy_took_action = who_attacking,
@@ -226,7 +232,7 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
     return final_healing
 
 
-def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder) -> None:
+def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
     who_attacking = "player"
 
     if ability.buff_hp_percent > 0:
@@ -272,6 +278,8 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     combat_log = CombatLog(
         game = game,
+        act=act,
+        battle=battle,
         gameuser = gameuser,
         defensive_gameuser_target = defensive_gameuser_target,
         player_or_enemy_took_action = who_attacking,
