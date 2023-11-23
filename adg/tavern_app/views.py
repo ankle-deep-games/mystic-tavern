@@ -465,6 +465,9 @@ def battle(request, game_id, act, number):
                         if gameenemy.current_hp > 0:
                             gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
                     # only deduct MP once
+                    # *****
+                    # TODO refactor this into a Loop for AOE and only deduct MP on the first AOE, the remaining AOE's in the loop do not deduct MP.
+                    # *****
                     gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
@@ -483,6 +486,7 @@ def battle(request, game_id, act, number):
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
                 gameuser_attack_single_gameenemy_and_save(game=game, gameuser=request_gameuser, gameenemy=gameenemy_target, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
+                # TODO rework deduct MP.
                 gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
 
             elif is_request_user_turn and ability.is_heal == True:
