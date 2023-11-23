@@ -70,8 +70,7 @@ def calc_is_request_user_turn(request_gameuser: GameUser, unit_turn: GameTurnOrd
         is_request_user_turn = False
     return is_request_user_turn
 
-def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
-    # TODO deduct MP here
+def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int, deduct_mp: bool) -> None:
     who_attacking = "player"
 
     starting_gameusers = GameUser.objects.filter(game=game)
@@ -80,6 +79,10 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
     starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
 
     calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
+
+    if deduct_mp:
+        gameuser.current_mp -= ability.mp_cost
+        gameuser.save()
 
     gameenemy.current_hp = gameenemy.current_hp - calculated_damage
     if gameenemy.current_hp < 0:
@@ -111,6 +114,7 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         )
     combat_log.save()
 
+# TODO to delete after refactor deducting MP within attack/buff/heals
 def gameuser_deduct_ability_mp_and_save(gameuser: GameUser, ability: Ability):
     gameuser.current_mp -= ability.mp_cost
     gameuser.save()
