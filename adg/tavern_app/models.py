@@ -267,10 +267,10 @@ class CombatLog(models.Model):
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     amount = models.IntegerField(default=0)
     damage_or_heal_or_buff = models.CharField(max_length=255) # 'damage' or 'heal' or 'buff' string - could improve later
-    starting_gameuser_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
-    starting_gameenemy_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
-    resulting_gameuser_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
-    resulting_gameenemy_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
+    starting_gameusers_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
+    starting_gameenemies_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
+    resulting_gameusers_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
+    resulting_gameenemies_json = models.JSONField(default=None, blank=True, null=True) # TODO remove the null
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

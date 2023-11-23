@@ -76,11 +76,11 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
 
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    starting_gameuser_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    starting_gameenemy_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
+    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
 
     calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
-    
+
     gameenemy.current_hp = gameenemy.current_hp - calculated_damage
     if gameenemy.current_hp < 0:
         gameenemy.current_hp = 0
@@ -91,8 +91,8 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
 
     resulting_gameusers = GameUser.objects.filter(game=game)
     resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    resulting_gameuser_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    resulting_gameenemy_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
+    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
     
     combat_log = CombatLog(
         game = game,
@@ -104,10 +104,10 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         ability = ability,
         amount = calculated_damage,
         damage_or_heal_or_buff = "damage",
-        starting_gameuser_json = starting_gameuser_json,
-        starting_gameenemy_json = starting_gameenemy_json,
-        resulting_gameuser_json = resulting_gameuser_json,
-        resulting_gameenemy_json = resulting_gameenemy_json,
+        starting_gameusers_json = starting_gameusers_json,
+        starting_gameenemies_json = starting_gameenemies_json,
+        resulting_gameusers_json = resulting_gameusers_json,
+        resulting_gameenemies_json = resulting_gameenemies_json,
         )
     combat_log.save()
 
