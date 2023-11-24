@@ -114,10 +114,6 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         )
     combat_log.save()
 
-# TODO to delete after refactor deducting MP within attack/buff/heals
-def gameuser_deduct_ability_mp_and_save(gameuser: GameUser, ability: Ability):
-    gameuser.current_mp -= ability.mp_cost
-    gameuser.save()
     
 def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
     who_attacking = "enemy"
@@ -291,9 +287,22 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
     return final_healing
 
 
-def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
+def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int, deduct_mp: bool) -> None:
     who_attacking = "player"
 
+    starting_gameusers = GameUser.objects.filter(game=game)
+    starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
+    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
+    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+
+    if deduct_mp:
+        gameuser.current_mp -= ability.mp_cost
+        gameuser.save()
+
+    # if buffing themselves, requery since their MP just decreased
+    if defensive_gameuser_target == gameuser:
+        defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
+    
     if ability.buff_hp_percent > 0:
         buffed_hp = defensive_gameuser_target.with_gear_hp + round(defensive_gameuser_target.with_gear_hp * ability.buff_hp_percent)
         if buffed_hp > defensive_gameuser_target.current_max_hp:
@@ -335,6 +344,14 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     defensive_gameuser_target.save()
 
+    unit_turn.is_their_turn = False
+    unit_turn.save()
+
+    resulting_gameusers = GameUser.objects.filter(game=game)
+    resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
+    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
+    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+
     combat_log = CombatLog(
         game = game,
         act=act,
@@ -345,11 +362,13 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         ability = ability,
         amount = 0,
         damage_or_heal_or_buff = "buff",
+        starting_gameusers_json = starting_gameusers_json,
+        starting_gameenemies_json = starting_gameenemies_json,
+        resulting_gameusers_json = resulting_gameusers_json,
+        resulting_gameenemies_json = resulting_gameenemies_json,
         )
     combat_log.save()
 
-    unit_turn.is_their_turn = False
-    unit_turn.save()
 
 def is_any_player_alive(game: Game):
     return True if GameUser.objects.filter(game=game, current_hp__gt=0) else False
