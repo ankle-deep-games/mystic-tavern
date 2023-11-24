@@ -212,7 +212,6 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     # if healing themselves, requery since their MP just decreased
     if defensive_gameuser_target == gameuser:
-        print("test print healing themselves")
         defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
 
     defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
