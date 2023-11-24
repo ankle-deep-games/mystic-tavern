@@ -196,9 +196,36 @@ def enemey_choose_random_alive_target(gameusers) -> GameUser:
             gameuser_list.append(gameuser)
     return random.choice(gameuser_list)
 
-def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
+def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int, deduct_mp: bool) -> None:
     who_attacking = "player"
+
+    starting_gameusers = GameUser.objects.filter(game=game)
+    starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
+    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
+    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+
     calculated_healing = calculate_healing(gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability)
+
+    if deduct_mp:
+        gameuser.current_mp -= ability.mp_cost
+        gameuser.save()
+
+    # if healing themselves, requery since their MP just decreased
+    if defensive_gameuser_target == gameuser:
+        defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
+
+    defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
+    if defensive_gameuser_target.current_hp > defensive_gameuser_target.current_max_hp:
+        defensive_gameuser_target.current_hp = defensive_gameuser_target.current_max_hp
+    defensive_gameuser_target.save()
+
+    unit_turn.is_their_turn = False
+    unit_turn.save()
+
+    resulting_gameusers = GameUser.objects.filter(game=game)
+    resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
+    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
+    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
 
     combat_log = CombatLog(
         game = game,
@@ -210,16 +237,12 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         ability = ability,
         amount = calculated_healing,
         damage_or_heal_or_buff = "heal",
+        starting_gameusers_json = starting_gameusers_json,
+        starting_gameenemies_json = starting_gameenemies_json,
+        resulting_gameusers_json = resulting_gameusers_json,
+        resulting_gameenemies_json = resulting_gameenemies_json,
         )
     combat_log.save()
-
-    defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
-    if defensive_gameuser_target.current_hp > defensive_gameuser_target.current_max_hp:
-        defensive_gameuser_target.current_hp = defensive_gameuser_target.current_max_hp
-    defensive_gameuser_target.save()
-
-    unit_turn.is_their_turn = False
-    unit_turn.save()
 
 
 def determine_type_strength_weakness(attack, attack_type_strength, attack_type_weakness, defense_type):
