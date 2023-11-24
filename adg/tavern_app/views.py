@@ -490,13 +490,14 @@ def battle(request, game_id, act, number):
             elif is_request_user_turn and ability.is_heal == True:
                 # AOE Heal
                 if ability.is_aoe == True:
+                    first_gameuser_heal = True
                     for gameuser in gameusers:
                         if gameuser.current_hp > 0:
-                            gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
-                    # requery the request gameuser who cast the heal since their HP just increased.
-                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
-                    # only deduct MP once
-                    gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+                            if first_gameuser_heal:
+                                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num, deduct_mp=True)
+                                first_gameuser_heal = False
+                            else:
+                                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=gameuser, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num, deduct_mp=False)
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
                 
@@ -512,11 +513,7 @@ def battle(request, game_id, act, number):
                     messages.error(request, 'Cannot single target heal player with 0 hp.', extra_tags="alert alert-danger")
                     # TODO update redirect to current battle
                     return redirect(reverse("tavern_app:battle", kwargs={'game_id': game.id, 'act': 1, 'number': 1}))
-                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num)
-                if defensive_gameuser_target == request_gameuser:
-                    # requery the request gameuser who cast the heal since their HP just increased.
-                    request_gameuser = GameUser.objects.get(game=game, user=request.user)
-                gameuser_deduct_ability_mp_and_save(gameuser=request_gameuser, ability=ability)
+                gameuser_heal_single_gameuser_and_save(game=game, gameuser=request_gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability, unit_turn=unit_turn, act=act, battle=battle_num, deduct_mp=True)
 
             elif is_request_user_turn and ability.is_buff == True:
                 # AOE Buff
