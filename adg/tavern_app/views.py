@@ -632,6 +632,40 @@ def battle(request, game_id, act, number):
         'request_gameuser': request_gameuser,
         'unit_turn': unit_turn,
         'is_request_user_turn': is_request_user_turn,
+        'act': act,
+        'battle_num': battle_num,
     }
 
     return render(request, 'tavern_app/battle.html', context)
+
+
+def battle_get_updates(request, game_id, act, number):
+    battle_num = number
+    if not request.user.is_authenticated:
+        messages.error(request, 'Must be logged in to see a game.', extra_tags="alert alert-danger")
+        return redirect('login')
+    
+    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+        messages.error(request, 'Must be in the game to see it.', extra_tags="alert alert-danger")
+        return redirect('tavern_app:games')
+    
+    game = Game.objects.get(pk=game_id)
+    
+    new_url = ""
+    gamelocation = GameLocation.objects.get(game=game)
+
+    # if they are not on this battle act/num - populate new_url so front end can redirect them
+    if gamelocation.game.pk != game_id and gamelocation.act != act and gamelocation.number != battle_num or gamelocation.location_type != "battle":
+        new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
+
+    game_combat_log = CombatLog.objects.filter(game=game, act=act, battle=battle_num)
+    data_list = list(game_combat_log.values())
+
+    data = {
+        "game_combat_log": data_list,
+        "error": "",
+        "new_url": new_url,
+    }
+    return JsonResponse(data)
+
+
