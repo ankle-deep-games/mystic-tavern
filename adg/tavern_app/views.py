@@ -632,6 +632,8 @@ def battle(request, game_id, act, number):
         'request_gameuser': request_gameuser,
         'unit_turn': unit_turn,
         'is_request_user_turn': is_request_user_turn,
+        'act': act,
+        'battle_num': battle_num,
     }
 
     return render(request, 'tavern_app/battle.html', context)

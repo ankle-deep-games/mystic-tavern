@@ -352,4 +352,36 @@
     </div>
 
 </div>
+
+{% comment %} TODO move jquery cdn elsewhere {% endcomment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        // TODO dialogue box ability selection UI
+
+        // TODO POST for ability selection
+
+        setInterval(function() {
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'tavern_app:battle_get_updates' game_id=game_id act=act number=battle_num %}",
+                success: function(response) {
+                    if (response.new_url) {
+                        window.location = response.new_url;
+                        return;
+                    }
+
+                    // TODO Logic for updating FE based on results
+
+                    // TODO add error messaging
+                },
+                error: function(response) {
+                    console.log('error getting data');
+                }
+            });
+        },2000);
+    });
+</script>
+
+
 {% endblock %}
