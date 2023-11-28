@@ -376,6 +376,11 @@
                         return;
                     }
 
+                    // TODO cannot sleep within setInterval. Likely need 2 arrays.
+                    // 1 array for syncing with backend.
+                    // 2nd array for progressing through animations.
+                    // Do that sync outside this ajax set interval
+
                     // Compare the new data received from the backend with the frontend array
                     response.game_combat_log.forEach(newItem => {
                         // Check if the newItem is not present in player_combat_progress

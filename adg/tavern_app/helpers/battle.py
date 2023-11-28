@@ -96,6 +96,8 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
     resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
     resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+
+    message = f'{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO effective or not.'
     
     combat_log = CombatLog(
         game = game,
@@ -107,6 +109,7 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
         ability = ability,
         amount = calculated_damage,
         damage_or_heal_or_buff = "damage",
+        message = message,
         starting_gameusers_json = starting_gameusers_json,
         starting_gameenemies_json = starting_gameenemies_json,
         resulting_gameusers_json = resulting_gameusers_json,
@@ -138,6 +141,8 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
     resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
     resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
 
+    message = f'{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO effective or not.'
+
     combat_log = CombatLog(
         game = game,
         act=act,
@@ -148,6 +153,7 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
         ability = ability,
         amount = calculated_damage,
         damage_or_heal_or_buff = "damage",
+        message = message,
         starting_gameusers_json = starting_gameusers_json,
         starting_gameenemies_json = starting_gameenemies_json,
         resulting_gameusers_json = resulting_gameusers_json,
@@ -223,6 +229,8 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
     resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
 
+    message = f'{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()} healing them for {calculated_healing}.'
+
     combat_log = CombatLog(
         game = game,
         act=act,
@@ -233,6 +241,7 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         ability = ability,
         amount = calculated_healing,
         damage_or_heal_or_buff = "heal",
+        message = message,
         starting_gameusers_json = starting_gameusers_json,
         starting_gameenemies_json = starting_gameenemies_json,
         resulting_gameusers_json = resulting_gameusers_json,
@@ -352,6 +361,8 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
     resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
 
+    message = f'{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()}. TODO buff what stats.'
+
     combat_log = CombatLog(
         game = game,
         act=act,
@@ -362,6 +373,7 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
         ability = ability,
         amount = 0,
         damage_or_heal_or_buff = "buff",
+        message = message,
         starting_gameusers_json = starting_gameusers_json,
         starting_gameenemies_json = starting_gameenemies_json,
         resulting_gameusers_json = resulting_gameusers_json,
