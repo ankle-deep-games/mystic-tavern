@@ -18,5 +18,6 @@ urlpatterns = [
     path('games/<int:game_id>/act/<int:act>/scene/<int:number>', views.scene, name='scene'),
     path('games/<int:game_id>/act/<int:act>/scene/<int:number>/updates', views.scene_get_updates, name='scene_get_updates'),
     path('games/<int:game_id>/act/<int:act>/battle/<int:number>', views.battle, name='battle'),
+    path('games/<int:game_id>/act/<int:act>/battle/<int:number>/updates', views.battle_get_updates, name='battle_get_updates'),
     path('equipplaceholder', views.equip_placeholder, name='equipplaceholder'),
 ]
