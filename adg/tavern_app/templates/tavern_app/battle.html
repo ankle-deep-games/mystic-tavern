@@ -361,6 +361,11 @@
 
         // TODO POST for ability selection
 
+        // keep track of combat log player has seen
+        let player_combat_progress = []
+        console.log("player_combat_progress is:")
+        console.log(player_combat_progress)
+
         setInterval(function() {
             $.ajax({
                 type: 'GET',
@@ -370,6 +375,22 @@
                         window.location = response.new_url;
                         return;
                     }
+
+                    // Compare the new data received from the backend with the frontend array
+                    response.game_combat_log.forEach(newItem => {
+                        // Check if the newItem is not present in player_combat_progress
+                        if (!player_combat_progress.some(item => item.id === newItem.id)) {
+                        // Add the new item to the frontend array
+                        console.log("new item received, adding:")
+                        console.log(newItem)
+                        player_combat_progress.push(newItem);
+                        // Perform any necessary operations with the new data
+                        // For example, update UI, render new items, etc.
+                        }
+                    });
+
+                    console.log("player_combat_progress after success is:")
+                    console.log(player_combat_progress)
 
                     // TODO Logic for updating FE based on results
 
