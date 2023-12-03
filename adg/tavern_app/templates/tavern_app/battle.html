@@ -49,6 +49,11 @@
 
     <div class="my-3"></div>
 
+    <div class="container bg-secondary text-center">
+        <h6 id="pickle"></h6>
+        <p>test</p>
+    </div>
+
     <div class="container combat-container bg-secondary text-center">
         <h6 class="pt-3">Select Ability JAVASCRIPT PLACEHOLDER</h6>
         <div class="row">
@@ -358,13 +363,45 @@
 <script>
     $(document).ready(function() {
         // TODO dialogue box ability selection UI
-
         // TODO POST for ability selection
 
-        // keep track of combat log player has seen
-        let player_combat_progress = []
-        console.log("player_combat_progress is:")
-        console.log(player_combat_progress)
+        var backendArray = []; // Array updating from the backend
+        var frontendMessagesArray = []; // Array for messages to be displayed on the frontend
+        var isDisplayingMessage = false; // Flag to control message display
+
+        var previousBackendArray = []; // To store the previous state of backendArray
+
+        // Function to update frontendMessagesArray and start displaying messages
+        function updateFrontendMessages() {
+        if (!isDisplayingMessage && frontendMessagesArray.length > 0) {
+            isDisplayingMessage = true;
+            const newEntry = frontendMessagesArray.shift(); // Get the next entry to display
+
+            // Display the message on the frontend
+            displayMessage(newEntry);
+
+            // Remove the message after 3 seconds and proceed to the next message
+            setTimeout(() => {
+                removeFrontendMessage(newEntry);
+                isDisplayingMessage = false;
+                updateFrontendMessages(); // Process next message
+            }, 3000);
+        }
+        }
+
+        // Function to display the message on the frontend
+        function displayMessage(newEntry) {
+            // Update the frontend with the message (replace this with your actual frontend update logic)
+            console.log(`Displaying message: ${newEntry.message}`);
+            $('#pickle').text(newEntry.message)
+        }
+
+        // Function to remove the displayed message from the frontend
+        function removeFrontendMessage(newEntry) {
+            // Remove the message from the frontend (replace this with your actual frontend update logic)
+            console.log(`Removing message: ${newEntry.message}`);
+            $('#pickle').text('')
+        }
 
         setInterval(function() {
             $.ajax({
@@ -376,26 +413,22 @@
                         return;
                     }
 
-                    // TODO cannot sleep within setInterval. Likely need 2 arrays.
-                    // 1 array for syncing with backend.
-                    // 2nd array for progressing through animations.
-                    // Do that sync outside this ajax set interval
+                    const updatedBackendArray = response.game_combat_log
 
-                    // Compare the new data received from the backend with the frontend array
-                    response.game_combat_log.forEach(newItem => {
-                        // Check if the newItem is not present in player_combat_progress
-                        if (!player_combat_progress.some(item => item.id === newItem.id)) {
-                        // Add the new item to the frontend array
-                        console.log("new item received, adding:")
-                        console.log(newItem)
-                        player_combat_progress.push(newItem);
-                        // Perform any necessary operations with the new data
-                        // For example, update UI, render new items, etc.
-                        }
+                    // Compare updatedBackendArray with previousBackendArray to find new entries
+                    const newEntries = updatedBackendArray.filter(entry => {
+                        return !previousBackendArray.some(prevEntry => prevEntry.id === entry.id);
                     });
 
-                    console.log("player_combat_progress after success is:")
-                    console.log(player_combat_progress)
+                    // If there are new entries, update frontendMessagesArray and start the message display process
+                    if (newEntries.length > 0) {
+                        backendArray = [...updatedBackendArray]; // Update backendArray
+                        previousBackendArray = [...updatedBackendArray]; // Update previousBackendArray
+                        
+                        frontendMessagesArray.push(...newEntries); // Update frontendMessagesArray with new entries
+                        updateFrontendMessages(); // Start displaying new messages
+                    }
+
 
                     // TODO Logic for updating FE based on results
 
@@ -405,6 +438,8 @@
                     console.log('error getting data');
                 }
             });
+
+            
         },2000);
     });
 </script>
