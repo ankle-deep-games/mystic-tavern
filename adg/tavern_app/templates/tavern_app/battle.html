@@ -9,9 +9,7 @@
         {% for gameenemy in gameenemies %}
         <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="enemy-{{gameenemy.pk}}">
             <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
-            <div class="card-img-overlay p-2">
-                <h6 class="card-title">{{ gameenemy.name }}</h6>
-            </div>
+            <h6 class="card-title pt-2">{{ gameenemy.name }}</h6>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="enemy-hp-bar">
                     <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="enemy-hp-nums">{{ gameenemy.enemy.start_hp }} / {{ gameenemy.enemy.start_hp }}</div>
@@ -29,9 +27,7 @@
         {% for gameuser in gameusers %}
         <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="player-{{gameuser.pk}}">
             <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
-            <div class="card-img-overlay p-2">
-                <h6 class="card-title">{{ gameuser.name }}</h6>
-            </div>
+            <h6 class="card-title pt-2">{{ gameuser.name }}</h6>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="player-hp-bar">
                     <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-hp-nums">{{ gameuser.current_max_hp }} / {{ gameuser.current_max_hp }}</div>
