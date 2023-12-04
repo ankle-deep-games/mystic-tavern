@@ -141,3 +141,8 @@ button.bg-primary:focus {
 a.text-primary:hover, a.text-primary:focus {
     color: #8f5ab1 !important;
 }
+
+/* Battle */
+.battle-text-container {
+    height: 150px;
+}

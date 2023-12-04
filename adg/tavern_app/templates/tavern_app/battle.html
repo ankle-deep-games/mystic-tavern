@@ -49,49 +49,11 @@
 
     <div class="my-3"></div>
 
-    <div class="container bg-secondary text-center">
-        <h6 id="pickle"></h6>
-        <p>test</p>
-    </div>
-
-    <div class="container combat-container bg-secondary text-center">
-        <h6 class="pt-3">Select Ability JAVASCRIPT PLACEHOLDER</h6>
-        <div class="row">
-            <div class="col py-3">
-                {{request_gameuser.ability_1.name}}
-            </div>
-            <div class="col py-3">
-                {{request_gameuser.ability_2.name}}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col py-3">
-                {{request_gameuser.ability_3.name}}
-            </div>
-            <div class="col py-3">
-                {{request_gameuser.ability_4.name}}
-            </div>
-        </div>
+    <div class="container bg-secondary battle-text-container p-3">
+        <p class="lead" id="battle-text-container-text"></p>
     </div>
 
     <div class="my-3"></div>
-
-    {% comment %} <div class="container combat-container bg-secondary text-center">
-        <h6 class="py-3">Choose Target</h6>
-        <div class="row">
-            {% for gameenemy in gameenemies %}
-            <div class="col py-3">
-                {{gameenemy.name}}
-            </div>
-            {% endfor %}
-        </div>
-        <div class="row">
-            <div class="col py-3">
-                {{request_gameuser.ability_4.name}} - {{request_gameuser.ability_4.description}}
-            </div>
-        </div>
-    </div> {% endcomment %}
-
 
     <div class="row my-2 w-75 mx-auto">
 
@@ -366,95 +328,89 @@
         // TODO POST for ability selection
 
         var backendArray = []; // Array updating from the backend
-        var frontendMessagesArray = []; // Array for messages to be displayed on the frontend
+        var previousBackendArray = []; // To store the previous state of backendArray
+        var frontendArray = []; // Array for messages to be displayed on the frontend
         var isDisplayingMessage = false; // Flag to control message display
 
-        var previousBackendArray = []; // To store the previous state of backendArray
+        // Function  to update frontendArray and start displaying messages and HP/MP changes
+        function updateFrontend() {
+            if (!isDisplayingMessage && frontendArray.length > 0) {
+                isDisplayingMessage = true;
+                const newEntry = frontendArray.shift(); // Get the next entry to display
 
-        // Function to update frontendMessagesArray and start displaying messages
-        function updateFrontendMessages() {
-        if (!isDisplayingMessage && frontendMessagesArray.length > 0) {
-            isDisplayingMessage = true;
-            const newEntry = frontendMessagesArray.shift(); // Get the next entry to display
+                // Display the message and update HP/MP on the frontend
+                displayMessageAndStatChanges(newEntry);
 
-            // Display the message on the frontend
-            displayMessage(newEntry);
-
-            // Remove the message after 3 seconds and proceed to the next message
-            setTimeout(() => {
-                removeFrontendMessage(newEntry);
-                isDisplayingMessage = false;
-                updateFrontendMessages(); // Process next message
-            }, 3000);
-        }
+                // Remove the message after 3 seconds and proceed to the next message
+                setTimeout(() => {
+                    removeFrontendMessage(newEntry);
+                    isDisplayingMessage = false;
+                    updateFrontend(); // Process next message
+                }, 3000);
+            }
         }
 
-        // Function to display the message on the frontend
-        function displayMessage(newEntry) {
-            // Update the frontend with the message (replace this with your actual frontend update logic)
-            
-            console.log(`Displaying message: ${newEntry.message}`);
-            $('#pickle').text(newEntry.message)
+        // Function to display the message and update HP/MP on the frontend
+        function displayMessageAndStatChanges(newEntry) {          
+            $('#battle-text-container-text').text(newEntry.message)
 
             newEntry.resulting_gameenemies_json.forEach(enemy => {
                 const enemyId = enemy.id;
-                const currentHP = enemy.current_hp;
-                const maxHP = enemy.enemy__start_hp;
-                const hpPercent = currentHP/maxHP;
-                const percentageValue = (hpPercent * 100).toFixed(0) + '%';
+                const enemyCurrentHp = enemy.current_hp;
+                const enemyMaxHp = enemy.enemy__start_hp;
+                const enemyHpPercent = enemyCurrentHp/enemyMaxHp;
+                const enemyHpPercentageString = (enemyHpPercent * 100).toFixed(0) + '%';
               
                 const enemyDiv = document.getElementById(`enemy-${enemyId}`);
                 if (enemyDiv) {
-                  const hpSpan = enemyDiv.querySelector('#enemy-hp-nums');
-                  if (hpSpan) {
-                    hpSpan.textContent = `${currentHP} / ${maxHP}`; // Update the HP value
-                  }
+                    const enemyHpEl = enemyDiv.querySelector('#enemy-hp-nums');
+                    if (enemyHpEl) {
+                        enemyHpEl.textContent = `${enemyCurrentHp} / ${enemyMaxHp}`; // Update the HP values
+                    }
 
-                  const hpBar = enemyDiv.querySelector('#enemy-hp-bar');
-                  if (hpBar) {
-                    hpBar.style.width = percentageValue; // Update the HP value
-                  }
+                    const enemyHpBar = enemyDiv.querySelector('#enemy-hp-bar');
+                    if (enemyHpBar) {
+                        enemyHpBar.style.width = enemyHpPercentageString; // Update the HP percentage bar
+                    }
                 }
             });
 
             newEntry.resulting_gameusers_json.forEach(gameuser => {
                 const gameuserId = gameuser.id;
-                const currentHP = gameuser.current_hp;
-                const maxHP = gameuser.current_max_hp;
-                const currentMP = gameuser.current_mp;
-                const maxMP = gameuser.current_max_mp;
-                const hpPercent = currentHP/maxHP;
-                const HPpercentageValue = (hpPercent * 100).toFixed(0) + '%';
-                const mpPercent = currentMP/maxMP;
-                const MPpercentageValue = (mpPercent * 100).toFixed(0) + '%';
+                const gameuserCurrentHp = gameuser.current_hp;
+                const gameuserMaxHp = gameuser.current_max_hp;
+                const gameuserCurrentMp = gameuser.current_mp;
+                const gameuserMaxMp = gameuser.current_max_mp;
+                const gameuserHpPercent = gameuserCurrentHp/gameuserMaxHp;
+                const gameuserHpPercentageString = (gameuserHpPercent * 100).toFixed(0) + '%';
+                const gameuserMpPercent = gameuserCurrentMp/gameuserMaxMp;
+                const gameuserMpPercentageString = (gameuserMpPercent * 100).toFixed(0) + '%';
               
-                const playerDiv = document.getElementById(`player-${gameuserId}`);
-                if (playerDiv) {
-                  const hpSpan = playerDiv.querySelector('#player-hp-nums');
-                  if (hpSpan) {
-                    hpSpan.textContent = `${currentHP} / ${maxHP}`; // Update the HP value
-                  }
-                  const mpSpan = playerDiv.querySelector('#player-mp-nums');
-                  if (mpSpan) {
-                    mpSpan.textContent = `${currentMP} / ${maxMP}`; // Update the MP value
-                  }
-                  const playerHPBar = playerDiv.querySelector('#player-hp-bar');
-                  if (playerHPBar) {
-                    playerHPBar.style.width = HPpercentageValue; // Update the HP value
-                  }
-                  const playerMPBar = playerDiv.querySelector('#player-mp-bar');
-                  if (playerMPBar) {
-                    playerMPBar.style.width = MPpercentageValue; // Update the MP value
-                  }
+                const gameuserDiv = document.getElementById(`player-${gameuserId}`);
+                if (gameuserDiv) {
+                    const gameuserHpEl = gameuserDiv.querySelector('#player-hp-nums');
+                    if (gameuserHpEl) {
+                        gameuserHpEl.textContent = `${gameuserCurrentHp} / ${gameuserMaxHp}`; // Update the HP values
+                    }
+                    const gameuserMpEl = gameuserDiv.querySelector('#player-mp-nums');
+                    if (gameuserMpEl) {
+                        gameuserMpEl.textContent = `${gameuserCurrentMp} / ${gameuserMaxMp}`; // Update the MP values
+                    }
+                    const gameuserHpBar = gameuserDiv.querySelector('#player-hp-bar');
+                    if (gameuserHpBar) {
+                        gameuserHpBar.style.width = gameuserHpPercentageString; // Update the HP percentage bar
+                    }
+                    const gameuserMpBar = gameuserDiv.querySelector('#player-mp-bar');
+                    if (gameuserMpBar) {
+                        gameuserMpBar.style.width = gameuserMpPercentageString; // Update the MP percentage bar
+                    }
                 }
             });
         }
 
         // Function to remove the displayed message from the frontend
         function removeFrontendMessage(newEntry) {
-            // Remove the message from the frontend (replace this with your actual frontend update logic)
-            console.log(`Removing message: ${newEntry.message}`);
-            $('#pickle').text('')
+            $('#battle-text-container-text').text('')
         }
 
         setInterval(function() {
@@ -474,19 +430,14 @@
                         return !previousBackendArray.some(prevEntry => prevEntry.id === entry.id);
                     });
 
-                    // If there are new entries, update frontendMessagesArray and start the message display process
+                    // If there are new entries, update frontendArray and start the message display process
                     if (newEntries.length > 0) {
                         backendArray = [...updatedBackendArray]; // Update backendArray
                         previousBackendArray = [...updatedBackendArray]; // Update previousBackendArray
                         
-                        frontendMessagesArray.push(...newEntries); // Update frontendMessagesArray with new entries
-                        updateFrontendMessages(); // Start displaying new messages
+                        frontendArray.push(...newEntries); // Update frontendArray with new entries
+                        updateFrontend(); // Start displaying new messages
                     }
-
-                    // TODO include the calculated percentages from the backend in the json payloads
-
-
-                    // TODO Logic for updating FE based on results
 
                     // TODO add error messaging
                 },
@@ -495,7 +446,6 @@
                 }
             });
 
-            
         },2000);
     });
 </script>
