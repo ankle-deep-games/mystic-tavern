@@ -7,14 +7,12 @@
     <div class="row">
         <div class="container d-flex justify-content-center">
         {% for gameenemy in gameenemies %}
-        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;">
+        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="enemy-{{gameenemy.pk}}">
             <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
-            <div class="card-img-overlay p-2">
-                <h6 class="card-title">{{ gameenemy.name }}</h6>
-            </div>
+            <h6 class="card-title pt-2">{{ gameenemy.name }}</h6>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="enemy-hp-bar">
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="enemy-hp-nums">{{ gameenemy.enemy.start_hp }} / {{ gameenemy.enemy.start_hp }}</div>
                 </div>
             </div>
         </div>
@@ -27,19 +25,17 @@
     <div class="row">
         <div class="container d-flex justify-content-center">
         {% for gameuser in gameusers %}
-        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;">
+        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="player-{{gameuser.pk}}">
             <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
-            <div class="card-img-overlay p-2">
-                <h6 class="card-title">{{ gameuser.name }}</h6>
-            </div>
+            <h6 class="card-title pt-2">{{ gameuser.name }}</h6>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="player-hp-bar">
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-hp-nums">{{ gameuser.current_max_hp }} / {{ gameuser.current_max_hp }}</div>
                 </div>
             </div>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}</div>
+                <div class="progress-bar bg-info" role="progressbar" style="width: 100%" id="player-mp-bar">
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-mp-nums">{{ gameuser.current_max_mp }} / {{ gameuser.current_max_mp }}</div>
                 </div>
             </div>
         </div>
@@ -49,44 +45,11 @@
 
     <div class="my-3"></div>
 
-    <div class="container combat-container bg-secondary text-center">
-        <h6 class="pt-3">Select Ability JAVASCRIPT PLACEHOLDER</h6>
-        <div class="row">
-            <div class="col py-3">
-                {{request_gameuser.ability_1.name}}
-            </div>
-            <div class="col py-3">
-                {{request_gameuser.ability_2.name}}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col py-3">
-                {{request_gameuser.ability_3.name}}
-            </div>
-            <div class="col py-3">
-                {{request_gameuser.ability_4.name}}
-            </div>
-        </div>
+    <div class="container bg-secondary battle-text-container p-3">
+        <p class="lead" id="battle-text-container-text"></p>
     </div>
 
     <div class="my-3"></div>
-
-    {% comment %} <div class="container combat-container bg-secondary text-center">
-        <h6 class="py-3">Choose Target</h6>
-        <div class="row">
-            {% for gameenemy in gameenemies %}
-            <div class="col py-3">
-                {{gameenemy.name}}
-            </div>
-            {% endfor %}
-        </div>
-        <div class="row">
-            <div class="col py-3">
-                {{request_gameuser.ability_4.name}} - {{request_gameuser.ability_4.description}}
-            </div>
-        </div>
-    </div> {% endcomment %}
-
 
     <div class="row my-2 w-75 mx-auto">
 
@@ -357,14 +320,99 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function() {
-        // TODO dialogue box ability selection UI
 
+        // TODO when initially loading check to see how far in the battle it is.
+        // consider skipping ahead to the latest 10 moves to catch players up.
+        // that would avoid someone having to refresh and seeing 25 moves to get to current state.
+
+        // TODO dialogue box ability selection UI
         // TODO POST for ability selection
 
-        // keep track of combat log player has seen
-        let player_combat_progress = []
-        console.log("player_combat_progress is:")
-        console.log(player_combat_progress)
+        var backendArray = []; // Array updating from the backend
+        var previousBackendArray = []; // To store the previous state of backendArray
+        var frontendArray = []; // Array for messages to be displayed on the frontend
+        var isDisplayingMessage = false; // Flag to control message display
+
+        // Function  to update frontendArray and start displaying messages and HP/MP changes
+        function updateFrontend() {
+            if (!isDisplayingMessage && frontendArray.length > 0) {
+                isDisplayingMessage = true;
+                const newEntry = frontendArray.shift(); // Get the next entry to display
+
+                // Display the message and update HP/MP on the frontend
+                displayMessageAndStatChanges(newEntry);
+
+                // Remove the message after 3 seconds and proceed to the next message
+                setTimeout(() => {
+                    removeFrontendMessage(newEntry);
+                    isDisplayingMessage = false;
+                    updateFrontend(); // Process next message
+                }, 3000);
+            }
+        }
+
+        // Function to display the message and update HP/MP on the frontend
+        function displayMessageAndStatChanges(newEntry) {          
+            $('#battle-text-container-text').text(newEntry.message)
+
+            newEntry.resulting_gameenemies_json.forEach(enemy => {
+                const enemyId = enemy.id;
+                const enemyCurrentHp = enemy.current_hp;
+                const enemyMaxHp = enemy.enemy__start_hp;
+                const enemyHpPercent = enemyCurrentHp/enemyMaxHp;
+                const enemyHpPercentageString = (enemyHpPercent * 100).toFixed(0) + '%';
+              
+                const enemyDiv = document.getElementById(`enemy-${enemyId}`);
+                if (enemyDiv) {
+                    const enemyHpEl = enemyDiv.querySelector('#enemy-hp-nums');
+                    if (enemyHpEl) {
+                        enemyHpEl.textContent = `${enemyCurrentHp} / ${enemyMaxHp}`; // Update the HP values
+                    }
+
+                    const enemyHpBar = enemyDiv.querySelector('#enemy-hp-bar');
+                    if (enemyHpBar) {
+                        enemyHpBar.style.width = enemyHpPercentageString; // Update the HP percentage bar
+                    }
+                }
+            });
+
+            newEntry.resulting_gameusers_json.forEach(gameuser => {
+                const gameuserId = gameuser.id;
+                const gameuserCurrentHp = gameuser.current_hp;
+                const gameuserMaxHp = gameuser.current_max_hp;
+                const gameuserCurrentMp = gameuser.current_mp;
+                const gameuserMaxMp = gameuser.current_max_mp;
+                const gameuserHpPercent = gameuserCurrentHp/gameuserMaxHp;
+                const gameuserHpPercentageString = (gameuserHpPercent * 100).toFixed(0) + '%';
+                const gameuserMpPercent = gameuserCurrentMp/gameuserMaxMp;
+                const gameuserMpPercentageString = (gameuserMpPercent * 100).toFixed(0) + '%';
+              
+                const gameuserDiv = document.getElementById(`player-${gameuserId}`);
+                if (gameuserDiv) {
+                    const gameuserHpEl = gameuserDiv.querySelector('#player-hp-nums');
+                    if (gameuserHpEl) {
+                        gameuserHpEl.textContent = `${gameuserCurrentHp} / ${gameuserMaxHp}`; // Update the HP values
+                    }
+                    const gameuserMpEl = gameuserDiv.querySelector('#player-mp-nums');
+                    if (gameuserMpEl) {
+                        gameuserMpEl.textContent = `${gameuserCurrentMp} / ${gameuserMaxMp}`; // Update the MP values
+                    }
+                    const gameuserHpBar = gameuserDiv.querySelector('#player-hp-bar');
+                    if (gameuserHpBar) {
+                        gameuserHpBar.style.width = gameuserHpPercentageString; // Update the HP percentage bar
+                    }
+                    const gameuserMpBar = gameuserDiv.querySelector('#player-mp-bar');
+                    if (gameuserMpBar) {
+                        gameuserMpBar.style.width = gameuserMpPercentageString; // Update the MP percentage bar
+                    }
+                }
+            });
+        }
+
+        // Function to remove the displayed message from the frontend
+        function removeFrontendMessage(newEntry) {
+            $('#battle-text-container-text').text('')
+        }
 
         setInterval(function() {
             $.ajax({
@@ -376,23 +424,21 @@
                         return;
                     }
 
-                    // Compare the new data received from the backend with the frontend array
-                    response.game_combat_log.forEach(newItem => {
-                        // Check if the newItem is not present in player_combat_progress
-                        if (!player_combat_progress.some(item => item.id === newItem.id)) {
-                        // Add the new item to the frontend array
-                        console.log("new item received, adding:")
-                        console.log(newItem)
-                        player_combat_progress.push(newItem);
-                        // Perform any necessary operations with the new data
-                        // For example, update UI, render new items, etc.
-                        }
+                    const updatedBackendArray = response.game_combat_log
+
+                    // Compare updatedBackendArray with previousBackendArray to find new entries
+                    const newEntries = updatedBackendArray.filter(entry => {
+                        return !previousBackendArray.some(prevEntry => prevEntry.id === entry.id);
                     });
 
-                    console.log("player_combat_progress after success is:")
-                    console.log(player_combat_progress)
-
-                    // TODO Logic for updating FE based on results
+                    // If there are new entries, update frontendArray and start the message display process
+                    if (newEntries.length > 0) {
+                        backendArray = [...updatedBackendArray]; // Update backendArray
+                        previousBackendArray = [...updatedBackendArray]; // Update previousBackendArray
+                        
+                        frontendArray.push(...newEntries); // Update frontendArray with new entries
+                        updateFrontend(); // Start displaying new messages
+                    }
 
                     // TODO add error messaging
                 },
@@ -400,6 +446,7 @@
                     console.log('error getting data');
                 }
             });
+
         },2000);
     });
 </script>
