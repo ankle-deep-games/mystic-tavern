@@ -7,14 +7,14 @@
     <div class="row">
         <div class="container d-flex justify-content-center">
         {% for gameenemy in gameenemies %}
-        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;">
+        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="enemy-{{gameenemy.pk}}">
             <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
             <div class="card-img-overlay p-2">
                 <h6 class="card-title">{{ gameenemy.name }}</h6>
             </div>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{gameenemy.hp_percentage}}%">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameenemy.current_hp }} / {{ gameenemy.enemy.start_hp }}</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="enemy-hp-bar">
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="enemy-hp-nums">{{ gameenemy.enemy.start_hp }} / {{ gameenemy.enemy.start_hp }}</div>
                 </div>
             </div>
         </div>
@@ -27,19 +27,19 @@
     <div class="row">
         <div class="container d-flex justify-content-center">
         {% for gameuser in gameusers %}
-        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;">
+        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="player-{{gameuser.pk}}">
             <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
             <div class="card-img-overlay p-2">
                 <h6 class="card-title">{{ gameuser.name }}</h6>
             </div>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{gameuser.hp_percentage}}%">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameuser.current_hp }} / {{ gameuser.current_max_hp }}</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="player-hp-bar">
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-hp-nums">{{ gameuser.current_max_hp }} / {{ gameuser.current_max_hp }}</div>
                 </div>
             </div>
             <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-info" role="progressbar" style="width: {{gameuser.mp_percentage}}%">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;">{{ gameuser.current_mp }} / {{ gameuser.current_max_mp }}</div>
+                <div class="progress-bar bg-info" role="progressbar" style="width: 100%" id="player-mp-bar">
+                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-mp-nums">{{ gameuser.current_max_mp }} / {{ gameuser.current_max_mp }}</div>
                 </div>
             </div>
         </div>
@@ -392,8 +392,62 @@
         // Function to display the message on the frontend
         function displayMessage(newEntry) {
             // Update the frontend with the message (replace this with your actual frontend update logic)
+            
             console.log(`Displaying message: ${newEntry.message}`);
             $('#pickle').text(newEntry.message)
+
+            newEntry.resulting_gameenemies_json.forEach(enemy => {
+                const enemyId = enemy.id;
+                const currentHP = enemy.current_hp;
+                const maxHP = enemy.enemy__start_hp;
+                const hpPercent = currentHP/maxHP;
+                const percentageValue = (hpPercent * 100).toFixed(0) + '%';
+              
+                const enemyDiv = document.getElementById(`enemy-${enemyId}`);
+                if (enemyDiv) {
+                  const hpSpan = enemyDiv.querySelector('#enemy-hp-nums');
+                  if (hpSpan) {
+                    hpSpan.textContent = `${currentHP} / ${maxHP}`; // Update the HP value
+                  }
+
+                  const hpBar = enemyDiv.querySelector('#enemy-hp-bar');
+                  if (hpBar) {
+                    hpBar.style.width = percentageValue; // Update the HP value
+                  }
+                }
+            });
+
+            newEntry.resulting_gameusers_json.forEach(gameuser => {
+                const gameuserId = gameuser.id;
+                const currentHP = gameuser.current_hp;
+                const maxHP = gameuser.current_max_hp;
+                const currentMP = gameuser.current_mp;
+                const maxMP = gameuser.current_max_mp;
+                const hpPercent = currentHP/maxHP;
+                const HPpercentageValue = (hpPercent * 100).toFixed(0) + '%';
+                const mpPercent = currentMP/maxMP;
+                const MPpercentageValue = (mpPercent * 100).toFixed(0) + '%';
+              
+                const playerDiv = document.getElementById(`player-${gameuserId}`);
+                if (playerDiv) {
+                  const hpSpan = playerDiv.querySelector('#player-hp-nums');
+                  if (hpSpan) {
+                    hpSpan.textContent = `${currentHP} / ${maxHP}`; // Update the HP value
+                  }
+                  const mpSpan = playerDiv.querySelector('#player-mp-nums');
+                  if (mpSpan) {
+                    mpSpan.textContent = `${currentMP} / ${maxMP}`; // Update the MP value
+                  }
+                  const playerHPBar = playerDiv.querySelector('#player-hp-bar');
+                  if (playerHPBar) {
+                    playerHPBar.style.width = HPpercentageValue; // Update the HP value
+                  }
+                  const playerMPBar = playerDiv.querySelector('#player-mp-bar');
+                  if (playerMPBar) {
+                    playerMPBar.style.width = MPpercentageValue; // Update the MP value
+                  }
+                }
+            });
         }
 
         // Function to remove the displayed message from the frontend
@@ -428,6 +482,8 @@
                         frontendMessagesArray.push(...newEntries); // Update frontendMessagesArray with new entries
                         updateFrontendMessages(); // Start displaying new messages
                     }
+
+                    // TODO include the calculated percentages from the backend in the json payloads
 
 
                     // TODO Logic for updating FE based on results
