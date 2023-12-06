@@ -336,7 +336,7 @@
         var gameuser_turn_name = '';
         var is_request_user_turn = false;
 
-        // Function  to update frontendArray and start displaying messages and HP/MP changes
+        // Function to update frontendArray and start displaying messages and HP/MP changes
         function updateFrontend() {
             if (!isDisplayingMessage && frontendArray.length > 0) {
                 isDisplayingMessage = true;
@@ -347,7 +347,7 @@
 
                 // Remove the message after 3 seconds and proceed to the next message
                 setTimeout(() => {
-                    removeFrontendMessage(newEntry);
+                    removeFrontendMessage();
                     isDisplayingMessage = false;
                     updateFrontend(); // Process next message
                 }, 1000); // TODO change back to longer time.
@@ -419,7 +419,7 @@
         }
 
         // Function to remove the displayed message from the frontend
-        function removeFrontendMessage(newEntry) {
+        function removeFrontendMessage() {
             $('#battle-text-container-text').text('')
         }
 
