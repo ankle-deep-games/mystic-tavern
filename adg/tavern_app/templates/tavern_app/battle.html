@@ -332,8 +332,11 @@
         var previousBackendArray = []; // To store the previous state of backendArray
         var frontendArray = []; // Array for messages to be displayed on the frontend
         var isDisplayingMessage = false; // Flag to control message display
+        
+        var gameuser_turn_name = '';
+        var is_request_user_turn = false;
 
-        // Function  to update frontendArray and start displaying messages and HP/MP changes
+        // Function to update frontendArray and start displaying messages and HP/MP changes
         function updateFrontend() {
             if (!isDisplayingMessage && frontendArray.length > 0) {
                 isDisplayingMessage = true;
@@ -344,10 +347,16 @@
 
                 // Remove the message after 3 seconds and proceed to the next message
                 setTimeout(() => {
-                    removeFrontendMessage(newEntry);
+                    removeFrontendMessage();
                     isDisplayingMessage = false;
                     updateFrontend(); // Process next message
-                }, 3000);
+                }, 1000); // TODO change back to longer time.
+            } else {
+                if (is_request_user_turn) {
+                    $('#battle-text-container-text').text(`${gameuser_turn_name}, it is your turn. JP TODO give actions.`);
+                } else {
+                    $('#battle-text-container-text').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                }
             }
         }
 
@@ -410,7 +419,7 @@
         }
 
         // Function to remove the displayed message from the frontend
-        function removeFrontendMessage(newEntry) {
+        function removeFrontendMessage() {
             $('#battle-text-container-text').text('')
         }
 
@@ -439,6 +448,9 @@
                         frontendArray.push(...newEntries); // Update frontendArray with new entries
                         updateFrontend(); // Start displaying new messages
                     }
+
+                    gameuser_turn_name = response.gameuser_turn_name;
+                    is_request_user_turn = response.is_request_user_turn;
 
                     // TODO add error messaging
                 },

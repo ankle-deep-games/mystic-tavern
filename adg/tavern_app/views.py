@@ -661,8 +661,23 @@ def battle_get_updates(request, game_id, act, number):
     game_combat_log = CombatLog.objects.filter(game=game, act=act, battle=battle_num)
     data_list = list(game_combat_log.values())
 
+    gameuser_turn_queryset = GameTurnOrder.objects.filter(game=game, is_their_turn=True, gameuser__isnull=False)
+    gameuser_turn_result = gameuser_turn_queryset.first()
+
+    request_gameuser = GameUser.objects.get(game=game, user=request.user)
+    
+    if gameuser_turn_result:
+        gameuser_turn_name = gameuser_turn_result.gameuser.name()
+        is_request_user_turn = gameuser_turn_result.gameuser == request_gameuser
+    else:
+        gameuser_turn_name = ''
+        is_request_user_turn = False
+
+
     data = {
         "game_combat_log": data_list,
+        "gameuser_turn_name": gameuser_turn_name,
+        "is_request_user_turn": is_request_user_turn,
         "error": "",
         "new_url": new_url,
     }
