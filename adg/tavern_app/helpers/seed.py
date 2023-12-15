@@ -556,7 +556,7 @@ def seed_data():
     )
     enemy3 = Enemy(
         name="Arachnid Sovereign",
-        image="drunk-man-2.png",
+        image="arachnid-sovereign.png",
         type=type_forest,
         start_hp=200,
         start_attack=60,
@@ -571,7 +571,7 @@ def seed_data():
     )
     enemy4 = Enemy(
         name="Arachnid Minion",
-        image="drunk-man-2.png",
+        image="arachnid-minion.png",
         type=type_forest,
         start_hp=80,
         start_attack=40,
@@ -586,7 +586,7 @@ def seed_data():
     )
     enemy5 = Enemy(
         name="Primordial Anomaly",
-        image="creature.png",
+        image="primordial-anomaly.png",
         type=type_forest,
         start_hp=300,
         start_attack=100,
@@ -601,7 +601,7 @@ def seed_data():
     )
     enemy6 = Enemy(
         name="Luminar Sentinel",
-        image="drunk-man-2.png",
+        image="luminar-sentinel.png",
         type=type_light,
         start_hp=100,
         start_attack=50,
@@ -616,7 +616,7 @@ def seed_data():
     )
     enemy7 = Enemy(
         name="Umbral Harbinger",
-        image="drunk-man-2.png",
+        image="umbral-harbinger.png",
         type=type_dark,
         start_hp=100,
         start_attack=50,
@@ -631,7 +631,7 @@ def seed_data():
     )
     enemy8 = Enemy(
         name="Granite Warden",
-        image="drunk-man-2.png",
+        image="granite-warden.png",
         type=type_stone,
         start_hp=100,
         start_attack=75,
@@ -646,7 +646,7 @@ def seed_data():
     )
     enemy9 = Enemy(
         name="Sylvan Enchanter",
-        image="drunk-man-2.png",
+        image="sylvan-enchanter.png",
         type=type_forest,
         start_hp=100,
         start_attack=75,
@@ -661,7 +661,7 @@ def seed_data():
     )
     enemy10 = Enemy(
         name="Galewing Shaman",
-        image="drunk-man-2.png",
+        image="galewing-shaman.png",
         type=type_wind,
         start_hp=100,
         start_attack=50,
