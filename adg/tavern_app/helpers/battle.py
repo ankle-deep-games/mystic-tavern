@@ -1,17 +1,28 @@
 from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
 import random
 
+
 def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
         for gameuser in gameusers:
             if gameuser.current_hp > 0:
-                gu_turn_order = GameTurnOrder(game=game, gameuser=gameuser, is_their_turn=False, accum_speed=gameuser.current_speed)
+                gu_turn_order = GameTurnOrder(
+                    game=game,
+                    gameuser=gameuser,
+                    is_their_turn=False,
+                    accum_speed=gameuser.current_speed,
+                )
                 gu_turn_order.save()
         for gameenemy in gameenemies:
             if gameenemy.current_hp > 0:
-                ge_turn_order = GameTurnOrder(game=game, gameenemy=gameenemy, is_their_turn=False, accum_speed=gameenemy.current_speed)
+                ge_turn_order = GameTurnOrder(
+                    game=game,
+                    gameenemy=gameenemy,
+                    is_their_turn=False,
+                    accum_speed=gameenemy.current_speed,
+                )
                 ge_turn_order.save()
         game_turn_order = GameTurnOrder.objects.filter(game=game)
 
@@ -39,7 +50,6 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
 
     # if not someone's turn we need to run calculations to make it someone's turn
     if is_someones_turn == False:
-
         # nobody over 100 so we don't know who to give turn. increase all units accum_speed by current_speed until at least 1 is over 100.
         while is_someone_over_100 == False:
             for unit in game_turn_order:
@@ -51,7 +61,7 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
                     unit.accum_speed = unit.accum_speed + unit.gameenemy.current_speed
                     if unit.accum_speed >= 100:
                         is_someone_over_100 = True
-        
+
         # now is_someone_over_100 is True
         for unit in game_turn_order:
             # only update reduce the speed and assign turn to 1 unit. save the rest
@@ -63,22 +73,46 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
                     unit.save()
             unit.save()
 
-def calc_is_request_user_turn(request_gameuser: GameUser, unit_turn: GameTurnOrder) -> bool:
+
+def calc_is_request_user_turn(
+    request_gameuser: GameUser, unit_turn: GameTurnOrder
+) -> bool:
     if unit_turn.gameuser:
         is_request_user_turn = True if unit_turn.gameuser == request_gameuser else False
     else:
         is_request_user_turn = False
     return is_request_user_turn
 
-def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int, deduct_mp: bool) -> None:
+
+def gameuser_attack_single_gameenemy_and_save(
+    game: Game,
+    gameuser: GameUser,
+    gameenemy: GameEnemy,
+    ability: Ability,
+    unit_turn: GameTurnOrder,
+    act: int,
+    battle: int,
+    deduct_mp: bool,
+) -> None:
     who_attacking = "player"
 
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    starting_gameusers_json = list(
+        starting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    starting_gameenemies_json = list(
+        starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
+    calculated_damage = calculate_damage(
+        gameuser=gameuser,
+        gameenemy=gameenemy,
+        ability=ability,
+        who_attacking=who_attacking,
+    )
 
     if deduct_mp:
         gameuser.current_mp -= ability.mp_cost
@@ -94,39 +128,64 @@ def gameuser_attack_single_gameenemy_and_save(game: Game, gameuser: GameUser, ga
 
     resulting_gameusers = GameUser.objects.filter(game=game)
     resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    resulting_gameusers_json = list(
+        resulting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    resulting_gameenemies_json = list(
+        resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    message = f'{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO effective or not.'
-    
+    message = f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO effective or not."
+
     combat_log = CombatLog(
-        game = game,
+        game=game,
         act=act,
         battle=battle,
-        gameuser = gameuser,
-        gameenemy = gameenemy,
-        player_or_enemy_took_action = who_attacking,
-        ability = ability,
-        amount = calculated_damage,
-        damage_or_heal_or_buff = "damage",
-        message = message,
-        starting_gameusers_json = starting_gameusers_json,
-        starting_gameenemies_json = starting_gameenemies_json,
-        resulting_gameusers_json = resulting_gameusers_json,
-        resulting_gameenemies_json = resulting_gameenemies_json,
-        )
+        gameuser=gameuser,
+        gameenemy=gameenemy,
+        player_or_enemy_took_action=who_attacking,
+        ability=ability,
+        amount=calculated_damage,
+        damage_or_heal_or_buff="damage",
+        message=message,
+        starting_gameusers_json=starting_gameusers_json,
+        starting_gameenemies_json=starting_gameenemies_json,
+        resulting_gameusers_json=resulting_gameusers_json,
+        resulting_gameenemies_json=resulting_gameenemies_json,
+    )
     combat_log.save()
 
-    
-def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int) -> None:
+
+def gameenemy_attack_single_gameuser_and_save(
+    game: Game,
+    gameuser: GameUser,
+    gameenemy: GameEnemy,
+    ability: Ability,
+    unit_turn: GameTurnOrder,
+    act: int,
+    battle: int,
+) -> None:
     who_attacking = "enemy"
 
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    starting_gameusers_json = list(
+        starting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    starting_gameenemies_json = list(
+        starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    calculated_damage = calculate_damage(gameuser=gameuser, gameenemy=gameenemy, ability=ability, who_attacking=who_attacking)
+    calculated_damage = calculate_damage(
+        gameuser=gameuser,
+        gameenemy=gameenemy,
+        ability=ability,
+        who_attacking=who_attacking,
+    )
 
     gameuser.current_hp = gameuser.current_hp - calculated_damage
     if gameuser.current_hp < 0:
@@ -138,31 +197,39 @@ def gameenemy_attack_single_gameuser_and_save(game: Game, gameuser: GameUser, ga
 
     resulting_gameusers = GameUser.objects.filter(game=game)
     resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    resulting_gameusers_json = list(
+        resulting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    resulting_gameenemies_json = list(
+        resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    message = f'{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO effective or not.'
+    message = f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO effective or not."
 
     combat_log = CombatLog(
-        game = game,
+        game=game,
         act=act,
         battle=battle,
-        gameuser = gameuser,
-        gameenemy = gameenemy,
-        player_or_enemy_took_action = who_attacking,
-        ability = ability,
-        amount = calculated_damage,
-        damage_or_heal_or_buff = "damage",
-        message = message,
-        starting_gameusers_json = starting_gameusers_json,
-        starting_gameenemies_json = starting_gameenemies_json,
-        resulting_gameusers_json = resulting_gameusers_json,
-        resulting_gameenemies_json = resulting_gameenemies_json,
-        )
+        gameuser=gameuser,
+        gameenemy=gameenemy,
+        player_or_enemy_took_action=who_attacking,
+        ability=ability,
+        amount=calculated_damage,
+        damage_or_heal_or_buff="damage",
+        message=message,
+        starting_gameusers_json=starting_gameusers_json,
+        starting_gameenemies_json=starting_gameenemies_json,
+        resulting_gameusers_json=resulting_gameusers_json,
+        resulting_gameenemies_json=resulting_gameenemies_json,
+    )
     combat_log.save()
 
 
-def calculate_damage(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str):
+def calculate_damage(
+    gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str
+):
     if who_attacking == "player":
         attacker = gameuser
         target = gameenemy
@@ -171,7 +238,7 @@ def calculate_damage(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability,
         target = gameuser
 
     # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
-    
+
     # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
 
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
@@ -185,11 +252,12 @@ def calculate_damage(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability,
     final_damage = ability.max_damage
     print("final calculated damage is: " + str(final_damage))
     return final_damage
-    
+
 
 def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
     random_ability = "ability_" + str(random.randint(1, 4))
     return getattr(gameenemy.enemy, random_ability)
+
 
 def enemey_choose_random_alive_target(gameusers) -> GameUser:
     gameuser_list = []
@@ -198,15 +266,35 @@ def enemey_choose_random_alive_target(gameusers) -> GameUser:
             gameuser_list.append(gameuser)
     return random.choice(gameuser_list)
 
-def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int, deduct_mp: bool) -> None:
+
+def gameuser_heal_single_gameuser_and_save(
+    game: Game,
+    gameuser: GameUser,
+    defensive_gameuser_target: GameUser,
+    ability: Ability,
+    unit_turn: GameTurnOrder,
+    act: int,
+    battle: int,
+    deduct_mp: bool,
+) -> None:
     who_attacking = "player"
 
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    starting_gameusers_json = list(
+        starting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    starting_gameenemies_json = list(
+        starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    calculated_healing = calculate_healing(gameuser=gameuser, defensive_gameuser_target=defensive_gameuser_target, ability=ability)
+    calculated_healing = calculate_healing(
+        gameuser=gameuser,
+        defensive_gameuser_target=defensive_gameuser_target,
+        ability=ability,
+    )
 
     if deduct_mp:
         gameuser.current_mp -= ability.mp_cost
@@ -216,7 +304,9 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     if defensive_gameuser_target == gameuser:
         defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
 
-    defensive_gameuser_target.current_hp = defensive_gameuser_target.current_hp + calculated_healing
+    defensive_gameuser_target.current_hp = (
+        defensive_gameuser_target.current_hp + calculated_healing
+    )
     if defensive_gameuser_target.current_hp > defensive_gameuser_target.current_max_hp:
         defensive_gameuser_target.current_hp = defensive_gameuser_target.current_max_hp
     defensive_gameuser_target.save()
@@ -226,31 +316,39 @@ def gameuser_heal_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     resulting_gameusers = GameUser.objects.filter(game=game)
     resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    resulting_gameusers_json = list(
+        resulting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    resulting_gameenemies_json = list(
+        resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    message = f'{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()} healing them for {calculated_healing}.'
+    message = f"{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()} healing them for {calculated_healing}."
 
     combat_log = CombatLog(
-        game = game,
+        game=game,
         act=act,
         battle=battle,
-        gameuser = gameuser,
-        defensive_gameuser_target = defensive_gameuser_target,
-        player_or_enemy_took_action = who_attacking,
-        ability = ability,
-        amount = calculated_healing,
-        damage_or_heal_or_buff = "heal",
-        message = message,
-        starting_gameusers_json = starting_gameusers_json,
-        starting_gameenemies_json = starting_gameenemies_json,
-        resulting_gameusers_json = resulting_gameusers_json,
-        resulting_gameenemies_json = resulting_gameenemies_json,
-        )
+        gameuser=gameuser,
+        defensive_gameuser_target=defensive_gameuser_target,
+        player_or_enemy_took_action=who_attacking,
+        ability=ability,
+        amount=calculated_healing,
+        damage_or_heal_or_buff="heal",
+        message=message,
+        starting_gameusers_json=starting_gameusers_json,
+        starting_gameenemies_json=starting_gameenemies_json,
+        resulting_gameusers_json=resulting_gameusers_json,
+        resulting_gameenemies_json=resulting_gameenemies_json,
+    )
     combat_log.save()
 
 
-def determine_type_strength_weakness(attack, attack_type_strength, attack_type_weakness, defense_type):
+def determine_type_strength_weakness(
+    attack, attack_type_strength, attack_type_weakness, defense_type
+):
     """
     This function will be called when an ability is chosen to determine the ability type as compared to the opponent's
     role type. If the ability is a strength against the opponent's role type, it will be X% more effective. If it is a
@@ -271,6 +369,7 @@ def determine_type_strength_weakness(attack, attack_type_strength, attack_type_w
 
     return attack
 
+
 def randomize_ability_strength():
     """
     This function will be called when an ability is chosen to randomize the strength. The float value returned should
@@ -279,7 +378,10 @@ def randomize_ability_strength():
     """
     return random.uniform(-0.1, 0.1)
 
-def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability):
+
+def calculate_healing(
+    gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
+):
     attacker = gameuser
     target = defensive_gameuser_target
 
@@ -296,13 +398,28 @@ def calculate_healing(gameuser: GameUser, defensive_gameuser_target: GameUser, a
     return final_healing
 
 
-def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability, unit_turn: GameTurnOrder, act: int, battle: int, deduct_mp: bool) -> None:
+def gameuser_buff_single_gameuser_and_save(
+    game: Game,
+    gameuser: GameUser,
+    defensive_gameuser_target: GameUser,
+    ability: Ability,
+    unit_turn: GameTurnOrder,
+    act: int,
+    battle: int,
+    deduct_mp: bool,
+) -> None:
     who_attacking = "player"
 
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    starting_gameusers_json = list(starting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    starting_gameenemies_json = list(starting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    starting_gameusers_json = list(
+        starting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    starting_gameenemies_json = list(
+        starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
     if deduct_mp:
         gameuser.current_mp -= ability.mp_cost
@@ -311,43 +428,59 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
     # if buffing themselves, requery since their MP just decreased
     if defensive_gameuser_target == gameuser:
         defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
-    
+
     if ability.buff_hp_percent > 0:
-        buffed_hp = defensive_gameuser_target.with_gear_hp + round(defensive_gameuser_target.with_gear_hp * ability.buff_hp_percent)
+        buffed_hp = defensive_gameuser_target.with_gear_hp + round(
+            defensive_gameuser_target.with_gear_hp * ability.buff_hp_percent
+        )
         if buffed_hp > defensive_gameuser_target.current_max_hp:
             hp_increase_delta = buffed_hp - defensive_gameuser_target.current_max_hp
             defensive_gameuser_target.current_max_hp = buffed_hp
             defensive_gameuser_target.current_hp += hp_increase_delta
 
     if ability.buff_mp_percent > 0:
-        buffed_mp = defensive_gameuser_target.with_gear_mp + round(defensive_gameuser_target.with_gear_mp * ability.buff_mp_percent)
+        buffed_mp = defensive_gameuser_target.with_gear_mp + round(
+            defensive_gameuser_target.with_gear_mp * ability.buff_mp_percent
+        )
         if buffed_mp > defensive_gameuser_target.current_max_mp:
             mp_increase_delta = buffed_mp - defensive_gameuser_target.current_max_mp
             defensive_gameuser_target.current_max_mp = buffed_mp
             defensive_gameuser_target.current_mp += mp_increase_delta
 
     if ability.buff_attack_percent > 0:
-        buffed_attack = defensive_gameuser_target.with_gear_attack + round(defensive_gameuser_target.with_gear_attack * ability.buff_attack_percent)
+        buffed_attack = defensive_gameuser_target.with_gear_attack + round(
+            defensive_gameuser_target.with_gear_attack * ability.buff_attack_percent
+        )
         if buffed_attack > defensive_gameuser_target.current_attack:
             defensive_gameuser_target.current_attack = buffed_attack
 
     if ability.buff_defense_percent > 0:
-        buffed_defense = defensive_gameuser_target.with_gear_defense + round(defensive_gameuser_target.with_gear_defense * ability.buff_defense_percent)
+        buffed_defense = defensive_gameuser_target.with_gear_defense + round(
+            defensive_gameuser_target.with_gear_defense * ability.buff_defense_percent
+        )
         if buffed_defense > defensive_gameuser_target.current_defense:
             defensive_gameuser_target.current_defense = buffed_defense
 
     if ability.buff_myst_attack_percent > 0:
-        buffed_myst_attack = defensive_gameuser_target.with_gear_myst_attack + round(defensive_gameuser_target.with_gear_myst_attack * ability.buff_myst_attack_percent)
+        buffed_myst_attack = defensive_gameuser_target.with_gear_myst_attack + round(
+            defensive_gameuser_target.with_gear_myst_attack
+            * ability.buff_myst_attack_percent
+        )
         if buffed_myst_attack > defensive_gameuser_target.current_myst_attack:
             defensive_gameuser_target.current_myst_attack = buffed_myst_attack
 
     if ability.buff_myst_defense_percent > 0:
-        buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(defensive_gameuser_target.with_gear_myst_defense * ability.buff_myst_defense_percent)
+        buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(
+            defensive_gameuser_target.with_gear_myst_defense
+            * ability.buff_myst_defense_percent
+        )
         if buffed_myst_defense > defensive_gameuser_target.current_myst_defense:
             defensive_gameuser_target.current_myst_defense = buffed_myst_defense
 
     if ability.buff_speed_percent > 0:
-        buffed_speed = defensive_gameuser_target.with_gear_speed + round(defensive_gameuser_target.with_gear_speed * ability.buff_speed_percent)
+        buffed_speed = defensive_gameuser_target.with_gear_speed + round(
+            defensive_gameuser_target.with_gear_speed * ability.buff_speed_percent
+        )
         if buffed_speed > defensive_gameuser_target.current_speed:
             defensive_gameuser_target.current_speed = buffed_speed
 
@@ -358,27 +491,33 @@ def gameuser_buff_single_gameuser_and_save(game: Game, gameuser: GameUser, defen
 
     resulting_gameusers = GameUser.objects.filter(game=game)
     resulting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
-    resulting_gameusers_json = list(resulting_gameusers.values('id', 'current_hp', 'current_max_hp', 'current_mp', 'current_max_mp'))
-    resulting_gameenemies_json = list(resulting_gameenemies.values('id', 'current_hp', 'enemy__start_hp'))
+    resulting_gameusers_json = list(
+        resulting_gameusers.values(
+            "id", "current_hp", "current_max_hp", "current_mp", "current_max_mp"
+        )
+    )
+    resulting_gameenemies_json = list(
+        resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
+    )
 
-    message = f'{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()}. TODO buff what stats.'
+    message = f"{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()}. TODO buff what stats."
 
     combat_log = CombatLog(
-        game = game,
+        game=game,
         act=act,
         battle=battle,
-        gameuser = gameuser,
-        defensive_gameuser_target = defensive_gameuser_target,
-        player_or_enemy_took_action = who_attacking,
-        ability = ability,
-        amount = 0,
-        damage_or_heal_or_buff = "buff",
-        message = message,
-        starting_gameusers_json = starting_gameusers_json,
-        starting_gameenemies_json = starting_gameenemies_json,
-        resulting_gameusers_json = resulting_gameusers_json,
-        resulting_gameenemies_json = resulting_gameenemies_json,
-        )
+        gameuser=gameuser,
+        defensive_gameuser_target=defensive_gameuser_target,
+        player_or_enemy_took_action=who_attacking,
+        ability=ability,
+        amount=0,
+        damage_or_heal_or_buff="buff",
+        message=message,
+        starting_gameusers_json=starting_gameusers_json,
+        starting_gameenemies_json=starting_gameenemies_json,
+        resulting_gameusers_json=resulting_gameusers_json,
+        resulting_gameenemies_json=resulting_gameenemies_json,
+    )
     combat_log.save()
 
 

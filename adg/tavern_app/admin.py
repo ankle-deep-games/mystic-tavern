@@ -1,5 +1,22 @@
 from django.contrib import admin
-from .models import Game, GameUser, Role, Gender, Weapon, Armor, Ability, Dialogue, GameDialogue, NPC, Type, Enemy, GameEnemy, CombatLog, GameLocation, GameTurnOrder
+from .models import (
+    Game,
+    GameUser,
+    Role,
+    Gender,
+    Weapon,
+    Armor,
+    Ability,
+    Dialogue,
+    GameDialogue,
+    NPC,
+    Type,
+    Enemy,
+    GameEnemy,
+    CombatLog,
+    GameLocation,
+    GameTurnOrder,
+)
 
 admin.site.register(Game)
 admin.site.register(GameUser)
