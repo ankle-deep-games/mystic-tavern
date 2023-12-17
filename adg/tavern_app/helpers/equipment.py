@@ -1,5 +1,6 @@
 from ..models import GameUser, Armor, Weapon
 
+
 def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int) -> None:
     gameuser = GameUser.objects.get(pk=gameuser.pk)
     if slot == 1:
@@ -8,14 +9,16 @@ def gameuser_equip_armor(gameuser: GameUser, armor: Armor, slot: int) -> None:
         gameuser.armor_2 = armor
     elif slot == 3:
         gameuser.armor_3 = armor
-    
+
     gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
+
 
 def gameuser_equip_weapon(gameuser: GameUser, weapon: Weapon) -> None:
     gameuser = GameUser.objects.get(pk=gameuser.pk)
     gameuser.weapon_1 = weapon
-    
+
     gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
+
 
 def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser) -> None:
     new_geared_attack = gameuser.role.start_attack
@@ -29,7 +32,7 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser) -> None:
         new_geared_myst_attack += gameuser.weapon_1.myst_attack_mod
     gameuser.with_gear_myst_attack = new_geared_myst_attack
     gameuser.current_myst_attack = new_geared_myst_attack
-    
+
     new_geared_defense = gameuser.role.start_defense
     if gameuser.armor_1:
         new_geared_defense += gameuser.armor_1.defense_mod
