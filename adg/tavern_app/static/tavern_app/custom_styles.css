@@ -146,3 +146,13 @@ a.text-primary:hover, a.text-primary:focus {
 .battle-text-container {
     height: 150px;
 }
+
+.word-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+  }
+.ability-name {
+    margin-bottom: 10px;
+    cursor: pointer;
+}

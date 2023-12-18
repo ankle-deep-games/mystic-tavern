@@ -49,6 +49,34 @@
         <p class="lead" id="battle-text-container-text"></p>
     </div>
 
+
+    <div class="container bg-secondary p-3 mt-3">
+        <div class="row justify-content-center">
+          <div class="col-12 col-sm-8 word-box" id="container">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
+                </div>
+                <div class="col-6">
+                    <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
+              </div>
+              <div class="col-6">
+                <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="container mt-4">
+        
+    </div>
+
     <div class="my-3"></div>
 
     <div class="row my-2 w-75 mx-auto">
@@ -350,10 +378,104 @@
                     removeFrontendMessage();
                     isDisplayingMessage = false;
                     updateFrontend(); // Process next message
-                }, 1000); // TODO change back to longer time.
+                }, 500); // TODO change back to longer time.
             } else {
                 if (is_request_user_turn) {
                     $('#battle-text-container-text').text(`${gameuser_turn_name}, it is your turn. JP TODO give actions.`);
+
+                      var originalContent = `<div class="row mb-3"><div class="col-6"><div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div></div>
+                      <div class="col-6">
+                          <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
+                      </div>
+                      </div>
+                      <div class="row">
+                      <div class="col-6">
+                          <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
+                      </div>
+                      <div class="col-6">
+                          <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
+                      </div>
+                      </div>`;
+
+                    // Functions to show ability description and back buttons
+                    function showAbility1Description() {
+                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_1.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        $('#container').html(replacedContent);
+                    }
+                    function showAbility2Description() {
+                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_2.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        $('#container').html(replacedContent);
+                    }
+                    function showAbility3Description() {
+                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_3.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        $('#container').html(replacedContent);
+                    }
+                    function showAbility4Description() {
+                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_4.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        $('#container').html(replacedContent);
+                    }
+                    // Reattach click events after back button
+                    function reattach4AbilityClickEvents() {
+                        $('#ability_1').click(function() {
+                            showAbility1Description();
+                        });
+                        $('#ability_2').click(function() {
+                            showAbility2Description();
+                        });
+                        $('#ability_3').click(function() {
+                            showAbility3Description();
+                        });
+                        $('#ability_4').click(function() {
+                            showAbility4Description();
+                        });
+                    }
+
+                    
+                    // Click event for ability 1
+                    $('#ability_1').click(function() {
+                        showAbility1Description();
+                
+                        // Click event for the back button
+                        $('#container').on('click', '.back-btn', function() {
+                            $('#container').html(originalContent);
+                            reattach4AbilityClickEvents();
+                        });
+                    });
+
+                    // Click event for ability 2
+                    $('#ability_2').click(function() {
+                        showAbility2Description();
+                
+                        // Click event for the back button
+                        $('#container').on('click', '.back-btn', function() {
+                            $('#container').html(originalContent);
+                            reattach4AbilityClickEvents();
+                        });
+                    });
+
+                    // Click event for ability 3
+                    $('#ability_3').click(function() {
+                        showAbility3Description();
+                
+                        // Click event for the back button
+                        $('#container').on('click', '.back-btn', function() {
+                            $('#container').html(originalContent);
+                            reattach4AbilityClickEvents();
+                        });
+                    });
+
+                    // Click event for ability 4
+                    $('#ability_4').click(function() {
+                        showAbility4Description();
+                
+                        // Click event for the back button
+                        $('#container').on('click', '.back-btn', function() {
+                            $('#container').html(originalContent);
+                            reattach4AbilityClickEvents();
+                        });
+                    });
+                      
+                      
                 } else {
                     $('#battle-text-container-text').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
                 }
