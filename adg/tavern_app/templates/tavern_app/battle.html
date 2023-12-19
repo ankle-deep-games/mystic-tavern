@@ -483,10 +483,18 @@
                         } else if (isAoe == "True" && isHeal == "True" && isBuff == "False") {
                             // AOE heal
                             $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE HEAL PLAYERS</button></form></div>`);
+                        } else if (isAoe == "False" && isHeal == "False" && isBuff == "True") {
+                            // single target buff
+                            gameUsersData.forEach(function(gameuser) {
+                                console.log(gameuser.name + ": " + gameuser.id);
+                                $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${gameuser.name}</button></form></div>`);
+                            }); 
+                        } else if (isAoe == "True" && isHeal == "False" && isBuff == "True") {
+                            // AOE buff
+                            $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE BUFF PLAYERS</button></form></div>`);
                         } else {
                             console.log('this type of ability is not coded yet')
                         }
-                        
                         
                     }
 
