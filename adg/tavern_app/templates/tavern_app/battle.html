@@ -354,6 +354,7 @@
             data: {
                 gameenemy: $(this).children("#gameenemy").val(),
                 ability: $(this).children("#ability").val(),
+                defensive_gameuser_target: $(this).children("#defensive_gameuser_target").val(),
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function(response) {
@@ -401,6 +402,15 @@
 
         var gameEnemiesData = [
             {% for obj in gameenemies %}
+                {
+                    "name": "{{ obj.name }}",
+                    "id": "{{ obj.pk }}",
+                },
+            {% endfor %}
+        ];
+
+        var gameUsersData = [
+            {% for obj in gameusers %}
                 {
                     "name": "{{ obj.name }}",
                     "id": "{{ obj.pk }}",
@@ -464,8 +474,15 @@
                         } else if (isAoe == "True" && isHeal == "False" && isBuff == "False") {
                             // AOE damage
                             $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE ALL ENEMIES</button></form></div>`);
+                        } else if (isAoe == "False" && isHeal == "True" && isBuff == "False") {
+                            // single target heal
+                            gameUsersData.forEach(function(gameuser) {
+                                console.log(gameuser.name + ": " + gameuser.id);
+                                $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${gameuser.name}</button></form></div>`);
+                            });
+                            
                         } else {
-                            console.log('this is not a single target attack or AOE attack')
+                            console.log('this type of ability is not coded yet')
                         }
                         
                         
