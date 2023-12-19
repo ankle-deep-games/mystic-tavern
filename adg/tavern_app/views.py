@@ -660,9 +660,11 @@ def battle(request, game_id, act, number):
     gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle_num)
 
     if request.method == "POST":
+        print("A COMBAT LOG EVENT WAS POSTED")
         form = CombatLogForm(request.POST)
 
         if form.is_valid():
+            print("COMBAT LOG FORM WAS VALID")
             ability = Ability.objects.get(pk=form.cleaned_data["ability"].id)
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
@@ -988,6 +990,7 @@ def battle(request, game_id, act, number):
                 "Something in combat form not valid",
                 extra_tags="alert alert-danger",
             )
+            print("ERROR: Something in COMBAT LOG FORM WAS not valid")
 
     # else render form
     else:
