@@ -46,9 +46,9 @@
     <div class="my-3"></div>
 
     <div class="container bg-secondary battle-text-container p-3">
-        <p class="lead" id="battle-text-container-text"></p>
         <div class="row justify-content-center">
-          <div class="col-12 col-sm-8" id="battle-abilities">
+            <p id="battle-combat-log-text"></p>
+            <div class="col-12 col-sm-8" id="battle-abilities">
             {% comment %} <div class="row mb-3">
                 <div class="col-6">
                     <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
@@ -399,19 +399,19 @@
 
                     // Functions to show ability description and back buttons
                     function showAbility1Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_1.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_1.description}} MP: {{request_gameuser.ability_1.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
                         $('#battle-abilities').html(replacedContent);
                     }
                     function showAbility2Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_2.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_2.description}} MP: {{request_gameuser.ability_2.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
                         $('#battle-abilities').html(replacedContent);
                     }
                     function showAbility3Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_3.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_3.description}} MP: {{request_gameuser.ability_3.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
                         $('#battle-abilities').html(replacedContent);
                     }
                     function showAbility4Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_4.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_4.description}} MP: {{request_gameuser.ability_4.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
                         $('#battle-abilities').html(replacedContent);
                     }
                     // Reattach click events after back button
@@ -476,14 +476,14 @@
                       
                       
                 } else {
-                    $('#battle-text-container-text').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                    $('#battle-combat-log-text').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
                 }
             }
         }
 
         // Function to display the message and update HP/MP on the frontend
         function displayMessageAndStatChanges(newEntry) {          
-            $('#battle-text-container-text').text(newEntry.message)
+            $('#battle-combat-log-text').text(newEntry.message)
 
             newEntry.resulting_gameenemies_json.forEach(enemy => {
                 const enemyId = enemy.id;
@@ -541,7 +541,7 @@
 
         // Function to remove the displayed message from the frontend
         function removeFrontendMessage() {
-            $('#battle-text-container-text').text('')
+            $('#battle-combat-log-text').text('')
         }
 
         setInterval(function() {
