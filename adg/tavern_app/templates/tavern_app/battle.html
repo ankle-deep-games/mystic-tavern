@@ -455,14 +455,17 @@
                     function showAbilityTargets(abilityNum, isAoe, isHeal, isBuff) {
                         console.log(`abilityNum: ${abilityNum}. isHeal: ${isHeal}. isAoe: ${isAoe}. isBuff: ${isBuff}`)
 
-                        // single target damage
                         if (isAoe == "False" && isHeal == "False" && isBuff == "False") {
+                            // single target damage
                             gameEnemiesData.forEach(function(enemy) {
                                 console.log(enemy.name + ": " + enemy.id);
                                 $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='gameenemy' id='gameenemy' value='${enemy.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${enemy.name}</button></form></div>`);
                             });
+                        } else if (isAoe == "True" && isHeal == "False" && isBuff == "False") {
+                            // AOE damage
+                            $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE ALL ENEMIES</button></form></div>`);
                         } else {
-                            console.log('this is not a single target attack')
+                            console.log('this is not a single target attack or AOE attack')
                         }
                         
                         
