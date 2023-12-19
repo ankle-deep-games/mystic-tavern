@@ -45,27 +45,10 @@
 
     <div class="my-3"></div>
 
-    <div class="container bg-secondary battle-text-container p-3">
+    <div class="container bg-secondary p-3" id="combat-ui-box">
         <div class="row justify-content-center">
-            <p id="battle-combat-log-text"></p>
-            <div class="col-12 col-sm-8" id="battle-abilities">
-            {% comment %} <div class="row mb-3">
-                <div class="col-6">
-                    <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
-                </div>
-                <div class="col-6">
-                    <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
-                </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
-              </div>
-              <div class="col-6">
-                <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
-              </div>
-            </div> {% endcomment %}
-          </div>
+            <div id="combat-ui-messages"></div>
+            <div class="col-12 col-sm-8 mt-3" id="combat-ui-abilities"></div>
         </div>
     </div>
 
@@ -105,7 +88,7 @@
                     return;
                 }
 
-                $('#battle-abilities').empty();
+                $('#combat-ui-abilities').empty();
 
                 /*
                 if (response.error) {
@@ -202,7 +185,7 @@
                             </div>
                         </div>`;
 
-                    $('#battle-abilities').html(originalContent);
+                    $('#combat-ui-abilities').html(originalContent);
 
                     function showAbilityTargets(abilityNum, isAoe, isHeal, isBuff) {
                         console.log(`abilityNum: ${abilityNum}. isHeal: ${isHeal}. isAoe: ${isAoe}. isBuff: ${isBuff}`)
@@ -211,29 +194,29 @@
                             // single target damage
                             gameEnemiesData.forEach(function(enemy) {
                                 console.log(enemy.name + ": " + enemy.id);
-                                $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='gameenemy' id='gameenemy' value='${enemy.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${enemy.name}</button></form></div>`);
+                                $("#combat-ui-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='gameenemy' id='gameenemy' value='${enemy.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${enemy.name}</button></form></div>`);
                             });
                         } else if (isAoe == "True" && isHeal == "False" && isBuff == "False") {
                             // AOE damage
-                            $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE ALL ENEMIES</button></form></div>`);
+                            $("#combat-ui-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE ALL ENEMIES</button></form></div>`);
                         } else if (isAoe == "False" && isHeal == "True" && isBuff == "False") {
                             // single target heal
                             gameUsersData.forEach(function(gameuser) {
                                 console.log(gameuser.name + ": " + gameuser.id);
-                                $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${gameuser.name}</button></form></div>`);
+                                $("#combat-ui-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${gameuser.name}</button></form></div>`);
                             }); 
                         } else if (isAoe == "True" && isHeal == "True" && isBuff == "False") {
                             // AOE heal
-                            $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE HEAL PLAYERS</button></form></div>`);
+                            $("#combat-ui-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE HEAL PLAYERS</button></form></div>`);
                         } else if (isAoe == "False" && isHeal == "False" && isBuff == "True") {
                             // single target buff
                             gameUsersData.forEach(function(gameuser) {
                                 console.log(gameuser.name + ": " + gameuser.id);
-                                $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${gameuser.name}</button></form></div>`);
+                                $("#combat-ui-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>${gameuser.name}</button></form></div>`);
                             }); 
                         } else if (isAoe == "True" && isHeal == "False" && isBuff == "True") {
                             // AOE buff
-                            $("#battle-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE BUFF PLAYERS</button></form></div>`);
+                            $("#combat-ui-abilities").append(`<div class='mt-3'><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-primary mt-3 submit-button'>AOE BUFF PLAYERS</button></form></div>`);
                         } else {
                             console.log('this type of ability is not coded yet')
                         }
@@ -243,22 +226,22 @@
                     // Functions to show ability description and back buttons
                     function showAbility1Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_1.description}} MP: {{request_gameuser.ability_1.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
-                        $('#battle-abilities').html(replacedContent);
+                        $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_1.pk}}", "{{request_gameuser.ability_1.is_aoe}}", "{{request_gameuser.ability_1.is_heal}}", "{{request_gameuser.ability_1.is_buff}}");
                     }
                     function showAbility2Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_2.description}} MP: {{request_gameuser.ability_2.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
-                        $('#battle-abilities').html(replacedContent);
+                        $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_2.pk}}", "{{request_gameuser.ability_2.is_aoe}}", "{{request_gameuser.ability_2.is_heal}}", "{{request_gameuser.ability_2.is_buff}}");
                     }
                     function showAbility3Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_3.description}} MP: {{request_gameuser.ability_3.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
-                        $('#battle-abilities').html(replacedContent);
+                        $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_3.pk}}", "{{request_gameuser.ability_3.is_aoe}}", "{{request_gameuser.ability_3.is_heal}}", "{{request_gameuser.ability_3.is_buff}}");
                     }
                     function showAbility4Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_4.description}} MP: {{request_gameuser.ability_4.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
-                        $('#battle-abilities').html(replacedContent);
+                        $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_4.pk}}", "{{request_gameuser.ability_4.is_aoe}}", "{{request_gameuser.ability_4.is_heal}}", "{{request_gameuser.ability_4.is_buff}}");
                     }
                     // Reattach click events after back button
@@ -282,8 +265,8 @@
                         showAbility1Description();
                 
                         // Click event for the back button
-                        $('#battle-abilities').on('click', '.back-btn', function() {
-                            $('#battle-abilities').html(originalContent);
+                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                            $('#combat-ui-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
@@ -293,8 +276,8 @@
                         showAbility2Description();
                 
                         // Click event for the back button
-                        $('#battle-abilities').on('click', '.back-btn', function() {
-                            $('#battle-abilities').html(originalContent);
+                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                            $('#combat-ui-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
@@ -304,8 +287,8 @@
                         showAbility3Description();
                 
                         // Click event for the back button
-                        $('#battle-abilities').on('click', '.back-btn', function() {
-                            $('#battle-abilities').html(originalContent);
+                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                            $('#combat-ui-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
@@ -315,22 +298,22 @@
                         showAbility4Description();
                 
                         // Click event for the back button
-                        $('#battle-abilities').on('click', '.back-btn', function() {
-                            $('#battle-abilities').html(originalContent);
+                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                            $('#combat-ui-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
                       
                       
                 } else {
-                    $('#battle-combat-log-text').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                    $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
                 }
             }
         }
 
         // Function to display the message and update HP/MP on the frontend
         function displayMessageAndStatChanges(newEntry) {          
-            $('#battle-combat-log-text').text(newEntry.message)
+            $('#combat-ui-messages').text(newEntry.message)
 
             newEntry.resulting_gameenemies_json.forEach(enemy => {
                 const enemyId = enemy.id;
@@ -388,7 +371,7 @@
 
         // Function to remove the displayed message from the frontend
         function removeFrontendMessage() {
-            $('#battle-combat-log-text').text('')
+            $('#combat-ui-messages').text('')
         }
 
         setInterval(function() {
