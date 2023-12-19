@@ -147,9 +147,7 @@ a.text-primary:hover, a.text-primary:focus {
     height: 150px;
 }
 
-.word-box {
-    border: 1px solid #ccc;
-    padding: 20px;
+#battle-abilities {
     text-align: center;
   }
 .ability-name {

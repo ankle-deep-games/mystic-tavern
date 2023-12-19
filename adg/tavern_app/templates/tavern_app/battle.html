@@ -47,13 +47,9 @@
 
     <div class="container bg-secondary battle-text-container p-3">
         <p class="lead" id="battle-text-container-text"></p>
-    </div>
-
-
-    <div class="container bg-secondary p-3 mt-3">
         <div class="row justify-content-center">
-          <div class="col-12 col-sm-8 word-box" id="container">
-            <div class="row mb-3">
+          <div class="col-12 col-sm-8" id="battle-abilities">
+            {% comment %} <div class="row mb-3">
                 <div class="col-6">
                     <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
                 </div>
@@ -68,14 +64,12 @@
               <div class="col-6">
                 <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
               </div>
-            </div>
+            </div> {% endcomment %}
           </div>
         </div>
-      </div>
-
-    <div class="container mt-4">
-        
     </div>
+
+    <div class="container mt-4"></div>
 
     <div class="my-3"></div>
 
@@ -381,38 +375,44 @@
                 }, 500); // TODO change back to longer time.
             } else {
                 if (is_request_user_turn) {
-                    $('#battle-text-container-text').text(`${gameuser_turn_name}, it is your turn. JP TODO give actions.`);
+                    removeFrontendMessage();
 
-                      var originalContent = `<div class="row mb-3"><div class="col-6"><div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div></div>
-                      <div class="col-6">
-                          <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
-                      </div>
-                      </div>
-                      <div class="row">
-                      <div class="col-6">
-                          <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
-                      </div>
-                      <div class="col-6">
-                          <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
-                      </div>
-                      </div>`;
+                    var originalContent = `
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
+                            </div>
+                        </div>`;
+
+                    $('#battle-abilities').html(originalContent);
 
                     // Functions to show ability description and back buttons
                     function showAbility1Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_1.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
-                        $('#container').html(replacedContent);
+                        $('#battle-abilities').html(replacedContent);
                     }
                     function showAbility2Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_2.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
-                        $('#container').html(replacedContent);
+                        $('#battle-abilities').html(replacedContent);
                     }
                     function showAbility3Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_3.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
-                        $('#container').html(replacedContent);
+                        $('#battle-abilities').html(replacedContent);
                     }
                     function showAbility4Description() {
                         var replacedContent = '<div class="row"><div class="col-12"><p>{{request_gameuser.ability_4.description}}</p><button class="btn btn-primary back-btn">Back</button></div></div>';
-                        $('#container').html(replacedContent);
+                        $('#battle-abilities').html(replacedContent);
                     }
                     // Reattach click events after back button
                     function reattach4AbilityClickEvents() {
@@ -430,14 +430,13 @@
                         });
                     }
 
-                    
                     // Click event for ability 1
                     $('#ability_1').click(function() {
                         showAbility1Description();
                 
                         // Click event for the back button
-                        $('#container').on('click', '.back-btn', function() {
-                            $('#container').html(originalContent);
+                        $('#battle-abilities').on('click', '.back-btn', function() {
+                            $('#battle-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
@@ -447,8 +446,8 @@
                         showAbility2Description();
                 
                         // Click event for the back button
-                        $('#container').on('click', '.back-btn', function() {
-                            $('#container').html(originalContent);
+                        $('#battle-abilities').on('click', '.back-btn', function() {
+                            $('#battle-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
@@ -458,8 +457,8 @@
                         showAbility3Description();
                 
                         // Click event for the back button
-                        $('#container').on('click', '.back-btn', function() {
-                            $('#container').html(originalContent);
+                        $('#battle-abilities').on('click', '.back-btn', function() {
+                            $('#battle-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
@@ -469,8 +468,8 @@
                         showAbility4Description();
                 
                         // Click event for the back button
-                        $('#container').on('click', '.back-btn', function() {
-                            $('#container').html(originalContent);
+                        $('#battle-abilities').on('click', '.back-btn', function() {
+                            $('#battle-abilities').html(originalContent);
                             reattach4AbilityClickEvents();
                         });
                     });
