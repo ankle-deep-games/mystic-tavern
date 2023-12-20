@@ -142,15 +142,18 @@ a.text-primary:hover, a.text-primary:focus {
     color: #8f5ab1 !important;
 }
 
-/* Battle */
-.battle-text-container {
-    height: 150px;
+/*------------------------------------
+- Battle
+------------------------------------*/
+#combat-ui-box {
+    height: 13.5rem;
 }
 
-#battle-abilities {
+#combat-ui-abilities {
     text-align: center;
-  }
+}
+
 .ability-name {
-    margin-bottom: 10px;
+    margin-bottom: .0625rem;
     cursor: pointer;
 }
