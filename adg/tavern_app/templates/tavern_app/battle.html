@@ -230,22 +230,22 @@
 
                     // Functions to show ability description and back buttons
                     function showAbility1Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_1.description}} MP: {{request_gameuser.ability_1.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_1.description}}</small></div><div><small>MP: {{request_gameuser.ability_1.mp_cost}} / Type: {{request_gameuser.ability_1.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
                         $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_1.pk}}", "{{request_gameuser.ability_1.is_aoe}}", "{{request_gameuser.ability_1.is_heal}}", "{{request_gameuser.ability_1.is_buff}}");
                     }
                     function showAbility2Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_2.description}} MP: {{request_gameuser.ability_2.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_2.description}}</small></div><div><small>MP: {{request_gameuser.ability_2.mp_cost}} / Type: {{request_gameuser.ability_2.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
                         $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_2.pk}}", "{{request_gameuser.ability_2.is_aoe}}", "{{request_gameuser.ability_2.is_heal}}", "{{request_gameuser.ability_2.is_buff}}");
                     }
                     function showAbility3Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_3.description}} MP: {{request_gameuser.ability_3.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_3.description}}</small></div><div><small>MP: {{request_gameuser.ability_3.mp_cost}} / Type: {{request_gameuser.ability_3.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
                         $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_3.pk}}", "{{request_gameuser.ability_3.is_aoe}}", "{{request_gameuser.ability_3.is_heal}}", "{{request_gameuser.ability_3.is_buff}}");
                     }
                     function showAbility4Description() {
-                        var replacedContent = '<div class="row"><div class="col-12"><p><small>{{request_gameuser.ability_4.description}} MP: {{request_gameuser.ability_4.mp_cost}}</small></p><button class="btn btn-primary btn-sm back-btn">Back</button></div></div>';
+                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_4.description}}</small></div><div><small>MP: {{request_gameuser.ability_4.mp_cost}} / Type: {{request_gameuser.ability_4.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
                         $('#combat-ui-abilities').html(replacedContent);
                         showAbilityTargets("{{request_gameuser.ability_4.pk}}", "{{request_gameuser.ability_4.is_aoe}}", "{{request_gameuser.ability_4.is_heal}}", "{{request_gameuser.ability_4.is_buff}}");
                     }
