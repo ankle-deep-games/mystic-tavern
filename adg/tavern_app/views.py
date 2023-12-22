@@ -977,20 +977,6 @@ def battle(request, game_id, act, number):
 
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
-    combat_log_debug = CombatLog.objects.filter(game=game)
-    print("***COMBAT LOG***")
-    for log in combat_log_debug:
-        print(log)
-    print("***COMBAT LOG***\n")
-
-    game_turn_order = GameTurnOrder.objects.filter(game=game)
-    print("***TURN ORDER***")
-    for turn_order in game_turn_order:
-        print(turn_order)
-        if turn_order.is_their_turn:
-            print("-----^ their turn ^-----")
-    print("***TURN ORDER***")
-
     # TODO prototype getting in here for proof of concept of drunk guys defeating players and then going to act 1
     #  scene 2 this will change when battles use javascript (including other non party leaders redirecting) still
     #  need to add defeating enemies and redirecting. related
