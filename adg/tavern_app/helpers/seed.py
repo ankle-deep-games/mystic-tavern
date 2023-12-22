@@ -427,7 +427,8 @@ def seed_data():
     )
     ability3 = Ability(
         name="Shatter Shot",
-        description="A precise single-target physical attack that delivers medium damage to one enemy with a precisely aimed arrow.",
+        description="A precise single-target physical attack that delivers medium damage to one enemy with a "
+                    "precisely aimed arrow.",
         type=type_forest,
         mp_cost=5,
         is_myst_attack=False,
@@ -439,7 +440,8 @@ def seed_data():
     )
     ability4 = Ability(
         name="Divine Light",
-        description="A single-target healing spell that provides a gentle, low-level healing effect to one ally with a radiant burst of light.",
+        description="A single-target healing spell that provides a gentle, low-level healing effect to one ally with "
+                    "a radiant burst of light.",
         type=type_light,
         mp_cost=10,
         is_myst_attack=True,
@@ -451,7 +453,8 @@ def seed_data():
     )
     ability5 = Ability(
         name="Shadow Blast",
-        description="A focused single-target attack that inflicts medium damage on one enemy through a powerful surge of arcane energy.",
+        description="A focused single-target attack that inflicts medium damage on one enemy through a powerful surge "
+                    "of arcane energy.",
         type=type_dark,
         mp_cost=10,
         is_myst_attack=True,
@@ -463,7 +466,8 @@ def seed_data():
     )
     ability6 = Ability(
         name="Anthem of Valor",
-        description="Empowers a single ally with a medium physical attack boost and a defensive buff, enhancing their strength and resilience.",
+        description="Empowers a single ally with a medium physical attack boost and a defensive buff, enhancing their"
+                    "strength and resilience.",
         type=type_wind,
         mp_cost=10,
         is_myst_attack=False,
@@ -476,7 +480,8 @@ def seed_data():
     # Tier 3
     ability7 = Ability(
         name="Divine Strike",
-        description="Launches a medium mystic attack, harnessing the power of light to strike a single target with celestial force.",
+        description="Launches a medium mystic attack, harnessing the power of light to strike a single target with "
+                    "celestial force.",
         type=type_light,
         mp_cost=30,
         is_myst_attack=True,
@@ -500,7 +505,8 @@ def seed_data():
     )
     ability9 = Ability(
         name="Enchanted Grove",
-        description="Evokes the magic of the forest with a medium mystic attack, creating an enchanting grove that envelops a single target.",
+        description="Evokes the magic of the forest with a medium mystic attack, creating an enchanting grove that "
+                    "envelops a single target.",
         type=type_forest,
         mp_cost=20,
         is_myst_attack=True,
@@ -512,7 +518,8 @@ def seed_data():
     )
     ability10 = Ability(
         name="Resonant Stones",
-        description="Conjures a medium mystic attack with resonating stones, creating a harmonious symphony that engulfs a single target.",
+        description="Conjures a medium mystic attack with resonating stones, creating a harmonious symphony that "
+                    "engulfs a single target.",
         type=type_stone,
         mp_cost=20,
         is_myst_attack=True,
@@ -524,7 +531,8 @@ def seed_data():
     )
     ability11 = Ability(
         name="Gale Fury",
-        description="Commands a medium mystic attack imbued with the tempest's might, releasing a raging windstorm upon a single target, inflicting swirling damage.",
+        description="Commands a medium mystic attack imbued with the tempest's might, releasing a raging windstorm "
+                    "upon a single target, inflicting swirling damage.",
         type=type_wind,
         mp_cost=20,
         is_myst_attack=True,
@@ -537,7 +545,8 @@ def seed_data():
     # Tier 4
     ability12 = Ability(
         name="Holy Wrath",
-        description="Summons divine fury, delivering a devastating high physical attack that channels holy energy to smite multiple targets with righteous force.",
+        description="Summons divine fury, delivering a devastating high physical attack that channels holy energy to "
+                    "smite multiple targets with righteous force.",
         type=type_stone,
         mp_cost=15,
         is_myst_attack=False,
@@ -549,7 +558,8 @@ def seed_data():
     )
     ability13 = Ability(
         name="Grove's Vengeance",
-        description="Harnesses the fury of the forest, unleashing a potent high physical attack that embodies the wrath of nature upon multiple targets.",
+        description="Harnesses the fury of the forest, unleashing a potent high physical attack that embodies the "
+                    "wrath of nature upon multiple targets.",
         type=type_forest,
         mp_cost=15,
         is_myst_attack=False,
@@ -561,7 +571,8 @@ def seed_data():
     )
     ability14 = Ability(
         name="Sanctuary",
-        description="Invokes a healing haven, granting a substantial high-level heal that envelops multiple targets in a protective aura of rejuvenation.",
+        description="Invokes a healing haven, granting a substantial high-level heal that envelops multiple targets "
+                    "in a protective aura of rejuvenation.",
         type=type_light,
         mp_cost=30,
         is_myst_attack=True,
@@ -573,7 +584,8 @@ def seed_data():
     )
     ability15 = Ability(
         name="Arcane Darkness",
-        description="Conjures dark mystic forces, casting a formidable high mystic attack that shrouds multiple targets in shadowy, unpredictable energies.",
+        description="Conjures dark mystic forces, casting a formidable high mystic attack that shrouds multiple "
+                    "targets in shadowy, unpredictable energies.",
         type=type_dark,
         mp_cost=30,
         is_myst_attack=True,
@@ -585,7 +597,8 @@ def seed_data():
     )
     ability16 = Ability(
         name="Ethereal Crescendo",
-        description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon multiple targets, elevating them to an ethereal peak of strength and grace.",
+        description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon multiple targets, "
+                    "elevating them to an ethereal peak of strength and grace.",
         type=type_wind,
         mp_cost=30,
         is_myst_attack=True,

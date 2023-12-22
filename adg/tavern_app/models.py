@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Game(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     creator = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -16,6 +17,7 @@ class Game(models.Model):
 
 
 class Type(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     strength = models.IntegerField(default=0)
     weakness = models.IntegerField(default=0)
@@ -27,6 +29,7 @@ class Type(models.Model):
 
 
 class Role(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
@@ -44,6 +47,7 @@ class Role(models.Model):
 
 
 class Gender(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,6 +57,7 @@ class Gender(models.Model):
 
 
 class NPC(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     image = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -63,6 +68,7 @@ class NPC(models.Model):
 
 
 class Weapon(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     attack_mod = models.IntegerField(default=0)
     myst_attack_mod = models.IntegerField(default=0)
@@ -76,6 +82,7 @@ class Weapon(models.Model):
 
 
 class Armor(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     defense_mod = models.IntegerField(default=0)
     myst_defense_mod = models.IntegerField(default=0)
@@ -90,6 +97,7 @@ class Armor(models.Model):
 
 
 class Ability(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
@@ -115,6 +123,7 @@ class Ability(models.Model):
 
 
 class GameUser(models.Model):
+    objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     role = models.ForeignKey(
@@ -242,6 +251,7 @@ class GameUser(models.Model):
 
 
 class Dialogue(models.Model):
+    objects = models.Manager()
     from_node_id = models.IntegerField(default=0)
     node_type = models.CharField(max_length=255)
     # talk     | player response | narration
@@ -268,6 +278,7 @@ class Dialogue(models.Model):
 
 # running log of decision tree nodes that have been selected for each game
 class GameDialogue(models.Model):
+    objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     dialogue = models.ForeignKey(Dialogue, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -278,6 +289,7 @@ class GameDialogue(models.Model):
 
 
 class Enemy(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=255)
     image = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
@@ -327,6 +339,7 @@ class Enemy(models.Model):
 
 
 class GameEnemy(models.Model):
+    objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     enemy = models.ForeignKey(Enemy, on_delete=models.PROTECT)
     act = models.IntegerField(default=0)
@@ -357,6 +370,7 @@ class GameEnemy(models.Model):
 
 
 class CombatLog(models.Model):
+    objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     act = models.IntegerField(default=0)
     battle = models.IntegerField(default=0)
@@ -412,6 +426,7 @@ class CombatLog(models.Model):
 
 
 class GameLocation(models.Model):
+    objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     act = models.IntegerField(default=0)
     location_type = models.CharField(max_length=255)  # "scene" or "battle"
@@ -424,6 +439,7 @@ class GameLocation(models.Model):
 
 
 class GameTurnOrder(models.Model):
+    objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     gameuser = models.ForeignKey(
         GameUser, on_delete=models.PROTECT, default=None, blank=True, null=True

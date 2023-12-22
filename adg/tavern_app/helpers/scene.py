@@ -7,7 +7,7 @@ def get_character_list(game: Game) -> list:
     game_users = GameUser.objects.filter(game=game)
 
     # in dialogue we save speakers as "Group Leader" or "Group Member 1"
-    # at run time compare those against players in the game so we can display the player username
+    # at run time compare those against players in the game, so we can display the player username
     for idx, game_user in enumerate(game_users):
         speaker = ""
         if idx == 0:
