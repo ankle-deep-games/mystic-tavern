@@ -50,7 +50,7 @@ from .models import (
 )
 
 
-def simple_view(request):
+def simple_view():
     return HttpResponse(
         "LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023"
     )
@@ -76,7 +76,7 @@ def add_three_users_to_game(request, game_id):
     return HttpResponse("3 users added to game " + str(game_id))
 
 
-def equip_placeholder(request):
+def equip_placeholder():
     gameuser = GameUser.objects.get(pk=6)
     armor = Armor.objects.get(pk=16)
     weapon = Weapon.objects.get(pk=1)
@@ -103,14 +103,14 @@ def games(request):
         return redirect("login")
 
     game_list = []
-    games = Game.objects.filter(game_over=False).annotate(num_players=Count("gameuser"))
+    games_queryset = Game.objects.filter(game_over=False).annotate(num_players=Count("gameuser"))
 
-    for game in games:
+    for game in games_queryset:
         is_user_in_game = (
             True if GameUser.objects.filter(game=game, user=request.user) else False
         )
         is_full = True if game.num_players == 4 else False
-        is_started = True if game.game_started == True else False
+        is_started = game.game_started
         game_list.append(
             {
                 "creator": game.creator,
@@ -487,10 +487,10 @@ def scene(request, game_id, act, number):
                 )
 
             # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
-            # change act/scene/dialogue to execute at correct place
-            # adding here now as an example of how we'll execute decisions in dialogue
-            # when we get here we might add func params to pland_seed_decision func
-            # this approach will also be used for fork in road decision for forest/mountain choice. conditionally execute a scene helper func
+            #  change act/scene/dialogue to execute at correct place adding here now as an example of how we'll
+            #  execute decisions in dialogue when we get here we might add func params to plant_seed_decision func
+            #  this approach will also be used for fork in road decision for forest/mountain choice. conditionally
+            #  execute a scene helper func
             if act == 1 and scene_num == 1 and dialogue.id == 5:
                 plant_seed_decision()
 
@@ -706,8 +706,8 @@ def battle(request, game_id, act, number):
 
             if (
                     is_request_user_turn
-                    and ability.is_heal == False
-                    and ability.is_buff == False
+                    and ability.is_heal is False
+                    and ability.is_buff is False
             ):
                 # AOE Damage
                 if ability.is_aoe:
@@ -798,7 +798,7 @@ def battle(request, game_id, act, number):
                     deduct_mp=True,
                 )
 
-            elif is_request_user_turn and ability.is_heal == True:
+            elif is_request_user_turn and ability.is_heal:
                 # AOE Heal
                 if ability.is_aoe:
                     first_gameuser_heal = True
@@ -884,7 +884,7 @@ def battle(request, game_id, act, number):
                     deduct_mp=True,
                 )
 
-            elif is_request_user_turn and ability.is_buff == True:
+            elif is_request_user_turn and ability.is_buff:
                 # AOE Buff
                 if ability.is_aoe:
                     first_gameuser_buff = True
@@ -1042,7 +1042,8 @@ def battle(request, game_id, act, number):
             )
 
             # if enemy will go after current enemy - have that enemy attack by looping again
-            is_enemy_turn_next = (True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
+            is_enemy_turn_next = (
+                True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
 
     combat_log_debug = CombatLog.objects.filter(game=game)
     print("***COMBAT LOG***")
@@ -1058,10 +1059,11 @@ def battle(request, game_id, act, number):
             print("-----^ their turn ^-----")
     print("***TURN ORDER***")
 
-    # TODO prototype getting in here for proof of concept of drunk guys defeating players and then going to act 1 scene 2
-    # this will change when battles use javascript (including other non party leaders redirecting)
-    # still need to add defeating enemies and redirecting.
-    # related https://trello.com/c/cS7s3OEs/217-combat-update-gamelocation-when-winning-and-loosing-battles-depending-on-next-step-in-game
+    # TODO prototype getting in here for proof of concept of drunk guys defeating players and then going to act 1
+    #  scene 2 this will change when battles use javascript (including other non party leaders redirecting) still
+    #  need to add defeating enemies and redirecting. related
+    #  https://trello.com/c/cS7s3OEs/217-combat-update-gamelocation-when-winning-and-loosing-battles-depending-on
+    #  -next-step-in-game
     gamelocation = GameLocation.objects.get(game=game)
     if not is_any_player_alive(game=game):
         if act == 1 and battle_num == 1:
@@ -1087,7 +1089,8 @@ def battle(request, game_id, act, number):
                     },
                 )
             )
-            # new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id, 'act': gamelocation.act, 'number': gamelocation.number})
+            # TODO new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id,
+            #  'act': gamelocation.act, 'number': gamelocation.number})
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
     is_request_user_turn = calc_is_request_user_turn(

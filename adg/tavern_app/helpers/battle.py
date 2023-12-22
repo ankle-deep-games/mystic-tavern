@@ -247,6 +247,7 @@ def calculate_damage(
 
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
 
+    # TODO might break into two funcs. one for player. one for enemy.
     print("attacker is: " + attacker.name())
     print("target is: " + target.name())
     print("target type is: " + target.unit_type().name)
