@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 from ..models import (
     Game,
     GameUser,
@@ -11,7 +13,6 @@ from ..models import (
     Ability,
     Enemy,
 )
-from django.contrib.auth.models import User
 
 
 def seed_data():

@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Game(models.Model):
@@ -255,14 +255,14 @@ class Dialogue(models.Model):
 
     def __str__(self):
         return (
-            "from_node_id: "
-            + str(self.from_node_id)
-            + ", node_type: "
-            + str(self.node_type)
-            + ", speaker: "
-            + str(self.speaker)
-            + ", text: "
-            + str(self.text)
+                "from_node_id: "
+                + str(self.from_node_id)
+                + ", node_type: "
+                + str(self.node_type)
+                + ", speaker: "
+                + str(self.speaker)
+                + ", text: "
+                + str(self.text)
         )
 
 

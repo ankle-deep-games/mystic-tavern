@@ -1,5 +1,6 @@
-from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
 import random
+
+from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
 
 
 def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
@@ -75,7 +76,7 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
 
 
 def calc_is_request_user_turn(
-    request_gameuser: GameUser, unit_turn: GameTurnOrder
+        request_gameuser: GameUser, unit_turn: GameTurnOrder
 ) -> bool:
     if unit_turn.gameuser:
         is_request_user_turn = True if unit_turn.gameuser == request_gameuser else False
@@ -85,14 +86,14 @@ def calc_is_request_user_turn(
 
 
 def gameuser_attack_single_gameenemy_and_save(
-    game: Game,
-    gameuser: GameUser,
-    gameenemy: GameEnemy,
-    ability: Ability,
-    unit_turn: GameTurnOrder,
-    act: int,
-    battle: int,
-    deduct_mp: bool,
+        game: Game,
+        gameuser: GameUser,
+        gameenemy: GameEnemy,
+        ability: Ability,
+        unit_turn: GameTurnOrder,
+        act: int,
+        battle: int,
+        deduct_mp: bool,
 ) -> None:
     who_attacking = "player"
 
@@ -159,13 +160,13 @@ def gameuser_attack_single_gameenemy_and_save(
 
 
 def gameenemy_attack_single_gameuser_and_save(
-    game: Game,
-    gameuser: GameUser,
-    gameenemy: GameEnemy,
-    ability: Ability,
-    unit_turn: GameTurnOrder,
-    act: int,
-    battle: int,
+        game: Game,
+        gameuser: GameUser,
+        gameenemy: GameEnemy,
+        ability: Ability,
+        unit_turn: GameTurnOrder,
+        act: int,
+        battle: int,
 ) -> None:
     who_attacking = "enemy"
 
@@ -228,7 +229,7 @@ def gameenemy_attack_single_gameuser_and_save(
 
 
 def calculate_damage(
-    gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str
+        gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str
 ):
     if who_attacking == "player":
         attacker = gameuser
@@ -268,14 +269,14 @@ def enemey_choose_random_alive_target(gameusers) -> GameUser:
 
 
 def gameuser_heal_single_gameuser_and_save(
-    game: Game,
-    gameuser: GameUser,
-    defensive_gameuser_target: GameUser,
-    ability: Ability,
-    unit_turn: GameTurnOrder,
-    act: int,
-    battle: int,
-    deduct_mp: bool,
+        game: Game,
+        gameuser: GameUser,
+        defensive_gameuser_target: GameUser,
+        ability: Ability,
+        unit_turn: GameTurnOrder,
+        act: int,
+        battle: int,
+        deduct_mp: bool,
 ) -> None:
     who_attacking = "player"
 
@@ -305,7 +306,7 @@ def gameuser_heal_single_gameuser_and_save(
         defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
 
     defensive_gameuser_target.current_hp = (
-        defensive_gameuser_target.current_hp + calculated_healing
+            defensive_gameuser_target.current_hp + calculated_healing
     )
     if defensive_gameuser_target.current_hp > defensive_gameuser_target.current_max_hp:
         defensive_gameuser_target.current_hp = defensive_gameuser_target.current_max_hp
@@ -347,7 +348,7 @@ def gameuser_heal_single_gameuser_and_save(
 
 
 def determine_type_strength_weakness(
-    attack, attack_type_strength, attack_type_weakness, defense_type
+        attack, attack_type_strength, attack_type_weakness, defense_type
 ):
     """
     This function will be called when an ability is chosen to determine the ability type as compared to the opponent's
@@ -380,7 +381,7 @@ def randomize_ability_strength():
 
 
 def calculate_healing(
-    gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
+        gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
 ):
     attacker = gameuser
     target = defensive_gameuser_target
@@ -399,14 +400,14 @@ def calculate_healing(
 
 
 def gameuser_buff_single_gameuser_and_save(
-    game: Game,
-    gameuser: GameUser,
-    defensive_gameuser_target: GameUser,
-    ability: Ability,
-    unit_turn: GameTurnOrder,
-    act: int,
-    battle: int,
-    deduct_mp: bool,
+        game: Game,
+        gameuser: GameUser,
+        defensive_gameuser_target: GameUser,
+        ability: Ability,
+        unit_turn: GameTurnOrder,
+        act: int,
+        battle: int,
+        deduct_mp: bool,
 ) -> None:
     who_attacking = "player"
 

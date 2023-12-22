@@ -1,6 +1,12 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.db.models import Count
+from django.http import JsonResponse
 from django.http.response import HttpResponse
+from django.shortcuts import redirect, reverse
+from django.shortcuts import render
 from django.views.generic import CreateView, FormView, TemplateView
+
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -9,6 +15,25 @@ from .forms import (
     StartGameForm,
     CombatLogForm,
 )
+from .helpers.battle import (
+    calc_and_save_turn_order,
+    gameuser_attack_single_gameenemy_and_save,
+    gameenemy_attack_single_gameuser_and_save,
+    enemey_choose_random_ability,
+    enemey_choose_random_alive_target,
+    gameuser_heal_single_gameuser_and_save,
+    calc_is_request_user_turn,
+    gameuser_buff_single_gameuser_and_save,
+    is_any_player_alive,
+)
+from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
+from .helpers.scene import (
+    get_character_list,
+    get_game_dialogue_progress_list,
+    get_next_dialogue_list,
+    plant_seed_decision,
+)
+from .helpers.seed import seed_data
 from .models import (
     Game,
     GameUser,
@@ -23,30 +48,6 @@ from .models import (
     Armor,
     Weapon,
 )
-from django.shortcuts import redirect, reverse
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.db.models import Count
-from django.http import JsonResponse
-from .helpers.seed import seed_data
-from .helpers.battle import (
-    calc_and_save_turn_order,
-    gameuser_attack_single_gameenemy_and_save,
-    gameenemy_attack_single_gameuser_and_save,
-    enemey_choose_random_ability,
-    enemey_choose_random_alive_target,
-    gameuser_heal_single_gameuser_and_save,
-    calc_is_request_user_turn,
-    gameuser_buff_single_gameuser_and_save,
-    is_any_player_alive,
-)
-from .helpers.scene import (
-    get_character_list,
-    get_game_dialogue_progress_list,
-    get_next_dialogue_list,
-    plant_seed_decision,
-)
-from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 
 
 def simple_view(request):
@@ -470,9 +471,9 @@ def scene(request, game_id, act, number):
                 game_dialogue.save()
 
             if (
-                (act == 1 and scene_num == 1 and dialogue.id == 58)
-                or (act == 1 and scene_num == 1 and dialogue.id == 65)
-                or (act == 1 and scene_num == 1 and dialogue.id == 72)
+                    (act == 1 and scene_num == 1 and dialogue.id == 58)
+                    or (act == 1 and scene_num == 1 and dialogue.id == 65)
+                    or (act == 1 and scene_num == 1 and dialogue.id == 72)
             ):
                 gamelocation.location_type = "battle"
                 gamelocation.save()
@@ -543,10 +544,10 @@ def scene(request, game_id, act, number):
     # redirect if they are not on this scene act/num
     gamelocation = GameLocation.objects.get(game=game)
     if (
-        gamelocation.game.pk != game_id
-        and gamelocation.act != act
-        and gamelocation.number != scene_num
-        or gamelocation.location_type != "scene"
+            gamelocation.game.pk != game_id
+            and gamelocation.act != act
+            and gamelocation.number != scene_num
+            or gamelocation.location_type != "scene"
     ):
         return redirect(
             reverse(
@@ -606,10 +607,10 @@ def scene_get_updates(request, game_id, act, number):
 
     # if they are not on this scene act/num - populate new_url so front end can redirect them
     if (
-        gamelocation.game.pk != game_id
-        and gamelocation.act != act
-        and gamelocation.number != scene_num
-        or gamelocation.location_type != "scene"
+            gamelocation.game.pk != game_id
+            and gamelocation.act != act
+            and gamelocation.number != scene_num
+            or gamelocation.location_type != "scene"
     ):
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
@@ -704,9 +705,9 @@ def battle(request, game_id, act, number):
                 )
 
             if (
-                is_request_user_turn
-                and ability.is_heal == False
-                and ability.is_buff == False
+                    is_request_user_turn
+                    and ability.is_heal == False
+                    and ability.is_buff == False
             ):
                 # AOE Damage
                 if ability.is_aoe == True:
@@ -1053,7 +1054,7 @@ def battle(request, game_id, act, number):
             is_enemy_turn_next = (
                 True
                 if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy
-                is not None
+                   is not None
                 else False
             )
 
@@ -1143,10 +1144,10 @@ def battle_get_updates(request, game_id, act, number):
 
     # if they are not on this battle act/num - populate new_url so front end can redirect them
     if (
-        gamelocation.game.pk != game_id
-        and gamelocation.act != act
-        and gamelocation.number != battle_num
-        or gamelocation.location_type != "battle"
+            gamelocation.game.pk != game_id
+            and gamelocation.act != act
+            and gamelocation.number != battle_num
+            or gamelocation.location_type != "battle"
     ):
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
