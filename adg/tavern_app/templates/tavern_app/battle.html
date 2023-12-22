@@ -74,7 +74,266 @@
         integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+    
+    var backendArray = []; // Array updating from the backend
+    var previousBackendArray = []; // To store the previous state of backendArray
+    var frontendArray = []; // Array for messages to be displayed on the frontend
+    var isDisplayingMessage = false; // Flag to control message display
+    
+    var gameuser_turn_name = '';
+    var is_request_user_turn = false;
+
+    var gameEnemiesData = [
+        {% for obj in gameenemies %}
+            {
+                "name": "{{ obj.name }}",
+                "id": "{{ obj.pk }}",
+            },
+        {% endfor %}
+    ];
+
+    var gameUsersData = [
+        {% for obj in gameusers %}
+            {
+                "name": "{{ obj.name }}",
+                "id": "{{ obj.pk }}",
+            },
+        {% endfor %}
+    ]
+
     var CSRF_TOKEN = '{{ csrf_token }}';
+
+    function showAbilityTargets(abilityNum, isAoe, isHeal, isBuff) {
+        console.log(`abilityNum: ${abilityNum}. isHeal: ${isHeal}. isAoe: ${isAoe}. isBuff: ${isBuff}`)
+
+        var abilityContainerDiv = $('<div class="row"></div>');
+
+        if (isAoe == "False" && isHeal == "False" && isBuff == "False") {
+            // single target damage
+            gameEnemiesData.forEach(function(enemy) {
+                abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='gameenemy' id='gameenemy' value='${enemy.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>${enemy.name}</button></form></div>`);
+                $("#combat-ui-abilities").prepend(abilityContainerDiv);
+            });
+        } else if (isAoe == "True" && isHeal == "False" && isBuff == "False") {
+            // AOE damage
+            abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE ALL ENEMIES</button></form></div>`);
+            $("#combat-ui-abilities").prepend(abilityContainerDiv);
+        } else if (isAoe == "False" && isHeal == "True" && isBuff == "False") {
+            // single target heal
+            gameUsersData.forEach(function(gameuser) {
+                abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>${gameuser.name}</button></form></div>`);
+            }); 
+            $("#combat-ui-abilities").prepend(abilityContainerDiv);
+        } else if (isAoe == "True" && isHeal == "True" && isBuff == "False") {
+            // AOE heal
+            abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE HEAL PLAYERS</button></form></div>`);
+            $("#combat-ui-abilities").prepend(abilityContainerDiv);
+        } else if (isAoe == "False" && isHeal == "False" && isBuff == "True") {
+            // single target buff
+            gameUsersData.forEach(function(gameuser) {
+                abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>${gameuser.name}</button></form></div>`);
+            });
+            $("#combat-ui-abilities").prepend(abilityContainerDiv);
+        } else if (isAoe == "True" && isHeal == "False" && isBuff == "True") {
+            // AOE buff
+            abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE BUFF PLAYERS</button></form></div>`);
+            $("#combat-ui-abilities").prepend(abilityContainerDiv);
+        } else {
+            console.log('this type of ability is not coded yet')
+        } 
+    }
+
+    // Functions to show ability description and back buttons
+    function showAbility1Description() {
+        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_1.description}}</small></div><div><small>MP: {{request_gameuser.ability_1.mp_cost}} / Type: {{request_gameuser.ability_1.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
+        $('#combat-ui-abilities').html(replacedContent);
+        showAbilityTargets("{{request_gameuser.ability_1.pk}}", "{{request_gameuser.ability_1.is_aoe}}", "{{request_gameuser.ability_1.is_heal}}", "{{request_gameuser.ability_1.is_buff}}");
+    }
+    function showAbility2Description() {
+        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_2.description}}</small></div><div><small>MP: {{request_gameuser.ability_2.mp_cost}} / Type: {{request_gameuser.ability_2.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
+        $('#combat-ui-abilities').html(replacedContent);
+        showAbilityTargets("{{request_gameuser.ability_2.pk}}", "{{request_gameuser.ability_2.is_aoe}}", "{{request_gameuser.ability_2.is_heal}}", "{{request_gameuser.ability_2.is_buff}}");
+    }
+    function showAbility3Description() {
+        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_3.description}}</small></div><div><small>MP: {{request_gameuser.ability_3.mp_cost}} / Type: {{request_gameuser.ability_3.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
+        $('#combat-ui-abilities').html(replacedContent);
+        showAbilityTargets("{{request_gameuser.ability_3.pk}}", "{{request_gameuser.ability_3.is_aoe}}", "{{request_gameuser.ability_3.is_heal}}", "{{request_gameuser.ability_3.is_buff}}");
+    }
+    function showAbility4Description() {
+        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_4.description}}</small></div><div><small>MP: {{request_gameuser.ability_4.mp_cost}} / Type: {{request_gameuser.ability_4.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
+        $('#combat-ui-abilities').html(replacedContent);
+        showAbilityTargets("{{request_gameuser.ability_4.pk}}", "{{request_gameuser.ability_4.is_aoe}}", "{{request_gameuser.ability_4.is_heal}}", "{{request_gameuser.ability_4.is_buff}}");
+    }
+    // Reattach click events after back button
+    function reattach4AbilityClickEvents() {
+        $('#ability_1').click(function() {
+            showAbility1Description();
+        });
+        $('#ability_2').click(function() {
+            showAbility2Description();
+        });
+        $('#ability_3').click(function() {
+            showAbility3Description();
+        });
+        $('#ability_4').click(function() {
+            showAbility4Description();
+        });
+    }
+
+    // Function to display the message and update HP/MP on the frontend
+    function displayMessageAndStatChanges(newEntry) {          
+        $('#combat-ui-messages').text(newEntry.message)
+
+        newEntry.resulting_gameenemies_json.forEach(enemy => {
+            const enemyId = enemy.id;
+            const enemyCurrentHp = enemy.current_hp;
+            const enemyMaxHp = enemy.enemy__start_hp;
+            const enemyHpPercent = enemyCurrentHp/enemyMaxHp;
+            const enemyHpPercentageString = (enemyHpPercent * 100).toFixed(0) + '%';
+          
+            const enemyDiv = document.getElementById(`enemy-${enemyId}`);
+            if (enemyDiv) {
+                const enemyHpEl = enemyDiv.querySelector('#enemy-hp-nums');
+                if (enemyHpEl) {
+                    enemyHpEl.textContent = `${enemyCurrentHp} / ${enemyMaxHp}`; // Update the HP values
+                }
+
+                const enemyHpBar = enemyDiv.querySelector('#enemy-hp-bar');
+                if (enemyHpBar) {
+                    enemyHpBar.style.width = enemyHpPercentageString; // Update the HP percentage bar
+                }
+            }
+        });
+
+        newEntry.resulting_gameusers_json.forEach(gameuser => {
+            const gameuserId = gameuser.id;
+            const gameuserCurrentHp = gameuser.current_hp;
+            const gameuserMaxHp = gameuser.current_max_hp;
+            const gameuserCurrentMp = gameuser.current_mp;
+            const gameuserMaxMp = gameuser.current_max_mp;
+            const gameuserHpPercent = gameuserCurrentHp/gameuserMaxHp;
+            const gameuserHpPercentageString = (gameuserHpPercent * 100).toFixed(0) + '%';
+            const gameuserMpPercent = gameuserCurrentMp/gameuserMaxMp;
+            const gameuserMpPercentageString = (gameuserMpPercent * 100).toFixed(0) + '%';
+          
+            const gameuserDiv = document.getElementById(`player-${gameuserId}`);
+            if (gameuserDiv) {
+                const gameuserHpEl = gameuserDiv.querySelector('#player-hp-nums');
+                if (gameuserHpEl) {
+                    gameuserHpEl.textContent = `${gameuserCurrentHp} / ${gameuserMaxHp}`; // Update the HP values
+                }
+                const gameuserMpEl = gameuserDiv.querySelector('#player-mp-nums');
+                if (gameuserMpEl) {
+                    gameuserMpEl.textContent = `${gameuserCurrentMp} / ${gameuserMaxMp}`; // Update the MP values
+                }
+                const gameuserHpBar = gameuserDiv.querySelector('#player-hp-bar');
+                if (gameuserHpBar) {
+                    gameuserHpBar.style.width = gameuserHpPercentageString; // Update the HP percentage bar
+                }
+                const gameuserMpBar = gameuserDiv.querySelector('#player-mp-bar');
+                if (gameuserMpBar) {
+                    gameuserMpBar.style.width = gameuserMpPercentageString; // Update the MP percentage bar
+                }
+            }
+        });
+    }
+
+    // Function to remove the displayed message from the frontend
+    function removeFrontendMessage() {
+        $('#combat-ui-messages').text('')
+    }
+
+    // Function to update frontendArray and start displaying messages and HP/MP changes
+    function updateFrontend() {
+        if (!isDisplayingMessage && frontendArray.length > 0) {
+            isDisplayingMessage = true;
+            const newEntry = frontendArray.shift(); // Get the next entry to display
+
+            // Display the message and update HP/MP on the frontend
+            displayMessageAndStatChanges(newEntry);
+
+            // Remove the message after 3 seconds and proceed to the next message
+            setTimeout(() => {
+                removeFrontendMessage();
+                isDisplayingMessage = false;
+                updateFrontend(); // Process next message
+            }, 500); // TODO change back to longer time.
+        } else {
+            if (is_request_user_turn) {
+                console.log("is now request users turn and removing front end message")
+                removeFrontendMessage();
+
+                var originalContent = `
+                    <div class="row mb-3 mt-5">
+                        <div class="col-6">
+                            <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
+                        </div>
+                    </div>`;
+
+                $('#combat-ui-abilities').html(originalContent);
+
+                // Click event for ability 1
+                $('#ability_1').click(function() {
+                    showAbility1Description();
+            
+                    // Click event for the back button
+                    $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                        $('#combat-ui-abilities').html(originalContent);
+                        reattach4AbilityClickEvents();
+                    });
+                });
+
+                // Click event for ability 2
+                $('#ability_2').click(function() {
+                    showAbility2Description();
+            
+                    // Click event for the back button
+                    $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                        $('#combat-ui-abilities').html(originalContent);
+                        reattach4AbilityClickEvents();
+                    });
+                });
+
+                // Click event for ability 3
+                $('#ability_3').click(function() {
+                    showAbility3Description();
+            
+                    // Click event for the back button
+                    $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                        $('#combat-ui-abilities').html(originalContent);
+                        reattach4AbilityClickEvents();
+                    });
+                });
+
+                // Click event for ability 4
+                $('#ability_4').click(function() {
+                    showAbility4Description();
+            
+                    // Click event for the back button
+                    $('#combat-ui-abilities').on('click', '.back-btn', function() {
+                        $('#combat-ui-abilities').html(originalContent);
+                        reattach4AbilityClickEvents();
+                    });
+                });
+                    
+                    
+            } else {
+                $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+            }
+        }
+    }
+
     $(document).on('submit', '.battle-post-form', function(e) {
         e.preventDefault();
 
@@ -98,286 +357,21 @@
 
                 $('#combat-ui-abilities').empty();
 
-                /*
                 if (response.error) {
-                    var alert_element = "<div class='alert alert-danger' role='alert'>" +
-                        response.error +
-                    "</div>";
-                    $("#dialogue-error-container").append(alert_element);
+                    $('#combat-ui-messages').text(response.error).addClass('text-danger');
 
-                    // TODO could improve this with a fade in or out animation
+                    // after a delay, update front end to show the 4 ability options
                     setTimeout(function() {
-                        $("#dialogue-error-container").empty();
-                    }, 4000);
+                        updateFrontend();
+                        $('#combat-ui-messages').removeClass('text-danger');
+                    }, 2000);
                 }
-                */
             }
         })
 
     })
 
     $(document).ready(function() {
-        var backendArray = []; // Array updating from the backend
-        var previousBackendArray = []; // To store the previous state of backendArray
-        var frontendArray = []; // Array for messages to be displayed on the frontend
-        var isDisplayingMessage = false; // Flag to control message display
-        
-        var gameuser_turn_name = '';
-        var is_request_user_turn = false;
-
-        var gameEnemiesData = [
-            {% for obj in gameenemies %}
-                {
-                    "name": "{{ obj.name }}",
-                    "id": "{{ obj.pk }}",
-                },
-            {% endfor %}
-        ];
-
-        var gameUsersData = [
-            {% for obj in gameusers %}
-                {
-                    "name": "{{ obj.name }}",
-                    "id": "{{ obj.pk }}",
-                },
-            {% endfor %}
-        ];
-
-        // TODO REMOVE CONSOLE LOG
-        gameEnemiesData.forEach(function(enemy) {
-            console.log(enemy.name + ": " + enemy.id);
-        });
-
-        // Function to update frontendArray and start displaying messages and HP/MP changes
-        function updateFrontend() {
-            if (!isDisplayingMessage && frontendArray.length > 0) {
-                isDisplayingMessage = true;
-                const newEntry = frontendArray.shift(); // Get the next entry to display
-
-                // Display the message and update HP/MP on the frontend
-                displayMessageAndStatChanges(newEntry);
-
-                // Remove the message after 3 seconds and proceed to the next message
-                setTimeout(() => {
-                    removeFrontendMessage();
-                    isDisplayingMessage = false;
-                    updateFrontend(); // Process next message
-                }, 500); // TODO change back to longer time.
-            } else {
-                if (is_request_user_turn) {
-                    removeFrontendMessage();
-
-                    var originalContent = `
-                        <div class="row mb-3 mt-5">
-                            <div class="col-6">
-                                <div class="ability-name" id="ability_1">{{request_gameuser.ability_1.name}}</div>
-                            </div>
-                            <div class="col-6">
-                                <div class="ability-name" id="ability_2">{{request_gameuser.ability_2.name}}</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="ability-name" id="ability_3">{{request_gameuser.ability_3.name}}</div>
-                            </div>
-                            <div class="col-6">
-                                <div class="ability-name" id="ability_4">{{request_gameuser.ability_4.name}}</div>
-                            </div>
-                        </div>`;
-
-                    $('#combat-ui-abilities').html(originalContent);
-
-                    function showAbilityTargets(abilityNum, isAoe, isHeal, isBuff) {
-                        console.log(`abilityNum: ${abilityNum}. isHeal: ${isHeal}. isAoe: ${isAoe}. isBuff: ${isBuff}`)
-
-                        var abilityContainerDiv = $('<div class="row"></div>');
-
-                        if (isAoe == "False" && isHeal == "False" && isBuff == "False") {
-                            // single target damage
-                            gameEnemiesData.forEach(function(enemy) {
-                                abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='gameenemy' id='gameenemy' value='${enemy.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>${enemy.name}</button></form></div>`);
-                                $("#combat-ui-abilities").prepend(abilityContainerDiv);
-                            });
-                        } else if (isAoe == "True" && isHeal == "False" && isBuff == "False") {
-                            // AOE damage
-                            abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE ALL ENEMIES</button></form></div>`);
-                            $("#combat-ui-abilities").prepend(abilityContainerDiv);
-                        } else if (isAoe == "False" && isHeal == "True" && isBuff == "False") {
-                            // single target heal
-                            gameUsersData.forEach(function(gameuser) {
-                                abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>${gameuser.name}</button></form></div>`);
-                            }); 
-                            $("#combat-ui-abilities").prepend(abilityContainerDiv);
-                        } else if (isAoe == "True" && isHeal == "True" && isBuff == "False") {
-                            // AOE heal
-                            abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE HEAL PLAYERS</button></form></div>`);
-                            $("#combat-ui-abilities").prepend(abilityContainerDiv);
-                        } else if (isAoe == "False" && isHeal == "False" && isBuff == "True") {
-                            // single target buff
-                            gameUsersData.forEach(function(gameuser) {
-                                abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='defensive_gameuser_target' id='defensive_gameuser_target' value='${gameuser.id}' /><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>${gameuser.name}</button></form></div>`);
-                            });
-                            $("#combat-ui-abilities").prepend(abilityContainerDiv);
-                        } else if (isAoe == "True" && isHeal == "False" && isBuff == "True") {
-                            // AOE buff
-                            abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE BUFF PLAYERS</button></form></div>`);
-                            $("#combat-ui-abilities").prepend(abilityContainerDiv);
-                        } else {
-                            console.log('this type of ability is not coded yet')
-                        }
-                        
-                    }
-
-                    // Functions to show ability description and back buttons
-                    function showAbility1Description() {
-                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_1.description}}</small></div><div><small>MP: {{request_gameuser.ability_1.mp_cost}} / Type: {{request_gameuser.ability_1.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
-                        $('#combat-ui-abilities').html(replacedContent);
-                        showAbilityTargets("{{request_gameuser.ability_1.pk}}", "{{request_gameuser.ability_1.is_aoe}}", "{{request_gameuser.ability_1.is_heal}}", "{{request_gameuser.ability_1.is_buff}}");
-                    }
-                    function showAbility2Description() {
-                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_2.description}}</small></div><div><small>MP: {{request_gameuser.ability_2.mp_cost}} / Type: {{request_gameuser.ability_2.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
-                        $('#combat-ui-abilities').html(replacedContent);
-                        showAbilityTargets("{{request_gameuser.ability_2.pk}}", "{{request_gameuser.ability_2.is_aoe}}", "{{request_gameuser.ability_2.is_heal}}", "{{request_gameuser.ability_2.is_buff}}");
-                    }
-                    function showAbility3Description() {
-                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_3.description}}</small></div><div><small>MP: {{request_gameuser.ability_3.mp_cost}} / Type: {{request_gameuser.ability_3.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
-                        $('#combat-ui-abilities').html(replacedContent);
-                        showAbilityTargets("{{request_gameuser.ability_3.pk}}", "{{request_gameuser.ability_3.is_aoe}}", "{{request_gameuser.ability_3.is_heal}}", "{{request_gameuser.ability_3.is_buff}}");
-                    }
-                    function showAbility4Description() {
-                        var replacedContent = '<div class="row mt-1"><div class="col-12"><div><small>{{request_gameuser.ability_4.description}}</small></div><div><small>MP: {{request_gameuser.ability_4.mp_cost}} / Type: {{request_gameuser.ability_4.type}}</small></div><button class="btn btn-outline-light btn-sm back-btn mt-1">Back</button></div></div>';
-                        $('#combat-ui-abilities').html(replacedContent);
-                        showAbilityTargets("{{request_gameuser.ability_4.pk}}", "{{request_gameuser.ability_4.is_aoe}}", "{{request_gameuser.ability_4.is_heal}}", "{{request_gameuser.ability_4.is_buff}}");
-                    }
-                    // Reattach click events after back button
-                    function reattach4AbilityClickEvents() {
-                        $('#ability_1').click(function() {
-                            showAbility1Description();
-                        });
-                        $('#ability_2').click(function() {
-                            showAbility2Description();
-                        });
-                        $('#ability_3').click(function() {
-                            showAbility3Description();
-                        });
-                        $('#ability_4').click(function() {
-                            showAbility4Description();
-                        });
-                    }
-
-                    // Click event for ability 1
-                    $('#ability_1').click(function() {
-                        showAbility1Description();
-                
-                        // Click event for the back button
-                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
-                            $('#combat-ui-abilities').html(originalContent);
-                            reattach4AbilityClickEvents();
-                        });
-                    });
-
-                    // Click event for ability 2
-                    $('#ability_2').click(function() {
-                        showAbility2Description();
-                
-                        // Click event for the back button
-                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
-                            $('#combat-ui-abilities').html(originalContent);
-                            reattach4AbilityClickEvents();
-                        });
-                    });
-
-                    // Click event for ability 3
-                    $('#ability_3').click(function() {
-                        showAbility3Description();
-                
-                        // Click event for the back button
-                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
-                            $('#combat-ui-abilities').html(originalContent);
-                            reattach4AbilityClickEvents();
-                        });
-                    });
-
-                    // Click event for ability 4
-                    $('#ability_4').click(function() {
-                        showAbility4Description();
-                
-                        // Click event for the back button
-                        $('#combat-ui-abilities').on('click', '.back-btn', function() {
-                            $('#combat-ui-abilities').html(originalContent);
-                            reattach4AbilityClickEvents();
-                        });
-                    });
-                      
-                      
-                } else {
-                    $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
-                }
-            }
-        }
-
-        // Function to display the message and update HP/MP on the frontend
-        function displayMessageAndStatChanges(newEntry) {          
-            $('#combat-ui-messages').text(newEntry.message)
-
-            newEntry.resulting_gameenemies_json.forEach(enemy => {
-                const enemyId = enemy.id;
-                const enemyCurrentHp = enemy.current_hp;
-                const enemyMaxHp = enemy.enemy__start_hp;
-                const enemyHpPercent = enemyCurrentHp/enemyMaxHp;
-                const enemyHpPercentageString = (enemyHpPercent * 100).toFixed(0) + '%';
-              
-                const enemyDiv = document.getElementById(`enemy-${enemyId}`);
-                if (enemyDiv) {
-                    const enemyHpEl = enemyDiv.querySelector('#enemy-hp-nums');
-                    if (enemyHpEl) {
-                        enemyHpEl.textContent = `${enemyCurrentHp} / ${enemyMaxHp}`; // Update the HP values
-                    }
-
-                    const enemyHpBar = enemyDiv.querySelector('#enemy-hp-bar');
-                    if (enemyHpBar) {
-                        enemyHpBar.style.width = enemyHpPercentageString; // Update the HP percentage bar
-                    }
-                }
-            });
-
-            newEntry.resulting_gameusers_json.forEach(gameuser => {
-                const gameuserId = gameuser.id;
-                const gameuserCurrentHp = gameuser.current_hp;
-                const gameuserMaxHp = gameuser.current_max_hp;
-                const gameuserCurrentMp = gameuser.current_mp;
-                const gameuserMaxMp = gameuser.current_max_mp;
-                const gameuserHpPercent = gameuserCurrentHp/gameuserMaxHp;
-                const gameuserHpPercentageString = (gameuserHpPercent * 100).toFixed(0) + '%';
-                const gameuserMpPercent = gameuserCurrentMp/gameuserMaxMp;
-                const gameuserMpPercentageString = (gameuserMpPercent * 100).toFixed(0) + '%';
-              
-                const gameuserDiv = document.getElementById(`player-${gameuserId}`);
-                if (gameuserDiv) {
-                    const gameuserHpEl = gameuserDiv.querySelector('#player-hp-nums');
-                    if (gameuserHpEl) {
-                        gameuserHpEl.textContent = `${gameuserCurrentHp} / ${gameuserMaxHp}`; // Update the HP values
-                    }
-                    const gameuserMpEl = gameuserDiv.querySelector('#player-mp-nums');
-                    if (gameuserMpEl) {
-                        gameuserMpEl.textContent = `${gameuserCurrentMp} / ${gameuserMaxMp}`; // Update the MP values
-                    }
-                    const gameuserHpBar = gameuserDiv.querySelector('#player-hp-bar');
-                    if (gameuserHpBar) {
-                        gameuserHpBar.style.width = gameuserHpPercentageString; // Update the HP percentage bar
-                    }
-                    const gameuserMpBar = gameuserDiv.querySelector('#player-mp-bar');
-                    if (gameuserMpBar) {
-                        gameuserMpBar.style.width = gameuserMpPercentageString; // Update the MP percentage bar
-                    }
-                }
-            });
-        }
-
-        // Function to remove the displayed message from the frontend
-        function removeFrontendMessage() {
-            $('#combat-ui-messages').text('')
-        }
 
         setInterval(function() {
             $.ajax({
@@ -408,7 +402,6 @@
                     gameuser_turn_name = response.gameuser_turn_name;
                     is_request_user_turn = response.is_request_user_turn;
 
-                    // TODO add error messaging
                 },
                 error: function(response) {
                     console.log('error getting data');
