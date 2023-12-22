@@ -44,15 +44,16 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
     is_someones_turn = False
     is_someone_over_100 = False
     for unit in game_turn_order:
-        if unit.is_their_turn == True:
+        if unit.is_their_turn:
             is_someones_turn = True
         if unit.accum_speed >= 100:
             is_someone_over_100 = True
 
     # if not someone's turn we need to run calculations to make it someone's turn
-    if is_someones_turn == False:
-        # nobody over 100 so we don't know who to give turn. increase all units accum_speed by current_speed until at least 1 is over 100.
-        while is_someone_over_100 == False:
+    if not is_someones_turn:
+        # nobody over 100 so we don't know who to give turn. increase all units accum_speed by current_speed until at
+        # least 1 is over 100.
+        while not is_someone_over_100:
             for unit in game_turn_order:
                 if unit.gameuser:
                     unit.accum_speed = unit.accum_speed + unit.gameuser.current_speed
@@ -67,7 +68,7 @@ def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
         for unit in game_turn_order:
             # only update reduce the speed and assign turn to 1 unit. save the rest
             if unit.accum_speed >= 100:
-                if is_someones_turn == False:
+                if not is_someones_turn:
                     unit.is_their_turn = True
                     unit.accum_speed = unit.accum_speed - 100
                     is_someones_turn = True
@@ -138,7 +139,8 @@ def gameuser_attack_single_gameenemy_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO effective or not."
+    message = (f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO "
+               f"effective or not.")
 
     combat_log = CombatLog(
         game=game,
@@ -207,7 +209,8 @@ def gameenemy_attack_single_gameuser_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO effective or not."
+    message = (f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO "
+               f"effective or not.")
 
     combat_log = CombatLog(
         game=game,
@@ -255,12 +258,12 @@ def calculate_damage(
     return final_damage
 
 
-def enemey_choose_random_ability(gameenemy: GameEnemy) -> Ability:
+def enemy_choose_random_ability(gameenemy: GameEnemy) -> Ability:
     random_ability = "ability_" + str(random.randint(1, 4))
     return getattr(gameenemy.enemy, random_ability)
 
 
-def enemey_choose_random_alive_target(gameusers) -> GameUser:
+def enemy_choose_random_alive_target(gameusers) -> GameUser:
     gameuser_list = []
     for gameuser in gameusers:
         if gameuser.current_hp > 0:

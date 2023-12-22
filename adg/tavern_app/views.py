@@ -19,8 +19,8 @@ from .helpers.battle import (
     calc_and_save_turn_order,
     gameuser_attack_single_gameenemy_and_save,
     gameenemy_attack_single_gameuser_and_save,
-    enemey_choose_random_ability,
-    enemey_choose_random_alive_target,
+    enemy_choose_random_ability,
+    enemy_choose_random_alive_target,
     gameuser_heal_single_gameuser_and_save,
     calc_is_request_user_turn,
     gameuser_buff_single_gameuser_and_save,
@@ -1005,7 +1005,7 @@ def battle(request, game_id, act, number):
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
             gameenemy = unit_turn.gameenemy
-            ability = enemey_choose_random_ability(gameenemy)
+            ability = enemy_choose_random_ability(gameenemy)
 
             # Enemies can only AOE or single target damage.
             # Enemies cannot heal or buff.
@@ -1025,7 +1025,7 @@ def battle(request, game_id, act, number):
                         )
             else:
                 # Single Target Damage
-                gameuser_target = enemey_choose_random_alive_target(gameusers=gameusers)
+                gameuser_target = enemy_choose_random_alive_target(gameusers=gameusers)
                 gameenemy_attack_single_gameuser_and_save(
                     game=game,
                     gameuser=gameuser_target,
