@@ -16,15 +16,11 @@ from .forms import (
     CombatLogForm,
 )
 from .helpers.battle import (
-    calc_and_save_turn_order,
     gameuser_attack_single_gameenemy_and_save,
-    gameenemy_attack_single_gameuser_and_save,
-    enemy_choose_random_ability,
-    enemy_choose_random_alive_target,
     gameuser_heal_single_gameuser_and_save,
     calc_is_request_user_turn,
     gameuser_buff_single_gameuser_and_save,
-    is_any_player_alive,
+    is_any_player_alive, calc_turns_and_execute_enemy_turns,
 )
 from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 from .helpers.scene import (
@@ -961,56 +957,7 @@ def battle(request, game_id, act, number):
                         extra_tags="alert alert-danger",
                     )
 
-                calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
-
-                if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
-                    is_enemy_turn_next = True
-                    while is_enemy_turn_next:
-                        if not is_any_player_alive(game=game):
-                            break
-
-                        unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-                        gameenemy = unit_turn.gameenemy
-                        ability = enemy_choose_random_ability(gameenemy)
-
-                        # Enemies can only AOE or single target damage.
-                        # Enemies cannot heal or buff.
-                        # Enemies do not use MP.
-                        if ability.is_aoe:
-                            # AOE Damage
-                            for gameuser in gameusers:
-                                if gameuser.current_hp > 0:
-                                    gameenemy_attack_single_gameuser_and_save(
-                                        game=game,
-                                        gameuser=gameuser,
-                                        gameenemy=gameenemy,
-                                        ability=ability,
-                                        unit_turn=unit_turn,
-                                        act=act,
-                                        battle=battle_num,
-                                    )
-                        else:
-                            # Single Target Damage
-                            gameuser_target = enemy_choose_random_alive_target(gameusers=gameusers)
-                            gameenemy_attack_single_gameuser_and_save(
-                                game=game,
-                                gameuser=gameuser_target,
-                                gameenemy=gameenemy,
-                                ability=ability,
-                                unit_turn=unit_turn,
-                                act=act,
-                                battle=battle_num,
-                            )
-                            # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
-
-                        calc_and_save_turn_order(
-                            game=game, gameusers=gameusers, gameenemies=gameenemies
-                        )
-
-                        # if enemy will go after current enemy - have that enemy attack by looping again
-                        is_enemy_turn_next = (
-                            True if GameTurnOrder.objects.get(game=game,
-                                                              is_their_turn=True).gameenemy is not None else False)
+                calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
             data = {
                 "error": error_msg,
@@ -1028,55 +975,7 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
-
-    if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
-        is_enemy_turn_next = True
-        while is_enemy_turn_next:
-            if not is_any_player_alive(game=game):
-                break
-
-            unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-            gameenemy = unit_turn.gameenemy
-            ability = enemy_choose_random_ability(gameenemy)
-
-            # Enemies can only AOE or single target damage.
-            # Enemies cannot heal or buff.
-            # Enemies do not use MP.
-            if ability.is_aoe:
-                # AOE Damage
-                for gameuser in gameusers:
-                    if gameuser.current_hp > 0:
-                        gameenemy_attack_single_gameuser_and_save(
-                            game=game,
-                            gameuser=gameuser,
-                            gameenemy=gameenemy,
-                            ability=ability,
-                            unit_turn=unit_turn,
-                            act=act,
-                            battle=battle_num,
-                        )
-            else:
-                # Single Target Damage
-                gameuser_target = enemy_choose_random_alive_target(gameusers=gameusers)
-                gameenemy_attack_single_gameuser_and_save(
-                    game=game,
-                    gameuser=gameuser_target,
-                    gameenemy=gameenemy,
-                    ability=ability,
-                    unit_turn=unit_turn,
-                    act=act,
-                    battle=battle_num,
-                )
-                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
-
-            calc_and_save_turn_order(
-                game=game, gameusers=gameusers, gameenemies=gameenemies
-            )
-
-            # if enemy will go after current enemy - have that enemy attack by looping again
-            is_enemy_turn_next = (
-                True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
+    calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
     combat_log_debug = CombatLog.objects.filter(game=game)
     print("***COMBAT LOG***")
