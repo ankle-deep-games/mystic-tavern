@@ -989,6 +989,7 @@ def battle(request, game_id, act, number):
                 "Something in combat form not valid",
                 extra_tags="alert alert-danger",
             )
+            # TODO return JSONRESPONSE on success and error of form submit
 
     # else render form
     else:
