@@ -8,3 +8,5 @@ adg/tavern_app/migrations/__pycache__
 adg/tavern_app/migrations/0001_initial.py
 
 .DS_Store
+
+.idea/
