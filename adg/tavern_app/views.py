@@ -57,7 +57,7 @@ def simple_view(request):
 
 
 def seed(request):
-    if request.user.is_superuser == False:
+    if not request.user.is_superuser:
         return redirect("tavern_app:home")
 
     seed_data()
@@ -66,7 +66,7 @@ def seed(request):
 
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
 def add_three_users_to_game(request, game_id):
-    if request.user.is_superuser == False:
+    if not request.user.is_superuser:
         return redirect("tavern_app:home")
 
     game = Game(pk=game_id)
@@ -201,7 +201,7 @@ def lobby(request, game_id):
         )
         return redirect("login")
 
-    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
         messages.error(
             request, "Must be in the game to see it.", extra_tags="alert alert-danger"
         )
@@ -217,7 +217,7 @@ def lobby(request, game_id):
     any_player_not_ready = gameusers.filter(is_ready=False).exists()
     num_players_in_lobby = gameusers.count()
 
-    if game.game_started == True:
+    if game.game_started:
         gamelocation = GameLocation.objects.get(game=game)
         return redirect(
             reverse(
@@ -235,7 +235,7 @@ def lobby(request, game_id):
         has_error = False
 
         if form.is_valid():
-            if any_player_not_ready == True:
+            if any_player_not_ready:
                 messages.error(
                     request,
                     "All players must be ready to start the game.",
@@ -426,7 +426,7 @@ def scene(request, game_id, act, number):
         )
         return redirect("login")
 
-    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
         messages.error(
             request, "Must be in the game to see it.", extra_tags="alert alert-danger"
         )
@@ -462,11 +462,11 @@ def scene(request, game_id, act, number):
                     "Invalid dialogue choice. Must be connected to previous dialogue."
                 )
 
-            if is_leader == False:
+            if not is_leader:
                 has_error = True
                 error_msg = "Only the party leader can progress dialogue."
 
-            if has_error == False:
+            if not has_error:
                 game_dialogue = GameDialogue(game=game, dialogue=dialogue)
                 game_dialogue.save()
 
@@ -594,7 +594,7 @@ def scene_get_updates(request, game_id, act, number):
         )
         return redirect("login")
 
-    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
         messages.error(
             request, "Must be in the game to see it.", extra_tags="alert alert-danger"
         )
@@ -650,7 +650,7 @@ def battle(request, game_id, act, number):
 
     game = Game.objects.get(pk=game_id)
 
-    if GameUser.objects.filter(user_id=request.user, game=game).exists() == False:
+    if not GameUser.objects.filter(user_id=request.user, game=game).exists():
         messages.error(
             request, "Must be in the game to see it.", extra_tags="alert alert-danger"
         )
@@ -710,7 +710,7 @@ def battle(request, game_id, act, number):
                     and ability.is_buff == False
             ):
                 # AOE Damage
-                if ability.is_aoe == True:
+                if ability.is_aoe:
                     first_gameuser_attack = True
                     for gameenemy in gameenemies:
                         if gameenemy.current_hp > 0:
@@ -756,7 +756,7 @@ def battle(request, game_id, act, number):
                     )
                     else False
                 )
-                if is_enemy_in_this_battle == False:
+                if not is_enemy_in_this_battle:
                     messages.error(
                         request,
                         "You may only attack enemies in this battle.",
@@ -800,7 +800,7 @@ def battle(request, game_id, act, number):
 
             elif is_request_user_turn and ability.is_heal == True:
                 # AOE Heal
-                if ability.is_aoe == True:
+                if ability.is_aoe:
                     first_gameuser_heal = True
                     for gameuser in gameusers:
                         if gameuser.current_hp > 0:
@@ -843,7 +843,7 @@ def battle(request, game_id, act, number):
                     )
                     else False
                 )
-                if is_player_in_this_game == False:
+                if not is_player_in_this_game:
                     messages.error(
                         request,
                         "You may only heal players in this game.",
@@ -886,7 +886,7 @@ def battle(request, game_id, act, number):
 
             elif is_request_user_turn and ability.is_buff == True:
                 # AOE Buff
-                if ability.is_aoe == True:
+                if ability.is_aoe:
                     first_gameuser_buff = True
                     for gameuser in gameusers:
                         if gameuser.current_hp > 0:
@@ -929,7 +929,7 @@ def battle(request, game_id, act, number):
                     )
                     else False
                 )
-                if is_player_in_this_game == False:
+                if not is_player_in_this_game:
                     messages.error(
                         request,
                         "You may only buff players in this game.",
@@ -1000,7 +1000,7 @@ def battle(request, game_id, act, number):
     if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
         is_enemy_turn_next = True
         while is_enemy_turn_next:
-            if is_any_player_alive(game=game) == False:
+            if not is_any_player_alive(game=game):
                 break
 
             unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
@@ -1010,7 +1010,7 @@ def battle(request, game_id, act, number):
             # Enemies can only AOE or single target damage.
             # Enemies cannot heal or buff.
             # Enemies do not use MP.
-            if ability.is_aoe == True:
+            if ability.is_aoe:
                 # AOE Damage
                 for gameuser in gameusers:
                     if gameuser.current_hp > 0:
@@ -1042,12 +1042,7 @@ def battle(request, game_id, act, number):
             )
 
             # if enemy will go after current enemy - have that enemy attack by looping again
-            is_enemy_turn_next = (
-                True
-                if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy
-                   is not None
-                else False
-            )
+            is_enemy_turn_next = (True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
 
     combat_log_debug = CombatLog.objects.filter(game=game)
     print("***COMBAT LOG***")
@@ -1068,7 +1063,7 @@ def battle(request, game_id, act, number):
     # still need to add defeating enemies and redirecting.
     # related https://trello.com/c/cS7s3OEs/217-combat-update-gamelocation-when-winning-and-loosing-battles-depending-on-next-step-in-game
     gamelocation = GameLocation.objects.get(game=game)
-    if is_any_player_alive(game=game) == False:
+    if not is_any_player_alive(game=game):
         if act == 1 and battle_num == 1:
             gamelocation.location_type = "scene"
             gamelocation.number = 2
@@ -1122,7 +1117,7 @@ def battle_get_updates(request, game_id, act, number):
         )
         return redirect("login")
 
-    if GameUser.objects.filter(user_id=request.user, game_id=game_id).exists() == False:
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
         messages.error(
             request, "Must be in the game to see it.", extra_tags="alert alert-danger"
         )
