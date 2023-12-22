@@ -1011,11 +1011,6 @@ def battle(request, game_id, act, number):
             # Enemies do not use MP.
             if ability.is_aoe == True:
                 # AOE Damage
-                messages.info(
-                    request,
-                    f"{gameenemy.name()} used AOE ability {ability} on all players with health above 0.",
-                    extra_tags="alert alert-info",
-                )
                 for gameuser in gameusers:
                     if gameuser.current_hp > 0:
                         gameenemy_attack_single_gameuser_and_save(
@@ -1038,11 +1033,6 @@ def battle(request, game_id, act, number):
                     unit_turn=unit_turn,
                     act=act,
                     battle=battle_num,
-                )
-                messages.info(
-                    request,
-                    f"{gameenemy.name()} used ability {ability} on {gameuser_target.name()} for {ability.max_damage}.",
-                    extra_tags="alert alert-info",
                 )
                 # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
 
