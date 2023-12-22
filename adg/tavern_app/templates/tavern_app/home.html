@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 
 {% if user.is_authenticated %}
-  {% block content %}
+{% block content %}
 <br/>
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">Create a Game</h5>
-          <p class="card-text">Create a game here and play with friends!</p>
-          <a href="{% url 'tavern_app:create_game' %}" class="btn btn-primary">Create</a>
+    <div class="row">
+        <div class="col">
+            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Create a Game</h5>
+                    <p class="card-text">Create a game here and play with friends!</p>
+                    <a href="{% url 'tavern_app:create_game' %}" class="btn btn-primary">Create</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">Join a Game</h5>
-          <p class="card-text">If you were given a password for an already created game, join it here!</p>
-          <a href="{% url 'tavern_app:games' %}" class="btn btn-primary">Join</a>
+        <div class="col">
+            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Join a Game</h5>
+                    <p class="card-text">If you were given a password for an already created game, join it here!</p>
+                    <a href="{% url 'tavern_app:games' %}" class="btn btn-primary">Join</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
-  {% endblock %}
+{% endblock %}
 {% else %}
-  <h2>Login</h2>
-  <form method="post">
+<h2>Login</h2>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Login</button>
-  </form>
+</form>
 {% endif %}

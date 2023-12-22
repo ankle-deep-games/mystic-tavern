@@ -6,17 +6,19 @@
 
     <div class="row">
         <div class="container d-flex justify-content-center">
-        {% for gameenemy in gameenemies %}
-        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="enemy-{{gameenemy.pk}}">
-            <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
-            <h6 class="card-title pt-2">{{ gameenemy.name }}</h6>
-            <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="enemy-hp-bar">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="enemy-hp-nums">{{ gameenemy.enemy.start_hp }} / {{ gameenemy.enemy.start_hp }}</div>
+            {% for gameenemy in gameenemies %}
+            <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="enemy-{{gameenemy.pk}}">
+                <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
+                <h6 class="card-title pt-2">{{ gameenemy.name }}</h6>
+                <div class="progress rounded-0 position-relative" style="height: 23px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="enemy-hp-bar">
+                        <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;"
+                             id="enemy-hp-nums">{{ gameenemy.enemy.start_hp }} / {{ gameenemy.enemy.start_hp }}
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 
@@ -24,22 +26,26 @@
 
     <div class="row">
         <div class="container d-flex justify-content-center">
-        {% for gameuser in gameusers %}
-        <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="player-{{gameuser.pk}}">
-            <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
-            <h6 class="card-title pt-2">{{ gameuser.name }}</h6>
-            <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="player-hp-bar">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-hp-nums">{{ gameuser.current_max_hp }} / {{ gameuser.current_max_hp }}</div>
+            {% for gameuser in gameusers %}
+            <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="player-{{gameuser.pk}}">
+                <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
+                <h6 class="card-title pt-2">{{ gameuser.name }}</h6>
+                <div class="progress rounded-0 position-relative" style="height: 23px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="player-hp-bar">
+                        <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;"
+                             id="player-hp-nums">{{ gameuser.current_max_hp }} / {{ gameuser.current_max_hp }}
+                        </div>
+                    </div>
+                </div>
+                <div class="progress rounded-0 position-relative" style="height: 23px;">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 100%" id="player-mp-bar">
+                        <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;"
+                             id="player-mp-nums">{{ gameuser.current_max_mp }} / {{ gameuser.current_max_mp }}
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="progress rounded-0 position-relative" style="height: 23px;">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 100%" id="player-mp-bar">
-                    <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;" id="player-mp-nums">{{ gameuser.current_max_mp }} / {{ gameuser.current_max_mp }}</div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 
@@ -54,17 +60,19 @@
 
     {% comment %} TODO move to JS {% endcomment %}
     {% if messages %}
-        {% for message in messages %}
-            <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
-                {{ message }}
-            </div>
-        {% endfor %}
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}" {% endif %} role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
 
 </div>
 
 {% comment %} TODO move jquery cdn elsewhere {% endcomment %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     var CSRF_TOKEN = '{{ csrf_token }}';
     $(document).on('submit', '.battle-post-form', function(e) {
