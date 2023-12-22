@@ -6,74 +6,75 @@
     <hr>
 
     {% if messages %}
-        {% for message in messages %}
-            <div {% if message.tags %} class="{{ message.tags }}"{% endif %} role="alert">
-                {{ message }}
-            </div>
-        {% endfor %}
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}" {% endif %} role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
 
     {% if is_leader == True %}
-        <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
-        {% if any_player_not_ready or num_players_in_lobby != 4 %}
-            <a href="#" class="btn btn-primary disabled">START GAME</a>
-        {% else %}
-            <form method="POST">
-                {% csrf_token %}
-                {{form}}
-                <input class="btn btn-primary mt-2" type="submit" value="START GAME">
-            </form>
-        {% endif %}
+    <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
+    {% if any_player_not_ready or num_players_in_lobby != 4 %}
+    <a href="#" class="btn btn-primary disabled">START GAME</a>
+    {% else %}
+    <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        <input class="btn btn-primary mt-2" type="submit" value="START GAME">
+    </form>
+    {% endif %}
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
     <div class="card-group">
-    {% for gameuser in gameusers %}
+        {% for gameuser in gameusers %}
         <div class="card text-white bg-secondary mb-3">
-          {% load static %}
-          {% if gameuser.is_ready %}
-            <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}" alt="role and gender picture">
+            {% load static %}
+            {% if gameuser.is_ready %}
+            <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
+                 alt="role and gender picture">
             <div class="card-body">
-              <h3 class="card-title text-white">{{ gameuser.name }} - READY</h3>
-              <hr>
-              <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
-              <hr>
-              <h6>Stats:</h6>
-              <ul>
-                <li>HP: {{ gameuser.current_hp }}</li>
-                <li>MP: {{ gameuser.current_mp }}</li>
-                <li>Attack: {{ gameuser.current_attack }}</li>
-                <li>Defense: {{ gameuser.current_defense }}</li>
-                <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
-                <li>Myst Defense: {{ gameuser.current_myst_defense }}</li>
-                <li>Speed: {{ gameuser.current_speed }}</li>
-              </ul>
-          </div>
-          {% else %}
-            <img class="card-img-top" src ="{% static 'tavern_app/logo.png' %}" alt="game logo">
+                <h3 class="card-title text-white">{{ gameuser.name }} - READY</h3>
+                <hr>
+                <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
+                <hr>
+                <h6>Stats:</h6>
+                <ul>
+                    <li>HP: {{ gameuser.current_hp }}</li>
+                    <li>MP: {{ gameuser.current_mp }}</li>
+                    <li>Attack: {{ gameuser.current_attack }}</li>
+                    <li>Defense: {{ gameuser.current_defense }}</li>
+                    <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
+                    <li>Myst Defense: {{ gameuser.current_myst_defense }}</li>
+                    <li>Speed: {{ gameuser.current_speed }}</li>
+                </ul>
+            </div>
+            {% else %}
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body">
-              <h3 class="card-title text-white">{{ gameuser.name }} - NOT READY</h3>
-              <hr>
-              <h3 class="card-title text-white">Role: ???</h3>
-              <hr>
-              <h6>Stats:</h6>
-              <ul>
-                <li>HP: ???</li>
-                <li>MP: ???</li>
-                <li>Attack: ???</li>
-                <li>Defense: ???</li>
-                <li>Myst Attack: ???</li>
-                <li>Myst Defense: ???</li>
-                <li>Speed: ???</li>
-              </ul>
-          </div>
-          {% endif %}
+                <h3 class="card-title text-white">{{ gameuser.name }} - NOT READY</h3>
+                <hr>
+                <h3 class="card-title text-white">Role: ???</h3>
+                <hr>
+                <h6>Stats:</h6>
+                <ul>
+                    <li>HP: ???</li>
+                    <li>MP: ???</li>
+                    <li>Attack: ???</li>
+                    <li>Defense: ???</li>
+                    <li>Myst Attack: ???</li>
+                    <li>Myst Defense: ???</li>
+                    <li>Speed: ???</li>
+                </ul>
+            </div>
+            {% endif %}
 
         </div>
-    {% endfor %}
+        {% endfor %}
     </div>
-{% endblock %}
+    {% endblock %}
 
-{% block additional_content %}
+    {% block additional_content %}
     <div class="container">
         <hr>
         <h4 class="text-white my-4">The Roles(Classes):</h4>
@@ -82,11 +83,13 @@
             <img src="{% static 'tavern_app/archer-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
             <div class="card-body">
                 <h3 class="card-title">Archer</h3>
-                <p class="card-text">In the world of Mystic Tavern, the Archer is a master of precision and deadly accuracy.
-                Armed with a trusty bow and an assortment of arrows, they rain down a flurry of projectiles from afar,
-                swiftly dispatching enemies with their ranged physical attacks. With their keen eyes and nimble
-                movements, Archers provide essential long-range support to their allies in the epic battles that
-                unfold.</p>
+                <p class="card-text">In the world of Mystic Tavern, the Archer is a master of precision and deadly
+                    accuracy.
+                    Armed with a trusty bow and an assortment of arrows, they rain down a flurry of projectiles from
+                    afar,
+                    swiftly dispatching enemies with their ranged physical attacks. With their keen eyes and nimble
+                    movements, Archers provide essential long-range support to their allies in the epic battles that
+                    unfold.</p>
             </div>
         </div>
 
@@ -94,20 +97,27 @@
             <img src="{% static 'tavern_app/paladin-male.png' %}" class="card-img-top" alt="..." style="width: 30%;">
             <div class="card-body">
                 <h3 class="card-title">Paladin</h3>
-                <p class="card-text">As the frontline defender in the realm of Mystic Tavern, the Paladin stands as a paragon of courage and
+                <p class="card-text">As the frontline defender in the realm of Mystic Tavern, the Paladin stands as a
+                    paragon of courage and
                     strength. Clad in heavy armor and wielding a mighty sword or hammer, they excel in close-quarters
-                    combat, unleashing devastating melee physical attacks upon their foes. Paladins are renowned for their
-                    unwavering resolve, shielding their comrades from harm and leading the charge against evil forces.</p>
+                    combat, unleashing devastating melee physical attacks upon their foes. Paladins are renowned for
+                    their
+                    unwavering resolve, shielding their comrades from harm and leading the charge against evil
+                    forces.</p>
             </div>
         </div>
 
         <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
-            <img src="{% static 'tavern_app/whitemage-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
+            <img src="{% static 'tavern_app/whitemage-female.png' %}" class="card-img-top" alt="..."
+                 style="width: 30%;">
             <div class="card-body">
                 <h3 class="card-title">White Mage</h3>
-                <p class="card-text">Within the enchanting world of Mystic Tavern, the White Mage embodies the essence of healing and
-                    restoration. Armed with ancient magical arts and wielding a staff, they are masters of mending wounds
-                    and revitalizing their allies. White Mages channel the ethereal powers of light, mending broken bodies
+                <p class="card-text">Within the enchanting world of Mystic Tavern, the White Mage embodies the essence
+                    of healing and
+                    restoration. Armed with ancient magical arts and wielding a staff, they are masters of mending
+                    wounds
+                    and revitalizing their allies. White Mages channel the ethereal powers of light, mending broken
+                    bodies
                     and replenishing vital energy, ensuring their team remains strong and resilient throughout their
                     perilous journeys.</p>
             </div>
@@ -117,7 +127,8 @@
             <img src="{% static 'tavern_app/blackmage-male.png' %}" class="card-img-top" alt="..." style="width: 30%;">
             <div class="card-body">
                 <h3 class="card-title">Black Mage</h3>
-                <p class="card-text">In the mystical realm of Mystic Tavern, the Black Mage harnesses the raw power of arcane forces. Wielding
+                <p class="card-text">In the mystical realm of Mystic Tavern, the Black Mage harnesses the raw power of
+                    arcane forces. Wielding
                     a staff crackling with dark energy, they unleash devastating ranged magical attacks upon their
                     adversaries. Black Mages weave intricate spells, conjuring destructive elements and manipulating the
                     very fabric of reality to decimate their foes from a distance.</p>
@@ -128,9 +139,12 @@
             <img src="{% static 'tavern_app/bard-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
             <div class="card-body">
                 <h3 class="card-title">Bard</h3>
-                <p class="card-text">Within the enchanting world reminiscent of Lord of the Rings, the Bard is a charismatic and versatile
-                    support class. Masters of both music and speech, they inspire their allies with uplifting melodies and
-                    captivating tales, bolstering their courage and enhancing their abilities. Bards excel at crowd control,
+                <p class="card-text">Within the enchanting world reminiscent of Lord of the Rings, the Bard is a
+                    charismatic and versatile
+                    support class. Masters of both music and speech, they inspire their allies with uplifting melodies
+                    and
+                    captivating tales, bolstering their courage and enhancing their abilities. Bards excel at crowd
+                    control,
                     manipulating the battlefield and providing crucial support, ensuring their comrades remain motivated
                     and ready for any challenge that awaits in the mythical realm of Mystic Tavern.</p>
             </div>
