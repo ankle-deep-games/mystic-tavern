@@ -787,13 +787,6 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
-                            )
-                        )
 
                     # Single Target Heal
                     is_player_in_this_game = (
@@ -804,45 +797,28 @@ def battle(request, game_id, act, number):
                         else False
                     )
                     if not is_player_in_this_game:
-                        messages.error(
-                            request,
-                            "You may only heal players in this game.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
-                            )
-                        )
+                        has_error = True
+                        error_msg = "You may only heal players in this game."
 
-                    defensive_gameuser_target = GameUser.objects.get(
-                        game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
-                    )
-                    if defensive_gameuser_target.current_hp == 0:
-                        messages.error(
-                            request,
-                            "Cannot single target heal player with 0 hp.",
-                            extra_tags="alert alert-danger",
+                    if not has_error:
+                        defensive_gameuser_target = GameUser.objects.get(
+                            game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                         )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
-                            )
+                        if defensive_gameuser_target.current_hp == 0:
+                            has_error = True
+                            error_msg = "Cannot single target heal player with 0 hp."
+
+                    if not has_error:
+                        gameuser_heal_single_gameuser_and_save(
+                            game=game,
+                            gameuser=request_gameuser,
+                            defensive_gameuser_target=defensive_gameuser_target,
+                            ability=ability,
+                            unit_turn=unit_turn,
+                            act=act,
+                            battle=battle_num,
+                            deduct_mp=True,
                         )
-                    gameuser_heal_single_gameuser_and_save(
-                        game=game,
-                        gameuser=request_gameuser,
-                        defensive_gameuser_target=defensive_gameuser_target,
-                        ability=ability,
-                        unit_turn=unit_turn,
-                        act=act,
-                        battle=battle_num,
-                        deduct_mp=True,
-                    )
 
                 # Buff Abilities
                 elif is_request_user_turn and ability.is_buff:
