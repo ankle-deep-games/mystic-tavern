@@ -672,27 +672,27 @@ def battle(request, game_id, act, number):
                 request_gameuser=request_gameuser, unit_turn=unit_turn
             )
 
-            if request_gameuser.current_mp < ability.mp_cost:
+            if not is_request_user_turn:
                 has_error = True
-                error_msg = "Not enough MP to cast that ability."
-
-            if ability not in [
-                request_gameuser.ability_1,
-                request_gameuser.ability_2,
-                request_gameuser.ability_3,
-                request_gameuser.ability_4,
-            ]:
-                has_error = True
-                error_msg = "You may only cast abilities that you know."
+                error_msg = "Can only cast abilities when it is your turn."
 
             if not has_error:
-                # TODO if not request_user_turn stop early. remove from if checks
+                if request_gameuser.current_mp < ability.mp_cost:
+                    has_error = True
+                    error_msg = "Not enough MP to cast that ability."
+
+                if ability not in [
+                    request_gameuser.ability_1,
+                    request_gameuser.ability_2,
+                    request_gameuser.ability_3,
+                    request_gameuser.ability_4,
+                ]:
+                    has_error = True
+                    error_msg = "You may only cast abilities that you know."
+
+            if not has_error:
                 # Damage Abilities
-                if (
-                        is_request_user_turn
-                        and ability.is_heal is False
-                        and ability.is_buff is False
-                ):
+                if ability.is_heal is False and ability.is_buff is False:
                     # AOE Damage
                     if ability.is_aoe:
                         first_gameuser_attack = True
@@ -758,7 +758,7 @@ def battle(request, game_id, act, number):
                             )
 
                 # Heal Abilities
-                elif is_request_user_turn and ability.is_heal:
+                elif ability.is_heal:
                     # AOE Heal
                     if ability.is_aoe:
                         first_gameuser_heal = True
@@ -821,7 +821,7 @@ def battle(request, game_id, act, number):
                             )
 
                 # Buff Abilities
-                elif is_request_user_turn and ability.is_buff:
+                elif ability.is_buff:
                     # AOE Buff
                     if ability.is_aoe:
                         first_gameuser_buff = True
