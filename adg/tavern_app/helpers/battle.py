@@ -306,11 +306,7 @@ def gameuser_heal_single_gameuser_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    calculated_healing = calculate_healing(
-        gameuser=gameuser,
-        defensive_gameuser_target=defensive_gameuser_target,
-        ability=ability,
-    )
+    calculated_healing = calculate_healing(ability=ability)
 
     if deduct_mp:
         gameuser.current_mp -= ability.mp_cost
@@ -362,12 +358,10 @@ def gameuser_heal_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_healing(
-        gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
-):
-    # TODO https://trello.com/c/6PCoXQ5O/196-combat-calculate-healing-done
-    final_healing = ability.max_amount
-    return final_healing
+def calculate_healing(ability: Ability) -> int:
+    # randomize healing between ability min/max
+    # we could later decide to include the myst_attack as a modifier
+    return random.randint(ability.min_amount, ability.max_amount)
 
 
 def gameuser_buff_single_gameuser_and_save(
