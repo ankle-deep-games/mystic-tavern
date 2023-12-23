@@ -113,6 +113,10 @@ def gameuser_attack_single_gameenemy_and_save(
     calculated_damage = calculate_damage(
         ability=ability,
         effectiveness_multiplier=effectiveness_multiplier,
+        attacker_myst_attack=gameuser.current_myst_attack,
+        attacker_attack=gameuser.current_attack,
+        defender_myst_defense=gameenemy.current_myst_defense,
+        defender_defense=gameenemy.current_defense,
     )
 
     if deduct_mp:
@@ -200,6 +204,10 @@ def gameenemy_attack_single_gameuser_and_save(
     calculated_damage = calculate_damage(
         ability=ability,
         effectiveness_multiplier=effectiveness_multiplier,
+        attacker_myst_attack=gameenemy.current_myst_attack,
+        attacker_attack=gameenemy.current_attack,
+        defender_myst_defense=gameuser.current_myst_defense,
+        defender_defense=gameuser.current_defense,
     )
 
     gameuser.current_hp = gameuser.current_hp - calculated_damage
@@ -242,16 +250,25 @@ def gameenemy_attack_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_damage(ability: Ability, effectiveness_multiplier: float) -> int:
+def calculate_damage(ability: Ability, effectiveness_multiplier: float, attacker_myst_attack: int, attacker_attack: int,
+                     defender_myst_defense: int, defender_defense: int) -> int:
     # randomize damage between ability min/max
     num_between_min_max = random.randint(ability.min_amount, ability.max_amount)
 
-    # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
-    # TODO https://trello.com/c/Pj9qSprE/254-combat-change-to-minamount-and-maxamount-in-the-model
+    # factor in myst or physical attack/defense
+    if ability.is_myst_attack:
+        damage = ((attacker_myst_attack - defender_myst_defense) * 0.5) + num_between_min_max
+        if damage < 0:
+            damage = 0
+    else:
+        damage = ((attacker_attack - defender_defense) * 0.5) + num_between_min_max
+        if damage < 0:
+            damage = 0
 
     # modify damage depending on if ability type is effective, not effective, or neutral
-    final_damage = round(num_between_min_max * effectiveness_multiplier)
-    final_damage = int(final_damage)  # Convert the rounded value to an integer
+    final_damage = round(damage * effectiveness_multiplier)
+    final_damage = int(final_damage)
+
     return final_damage
 
 
