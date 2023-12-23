@@ -246,6 +246,7 @@ def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability:
     # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
     # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
+    # TODO make a ticket to rename min and max damage so it can be used for healing
     final_damage = ability.max_damage
     return final_damage
 
@@ -525,7 +526,6 @@ def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameu
                     act=act,
                     battle=battle_num,
                 )
-                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
 
             calc_and_save_turn_order(
                 game=game, gameusers=gameusers, gameenemies=gameenemies
