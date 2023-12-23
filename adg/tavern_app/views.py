@@ -1,11 +1,13 @@
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, reverse
 from django.shortcuts import render
-from django.views.generic import CreateView, FormView, TemplateView
+from django.views.generic import CreateView, TemplateView
 
 from .forms import (
     CreateGameForm,
@@ -358,60 +360,103 @@ class CreateGameView(CreateView):
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
 
 
-class RoleAssignmentView(FormView):
-    template_name = "tavern_app/role_assignment.html"
-    form_class = RoleAssignmentForm
+class BaseRoleAssignmentFormSet(BaseInlineFormSet):
+    def clean(self):
+        """Custom formset-level validation."""
+        if any(self.errors):
+            # Don't perform validation if there are form errors already
+            return
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["game_id"] = self.kwargs["game_id"]
-        kwargs["num_players"] = GameUser.objects.filter(
-            game_id=self.kwargs["game_id"]
-        ).count()
-        return kwargs
+        roles = [form.cleaned_data.get('role') for form in self.forms if form.cleaned_data.get('role')]
+        if len(roles) != len(set(roles)):
+            raise forms.ValidationError("Each player must have a unique role.")
 
-    def form_valid(self, form):
-        game = Game.objects.get(pk=self.kwargs["game_id"])
-        num_players = form.initial["num_players"]
-        attack_ability = Ability.objects.get(pk=1)
+        for form in self.forms:
+            role = form.cleaned_data.get('role')
+            gender = form.cleaned_data.get('gender')
 
-        for i in range(1, num_players + 1):
-            player_name = form.cleaned_data[f"player_{i}_name"]
-            player_role = form.cleaned_data[f"player_{i}_role"]
-            player_gender = form.cleaned_data[f"player_{i}_gender"]
+            if not role or not gender:
+                raise forms.ValidationError("Every player must have a role and gender selected.")
 
-            player = GameUser.objects.get(game=game, user__username=player_name)
+        return super().clean()
 
-            player.role = player_role
-            player.gender = player_gender
 
-            player.current_hp = player.role.start_hp
-            player.current_max_hp = player.role.start_hp
-            player.current_mp = player.role.start_mp
-            player.current_max_mp = player.role.start_mp
-            player.current_attack = player.role.start_attack
-            player.current_defense = player.role.start_defense
-            player.current_myst_attack = player.role.start_myst_attack
-            player.current_myst_defense = player.role.start_myst_defense
-            player.current_speed = player.role.start_speed
+def role_assignment(request, game_id):
+    if not request.user.is_authenticated:
+        messages.error(
+            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
+        )
+        return redirect("login")
 
-            player.with_gear_hp = player.role.start_hp
-            player.with_gear_mp = player.role.start_mp
-            player.with_gear_attack = player.role.start_attack
-            player.with_gear_defense = player.role.start_defense
-            player.with_gear_myst_attack = player.role.start_myst_attack
-            player.with_gear_myst_defense = player.role.start_myst_defense
-            player.with_gear_speed = player.role.start_speed
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
+        messages.error(
+            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
+        )
+        return redirect("tavern_app:games")
 
-            player.ability_1 = attack_ability
+    game = Game.objects.get(pk=game_id)
+    is_leader = (
+        True
+        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
+        else False
+    )
+    if not is_leader:
+        messages.error(
+            request, "Only party leader can assign roles.", extra_tags="alert alert-danger"
+        )
+        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
 
-            player.save()
+    gameusers_queryset = GameUser.objects.filter(game_id=game_id)
+    gameusers_count = gameusers_queryset.count()
 
-        return super().form_valid(form)
+    user_names = [gameuser.user.username for gameuser in gameusers_queryset]
 
-    def get_success_url(self):
-        game_id = self.kwargs["game_id"]
-        return reverse("tavern_app:lobby", kwargs={"game_id": game_id})
+    role_assignment_form_set = inlineformset_factory(
+        parent_model=Game,
+        model=GameUser,
+        form=RoleAssignmentForm,
+        formset=BaseRoleAssignmentFormSet,
+        extra=gameusers_count,  # Dynamically set the number of extra forms
+        max_num=4,  # Maximum number of forms
+        can_delete=False,
+    )
+
+    if request.method == 'POST':
+        formset = role_assignment_form_set(request.POST, instance=game)
+        if formset.is_valid():
+            attack_ability = Ability.objects.get(pk=1)
+            for form in formset:
+                if form.cleaned_data:
+                    player = form.save(commit=False)  # Get the player object from the form
+                    # Perform additional operations on the player based on the form data
+                    player.current_hp = player.role.start_hp
+                    player.current_max_hp = player.role.start_hp
+                    player.current_mp = player.role.start_mp
+                    player.current_max_mp = player.role.start_mp
+                    player.current_attack = player.role.start_attack
+                    player.current_defense = player.role.start_defense
+                    player.current_myst_attack = player.role.start_myst_attack
+                    player.current_myst_defense = player.role.start_myst_defense
+                    player.current_speed = player.role.start_speed
+
+                    player.with_gear_hp = player.role.start_hp
+                    player.with_gear_mp = player.role.start_mp
+                    player.with_gear_attack = player.role.start_attack
+                    player.with_gear_defense = player.role.start_defense
+                    player.with_gear_myst_attack = player.role.start_myst_attack
+                    player.with_gear_myst_defense = player.role.start_myst_defense
+                    player.with_gear_speed = player.role.start_speed
+
+                    player.ability_1 = attack_ability
+
+                    player.save()  # Save the updated player information
+
+            formset.save()  # Save the formset data after updating the players
+            return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
+    else:
+        formset = role_assignment_form_set(instance=game)
+
+    return render(request, 'tavern_app/role_assignment.html', {'formset': formset, 'user_names': user_names})
 
 
 def scene(request, game_id, act, number):
