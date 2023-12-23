@@ -721,41 +721,41 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-
-                    # Single Target Damage
-                    is_enemy_in_this_battle = (
-                        True
-                        if GameEnemy.objects.filter(
-                            game=game,
-                            pk=form.cleaned_data["gameenemy"].id,
-                            act=act,
-                            battle=battle_num,
+                    else:
+                        # Single Target Damage
+                        is_enemy_in_this_battle = (
+                            True
+                            if GameEnemy.objects.filter(
+                                game=game,
+                                pk=form.cleaned_data["gameenemy"].id,
+                                act=act,
+                                battle=battle_num,
+                            )
+                            else False
                         )
-                        else False
-                    )
-                    if not is_enemy_in_this_battle:
-                        has_error = True
-                        error_msg = "You may only attack enemies in this battle."
-
-                    if not has_error:
-                        gameenemy_target = GameEnemy.objects.get(
-                            game=game, pk=form.cleaned_data["gameenemy"].id
-                        )
-                        if gameenemy_target.current_hp == 0:
+                        if not is_enemy_in_this_battle:
                             has_error = True
-                            error_msg = "Cannot single target enemy with 0 hp."
+                            error_msg = "You may only attack enemies in this battle."
 
-                    if not has_error:
-                        gameuser_attack_single_gameenemy_and_save(
-                            game=game,
-                            gameuser=request_gameuser,
-                            gameenemy=gameenemy_target,
-                            ability=ability,
-                            unit_turn=unit_turn,
-                            act=act,
-                            battle=battle_num,
-                            deduct_mp=True,
-                        )
+                        if not has_error:
+                            gameenemy_target = GameEnemy.objects.get(
+                                game=game, pk=form.cleaned_data["gameenemy"].id
+                            )
+                            if gameenemy_target.current_hp == 0:
+                                has_error = True
+                                error_msg = "Cannot single target enemy with 0 hp."
+
+                        if not has_error:
+                            gameuser_attack_single_gameenemy_and_save(
+                                game=game,
+                                gameuser=request_gameuser,
+                                gameenemy=gameenemy_target,
+                                ability=ability,
+                                unit_turn=unit_turn,
+                                act=act,
+                                battle=battle_num,
+                                deduct_mp=True,
+                            )
 
                 # Heal Abilities
                 elif is_request_user_turn and ability.is_heal:
@@ -787,38 +787,38 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-
-                    # Single Target Heal
-                    is_player_in_this_game = (
-                        True
-                        if GameUser.objects.filter(
-                            game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
+                    else:
+                        # Single Target Heal
+                        is_player_in_this_game = (
+                            True
+                            if GameUser.objects.filter(
+                                game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
+                            )
+                            else False
                         )
-                        else False
-                    )
-                    if not is_player_in_this_game:
-                        has_error = True
-                        error_msg = "You may only heal players in this game."
-
-                    if not has_error:
-                        defensive_gameuser_target = GameUser.objects.get(
-                            game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
-                        )
-                        if defensive_gameuser_target.current_hp == 0:
+                        if not is_player_in_this_game:
                             has_error = True
-                            error_msg = "Cannot single target heal player with 0 hp."
+                            error_msg = "You may only heal players in this game."
 
-                    if not has_error:
-                        gameuser_heal_single_gameuser_and_save(
-                            game=game,
-                            gameuser=request_gameuser,
-                            defensive_gameuser_target=defensive_gameuser_target,
-                            ability=ability,
-                            unit_turn=unit_turn,
-                            act=act,
-                            battle=battle_num,
-                            deduct_mp=True,
-                        )
+                        if not has_error:
+                            defensive_gameuser_target = GameUser.objects.get(
+                                game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
+                            )
+                            if defensive_gameuser_target.current_hp == 0:
+                                has_error = True
+                                error_msg = "Cannot single target heal player with 0 hp."
+
+                        if not has_error:
+                            gameuser_heal_single_gameuser_and_save(
+                                game=game,
+                                gameuser=request_gameuser,
+                                defensive_gameuser_target=defensive_gameuser_target,
+                                ability=ability,
+                                unit_turn=unit_turn,
+                                act=act,
+                                battle=battle_num,
+                                deduct_mp=True,
+                            )
 
                 # Buff Abilities
                 elif is_request_user_turn and ability.is_buff:

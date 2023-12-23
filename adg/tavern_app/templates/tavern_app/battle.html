@@ -337,6 +337,7 @@
     $(document).on('submit', '.battle-post-form', function(e) {
         e.preventDefault();
 
+        // TODO possibly get rid of spinners
         $(".submit-button").prop("disabled", true);
         $(".submit-button").html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`);
 
