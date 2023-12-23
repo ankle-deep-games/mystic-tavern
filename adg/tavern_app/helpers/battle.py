@@ -139,8 +139,22 @@ def gameuser_attack_single_gameenemy_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = (f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO "
-               f"effective or not.")
+    effectiveness_message = ''
+
+    print("ability.type")
+    print(ability.type)
+    print("gameenemy.unit_type().weakness")
+    print(gameenemy.unit_type().weakness)
+    if ability.type == gameenemy.unit_type().weakness:
+        print("inside weakness")
+        effectiveness_message = "It was very effective."
+    elif ability.type == gameenemy.unit_type().strength:
+        print("inside strength")
+        effectiveness_message = "It was not very effective."
+    else:
+        print("neither, else.")
+
+    message = f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. {effectiveness_message}"
 
     combat_log = CombatLog(
         game=game,
@@ -242,12 +256,23 @@ def calculate_damage(
         target = gameuser
 
     # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
+    # HERE
+    # attack_type_strength_weight = 1.25
+    # attack_type_weakness_weight = 0.75
+    #
+    # if defense_type == attack_type_strength:
+    #     attack = attack * attack_type_strength_weight
+    # elif defense_type == attack_type_weakness:
+    #     attack = attack * attack_type_weakness_weight
 
     # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
 
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
 
     # TODO might break into two funcs. one for player. one for enemy.
+    # Yes - refactor this. two different calculate damage funcs
+    # get rid of unit_type and update other two funcs that use it.
+    # That way I can reference types directly
     print("attacker is: " + attacker.name())
     print("target is: " + target.name())
     print("target type is: " + target.unit_type().name)
@@ -349,30 +374,6 @@ def gameuser_heal_single_gameuser_and_save(
         resulting_gameenemies_json=resulting_gameenemies_json,
     )
     combat_log.save()
-
-
-def determine_type_strength_weakness(
-        attack, attack_type_strength, attack_type_weakness, defense_type
-):
-    """
-    This function will be called when an ability is chosen to determine the ability type as compared to the opponent's
-    role type. If the ability is a strength against the opponent's role type, it will be X% more effective. If it is a
-    weakness, it will be Y% less effective. If there is no strength or weakness, the ability strength will not be
-    changed.
-    :param attack: either the with_gear_attack or with_gear_myst_attack depending on attack choice
-    :param attack_type_strength: ability.type.strength
-    :param attack_type_weakness: ability.type.weakness
-    :param defense_type: target.role.type_id
-    """
-    attack_type_strength_weight = 1.25
-    attack_type_weakness_weight = 0.75
-
-    if defense_type == attack_type_strength:
-        attack = attack * attack_type_strength_weight
-    elif defense_type == attack_type_weakness:
-        attack = attack * attack_type_weakness_weight
-
-    return attack
 
 
 def randomize_ability_strength():
