@@ -113,20 +113,24 @@ def gameuser_attack_single_gameenemy_and_save(
     # I need to know the type to both calculate damage integer
     # and which string for combat log
     effectiveness_message = ''
+    effectiveness_multiplier = 1.00
     enemy_defense_type_id = gameenemy.enemy.type.id
     attack_type_strength = ability.type.strength
     attack_type_weakness = ability.type.weakness
 
     if enemy_defense_type_id == attack_type_strength:
         effectiveness_message = "It was very effective."
+        effectiveness_multiplier = 1.25
 
     elif enemy_defense_type_id == attack_type_weakness:
         effectiveness_message = "It was not very effective."
+        effectiveness_multiplier = 0.75
 
     calculated_damage = calculate_damage_to_enemy(
         gameuser=gameuser,
         gameenemy=gameenemy,
         ability=ability,
+        effectiveness_multiplier=effectiveness_multiplier,
     )
 
     if deduct_mp:
@@ -242,12 +246,13 @@ def gameenemy_attack_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability) -> int:
+def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, effectiveness_multiplier: int) -> int:
     # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
     # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
     # TODO make a ticket to rename min and max damage so it can be used for healing
-    final_damage = ability.max_damage
+    final_damage = round(ability.max_damage * effectiveness_multiplier)
+    final_damage = int(final_damage)  # Convert the rounded value to an integer
     return final_damage
 
 
