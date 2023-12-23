@@ -140,19 +140,9 @@ def gameuser_attack_single_gameenemy_and_save(
     )
 
     effectiveness_message = ''
-
-    print("ability.type")
-    print(ability.type)
-    print("gameenemy.unit_type().weakness")
-    print(gameenemy.unit_type().weakness)
-    if ability.type == gameenemy.unit_type().weakness:
-        print("inside weakness")
+    enemy_type = gameenemy.unit_type()
+    if ability.type.id == enemy_type.weakness:
         effectiveness_message = "It was very effective."
-    elif ability.type == gameenemy.unit_type().strength:
-        print("inside strength")
-        effectiveness_message = "It was not very effective."
-    else:
-        print("neither, else.")
 
     message = f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. {effectiveness_message}"
 
