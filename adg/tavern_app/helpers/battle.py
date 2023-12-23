@@ -109,11 +109,10 @@ def gameuser_attack_single_gameenemy_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    calculated_damage = calculate_damage(
+    calculated_damage = calculate_damage_to_enemy(
         gameuser=gameuser,
         gameenemy=gameenemy,
         ability=ability,
-        who_attacking=who_attacking,
     )
 
     if deduct_mp:
@@ -188,11 +187,10 @@ def gameenemy_attack_single_gameuser_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    calculated_damage = calculate_damage(
+    calculated_damage = calculate_damage_to_player(
         gameuser=gameuser,
         gameenemy=gameenemy,
         ability=ability,
-        who_attacking=who_attacking,
     )
 
     gameuser.current_hp = gameuser.current_hp - calculated_damage
@@ -236,33 +234,18 @@ def gameenemy_attack_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_damage(
-        gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str
-):
-    if who_attacking == "player":
-        attacker = gameuser
-        target = gameenemy
-    elif who_attacking == "enemy":
-        attacker = gameenemy
-        target = gameuser
-
+def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability) -> int:
     # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
-    # HERE
-    # attack_type_strength_weight = 1.25
-    # attack_type_weakness_weight = 0.75
-    #
-    # if defense_type == attack_type_strength:
-    #     attack = attack * attack_type_strength_weight
-    # elif defense_type == attack_type_weakness:
-    #     attack = attack * attack_type_weakness_weight
-
     # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
-
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
+    final_damage = ability.max_damage
+    return final_damage
 
-    # TODO refactor into two funcs. one for player. one for enemy. will be easier to understand
-    # could call it calculate_damage_to_enemy and calculate_damage_to_player
 
+def calculate_damage_to_player(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability) -> int:
+    # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
+    # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
+    # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
     final_damage = ability.max_damage
     return final_damage
 
