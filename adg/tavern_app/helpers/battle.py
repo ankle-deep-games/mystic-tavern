@@ -246,7 +246,7 @@ def gameenemy_attack_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, effectiveness_multiplier: int) -> int:
+def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, effectiveness_multiplier: float) -> int:
     # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
     # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
