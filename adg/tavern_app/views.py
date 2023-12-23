@@ -16,15 +16,11 @@ from .forms import (
     CombatLogForm,
 )
 from .helpers.battle import (
-    calc_and_save_turn_order,
     gameuser_attack_single_gameenemy_and_save,
-    gameenemy_attack_single_gameuser_and_save,
-    enemy_choose_random_ability,
-    enemy_choose_random_alive_target,
     gameuser_heal_single_gameuser_and_save,
     calc_is_request_user_turn,
     gameuser_buff_single_gameuser_and_save,
-    is_any_player_alive,
+    is_any_player_alive, calc_turns_and_execute_enemy_turns,
 )
 from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 from .helpers.scene import (
@@ -560,6 +556,7 @@ def scene(request, game_id, act, number):
             )
         )
 
+    # TODO refactor extract
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
@@ -675,25 +672,27 @@ def battle(request, game_id, act, number):
                 request_gameuser=request_gameuser, unit_turn=unit_turn
             )
 
-            if request_gameuser.current_mp < ability.mp_cost:
+            if not is_request_user_turn:
                 has_error = True
-                error_msg = "Not enough MP to cast that ability."
-
-            if ability not in [
-                request_gameuser.ability_1,
-                request_gameuser.ability_2,
-                request_gameuser.ability_3,
-                request_gameuser.ability_4,
-            ]:
-                has_error = True
-                error_msg = "You may only cast abilities that you know."
+                error_msg = "Can only cast abilities when it is your turn."
 
             if not has_error:
-                if (
-                        is_request_user_turn
-                        and ability.is_heal is False
-                        and ability.is_buff is False
-                ):
+                if request_gameuser.current_mp < ability.mp_cost:
+                    has_error = True
+                    error_msg = "Not enough MP to cast that ability."
+
+                if ability not in [
+                    request_gameuser.ability_1,
+                    request_gameuser.ability_2,
+                    request_gameuser.ability_3,
+                    request_gameuser.ability_4,
+                ]:
+                    has_error = True
+                    error_msg = "You may only cast abilities that you know."
+
+            if not has_error:
+                # Damage Abilities
+                if ability.is_heal is False and ability.is_buff is False:
                     # AOE Damage
                     if ability.is_aoe:
                         first_gameuser_attack = True
@@ -722,68 +721,44 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                    else:
+                        # Single Target Damage
+                        is_enemy_in_this_battle = (
+                            True
+                            if GameEnemy.objects.filter(
+                                game=game,
+                                pk=form.cleaned_data["gameenemy"].id,
+                                act=act,
+                                battle=battle_num,
                             )
+                            else False
                         )
+                        if not is_enemy_in_this_battle:
+                            has_error = True
+                            error_msg = "You may only attack enemies in this battle."
 
-                    # Single Target Damage
-                    is_enemy_in_this_battle = (
-                        True
-                        if GameEnemy.objects.filter(
-                            game=game,
-                            pk=form.cleaned_data["gameenemy"].id,
-                            act=act,
-                            battle=battle_num,
-                        )
-                        else False
-                    )
-                    if not is_enemy_in_this_battle:
-                        messages.error(
-                            request,
-                            "You may only attack enemies in this battle.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                        if not has_error:
+                            gameenemy_target = GameEnemy.objects.get(
+                                game=game, pk=form.cleaned_data["gameenemy"].id
                             )
-                        )
+                            if gameenemy_target.current_hp == 0:
+                                has_error = True
+                                error_msg = "Cannot single target enemy with 0 hp."
 
-                    gameenemy_target = GameEnemy.objects.get(
-                        game=game, pk=form.cleaned_data["gameenemy"].id
-                    )
-                    if gameenemy_target.current_hp == 0:
-                        messages.error(
-                            request,
-                            "Cannot single target enemy with 0 hp.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                        if not has_error:
+                            gameuser_attack_single_gameenemy_and_save(
+                                game=game,
+                                gameuser=request_gameuser,
+                                gameenemy=gameenemy_target,
+                                ability=ability,
+                                unit_turn=unit_turn,
+                                act=act,
+                                battle=battle_num,
+                                deduct_mp=True,
                             )
-                        )
 
-                    gameuser_attack_single_gameenemy_and_save(
-                        game=game,
-                        gameuser=request_gameuser,
-                        gameenemy=gameenemy_target,
-                        ability=ability,
-                        unit_turn=unit_turn,
-                        act=act,
-                        battle=battle_num,
-                        deduct_mp=True,
-                    )
-
-                elif is_request_user_turn and ability.is_heal:
+                # Heal Abilities
+                elif ability.is_heal:
                     # AOE Heal
                     if ability.is_aoe:
                         first_gameuser_heal = True
@@ -812,64 +787,41 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                    else:
+                        # Single Target Heal
+                        is_player_in_this_game = (
+                            True
+                            if GameUser.objects.filter(
+                                game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                             )
+                            else False
                         )
+                        if not is_player_in_this_game:
+                            has_error = True
+                            error_msg = "You may only heal players in this game."
 
-                    # Single Target Heal
-                    is_player_in_this_game = (
-                        True
-                        if GameUser.objects.filter(
-                            game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
-                        )
-                        else False
-                    )
-                    if not is_player_in_this_game:
-                        messages.error(
-                            request,
-                            "You may only heal players in this game.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                        if not has_error:
+                            defensive_gameuser_target = GameUser.objects.get(
+                                game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                             )
-                        )
+                            if defensive_gameuser_target.current_hp == 0:
+                                has_error = True
+                                error_msg = "Cannot single target heal player with 0 hp."
 
-                    defensive_gameuser_target = GameUser.objects.get(
-                        game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
-                    )
-                    if defensive_gameuser_target.current_hp == 0:
-                        messages.error(
-                            request,
-                            "Cannot single target heal player with 0 hp.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                        if not has_error:
+                            gameuser_heal_single_gameuser_and_save(
+                                game=game,
+                                gameuser=request_gameuser,
+                                defensive_gameuser_target=defensive_gameuser_target,
+                                ability=ability,
+                                unit_turn=unit_turn,
+                                act=act,
+                                battle=battle_num,
+                                deduct_mp=True,
                             )
-                        )
-                    gameuser_heal_single_gameuser_and_save(
-                        game=game,
-                        gameuser=request_gameuser,
-                        defensive_gameuser_target=defensive_gameuser_target,
-                        ability=ability,
-                        unit_turn=unit_turn,
-                        act=act,
-                        battle=battle_num,
-                        deduct_mp=True,
-                    )
 
-                elif is_request_user_turn and ability.is_buff:
+                # Buff Abilities
+                elif ability.is_buff:
                     # AOE Buff
                     if ability.is_aoe:
                         first_gameuser_buff = True
@@ -898,62 +850,38 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                    else:
+                        # Single Target Buff
+                        is_player_in_this_game = (
+                            True
+                            if GameUser.objects.filter(
+                                game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                             )
+                            else False
                         )
+                        if not is_player_in_this_game:
+                            has_error = True
+                            error_msg = "You may only buff players in this game."
 
-                    # Single Target Buff
-                    is_player_in_this_game = (
-                        True
-                        if GameUser.objects.filter(
-                            game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
-                        )
-                        else False
-                    )
-                    if not is_player_in_this_game:
-                        messages.error(
-                            request,
-                            "You may only buff players in this game.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                        if not has_error:
+                            defensive_gameuser_target = GameUser.objects.get(
+                                game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                             )
-                        )
+                            if defensive_gameuser_target.current_hp == 0:
+                                has_error = True
+                                error_msg = "Cannot single target buff player with 0 hp."
 
-                    defensive_gameuser_target = GameUser.objects.get(
-                        game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
-                    )
-                    if defensive_gameuser_target.current_hp == 0:
-                        messages.error(
-                            request,
-                            "Cannot single target buff player with 0 hp.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
+                        if not has_error:
+                            gameuser_buff_single_gameuser_and_save(
+                                game=game,
+                                gameuser=request_gameuser,
+                                defensive_gameuser_target=defensive_gameuser_target,
+                                ability=ability,
+                                unit_turn=unit_turn,
+                                act=act,
+                                battle=battle_num,
+                                deduct_mp=True,
                             )
-                        )
-                    gameuser_buff_single_gameuser_and_save(
-                        game=game,
-                        gameuser=request_gameuser,
-                        defensive_gameuser_target=defensive_gameuser_target,
-                        ability=ability,
-                        unit_turn=unit_turn,
-                        act=act,
-                        battle=battle_num,
-                        deduct_mp=True,
-                    )
                 else:
                     messages.error(
                         request,
@@ -961,136 +889,24 @@ def battle(request, game_id, act, number):
                         extra_tags="alert alert-danger",
                     )
 
-                calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
-
-                if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
-                    is_enemy_turn_next = True
-                    while is_enemy_turn_next:
-                        if not is_any_player_alive(game=game):
-                            break
-
-                        unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-                        gameenemy = unit_turn.gameenemy
-                        ability = enemy_choose_random_ability(gameenemy)
-
-                        # Enemies can only AOE or single target damage.
-                        # Enemies cannot heal or buff.
-                        # Enemies do not use MP.
-                        if ability.is_aoe:
-                            # AOE Damage
-                            for gameuser in gameusers:
-                                if gameuser.current_hp > 0:
-                                    gameenemy_attack_single_gameuser_and_save(
-                                        game=game,
-                                        gameuser=gameuser,
-                                        gameenemy=gameenemy,
-                                        ability=ability,
-                                        unit_turn=unit_turn,
-                                        act=act,
-                                        battle=battle_num,
-                                    )
-                        else:
-                            # Single Target Damage
-                            gameuser_target = enemy_choose_random_alive_target(gameusers=gameusers)
-                            gameenemy_attack_single_gameuser_and_save(
-                                game=game,
-                                gameuser=gameuser_target,
-                                gameenemy=gameenemy,
-                                ability=ability,
-                                unit_turn=unit_turn,
-                                act=act,
-                                battle=battle_num,
-                            )
-                            # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
-
-                        calc_and_save_turn_order(
-                            game=game, gameusers=gameusers, gameenemies=gameenemies
-                        )
-
-                        # if enemy will go after current enemy - have that enemy attack by looping again
-                        is_enemy_turn_next = (
-                            True if GameTurnOrder.objects.get(game=game,
-                                                              is_their_turn=True).gameenemy is not None else False)
+                calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
             data = {
                 "error": error_msg,
             }
             return JsonResponse(data)
         else:
-            messages.error(
-                request,
-                "Something in combat form not valid",
-                extra_tags="alert alert-danger",
-            )
-            # TODO return JSONRESPONSE on success and error of form submit
+            error_msg = "Something in combat form not valid."
+            data = {
+                "error": error_msg,
+            }
+            return JsonResponse(data)
 
     # else render form
     else:
         form = CombatLogForm()
 
-    calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
-
-    if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
-        is_enemy_turn_next = True
-        while is_enemy_turn_next:
-            if not is_any_player_alive(game=game):
-                break
-
-            unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
-            gameenemy = unit_turn.gameenemy
-            ability = enemy_choose_random_ability(gameenemy)
-
-            # Enemies can only AOE or single target damage.
-            # Enemies cannot heal or buff.
-            # Enemies do not use MP.
-            if ability.is_aoe:
-                # AOE Damage
-                for gameuser in gameusers:
-                    if gameuser.current_hp > 0:
-                        gameenemy_attack_single_gameuser_and_save(
-                            game=game,
-                            gameuser=gameuser,
-                            gameenemy=gameenemy,
-                            ability=ability,
-                            unit_turn=unit_turn,
-                            act=act,
-                            battle=battle_num,
-                        )
-            else:
-                # Single Target Damage
-                gameuser_target = enemy_choose_random_alive_target(gameusers=gameusers)
-                gameenemy_attack_single_gameuser_and_save(
-                    game=game,
-                    gameuser=gameuser_target,
-                    gameenemy=gameenemy,
-                    ability=ability,
-                    unit_turn=unit_turn,
-                    act=act,
-                    battle=battle_num,
-                )
-                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
-
-            calc_and_save_turn_order(
-                game=game, gameusers=gameusers, gameenemies=gameenemies
-            )
-
-            # if enemy will go after current enemy - have that enemy attack by looping again
-            is_enemy_turn_next = (
-                True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
-
-    combat_log_debug = CombatLog.objects.filter(game=game)
-    print("***COMBAT LOG***")
-    for log in combat_log_debug:
-        print(log)
-    print("***COMBAT LOG***\n")
-
-    game_turn_order = GameTurnOrder.objects.filter(game=game)
-    print("***TURN ORDER***")
-    for turn_order in game_turn_order:
-        print(turn_order)
-        if turn_order.is_their_turn:
-            print("-----^ their turn ^-----")
-    print("***TURN ORDER***")
+    calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
     # TODO prototype getting in here for proof of concept of drunk guys defeating players and then going to act 1
     #  scene 2 this will change when battles use javascript (including other non party leaders redirecting) still

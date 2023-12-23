@@ -528,3 +528,54 @@ def gameuser_buff_single_gameuser_and_save(
 
 def is_any_player_alive(game: Game):
     return True if GameUser.objects.filter(game=game, current_hp__gt=0) else False
+
+
+def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers):
+    calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
+    if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
+        is_enemy_turn_next = True
+        while is_enemy_turn_next:
+            if not is_any_player_alive(game=game):
+                break
+
+            unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
+            gameenemy = unit_turn.gameenemy
+            ability = enemy_choose_random_ability(gameenemy)
+
+            # Enemies can only AOE or single target damage.
+            # Enemies cannot heal or buff.
+            # Enemies do not use MP.
+            if ability.is_aoe:
+                # AOE Damage
+                for gameuser in gameusers:
+                    if gameuser.current_hp > 0:
+                        gameenemy_attack_single_gameuser_and_save(
+                            game=game,
+                            gameuser=gameuser,
+                            gameenemy=gameenemy,
+                            ability=ability,
+                            unit_turn=unit_turn,
+                            act=act,
+                            battle=battle_num,
+                        )
+            else:
+                # Single Target Damage
+                gameuser_target = enemy_choose_random_alive_target(gameusers=gameusers)
+                gameenemy_attack_single_gameuser_and_save(
+                    game=game,
+                    gameuser=gameuser_target,
+                    gameenemy=gameenemy,
+                    ability=ability,
+                    unit_turn=unit_turn,
+                    act=act,
+                    battle=battle_num,
+                )
+                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
+
+            calc_and_save_turn_order(
+                game=game, gameusers=gameusers, gameenemies=gameenemies
+            )
+
+            # if enemy will go after current enemy - have that enemy attack by looping again
+            is_enemy_turn_next = (
+                True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
