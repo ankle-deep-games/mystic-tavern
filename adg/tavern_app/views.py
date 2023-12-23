@@ -1,12 +1,13 @@
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, reverse
 from django.shortcuts import render
-from django.views.generic import CreateView, FormView, TemplateView
-from django.forms import inlineformset_factory
+from django.views.generic import CreateView, TemplateView
 
 from .forms import (
     CreateGameForm,
@@ -359,6 +360,22 @@ class CreateGameView(CreateView):
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
 
 
+class BaseRoleAssignmentFormSet(BaseInlineFormSet):
+    def clean(self):
+        """Custom formset-level validation to ensure distinct roles for each player."""
+        if any(self.errors):
+            # Don't perform validation if there are form errors already
+            return
+
+        roles = [form.cleaned_data.get('role') for form in self.forms if form.cleaned_data.get('role')]
+        if len(roles) != len(set(roles)):
+            raise forms.ValidationError("Each player must have a unique role.")
+
+        # Optionally, add additional validation here
+
+        return super().clean()
+
+
 def role_assignment(request, game_id):
     if not request.user.is_authenticated:
         messages.error(
@@ -393,6 +410,7 @@ def role_assignment(request, game_id):
         parent_model=Game,
         model=GameUser,
         form=RoleAssignmentForm,
+        formset=BaseRoleAssignmentFormSet,
         extra=gameusers_count,  # Dynamically set the number of extra forms
         max_num=4,  # Maximum number of forms
         can_delete=False,
@@ -403,7 +421,6 @@ def role_assignment(request, game_id):
         if formset.is_valid():
             # TODO for form to be valid make sure everyone has a role and gender
             # TODO conditional check no duplicate roles before saving the formset
-                # TODO show error on role assignments page and redirect back to it instead of back to game
             # TODO if valid also assign the role stats to the gameuser
 
             formset.save()
@@ -412,6 +429,7 @@ def role_assignment(request, game_id):
         formset = role_assignment_form_set(instance=game)
 
     return render(request, 'tavern_app/role_assignment.html', {'formset': formset, 'user_names': user_names})
+
 
 # class RoleAssignmentView(FormView):
 #     template_name = "tavern_app/role_assignment.html"
