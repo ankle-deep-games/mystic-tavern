@@ -109,6 +109,20 @@ def gameuser_attack_single_gameenemy_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
+    # TODO WIP
+    # I need to know the type to both calculate damage integer
+    # and which string for combat log
+    effectiveness_message = ''
+    enemy_defense_type_id = gameenemy.enemy.type.id
+    attack_type_strength = ability.type.strength
+    attack_type_weakness = ability.type.weakness
+
+    if enemy_defense_type_id == attack_type_strength:
+        effectiveness_message = "It was very effective."
+
+    elif enemy_defense_type_id == attack_type_weakness:
+        effectiveness_message = "It was not very effective."
+
     calculated_damage = calculate_damage_to_enemy(
         gameuser=gameuser,
         gameenemy=gameenemy,
@@ -137,12 +151,6 @@ def gameuser_attack_single_gameenemy_and_save(
     resulting_gameenemies_json = list(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
-
-    # TODO WIP
-    effectiveness_message = ''
-    enemy_type = gameenemy.enemy.type.weakness
-    if ability.type.id == enemy_type.weakness:
-        effectiveness_message = "It was very effective."
 
     message = f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. {effectiveness_message}"
 
@@ -340,15 +348,6 @@ def gameuser_heal_single_gameuser_and_save(
         resulting_gameenemies_json=resulting_gameenemies_json,
     )
     combat_log.save()
-
-
-def randomize_ability_strength():
-    """
-    This function will be called when an ability is chosen to randomize the strength. The float value returned should
-    be applied to the ability strength determined in the main determine_ability_strength() function to provide some RNG.
-    return: float value between -10% and +10%
-    """
-    return random.uniform(-0.1, 0.1)
 
 
 def calculate_healing(
