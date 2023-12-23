@@ -42,6 +42,7 @@ from .models import (
     GameTurnOrder,
     Armor,
     Weapon,
+    SceneImage,
 )
 
 
@@ -559,6 +560,8 @@ def scene(request, game_id, act, number):
         scene_num=scene_num,
     )
 
+    scene_image = SceneImage.objects.get(act=act, scene=scene_num)
+
     # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
 
     context = {
@@ -569,6 +572,7 @@ def scene(request, game_id, act, number):
         "is_leader": is_leader,
         "act": act,
         "scene_num": scene_num,
+        "scene_image": scene_image.image,
     }
 
     return render(request, "tavern_app/scene.html", context)

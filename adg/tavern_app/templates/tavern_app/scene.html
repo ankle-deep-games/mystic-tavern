@@ -6,6 +6,16 @@
     <div class="row my-2">
         <div id="dialogue-error-container"></div>
         <div id="dialogue-container">
+            
+            {% comment %} only show the scene image on the first node of the scene {% endcomment %}
+            {% if game_dialogue_progress_list|length == 1 %}
+                <div class="row justify-content-center">
+                    <div class="col-8 col-md-6 d-flex justify-content-center">
+                        <img src="{% static 'tavern_app/' %}{{ scene_image }}" alt="Image of the scene" class="img-fluid">
+                    </div>
+                </div>
+            {% endif %}
+
             {% comment %} this game's dialogue so far from game_dialogue table {% endcomment %}
             {% for game_dialogue in game_dialogue_progress_list %}
             {% if game_dialogue.node_type == "player response" %}
@@ -15,7 +25,7 @@
             {% else %}
             <div class="d-flex mt-3">
                 <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" style="width:100px;height:100px;">
-                <p><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
+                <p class="scene-p"><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
             </div>
             {% endif %}
             {% endfor %}
@@ -25,7 +35,7 @@
             {% if dialogue.node_type == "talk" or dialogue.node_type == "narration" %}
             <div class="d-flex mt-3">
                 <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" style="width:100px;height:100px;">
-                <p><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
+                <p class="scene-p"><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
             </div>
             <form method="POST" class="dialogue-post-form">
                 {% csrf_token %}
@@ -89,7 +99,7 @@
                     } else {
                         var element = "<div class='d-flex mt-3'>" +
                             "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                            "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                            "<p class='scene-p'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                             "</div>";
                     }
                     $("#dialogue-container").append(element);
@@ -101,7 +111,7 @@
                     if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                         var element = "<div class='d-flex mt-3'>" +
                             "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                            "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                            "<p class='scene-p'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                             "</div>" +
                             "<form method='POST' class='dialogue-post-form'>" +
                             "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
@@ -166,7 +176,7 @@
                                 } else {
                                     var element = "<div class='d-flex mt-3'>" +
                                         "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                        "<p><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                                        "<p class='scene-p'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                                         "</div>";
                                 }
                                 $("#dialogue-container").append(element);
@@ -178,7 +188,7 @@
                                 if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                                     var element = "<div class='d-flex mt-3'>" +
                                         "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                        "<p><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                                        "<p class='scene-p'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                                         "</div>" +
                                         "<form method='POST' class='dialogue-post-form'>" +
                                         "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
