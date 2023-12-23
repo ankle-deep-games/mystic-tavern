@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 
 from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
 
@@ -96,8 +97,6 @@ def gameuser_attack_single_gameenemy_and_save(
         battle: int,
         deduct_mp: bool,
 ) -> None:
-    who_attacking = "player"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -109,26 +108,9 @@ def gameuser_attack_single_gameenemy_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    # TODO WIP
-    # I need to know the type to both calculate damage integer
-    # and which string for combat log
-    effectiveness_message = ''
-    effectiveness_multiplier = 1.00
-    enemy_defense_type_id = gameenemy.enemy.type.id
-    attack_type_strength = ability.type.strength
-    attack_type_weakness = ability.type.weakness
+    effectiveness_message, effectiveness_multiplier = calc_type_message_and_multiplier(ability, gameenemy.enemy.type.id)
 
-    if enemy_defense_type_id == attack_type_strength:
-        effectiveness_message = "It was very effective."
-        effectiveness_multiplier = 1.25
-
-    elif enemy_defense_type_id == attack_type_weakness:
-        effectiveness_message = "It was not very effective."
-        effectiveness_multiplier = 0.75
-
-    calculated_damage = calculate_damage_to_enemy(
-        gameuser=gameuser,
-        gameenemy=gameenemy,
+    calculated_damage = calculate_damage(
         ability=ability,
         effectiveness_multiplier=effectiveness_multiplier,
     )
@@ -164,7 +146,7 @@ def gameuser_attack_single_gameenemy_and_save(
         battle=battle,
         gameuser=gameuser,
         gameenemy=gameenemy,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="player",
         ability=ability,
         amount=calculated_damage,
         damage_or_heal_or_buff="damage",
@@ -177,6 +159,22 @@ def gameuser_attack_single_gameenemy_and_save(
     combat_log.save()
 
 
+def calc_type_message_and_multiplier(ability: Ability, defense_type_id: int) -> Tuple[str, float]:
+    effectiveness_message = ''
+    effectiveness_multiplier = 1.00
+    attack_type_strength = ability.type.strength
+    attack_type_weakness = ability.type.weakness
+
+    if defense_type_id == attack_type_strength:
+        effectiveness_message = "It was very effective."
+        effectiveness_multiplier = 1.25
+
+    elif defense_type_id == attack_type_weakness:
+        effectiveness_message = "It was not very effective."
+        effectiveness_multiplier = 0.75
+    return effectiveness_message, effectiveness_multiplier
+
+
 def gameenemy_attack_single_gameuser_and_save(
         game: Game,
         gameuser: GameUser,
@@ -186,8 +184,6 @@ def gameenemy_attack_single_gameuser_and_save(
         act: int,
         battle: int,
 ) -> None:
-    who_attacking = "enemy"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -199,10 +195,11 @@ def gameenemy_attack_single_gameuser_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    calculated_damage = calculate_damage_to_player(
-        gameuser=gameuser,
-        gameenemy=gameenemy,
+    effectiveness_message, effectiveness_multiplier = calc_type_message_and_multiplier(ability, gameuser.role.type.id)
+
+    calculated_damage = calculate_damage(
         ability=ability,
+        effectiveness_multiplier=effectiveness_multiplier,
     )
 
     gameuser.current_hp = gameuser.current_hp - calculated_damage
@@ -224,8 +221,7 @@ def gameenemy_attack_single_gameuser_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = (f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO "
-               f"effective or not.")
+    message = f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. {effectiveness_message}"
 
     combat_log = CombatLog(
         game=game,
@@ -233,7 +229,7 @@ def gameenemy_attack_single_gameuser_and_save(
         battle=battle,
         gameuser=gameuser,
         gameenemy=gameenemy,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="enemy",
         ability=ability,
         amount=calculated_damage,
         damage_or_heal_or_buff="damage",
@@ -246,21 +242,16 @@ def gameenemy_attack_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_damage_to_enemy(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, effectiveness_multiplier: float) -> int:
-    # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
-    # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
+def calculate_damage(ability: Ability, effectiveness_multiplier: float) -> int:
+    # randomize damage between ability min/max
+    num_between_min_max = random.randint(ability.min_damage, ability.max_damage)
+
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
-    # TODO make a ticket to rename min and max damage so it can be used for healing
-    final_damage = round(ability.max_damage * effectiveness_multiplier)
+    # TODO https://trello.com/c/Pj9qSprE/254-combat-change-to-minamount-and-maxamount-in-the-model
+
+    # modify damage depending on if ability type is effective, not effective, or neutral
+    final_damage = round(num_between_min_max * effectiveness_multiplier)
     final_damage = int(final_damage)  # Convert the rounded value to an integer
-    return final_damage
-
-
-def calculate_damage_to_player(gameuser: GameUser, gameenemy: GameEnemy, ability: Ability) -> int:
-    # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
-    # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
-    # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
-    final_damage = ability.max_damage
     return final_damage
 
 
@@ -287,8 +278,6 @@ def gameuser_heal_single_gameuser_and_save(
         battle: int,
         deduct_mp: bool,
 ) -> None:
-    who_attacking = "player"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -343,7 +332,7 @@ def gameuser_heal_single_gameuser_and_save(
         battle=battle,
         gameuser=gameuser,
         defensive_gameuser_target=defensive_gameuser_target,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="player",
         ability=ability,
         amount=calculated_healing,
         damage_or_heal_or_buff="heal",
@@ -374,8 +363,6 @@ def gameuser_buff_single_gameuser_and_save(
         battle: int,
         deduct_mp: bool,
 ) -> None:
-    who_attacking = "player"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -474,7 +461,7 @@ def gameuser_buff_single_gameuser_and_save(
         battle=battle,
         gameuser=gameuser,
         defensive_gameuser_target=defensive_gameuser_target,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="player",
         ability=ability,
         amount=0,
         damage_or_heal_or_buff="buff",
