@@ -244,7 +244,7 @@ def gameenemy_attack_single_gameuser_and_save(
 
 def calculate_damage(ability: Ability, effectiveness_multiplier: float) -> int:
     # randomize damage between ability min/max
-    num_between_min_max = random.randint(ability.min_damage, ability.max_damage)
+    num_between_min_max = random.randint(ability.min_amount, ability.max_amount)
 
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
     # TODO https://trello.com/c/Pj9qSprE/254-combat-change-to-minamount-and-maxamount-in-the-model
@@ -349,7 +349,7 @@ def calculate_healing(
         gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
 ):
     # TODO https://trello.com/c/6PCoXQ5O/196-combat-calculate-healing-done
-    final_healing = ability.max_damage
+    final_healing = ability.max_amount
     return final_healing
 
 

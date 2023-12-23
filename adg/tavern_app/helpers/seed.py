@@ -409,8 +409,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=1,
-        max_damage=5,
+        min_amount=1,
+        max_amount=5,
     )
     # Tier 2
     ability2 = Ability(
@@ -422,8 +422,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=15,
+        min_amount=5,
+        max_amount=15,
     )
     ability3 = Ability(
         name="Shatter Shot",
@@ -435,8 +435,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=15,
+        min_amount=5,
+        max_amount=15,
     )
     ability4 = Ability(
         name="Divine Light",
@@ -448,8 +448,8 @@ def seed_data():
         is_heal=True,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=15,
+        min_amount=5,
+        max_amount=15,
     )
     ability5 = Ability(
         name="Shadow Blast",
@@ -461,8 +461,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=15,
+        min_amount=5,
+        max_amount=15,
     )
     ability6 = Ability(
         name="Anthem of Valor",
@@ -488,8 +488,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
     ability8 = Ability(
         name="Shadow Volley",
@@ -500,8 +500,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
     ability9 = Ability(
         name="Enchanted Grove",
@@ -513,8 +513,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
     ability10 = Ability(
         name="Resonant Stones",
@@ -526,8 +526,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
     ability11 = Ability(
         name="Gale Fury",
@@ -539,8 +539,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
     # Tier 4
     ability12 = Ability(
@@ -553,8 +553,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=30,
-        max_damage=45,
+        min_amount=30,
+        max_amount=45,
     )
     ability13 = Ability(
         name="Grove's Vengeance",
@@ -566,8 +566,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=30,
-        max_damage=45,
+        min_amount=30,
+        max_amount=45,
     )
     ability14 = Ability(
         name="Sanctuary",
@@ -579,8 +579,8 @@ def seed_data():
         is_heal=True,
         is_aoe=True,
         is_buff=False,
-        min_damage=30,
-        max_damage=45,
+        min_amount=30,
+        max_amount=45,
     )
     ability15 = Ability(
         name="Arcane Darkness",
@@ -592,8 +592,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=30,
-        max_damage=45,
+        min_amount=30,
+        max_amount=45,
     )
     ability16 = Ability(
         name="Ethereal Crescendo",
@@ -624,8 +624,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=10,
+        min_amount=5,
+        max_amount=10,
     )
 
     ability18 = Ability(
@@ -637,8 +637,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=5,
-        max_damage=10,
+        min_amount=5,
+        max_amount=10,
     )
 
     ability19 = Ability(
@@ -650,8 +650,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=15,
+        min_amount=5,
+        max_amount=15,
     )
 
     ability20 = Ability(
@@ -663,8 +663,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=10,
+        min_amount=5,
+        max_amount=10,
     )
 
     ability21 = Ability(
@@ -676,8 +676,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=5,
-        max_damage=10,
+        min_amount=5,
+        max_amount=10,
     )
 
     ability22 = Ability(
@@ -689,8 +689,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=5,
-        max_damage=15,
+        min_amount=5,
+        max_amount=15,
     )
 
     ability23 = Ability(
@@ -702,8 +702,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
 
     ability24 = Ability(
@@ -715,8 +715,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
 
     ability25 = Ability(
@@ -728,8 +728,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=50,
+        min_amount=15,
+        max_amount=50,
     )
 
     ability26 = Ability(
@@ -741,8 +741,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=15,
-        max_damage=30,
+        min_amount=15,
+        max_amount=30,
     )
 
     ability27 = Ability(
@@ -754,8 +754,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=30,
-        max_damage=50,
+        min_amount=30,
+        max_amount=50,
     )
 
     ability28 = Ability(
@@ -767,8 +767,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=30,
-        max_damage=50,
+        min_amount=30,
+        max_amount=50,
     )
 
     ability29 = Ability(
@@ -780,8 +780,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=30,
-        max_damage=50,
+        min_amount=30,
+        max_amount=50,
     )
 
     ability30 = Ability(
@@ -793,8 +793,8 @@ def seed_data():
         is_heal=False,
         is_aoe=True,
         is_buff=False,
-        min_damage=30,
-        max_damage=75,
+        min_amount=30,
+        max_amount=75,
     )
 
     ability31 = Ability(
@@ -806,8 +806,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability32 = Ability(
@@ -819,8 +819,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability33 = Ability(
@@ -832,8 +832,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability34 = Ability(
@@ -845,8 +845,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability35 = Ability(
@@ -858,8 +858,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability36 = Ability(
@@ -871,8 +871,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability37 = Ability(
@@ -884,8 +884,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability38 = Ability(
@@ -897,8 +897,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability39 = Ability(
@@ -910,8 +910,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     ability40 = Ability(
@@ -923,8 +923,8 @@ def seed_data():
         is_heal=False,
         is_aoe=False,
         is_buff=False,
-        min_damage=25,
-        max_damage=50,
+        min_amount=25,
+        max_amount=50,
     )
 
     Ability.objects.bulk_create(

@@ -113,8 +113,8 @@ class Ability(models.Model):
     buff_myst_attack_percent = models.FloatField(default=0)  # between 0 and 1
     buff_myst_defense_percent = models.FloatField(default=0)  # between 0 and 1
     buff_speed_percent = models.FloatField(default=0)  # between 0 and 1
-    min_damage = models.IntegerField(default=0)
-    max_damage = models.IntegerField(default=0)
+    min_amount = models.IntegerField(default=0)
+    max_amount = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
