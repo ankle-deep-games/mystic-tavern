@@ -362,7 +362,7 @@ class CreateGameView(CreateView):
 
 class BaseRoleAssignmentFormSet(BaseInlineFormSet):
     def clean(self):
-        """Custom formset-level validation to ensure distinct roles for each player."""
+        """Custom formset-level validation."""
         if any(self.errors):
             # Don't perform validation if there are form errors already
             return
@@ -371,7 +371,12 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
         if len(roles) != len(set(roles)):
             raise forms.ValidationError("Each player must have a unique role.")
 
-        # Optionally, add additional validation here
+        for form in self.forms:
+            role = form.cleaned_data.get('role')
+            gender = form.cleaned_data.get('gender')
+
+            if not role or not gender:
+                raise forms.ValidationError("Every player must have a role and gender selected.")
 
         return super().clean()
 
