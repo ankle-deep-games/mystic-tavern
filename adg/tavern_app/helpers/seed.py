@@ -12,6 +12,7 @@ from ..models import (
     Armor,
     Ability,
     Enemy,
+    SceneImage,
 )
 
 
@@ -75,6 +76,14 @@ def seed_data():
             type_forest,
             type_wind,
             type_normal,
+        ]
+    )
+
+    # scene images
+    scene_image1 = SceneImage(act=1, scene=1, image="setting-alley.png")
+    SceneImage.objects.bulk_create(
+        [
+            scene_image1,
         ]
     )
 

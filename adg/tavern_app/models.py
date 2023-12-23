@@ -450,3 +450,15 @@ class GameTurnOrder(models.Model):
         gameuser = self.gameuser.name() if self.gameuser else "Null"
         gameenemy = self.gameenemy.name() if self.gameenemy else "Null"
         return f"game: {self.game.name}, gameuser: {gameuser}, gameenemy: {gameenemy}, is_their_turn: {self.is_their_turn}, accum_speed: {self.accum_speed}"
+
+
+class SceneImage(models.Model):
+    objects = models.Manager()
+    act = models.IntegerField(default=0)
+    scene = models.IntegerField(default=0)
+    image = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Scene image url: {self.image}, Act: {self.act}, Scene: {self.scene}"
