@@ -93,10 +93,3 @@ def get_next_dialogue_list(
             )
 
     return next_dialogue_list
-
-
-def plant_seed_decision():
-    print("PLANTING THE SEED PLACEHOLDER")
-    # This will do something like: somehow we keep track of which gem was planted.
-    # randomly assign the 4 players one of the gems and give them the corresponding ability
-    # we don't want to assign someone the TYPE of gem that their role is

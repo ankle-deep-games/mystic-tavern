@@ -27,7 +27,6 @@ from .helpers.scene import (
     get_character_list,
     get_game_dialogue_progress_list,
     get_next_dialogue_list,
-    plant_seed_decision,
 )
 from .helpers.seed import seed_data
 from .models import (
@@ -481,14 +480,6 @@ def scene(request, game_id, act, number):
                         "number": gamelocation.number,
                     },
                 )
-
-            # TODO https://trello.com/c/BCQJFpKL/200-function-to-determine-ability-3-based-on-plant-the-seed-decision
-            #  change act/scene/dialogue to execute at correct place adding here now as an example of how we'll
-            #  execute decisions in dialogue when we get here we might add func params to plant_seed_decision func
-            #  this approach will also be used for fork in road decision for forest/mountain choice. conditionally
-            #  execute a scene helper func
-            if act == 1 and scene_num == 1 and dialogue.id == 5:
-                plant_seed_decision()
 
             character_list = get_character_list(game=game)
             game_dialogue_progress_list = get_game_dialogue_progress_list(
