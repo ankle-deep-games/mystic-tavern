@@ -239,9 +239,6 @@ class GameUser(models.Model):
     def mp_percentage(self):
         return round((self.current_mp / self.current_max_mp) * 100)
 
-    def unit_type(self):
-        return self.role.type
-
     def __str__(self):
         game_name = self.game.name if self.game else "Unknown Game"
         gameuser = self.name() if self.user else "Unknown User"
@@ -361,9 +358,6 @@ class GameEnemy(models.Model):
 
     def hp_percentage(self):
         return round((self.current_hp / self.enemy.start_hp) * 100)
-
-    def unit_type(self):
-        return self.enemy.type
 
     def __str__(self):
         return f"Game Name: {self.game.name}, Enemy Name: {self.name()}, Act: {self.act}, Battle: {self.battle}"

@@ -139,8 +139,9 @@ def gameuser_attack_single_gameenemy_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
+    # TODO WIP
     effectiveness_message = ''
-    enemy_type = gameenemy.unit_type()
+    enemy_type = gameenemy.enemy.type.weakness
     if ability.type.id == enemy_type.weakness:
         effectiveness_message = "It was very effective."
 
@@ -259,18 +260,10 @@ def calculate_damage(
 
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
 
-    # TODO might break into two funcs. one for player. one for enemy.
-    # Yes - refactor this. two different calculate damage funcs
-    # get rid of unit_type and update other two funcs that use it.
-    # That way I can reference types directly
-    print("attacker is: " + attacker.name())
-    print("target is: " + target.name())
-    print("target type is: " + target.unit_type().name)
-    print("ability is: " + ability.name)
-    print("ability type is: " + ability.type.name)
+    # TODO refactor into two funcs. one for player. one for enemy. will be easier to understand
+    # could call it calculate_damage_to_enemy and calculate_damage_to_player
 
     final_damage = ability.max_damage
-    print("final calculated damage is: " + str(final_damage))
     return final_damage
 
 
@@ -378,19 +371,8 @@ def randomize_ability_strength():
 def calculate_healing(
         gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
 ):
-    attacker = gameuser
-    target = defensive_gameuser_target
-
     # TODO https://trello.com/c/6PCoXQ5O/196-combat-calculate-healing-done
-
-    print("attacker is: " + attacker.name())
-    print("target is: " + target.name())
-    print("target type is: " + target.unit_type().name)
-    print("ability is: " + ability.name)
-    print("ability type is: " + ability.type.name)
-
     final_healing = ability.max_damage
-    print("final calculated damage is: " + str(final_healing))
     return final_healing
 
 
