@@ -17,6 +17,7 @@ from .models import (
     CombatLog,
     GameLocation,
     GameTurnOrder,
+    SceneImage,
 )
 
 admin.site.register(Game)
@@ -35,3 +36,4 @@ admin.site.register(GameEnemy)
 admin.site.register(CombatLog)
 admin.site.register(GameLocation)
 admin.site.register(GameTurnOrder)
+admin.site.register(SceneImage)

@@ -4,11 +4,7 @@
 <div class="container">
     {% load static %}
     <div class="row my-2">
-        <h1 class="mb-3">game id {{ game_id }}</h1>
-
         <div id="dialogue-error-container"></div>
-        <hr>
-
         <div id="dialogue-container">
             {% comment %} this game's dialogue so far from game_dialogue table {% endcomment %}
             {% for game_dialogue in game_dialogue_progress_list %}
