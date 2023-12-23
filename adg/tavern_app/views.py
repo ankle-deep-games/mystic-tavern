@@ -896,12 +896,11 @@ def battle(request, game_id, act, number):
             }
             return JsonResponse(data)
         else:
-            messages.error(
-                request,
-                "Something in combat form not valid",
-                extra_tags="alert alert-danger",
-            )
-            # TODO return JSONRESPONSE on success and error of form submit
+            error_msg = "Something in combat form not valid."
+            data = {
+                "error": error_msg,
+            }
+            return JsonResponse(data)
 
     # else render form
     else:
