@@ -1135,7 +1135,6 @@ def seed_data():
     )
 
     # Enemies
-    # TODO https://trello.com/c/0vbGueR2/204-chuck-create-enemy-images - Add enemy images
     enemy1 = Enemy(
         name="Drunk Man 1",
         image="drunk-man-1.png",

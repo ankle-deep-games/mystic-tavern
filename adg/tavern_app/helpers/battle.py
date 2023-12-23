@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 
 from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
 
@@ -96,8 +97,6 @@ def gameuser_attack_single_gameenemy_and_save(
         battle: int,
         deduct_mp: bool,
 ) -> None:
-    who_attacking = "player"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -109,11 +108,11 @@ def gameuser_attack_single_gameenemy_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
+    effectiveness_message, effectiveness_multiplier = calc_type_message_and_multiplier(ability, gameenemy.enemy.type.id)
+
     calculated_damage = calculate_damage(
-        gameuser=gameuser,
-        gameenemy=gameenemy,
         ability=ability,
-        who_attacking=who_attacking,
+        effectiveness_multiplier=effectiveness_multiplier,
     )
 
     if deduct_mp:
@@ -139,8 +138,7 @@ def gameuser_attack_single_gameenemy_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = (f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. TODO "
-               f"effective or not.")
+    message = f"{gameuser.name()} used {ability.name} on {gameenemy.name()} for {calculated_damage} damage. {effectiveness_message}"
 
     combat_log = CombatLog(
         game=game,
@@ -148,7 +146,7 @@ def gameuser_attack_single_gameenemy_and_save(
         battle=battle,
         gameuser=gameuser,
         gameenemy=gameenemy,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="player",
         ability=ability,
         amount=calculated_damage,
         damage_or_heal_or_buff="damage",
@@ -161,6 +159,22 @@ def gameuser_attack_single_gameenemy_and_save(
     combat_log.save()
 
 
+def calc_type_message_and_multiplier(ability: Ability, defense_type_id: int) -> Tuple[str, float]:
+    effectiveness_message = ''
+    effectiveness_multiplier = 1.00
+    attack_type_strength = ability.type.strength
+    attack_type_weakness = ability.type.weakness
+
+    if defense_type_id == attack_type_strength:
+        effectiveness_message = "It was very effective."
+        effectiveness_multiplier = 1.25
+
+    elif defense_type_id == attack_type_weakness:
+        effectiveness_message = "It was not very effective."
+        effectiveness_multiplier = 0.75
+    return effectiveness_message, effectiveness_multiplier
+
+
 def gameenemy_attack_single_gameuser_and_save(
         game: Game,
         gameuser: GameUser,
@@ -170,8 +184,6 @@ def gameenemy_attack_single_gameuser_and_save(
         act: int,
         battle: int,
 ) -> None:
-    who_attacking = "enemy"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -183,11 +195,11 @@ def gameenemy_attack_single_gameuser_and_save(
         starting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
+    effectiveness_message, effectiveness_multiplier = calc_type_message_and_multiplier(ability, gameuser.role.type.id)
+
     calculated_damage = calculate_damage(
-        gameuser=gameuser,
-        gameenemy=gameenemy,
         ability=ability,
-        who_attacking=who_attacking,
+        effectiveness_multiplier=effectiveness_multiplier,
     )
 
     gameuser.current_hp = gameuser.current_hp - calculated_damage
@@ -209,8 +221,7 @@ def gameenemy_attack_single_gameuser_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = (f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. TODO "
-               f"effective or not.")
+    message = f"{gameenemy.name()} used {ability.name} on {gameuser.name()} for {calculated_damage} damage. {effectiveness_message}"
 
     combat_log = CombatLog(
         game=game,
@@ -218,7 +229,7 @@ def gameenemy_attack_single_gameuser_and_save(
         battle=battle,
         gameuser=gameuser,
         gameenemy=gameenemy,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="enemy",
         ability=ability,
         amount=calculated_damage,
         damage_or_heal_or_buff="damage",
@@ -231,31 +242,16 @@ def gameenemy_attack_single_gameuser_and_save(
     combat_log.save()
 
 
-def calculate_damage(
-        gameuser: GameUser, gameenemy: GameEnemy, ability: Ability, who_attacking: str
-):
-    if who_attacking == "player":
-        attacker = gameuser
-        target = gameenemy
-    elif who_attacking == "enemy":
-        attacker = gameenemy
-        target = gameuser
-
-    # TODO https://trello.com/c/ZBcEgLsh/164-combat-factor-in-type-strength-weakness-for-damage
-
-    # TODO https://trello.com/c/acCnmIXe/165-combat-randomize-damage-between-min-max
+def calculate_damage(ability: Ability, effectiveness_multiplier: float) -> int:
+    # randomize damage between ability min/max
+    num_between_min_max = random.randint(ability.min_damage, ability.max_damage)
 
     # TODO https://trello.com/c/OwzLDbD6/170-combat-factor-myst-reg-attack-and-defense
+    # TODO https://trello.com/c/Pj9qSprE/254-combat-change-to-minamount-and-maxamount-in-the-model
 
-    # TODO might break into two funcs. one for player. one for enemy.
-    print("attacker is: " + attacker.name())
-    print("target is: " + target.name())
-    print("target type is: " + target.unit_type().name)
-    print("ability is: " + ability.name)
-    print("ability type is: " + ability.type.name)
-
-    final_damage = ability.max_damage
-    print("final calculated damage is: " + str(final_damage))
+    # modify damage depending on if ability type is effective, not effective, or neutral
+    final_damage = round(num_between_min_max * effectiveness_multiplier)
+    final_damage = int(final_damage)  # Convert the rounded value to an integer
     return final_damage
 
 
@@ -282,8 +278,6 @@ def gameuser_heal_single_gameuser_and_save(
         battle: int,
         deduct_mp: bool,
 ) -> None:
-    who_attacking = "player"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -338,7 +332,7 @@ def gameuser_heal_single_gameuser_and_save(
         battle=battle,
         gameuser=gameuser,
         defensive_gameuser_target=defensive_gameuser_target,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="player",
         ability=ability,
         amount=calculated_healing,
         damage_or_heal_or_buff="heal",
@@ -351,55 +345,11 @@ def gameuser_heal_single_gameuser_and_save(
     combat_log.save()
 
 
-def determine_type_strength_weakness(
-        attack, attack_type_strength, attack_type_weakness, defense_type
-):
-    """
-    This function will be called when an ability is chosen to determine the ability type as compared to the opponent's
-    role type. If the ability is a strength against the opponent's role type, it will be X% more effective. If it is a
-    weakness, it will be Y% less effective. If there is no strength or weakness, the ability strength will not be
-    changed.
-    :param attack: either the with_gear_attack or with_gear_myst_attack depending on attack choice
-    :param attack_type_strength: ability.type.strength
-    :param attack_type_weakness: ability.type.weakness
-    :param defense_type: target.role.type_id
-    """
-    attack_type_strength_weight = 1.25
-    attack_type_weakness_weight = 0.75
-
-    if defense_type == attack_type_strength:
-        attack = attack * attack_type_strength_weight
-    elif defense_type == attack_type_weakness:
-        attack = attack * attack_type_weakness_weight
-
-    return attack
-
-
-def randomize_ability_strength():
-    """
-    This function will be called when an ability is chosen to randomize the strength. The float value returned should
-    be applied to the ability strength determined in the main determine_ability_strength() function to provide some RNG.
-    return: float value between -10% and +10%
-    """
-    return random.uniform(-0.1, 0.1)
-
-
 def calculate_healing(
         gameuser: GameUser, defensive_gameuser_target: GameUser, ability: Ability
 ):
-    attacker = gameuser
-    target = defensive_gameuser_target
-
     # TODO https://trello.com/c/6PCoXQ5O/196-combat-calculate-healing-done
-
-    print("attacker is: " + attacker.name())
-    print("target is: " + target.name())
-    print("target type is: " + target.unit_type().name)
-    print("ability is: " + ability.name)
-    print("ability type is: " + ability.type.name)
-
     final_healing = ability.max_damage
-    print("final calculated damage is: " + str(final_healing))
     return final_healing
 
 
@@ -413,8 +363,6 @@ def gameuser_buff_single_gameuser_and_save(
         battle: int,
         deduct_mp: bool,
 ) -> None:
-    who_attacking = "player"
-
     starting_gameusers = GameUser.objects.filter(game=game)
     starting_gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle)
     starting_gameusers_json = list(
@@ -513,7 +461,7 @@ def gameuser_buff_single_gameuser_and_save(
         battle=battle,
         gameuser=gameuser,
         defensive_gameuser_target=defensive_gameuser_target,
-        player_or_enemy_took_action=who_attacking,
+        player_or_enemy_took_action="player",
         ability=ability,
         amount=0,
         damage_or_heal_or_buff="buff",
@@ -570,7 +518,6 @@ def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameu
                     act=act,
                     battle=battle_num,
                 )
-                # TODO change log message from ability.max_damage to real damage. and then later change UI entirely
 
             calc_and_save_turn_order(
                 game=game, gameusers=gameusers, gameenemies=gameenemies
