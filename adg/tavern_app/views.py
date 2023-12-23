@@ -556,6 +556,7 @@ def scene(request, game_id, act, number):
             )
         )
 
+    # TODO refactor extract
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
@@ -685,6 +686,8 @@ def battle(request, game_id, act, number):
                 error_msg = "You may only cast abilities that you know."
 
             if not has_error:
+                # TODO if not request_user_turn stop early. remove from if checks
+                # Damage Abilities
                 if (
                         is_request_user_turn
                         and ability.is_heal is False
@@ -718,13 +721,6 @@ def battle(request, game_id, act, number):
                                         battle=battle_num,
                                         deduct_mp=False,
                                     )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
-                            )
-                        )
 
                     # Single Target Damage
                     is_enemy_in_this_battle = (
@@ -738,47 +734,30 @@ def battle(request, game_id, act, number):
                         else False
                     )
                     if not is_enemy_in_this_battle:
-                        messages.error(
-                            request,
-                            "You may only attack enemies in this battle.",
-                            extra_tags="alert alert-danger",
+                        has_error = True
+                        error_msg = "You may only attack enemies in this battle."
+
+                    if not has_error:
+                        gameenemy_target = GameEnemy.objects.get(
+                            game=game, pk=form.cleaned_data["gameenemy"].id
                         )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
-                            )
+                        if gameenemy_target.current_hp == 0:
+                            has_error = True
+                            error_msg = "Cannot single target enemy with 0 hp."
+
+                    if not has_error:
+                        gameuser_attack_single_gameenemy_and_save(
+                            game=game,
+                            gameuser=request_gameuser,
+                            gameenemy=gameenemy_target,
+                            ability=ability,
+                            unit_turn=unit_turn,
+                            act=act,
+                            battle=battle_num,
+                            deduct_mp=True,
                         )
 
-                    gameenemy_target = GameEnemy.objects.get(
-                        game=game, pk=form.cleaned_data["gameenemy"].id
-                    )
-                    if gameenemy_target.current_hp == 0:
-                        messages.error(
-                            request,
-                            "Cannot single target enemy with 0 hp.",
-                            extra_tags="alert alert-danger",
-                        )
-                        # TODO update redirect to current battle
-                        return redirect(
-                            reverse(
-                                "tavern_app:battle",
-                                kwargs={"game_id": game.id, "act": 1, "number": 1},
-                            )
-                        )
-
-                    gameuser_attack_single_gameenemy_and_save(
-                        game=game,
-                        gameuser=request_gameuser,
-                        gameenemy=gameenemy_target,
-                        ability=ability,
-                        unit_turn=unit_turn,
-                        act=act,
-                        battle=battle_num,
-                        deduct_mp=True,
-                    )
-
+                # Heal Abilities
                 elif is_request_user_turn and ability.is_heal:
                     # AOE Heal
                     if ability.is_aoe:
@@ -865,6 +844,7 @@ def battle(request, game_id, act, number):
                         deduct_mp=True,
                     )
 
+                # Buff Abilities
                 elif is_request_user_turn and ability.is_buff:
                     # AOE Buff
                     if ability.is_aoe:
