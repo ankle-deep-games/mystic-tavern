@@ -19,6 +19,7 @@ urlpatterns = [
     path("games/", views.games, name="games"),
     path("games/<int:pk>", views.join_game, name="join_game"),
     path("games/<int:game_id>/lobby", views.lobby, name="lobby"),
+    path("games/<int:game_id>/lobby/updates", views.lobby_get_updates, name="lobby_get_updates"),
     path("games/<int:game_id>/lobby/role_assignment", views.role_assignment, name="role_assignment"),
     path(
         "games/<int:game_id>/act/<int:act>/scene/<int:number>",

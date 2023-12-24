@@ -344,6 +344,51 @@ def lobby(request, game_id):
     return render(request, "tavern_app/lobby.html", context)
 
 
+def lobby_get_updates(request, game_id):
+    if not request.user.is_authenticated:
+        messages.error(
+            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
+        )
+        return redirect("login")
+
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
+        messages.error(
+            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
+        )
+        return redirect("tavern_app:games")
+
+    game = Game.objects.get(pk=game_id)
+
+    new_url = ""
+    gamelocation = GameLocation.objects.filter(game=game)
+    if gamelocation.exists():
+        new_url = reverse(
+            "tavern_app:" + gamelocation.location_type,
+            kwargs={
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            },
+        )
+
+    is_full = True if GameUser.objects.filter(game_id=game_id).count() == 4 else False
+
+    gameusers = GameUser.objects.filter(game=game)
+    gameusers_json = list(
+        gameusers.values(
+            "id", "user__username", "role__name", "role__start_hp", "role__start_mp", "role__start_attack",
+            "role__start_defense", "role__start_myst_attack", "role__start_myst_defense", "role__start_speed"
+        )
+    )
+
+    data = {
+        "gameusers": gameusers_json,
+        "new_url": new_url,
+        "is_full": is_full,
+    }
+    return JsonResponse(data)
+
+
 class CreateGameView(CreateView):
     model = Game
     template_name = "tavern_app/create_game.html"
