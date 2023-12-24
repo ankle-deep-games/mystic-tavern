@@ -373,8 +373,6 @@ def lobby_get_updates(request, game_id):
             },
         )
 
-    is_full = True if GameUser.objects.filter(game_id=game_id).count() == 4 else False
-
     gameusers = GameUser.objects.filter(game=game)
     gameusers_json = list(
         gameusers.values(
@@ -387,7 +385,6 @@ def lobby_get_updates(request, game_id):
     data = {
         "gameusers": gameusers_json,
         "new_url": new_url,
-        "is_full": is_full,
     }
     return JsonResponse(data)
 
