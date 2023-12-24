@@ -422,6 +422,7 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
         for form in self.forms:
             role = form.cleaned_data.get('role')
             gender = form.cleaned_data.get('gender')
+            # TODO monitor. sometimes getting weird gender setting to --- after submit with error?
 
             if not role or not gender:
                 raise forms.ValidationError("Every player must have a role and gender selected.")
