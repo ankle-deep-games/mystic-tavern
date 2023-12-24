@@ -159,6 +159,33 @@
 <script>
     $(document).ready(function() {
     
+        var gameusersArray = []; // Array updating from the backend
+
+        function deepCompare(obj1, obj2) {
+            // Check if both arguments are objects
+            if (!(obj1 instanceof Object) || !(obj2 instanceof Object)) {
+                return obj1 === obj2;
+            }
+            
+            const keys1 = Object.keys(obj1);
+            const keys2 = Object.keys(obj2);
+            
+            if (keys1.length !== keys2.length) {
+                return false;
+            }
+            
+            for (const key of keys1) {
+                const val1 = obj1[key];
+                const val2 = obj2[key];
+            
+                if (!deepCompare(val1, val2)) {
+                return false;
+                }
+            }
+            
+            return true;
+        }
+
         setInterval(function() {
             $.ajax({
                 type: 'GET',
@@ -169,12 +196,24 @@
                         return;
                     }
 
-                    console.log(response)
-                    // TODO compare the new vs the old for any changes 
+                    // on the first call set the gameusersArray so subsequent calls can start comparing them
+                    if (gameusersArray.length === 0) {
+                        gameusersArray = response.gameusers;
+                    } else {
+                        const updatedGameusersArray = response.gameusers
+    
+                        // Compare the objects for any changes
+                        const haveDifferences = !deepCompare(updatedGameusersArray, gameusersArray);
+                        
+                        if (haveDifferences) {
+                            console.log("Objects have differences.");
+                            gameusersArray = [...updatedGameusersArray]
 
-                    // TODO update the front end if changes to amount of players or role/gender
-                    // #player-cards
-                    // could put id on each string/image to inject just the changes instead of full html
+                            // TODO update the front end if changes to amount of players or role/gender #player-cards
+                        } else {
+                            console.log("Objects are identical.");
+                        }
+                    }
                 },
                 error: function(response) {
                     console.log('error getting data');

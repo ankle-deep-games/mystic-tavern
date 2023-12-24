@@ -361,8 +361,9 @@ def lobby_get_updates(request, game_id):
     game = Game.objects.get(pk=game_id)
 
     new_url = ""
-    gamelocation = GameLocation.objects.filter(game=game)
-    if gamelocation.exists():
+    gamelocation_queryset = GameLocation.objects.filter(game=game)
+    if gamelocation_queryset.exists():
+        gamelocation = gamelocation_queryset.first()
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
@@ -377,7 +378,8 @@ def lobby_get_updates(request, game_id):
     gameusers = GameUser.objects.filter(game=game)
     gameusers_json = list(
         gameusers.values(
-            "id", "user__username", "role__name", "role__start_hp", "role__start_mp", "role__start_attack",
+            "id", "user__username", "gender__name", "role__name", "role__start_hp", "role__start_mp",
+            "role__start_attack",
             "role__start_defense", "role__start_myst_attack", "role__start_myst_defense", "role__start_speed"
         )
     )
