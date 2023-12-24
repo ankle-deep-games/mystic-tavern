@@ -333,6 +333,7 @@ def lobby(request, game_id):
         form = StartGameForm(initial={"game_id": game_id})
 
     context = {
+        "game_id": game_id,
         "game": game,
         "gameusers": gameusers,
         "is_leader": is_leader,

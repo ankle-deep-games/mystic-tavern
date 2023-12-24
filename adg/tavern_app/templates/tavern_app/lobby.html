@@ -33,7 +33,7 @@
             {% if gameuser.is_ready %}
             <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
                  alt="role and gender picture">
-            <div class="card-body">
+            <div class="card-body" id="player-cards">
                 <h3 class="card-title text-white">{{ gameuser.name }} - READY</h3>
                 <hr>
                 <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
@@ -152,4 +152,37 @@
 
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+    
+        setInterval(function() {
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'tavern_app:lobby_get_updates' game_id=game_id %}",
+                success: function(response) {
+                    if (response.new_url) {
+                        window.location = response.new_url;
+                        return;
+                    }
+
+                    console.log(response)
+                    // TODO compare the new vs the old for any changes 
+
+                    // TODO update the front end if changes to amount of players or role/gender
+                    // #player-cards
+                    // could put id on each string/image to inject just the changes instead of full html
+                },
+                error: function(response) {
+                    console.log('error getting data');
+                }
+            });
+        },2000);
+        
+    });
+</script>
+
 {% endblock %}
