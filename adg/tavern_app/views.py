@@ -420,6 +420,7 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
             role = form.cleaned_data.get('role')
             gender = form.cleaned_data.get('gender')
             # TODO monitor. sometimes getting weird gender setting to --- after submit with error?
+            # https://trello.com/c/lZVXv5tE/266-debug-role-gender-assignement-form-errors
 
             if not role or not gender:
                 raise forms.ValidationError("Every player must have a role and gender selected.")
