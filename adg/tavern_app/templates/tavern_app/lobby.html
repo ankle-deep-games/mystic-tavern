@@ -1,6 +1,7 @@
 {% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
+{% load static %}
 <div class="container">
     <h1 class="text-primary my-4">Game Lobby - {{ game.name }}</h1>
     <hr>
@@ -26,51 +27,150 @@
     {% endif %}
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
-    <div class="card-group">
+    <div class="card-group d-flex flex-row flex-nowrap overflow-auto">
         {% for gameuser in gameusers %}
         <div class="card text-white bg-secondary mb-3">
-            {% load static %}
             {% if gameuser.is_ready %}
             <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
                  alt="role and gender picture">
-            <div class="card-body">
-                <h3 class="card-title text-white">{{ gameuser.name }} - READY</h3>
-                <hr>
-                <h3 class="card-title text-white">Role: {{ gameuser.role }}</h3>
-                <hr>
-                <h6>Stats:</h6>
-                <ul>
-                    <li>HP: {{ gameuser.current_hp }}</li>
-                    <li>MP: {{ gameuser.current_mp }}</li>
-                    <li>Attack: {{ gameuser.current_attack }}</li>
-                    <li>Defense: {{ gameuser.current_defense }}</li>
-                    <li>Myst Attack: {{ gameuser.current_myst_attack }}</li>
-                    <li>Myst Defense: {{ gameuser.current_myst_defense }}</li>
-                    <li>Speed: {{ gameuser.current_speed }}</li>
-                </ul>
+            <div class="card-body p-2 p-2" id="player-cards">
+                <h6 class="card-title text-white">{{ gameuser.name }}</h6>
+                <h6 class="card-title text-white">{{ gameuser.role }}</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: {{ gameuser.current_hp }}</p>
+                    <p>MP: {{ gameuser.current_mp }}</p>
+                    <p>Attack: {{ gameuser.current_attack }}</p>
+                    <p>Defense: {{ gameuser.current_defense }}</p>
+                    <p>Myst Attack: {{ gameuser.current_myst_attack }}</p>
+                    <p>Myst Defense: {{ gameuser.current_myst_defense }}</p>
+                    <p>Speed: {{ gameuser.current_speed }}</p>
+                </div>
             </div>
             {% else %}
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
-            <div class="card-body">
-                <h3 class="card-title text-white">{{ gameuser.name }} - NOT READY</h3>
-                <hr>
-                <h3 class="card-title text-white">Role: ???</h3>
-                <hr>
-                <h6>Stats:</h6>
-                <ul>
-                    <li>HP: ???</li>
-                    <li>MP: ???</li>
-                    <li>Attack: ???</li>
-                    <li>Defense: ???</li>
-                    <li>Myst Attack: ???</li>
-                    <li>Myst Defense: ???</li>
-                    <li>Speed: ???</li>
-                </ul>
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">{{ gameuser.name }}</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
             </div>
             {% endif %}
 
         </div>
         {% endfor %}
+
+        {% if num_players_in_lobby == 1 %}
+        <div class="card text-white bg-secondary mb-3">
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">pending</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
+            </div>
+        </div>
+        <div class="card text-white bg-secondary mb-3">
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">pending</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
+            </div>
+        </div>
+        <div class="card text-white bg-secondary mb-3">
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">pending</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if num_players_in_lobby == 2 %}
+        <div class="card text-white bg-secondary mb-3">
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">pending</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
+            </div>
+        </div>
+        <div class="card text-white bg-secondary mb-3">
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">pending</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if num_players_in_lobby == 3 %}
+        <div class="card text-white bg-secondary mb-3">
+            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <div class="card-body p-2">
+                <h6 class="card-title text-white">pending</h6>
+                <h6 class="card-title text-white">???</h6>
+                <div class="lobby-card-stats">
+                    <p>HP: ???</p>
+                    <p>MP: ???</p>
+                    <p>Attack: ???</p>
+                    <p>Defense: ???</p>
+                    <p>Myst Attack: ???</p>
+                    <p>Myst Defense: ???</p>
+                    <p>Speed: ???</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
     </div>
     {% endblock %}
 
@@ -152,4 +252,76 @@
 
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+    
+        var gameusersArray = []; // Array updating from the backend
+
+        function deepCompare(obj1, obj2) {
+            // Check if both arguments are objects
+            if (!(obj1 instanceof Object) || !(obj2 instanceof Object)) {
+                return obj1 === obj2;
+            }
+            
+            const keys1 = Object.keys(obj1);
+            const keys2 = Object.keys(obj2);
+            
+            if (keys1.length !== keys2.length) {
+                return false;
+            }
+            
+            for (const key of keys1) {
+                const val1 = obj1[key];
+                const val2 = obj2[key];
+            
+                if (!deepCompare(val1, val2)) {
+                return false;
+                }
+            }
+            
+            return true;
+        }
+
+        setInterval(function() {
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'tavern_app:lobby_get_updates' game_id=game_id %}",
+                success: function(response) {
+                    if (response.new_url) {
+                        window.location = response.new_url;
+                        return;
+                    }
+
+                    // on the first call set the gameusersArray so subsequent calls can start comparing them
+                    if (gameusersArray.length === 0) {
+                        gameusersArray = response.gameusers;
+                    } else {
+                        const updatedGameusersArray = response.gameusers
+    
+                        // Compare the objects for any changes
+                        const haveDifferences = !deepCompare(updatedGameusersArray, gameusersArray);
+                        
+                        if (haveDifferences) {
+                            console.log("Objects have differences.");
+                            gameusersArray = [...updatedGameusersArray]
+
+                            // TODO update the front end if changes to amount of players or role/gender #player-cards
+                        } else {
+                            console.log("Objects are identical.");
+                        }
+                    }
+                },
+                error: function(response) {
+                    console.log('error getting data');
+                }
+            });
+        },2000);
+        
+    });
+</script>
+
 {% endblock %}

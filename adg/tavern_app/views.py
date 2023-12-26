@@ -333,6 +333,7 @@ def lobby(request, game_id):
         form = StartGameForm(initial={"game_id": game_id})
 
     context = {
+        "game_id": game_id,
         "game": game,
         "gameusers": gameusers,
         "is_leader": is_leader,
@@ -342,6 +343,50 @@ def lobby(request, game_id):
     }
 
     return render(request, "tavern_app/lobby.html", context)
+
+
+def lobby_get_updates(request, game_id):
+    if not request.user.is_authenticated:
+        messages.error(
+            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
+        )
+        return redirect("login")
+
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
+        messages.error(
+            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
+        )
+        return redirect("tavern_app:games")
+
+    game = Game.objects.get(pk=game_id)
+
+    new_url = ""
+    gamelocation_queryset = GameLocation.objects.filter(game=game)
+    if gamelocation_queryset.exists():
+        gamelocation = gamelocation_queryset.first()
+        new_url = reverse(
+            "tavern_app:" + gamelocation.location_type,
+            kwargs={
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            },
+        )
+
+    gameusers = GameUser.objects.filter(game=game)
+    gameusers_json = list(
+        gameusers.values(
+            "id", "user__username", "gender__name", "role__name", "role__start_hp", "role__start_mp",
+            "role__start_attack",
+            "role__start_defense", "role__start_myst_attack", "role__start_myst_defense", "role__start_speed"
+        )
+    )
+
+    data = {
+        "gameusers": gameusers_json,
+        "new_url": new_url,
+    }
+    return JsonResponse(data)
 
 
 class CreateGameView(CreateView):
@@ -374,6 +419,8 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
         for form in self.forms:
             role = form.cleaned_data.get('role')
             gender = form.cleaned_data.get('gender')
+            # TODO monitor. sometimes getting weird gender setting to --- after submit with error?
+            # https://trello.com/c/lZVXv5tE/266-debug-role-gender-assignement-form-errors
 
             if not role or not gender:
                 raise forms.ValidationError("Every player must have a role and gender selected.")
