@@ -31,7 +31,7 @@
         {% for gameuser in gameusers %}
         <div class="card text-white bg-secondary mb-3" id="player-{{gameuser.pk}}">
             {% if gameuser.is_ready %}
-            <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
                  alt="role and gender picture">
             <div class="card-body p-2 p-2" id="player-cards">
                 <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
@@ -47,7 +47,7 @@
                 </div>
             </div>
             {% else %}
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -57,7 +57,8 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
@@ -68,7 +69,7 @@
 
         {% if num_players_in_lobby == 1 %}
         <div class="card text-white bg-secondary mb-3" id="player-2">
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -78,13 +79,14 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
         <div class="card text-white bg-secondary mb-3" id="player-3">
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -94,13 +96,14 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
         <div class="card text-white bg-secondary mb-3" id="player-4">
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -110,7 +113,8 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
@@ -119,7 +123,7 @@
 
         {% if num_players_in_lobby == 2 %}
         <div class="card text-white bg-secondary mb-3" id="player-3">
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -129,13 +133,14 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
         <div class="card text-white bg-secondary mb-3" id="player-4">
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -145,7 +150,8 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
@@ -154,7 +160,7 @@
 
         {% if num_players_in_lobby == 3 %}
         <div class="card text-white bg-secondary mb-3" id="player-4">
-            <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -164,7 +170,8 @@
                     <p>Attack: <span class="gameuser-attack">???</span></p>
                     <p>Defense: <span class="gameuser-defense">???</span></p>
                     <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>
                     <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
@@ -300,18 +307,86 @@
                     if (gameusersArray.length === 0) {
                         gameusersArray = response.gameusers;
                     } else {
-                        const updatedGameusersArray = response.gameusers
+                        const updatedGameusersArray = response.gameusers;
     
                         // Compare the objects for any changes
                         const haveDifferences = !deepCompare(updatedGameusersArray, gameusersArray);
                         
                         if (haveDifferences) {
                             console.log("Objects have differences.");
-                            gameusersArray = [...updatedGameusersArray]
+                            gameusersArray = [...updatedGameusersArray];
 
-                            // TODO update the front end if changes to amount of players or role/gender #player-cards
+                            if (gameusersArray[0]) {
+                                $(`#player-${gameusersArray[0].id} .gameuser-name`).text(gameusersArray[0].user__username);
+                                if (gameusersArray[0].role__name) {
+                                    var player1image = "{% static 'tavern_app/' %}" + gameusersArray[0].role__name + "-" + gameusersArray[0].gender__name + ".png";
+                                    $(`#player-${gameusersArray[0].id} .gameuser-role`).text(gameusersArray[0].role__display_name);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-hp`).text(gameusersArray[0].role__start_hp);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-mp`).text(gameusersArray[0].role__start_mp);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-myst-attack`).text(gameusersArray[0].role__start_myst_attack);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-myst-defense`).text(gameusersArray[0].role__start_myst_defense);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-attack`).text(gameusersArray[0].role__start_attack);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-defense`).text(gameusersArray[0].role__start_defense);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-speed`).text(gameusersArray[0].role__start_speed);
+                                    $(`#player-${gameusersArray[0].id} .gameuser-image`).attr('src', player1image);
+                                }
+                            }
+                            if (gameusersArray[1]) {
+                                if ($('#player-2').length) {
+                                    $('#player-2').attr('id', `player-${gameusersArray[1].id}`);
+                                }
+                                $(`#player-${gameusersArray[1].id} .gameuser-name`).text(gameusersArray[1].user__username);
+                                if (gameusersArray[1].role__name) {
+                                    var player2image = "{% static 'tavern_app/' %}" + gameusersArray[1].role__name + "-" + gameusersArray[1].gender__name + ".png";
+                                    $(`#player-${gameusersArray[1].id} .gameuser-role`).text(gameusersArray[1].role__display_name);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-hp`).text(gameusersArray[1].role__start_hp);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-mp`).text(gameusersArray[1].role__start_mp);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-myst-attack`).text(gameusersArray[1].role__start_myst_attack);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-myst-defense`).text(gameusersArray[1].role__start_myst_defense);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-attack`).text(gameusersArray[1].role__start_attack);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-defense`).text(gameusersArray[1].role__start_defense);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-speed`).text(gameusersArray[1].role__start_speed);
+                                    $(`#player-${gameusersArray[1].id} .gameuser-image`).attr('src', player2image);
+                                }
+                            }
+                            if (gameusersArray[2]) {
+                                if ($('#player-3').length) {
+                                    $('#player-3').attr('id', `player-${gameusersArray[2].id}`);
+                                }
+                                $(`#player-${gameusersArray[2].id} .gameuser-name`).text(gameusersArray[2].user__username);
+                                if (gameusersArray[2].role__name) {
+                                    var player3image = "{% static 'tavern_app/' %}" + gameusersArray[2].role__name + "-" + gameusersArray[2].gender__name + ".png";
+                                    $(`#player-${gameusersArray[2].id} .gameuser-role`).text(gameusersArray[2].role__display_name);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-hp`).text(gameusersArray[2].role__start_hp);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-mp`).text(gameusersArray[2].role__start_mp);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-myst-attack`).text(gameusersArray[2].role__start_myst_attack);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-myst-defense`).text(gameusersArray[2].role__start_myst_defense);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-attack`).text(gameusersArray[2].role__start_attack);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-defense`).text(gameusersArray[2].role__start_defense);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-speed`).text(gameusersArray[2].role__start_speed);
+                                    $(`#player-${gameusersArray[2].id} .gameuser-image`).attr('src', player3image);
+                                }
+                            }
+                            if (gameusersArray[3]) {
+                                if ($('#player-4').length) {
+                                    $('#player-4').attr('id', `player-${gameusersArray[3].id}`);
+                                }
+                                $(`#player-${gameusersArray[3].id} .gameuser-name`).text(gameusersArray[3].user__username);
+                                if (gameusersArray[3].role__name) {
+                                    var player4image = "{% static 'tavern_app/' %}" + gameusersArray[3].role__name + "-" + gameusersArray[3].gender__name + ".png";
+                                    $(`#player-${gameusersArray[3].id} .gameuser-role`).text(gameusersArray[3].role__display_name);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-hp`).text(gameusersArray[3].role__start_hp);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-mp`).text(gameusersArray[3].role__start_mp);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-myst-attack`).text(gameusersArray[3].role__start_myst_attack);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-myst-defense`).text(gameusersArray[3].role__start_myst_defense);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-attack`).text(gameusersArray[3].role__start_attack);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-defense`).text(gameusersArray[3].role__start_defense);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-speed`).text(gameusersArray[3].role__start_speed);
+                                    $(`#player-${gameusersArray[3].id} .gameuser-image`).attr('src', player4image);
+                                }
+                            }
                         } else {
-                            console.log("Objects are identical.");
+                            console.log("Objects are identical."); // TODO remove log line
                         }
                     }
                 },
