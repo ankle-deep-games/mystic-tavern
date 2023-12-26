@@ -143,7 +143,7 @@ a.text-primary:hover, a.text-primary:focus {
 }
 
 /*------------------------------------
-- Battle
+- Scene
 ------------------------------------*/
 .scene-p {
     font-size: 0.875rem;
@@ -163,4 +163,16 @@ a.text-primary:hover, a.text-primary:focus {
 .ability-name {
     margin-bottom: .0625rem;
     cursor: pointer;
+}
+
+/*------------------------------------
+- Lobby
+------------------------------------*/
+
+.lobby-card-stats {
+    font-size: 0.875rem;
+}
+
+.lobby-card-stats > p {
+    margin-bottom: 0.5rem;
 }
