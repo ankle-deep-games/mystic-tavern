@@ -31,6 +31,7 @@ class Type(models.Model):
 class Role(models.Model):
     objects = models.Manager()
     name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255)
     type = models.ForeignKey(Type, on_delete=models.PROTECT)
     start_hp = models.IntegerField(default=0)
     start_mp = models.IntegerField(default=0)
