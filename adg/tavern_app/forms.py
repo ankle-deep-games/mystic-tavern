@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Game, GameUser, GameDialogue, CombatLog
+from .models import Game, GameUser, GameDialogue, CombatLog, Role
 
 
 class CreateGameForm(ModelForm):
@@ -28,6 +28,12 @@ class StartGameForm(forms.Form):
 
 
 class RoleAssignmentForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set the queryset and label for the role field to use display_name
+        self.fields['role'].queryset = Role.objects.all()
+        self.fields['role'].label_from_instance = lambda obj: obj.display_name
+
     class Meta:
         model = GameUser
         fields = ['role', 'gender']

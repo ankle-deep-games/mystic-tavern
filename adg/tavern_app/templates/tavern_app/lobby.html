@@ -35,7 +35,7 @@
                  alt="role and gender picture">
             <div class="card-body p-2 p-2" id="player-cards">
                 <h6 class="card-title text-white">{{ gameuser.name }}</h6>
-                <h6 class="card-title text-white">{{ gameuser.role }}</h6>
+                <h6 class="card-title text-white">{{ gameuser.role.display_name }}</h6>
                 <div class="lobby-card-stats">
                     <p>HP: {{ gameuser.current_hp }}</p>
                     <p>MP: {{ gameuser.current_mp }}</p>

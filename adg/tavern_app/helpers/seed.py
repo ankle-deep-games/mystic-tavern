@@ -90,6 +90,7 @@ def seed_data():
     # roles
     role1 = Role(
         name="WHITEMAGE",
+        display_name="White Mage",
         type=type_light,
         start_hp=100,
         start_mp=100,
@@ -101,6 +102,7 @@ def seed_data():
     )
     role2 = Role(
         name="BLACKMAGE",
+        display_name="Black Mage",
         type=type_dark,
         start_hp=80,
         start_mp=120,
@@ -112,6 +114,7 @@ def seed_data():
     )
     role3 = Role(
         name="PALADIN",
+        display_name="Paladin",
         type=type_stone,
         start_hp=120,
         start_mp=80,
@@ -123,6 +126,7 @@ def seed_data():
     )
     role4 = Role(
         name="ARCHER",
+        display_name="Archer",
         type=type_forest,
         start_hp=110,
         start_mp=90,
@@ -134,6 +138,7 @@ def seed_data():
     )
     role5 = Role(
         name="BARD",
+        display_name="Bard",
         type=type_wind,
         start_hp=90,
         start_mp=110,
