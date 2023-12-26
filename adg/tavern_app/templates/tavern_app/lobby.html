@@ -29,36 +29,36 @@
     <h2 class="text-white my-4">Players:</h2>
     <div class="card-group d-flex flex-row flex-nowrap overflow-auto">
         {% for gameuser in gameusers %}
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-{{gameuser.pk}}">
             {% if gameuser.is_ready %}
             <img class="card-img-top" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
                  alt="role and gender picture">
             <div class="card-body p-2 p-2" id="player-cards">
-                <h6 class="card-title text-white">{{ gameuser.name }}</h6>
-                <h6 class="card-title text-white">{{ gameuser.role.display_name }}</h6>
+                <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
+                <h6 class="card-title text-white gameuser-role">{{ gameuser.role.display_name }}</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: {{ gameuser.current_hp }}</p>
-                    <p>MP: {{ gameuser.current_mp }}</p>
-                    <p>Attack: {{ gameuser.current_attack }}</p>
-                    <p>Defense: {{ gameuser.current_defense }}</p>
-                    <p>Myst Attack: {{ gameuser.current_myst_attack }}</p>
-                    <p>Myst Defense: {{ gameuser.current_myst_defense }}</p>
-                    <p>Speed: {{ gameuser.current_speed }}</p>
+                    <p>HP: <span class="gameuser-hp">{{ gameuser.current_hp }}</span></p>
+                    <p>MP: <span class="gameuser-mp">{{ gameuser.current_mp }}</span></p>
+                    <p>Attack: <span class="gameuser-attack">{{ gameuser.current_attack }}</span></p>
+                    <p>Defense: <span class="gameuser-defense">{{ gameuser.current_defense }}</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">{{ gameuser.current_myst_attack }}</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">{{ gameuser.current_myst_defense }}</span></p>
+                    <p>Speed: <span class="gameuser-speed">{{ gameuser.current_speed }}</span></p>
                 </div>
             </div>
             {% else %}
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">{{ gameuser.name }}</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
             {% endif %}
@@ -67,105 +67,105 @@
         {% endfor %}
 
         {% if num_players_in_lobby == 1 %}
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-2">
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">pending</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">pending</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-3">
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">pending</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">pending</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-4">
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">pending</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">pending</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
         {% endif %}
 
         {% if num_players_in_lobby == 2 %}
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-3">
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">pending</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">pending</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-4">
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">pending</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">pending</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
         {% endif %}
 
         {% if num_players_in_lobby == 3 %}
-        <div class="card text-white bg-secondary mb-3">
+        <div class="card text-white bg-secondary mb-3" id="player-4">
             <img class="card-img-top" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
             <div class="card-body p-2">
-                <h6 class="card-title text-white">pending</h6>
-                <h6 class="card-title text-white">???</h6>
+                <h6 class="card-title text-white gameuser-name">pending</h6>
+                <h6 class="card-title text-white gameuser-role">???</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: ???</p>
-                    <p>MP: ???</p>
-                    <p>Attack: ???</p>
-                    <p>Defense: ???</p>
-                    <p>Myst Attack: ???</p>
-                    <p>Myst Defense: ???</p>
-                    <p>Speed: ???</p>
+                    <p>HP: <span class="gameuser-hp">???</span></p>
+                    <p>MP: <span class="gameuser-mp">???</span></p>
+                    <p>Attack: <span class="gameuser-attack">???</span></p>
+                    <p>Defense: <span class="gameuser-defense">???</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span><p>
+                    <p>Speed: <span class="gameuser-speed">???</span></p>
                 </div>
             </div>
         </div>
