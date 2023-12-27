@@ -10,7 +10,7 @@ class CreateGameForm(ModelForm):
         fields = ("name", "password")
 
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "minlength": 3}),
             "password": forms.TextInput(attrs={"class": "form-control"}),
         }
 
