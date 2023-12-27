@@ -133,12 +133,10 @@ def games(request):
 
 def join_game(request, pk):
     if not request.user.is_authenticated:
-        messages.error(
-            request,
-            "Must be logged in to join a game.",
-            extra_tags="alert alert-danger",
+        messages.info(
+            request, "Must be logged in to join a game. Log in or click the link below to register a new account.", extra_tags="alert alert-info"
         )
-        return redirect("login")
+        return redirect(f"{reverse('login')}?next=/games/{pk}")
 
     game_exists = Game.objects.filter(pk=pk).exists()
     if not game_exists:
@@ -197,16 +195,10 @@ def join_game(request, pk):
 
 def lobby(request, game_id):
     if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+        return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
 
     if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
+        return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
 
     game = Game.objects.get(id=game_id)
     gameusers = GameUser.objects.filter(game_id=game_id)

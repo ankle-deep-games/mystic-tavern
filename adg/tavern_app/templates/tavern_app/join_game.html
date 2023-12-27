@@ -3,14 +3,7 @@
 {% block content %}
 <div class="container">
 
-    <h1> Join Game </h1>
-    <div class="form-group mb-3">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn btn-primary">Join Lobby</button>
-        </form>
-    </div>
+    <h1 class="my-3">Join Game: {{ game_name }}</h1>
 
     {% if messages %}
     {% for message in messages %}
@@ -19,6 +12,14 @@
     </div>
     {% endfor %}
     {% endif %}
+
+    <div class="form-group mb-3">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary">Join Lobby</button>
+        </form>
+    </div>
 
 </div>
 {% endblock %}

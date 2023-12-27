@@ -25,7 +25,12 @@ def register(request):
 
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect("tavern_app:games")
+
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+            else:
+                return redirect("tavern_app:games")
     else:
         form = UserCreationForm()
 
