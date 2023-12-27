@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, reverse
 from django.shortcuts import render
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView
 
 from .forms import (
     CreateGameForm,
@@ -48,6 +48,13 @@ from .models import (
 )
 
 
+def homepage(request):
+    if request.user.is_authenticated:
+        return redirect("tavern_app:games")
+
+    return render(request, 'tavern_app/home.html')
+
+
 def simple_view():
     return HttpResponse(
         "LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023"
@@ -56,16 +63,16 @@ def simple_view():
 
 def seed(request):
     if not request.user.is_superuser:
-        return redirect("tavern_app:home")
+        return redirect("tavern_app:games")
 
     seed_data()
-    return render(request, "seed.html")
+    return render(request, "tavern_app/seed.html")
 
 
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
 def add_three_users_to_game(request, game_id):
     if not request.user.is_superuser:
-        return redirect("tavern_app:home")
+        return redirect("tavern_app:games")
 
     game = Game(pk=game_id)
     GameUser(game=game, user=User(pk=2)).save()
@@ -87,10 +94,6 @@ def equip_placeholder():
         + gameuser.game.name
         + ". check admin for that gameuser to see changes."
     )
-
-
-class CreateOrJoinView(TemplateView):
-    template_name = "tavern_app/home.html"
 
 
 def games(request):

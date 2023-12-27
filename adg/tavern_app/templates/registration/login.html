@@ -1,40 +1,43 @@
-{% extends 'base.html' %}
+{% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
+<div class="container">
 
-<h1>Log In</h1>
+    <h1 class="my-3">Log In</h1>
 
-{% if form.errors %}
-<div class="alert alert-danger" role="alert">
-    Please enter a valid username and password.
-</div>
-{% endif %}
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        Please enter a valid username and password.
+    </div>
+    {% endif %}
 
-{% if messages %}
-{% for message in messages %}
-<div {% if message.tags %} class="{{ message.tags }}" {% endif %} role="alert">
-    {{ message }}
-</div>
-{% endfor %}
-{% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}" {% endif %} role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
 
-<div class="form-group mb-3">
-    {% comment %} Added p manually so we can apply bootstrap form-control class to inputs {% endcomment %}
-    <form method="POST">
-        {% csrf_token %}
-        <p>
-            <label for="id_username">Username:</label>
-            <input class="form-control" type="text" name="username" autofocus="" autocapitalize="none"
-                   autocomplete="username" maxlength="150" required="" id="id_username">
-        </p>
-        <p>
-            <label for="id_password">Password:</label>
-            <input class="form-control" type="password" name="password" autocomplete="current-password" required=""
-                   id="id_password">
-        </p>
-        <button class="btn btn-primary mb-3" type="submit">Log In</button>
-    </form>
-    <a href="{% url 'register' %}" class="text-white">Don't have an account? Register here.</a>
+    <div class="form-group mb-3">
+        {% comment %} Added p manually so we can apply bootstrap form-control class to inputs {% endcomment %}
+        <form method="POST">
+            {% csrf_token %}
+            <p>
+                <label for="id_username">Username:</label>
+                <input class="form-control" type="text" name="username" autofocus="" autocapitalize="none"
+                       autocomplete="username" maxlength="150" required="" id="id_username">
+            </p>
+            <p>
+                <label for="id_password">Password:</label>
+                <input class="form-control" type="password" name="password" autocomplete="current-password" required=""
+                       id="id_password">
+            </p>
+            <button class="btn btn-primary mb-3" type="submit">Log In</button>
+        </form>
+        <a href="{% url 'register' %}" class="text-white">Don't have an account? Register here.</a>
+    </div>
+
 </div>
 
 {% endblock %}

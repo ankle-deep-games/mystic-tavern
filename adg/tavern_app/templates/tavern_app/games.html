@@ -12,7 +12,10 @@
     {% endfor %}
     {% endif %}
 
-    <hr>
+    <h6>Create a game and play with friends.</h6>
+    <a href="{% url 'tavern_app:create_game' %}" class="btn btn-primary mb-3">Create</a>
+
+    <h6>Or join an already created game with a password.</h6>
 
     {% for game in game_list %}
     <div class="card text-white bg-secondary mb-3" style="max-width: 23rem;">

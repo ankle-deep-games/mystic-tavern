@@ -1,14 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'tavern_app/mt_base.html' %}
 
 {% block content %}
 
-<h1> Create Game </h1>
-<div class="form-group">
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary">Create</button>
+<div class="container">
 
-    </form>
+    <h1 class="my-3"> Create Game </h1>
+    <div class="form-group">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary">Create</button>
+
+        </form>
+    </div>
+
 </div>
+
 {% endblock %}
