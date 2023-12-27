@@ -134,7 +134,8 @@ def games(request):
 def join_game(request, pk):
     if not request.user.is_authenticated:
         messages.info(
-            request, "Must be logged in to join a game. Log in or click the link below to register a new account.", extra_tags="alert alert-info"
+            request, "Must be logged in to join a game. Log in or click the link below to register a new account.",
+            extra_tags="alert alert-info"
         )
         return redirect(f"{reverse('login')}?next=/games/{pk}")
 
@@ -1101,3 +1102,17 @@ def battle_get_updates(request, game_id, act, number):
         "new_url": new_url,
     }
     return JsonResponse(data)
+
+
+def gameover(request, game_id):
+    if not request.user.is_authenticated:
+        return redirect("tavern_app:games")
+
+    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
+        return redirect("tavern_app:games")
+
+    game = Game(pk=game_id)
+    if not game.game_over:
+        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game_id}))
+
+    return render(request, 'tavern_app/game_over.html')

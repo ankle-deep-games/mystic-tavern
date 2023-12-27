@@ -42,4 +42,5 @@ urlpatterns = [
         name="battle_get_updates",
     ),
     path("equipplaceholder", views.equip_placeholder, name="equipplaceholder"),
+    path("games/<int:game_id>/gameover", views.gameover, name="gameover"),
 ]
