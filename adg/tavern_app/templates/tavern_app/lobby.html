@@ -420,80 +420,81 @@
                         const haveDifferences = !deepCompare(updatedGameusersArray, gameusersArray);
                         
                         if (haveDifferences) {
-                            console.log("Objects have differences.");
                             gameusersArray = [...updatedGameusersArray];
 
                             if (gameusersArray[0]) {
-                                $(`#player-${gameusersArray[0].id} .gameuser-name`).text(gameusersArray[0].user__username);
-                                if (gameusersArray[0].role__name) {
-                                    var player1image = "{% static 'tavern_app/' %}" + gameusersArray[0].role__name + "-" + gameusersArray[0].gender__name + ".png";
-                                    $(`#player-${gameusersArray[0].id} .gameuser-role`).text(gameusersArray[0].role__display_name);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-hp`).text(gameusersArray[0].role__start_hp);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-mp`).text(gameusersArray[0].role__start_mp);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-myst-attack`).text(gameusersArray[0].role__start_myst_attack);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-myst-defense`).text(gameusersArray[0].role__start_myst_defense);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-attack`).text(gameusersArray[0].role__start_attack);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-defense`).text(gameusersArray[0].role__start_defense);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-speed`).text(gameusersArray[0].role__start_speed);
-                                    $(`#player-${gameusersArray[0].id} .gameuser-image`).attr('src', player1image);
+                                let player1 = gameusersArray[0];
+                                $(`#player-${player1.id} .gameuser-name`).text(player1.user__username);
+                                if (player1.role__name) {
+                                    var player1image = "{% static 'tavern_app/' %}" + player1.role__name + "-" + player1.gender__name + ".png";
+                                    $(`#player-${player1.id} .gameuser-role`).text(player1.role__display_name);
+                                    $(`#player-${player1.id} .gameuser-hp`).text(player1.role__start_hp);
+                                    $(`#player-${player1.id} .gameuser-mp`).text(player1.role__start_mp);
+                                    $(`#player-${player1.id} .gameuser-myst-attack`).text(player1.role__start_myst_attack);
+                                    $(`#player-${player1.id} .gameuser-myst-defense`).text(player1.role__start_myst_defense);
+                                    $(`#player-${player1.id} .gameuser-attack`).text(player1.role__start_attack);
+                                    $(`#player-${player1.id} .gameuser-defense`).text(player1.role__start_defense);
+                                    $(`#player-${player1.id} .gameuser-speed`).text(player1.role__start_speed);
+                                    $(`#player-${player1.id} .gameuser-image`).attr('src', player1image);
                                 }
                             }
                             if (gameusersArray[1]) {
+                                let player2 = gameusersArray[1];
                                 if ($('#player-2').length) {
-                                    $('#player-2').attr('id', `player-${gameusersArray[1].id}`);
+                                    $('#player-2').attr('id', `player-${player2.id}`);
                                 }
-                                $(`#player-${gameusersArray[1].id} .gameuser-name`).text(gameusersArray[1].user__username);
-                                if (gameusersArray[1].role__name) {
-                                    var player2image = "{% static 'tavern_app/' %}" + gameusersArray[1].role__name + "-" + gameusersArray[1].gender__name + ".png";
-                                    $(`#player-${gameusersArray[1].id} .gameuser-role`).text(gameusersArray[1].role__display_name);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-hp`).text(gameusersArray[1].role__start_hp);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-mp`).text(gameusersArray[1].role__start_mp);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-myst-attack`).text(gameusersArray[1].role__start_myst_attack);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-myst-defense`).text(gameusersArray[1].role__start_myst_defense);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-attack`).text(gameusersArray[1].role__start_attack);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-defense`).text(gameusersArray[1].role__start_defense);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-speed`).text(gameusersArray[1].role__start_speed);
-                                    $(`#player-${gameusersArray[1].id} .gameuser-image`).attr('src', player2image);
+                                $(`#player-${player2.id} .gameuser-name`).text(player2.user__username);
+                                if (player2.role__name) {
+                                    var player2image = "{% static 'tavern_app/' %}" + player2.role__name + "-" + player2.gender__name + ".png";
+                                    $(`#player-${player2.id} .gameuser-role`).text(player2.role__display_name);
+                                    $(`#player-${player2.id} .gameuser-hp`).text(player2.role__start_hp);
+                                    $(`#player-${player2.id} .gameuser-mp`).text(player2.role__start_mp);
+                                    $(`#player-${player2.id} .gameuser-myst-attack`).text(player2.role__start_myst_attack);
+                                    $(`#player-${player2.id} .gameuser-myst-defense`).text(player2.role__start_myst_defense);
+                                    $(`#player-${player2.id} .gameuser-attack`).text(player2.role__start_attack);
+                                    $(`#player-${player2.id} .gameuser-defense`).text(player2.role__start_defense);
+                                    $(`#player-${player2.id} .gameuser-speed`).text(player2.role__start_speed);
+                                    $(`#player-${player2.id} .gameuser-image`).attr('src', player2image);
                                 }
                             }
                             if (gameusersArray[2]) {
+                                let player3 = gameusersArray[2];
                                 if ($('#player-3').length) {
-                                    $('#player-3').attr('id', `player-${gameusersArray[2].id}`);
+                                    $('#player-3').attr('id', `player-${player3.id}`);
                                 }
-                                $(`#player-${gameusersArray[2].id} .gameuser-name`).text(gameusersArray[2].user__username);
-                                if (gameusersArray[2].role__name) {
-                                    var player3image = "{% static 'tavern_app/' %}" + gameusersArray[2].role__name + "-" + gameusersArray[2].gender__name + ".png";
-                                    $(`#player-${gameusersArray[2].id} .gameuser-role`).text(gameusersArray[2].role__display_name);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-hp`).text(gameusersArray[2].role__start_hp);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-mp`).text(gameusersArray[2].role__start_mp);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-myst-attack`).text(gameusersArray[2].role__start_myst_attack);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-myst-defense`).text(gameusersArray[2].role__start_myst_defense);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-attack`).text(gameusersArray[2].role__start_attack);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-defense`).text(gameusersArray[2].role__start_defense);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-speed`).text(gameusersArray[2].role__start_speed);
-                                    $(`#player-${gameusersArray[2].id} .gameuser-image`).attr('src', player3image);
+                                $(`#player-${player3.id} .gameuser-name`).text(player3.user__username);
+                                if (player3.role__name) {
+                                    var player3image = "{% static 'tavern_app/' %}" + player3.role__name + "-" + player3.gender__name + ".png";
+                                    $(`#player-${player3.id} .gameuser-role`).text(player3.role__display_name);
+                                    $(`#player-${player3.id} .gameuser-hp`).text(player3.role__start_hp);
+                                    $(`#player-${player3.id} .gameuser-mp`).text(player3.role__start_mp);
+                                    $(`#player-${player3.id} .gameuser-myst-attack`).text(player3.role__start_myst_attack);
+                                    $(`#player-${player3.id} .gameuser-myst-defense`).text(player3.role__start_myst_defense);
+                                    $(`#player-${player3.id} .gameuser-attack`).text(player3.role__start_attack);
+                                    $(`#player-${player3.id} .gameuser-defense`).text(player3.role__start_defense);
+                                    $(`#player-${player3.id} .gameuser-speed`).text(player3.role__start_speed);
+                                    $(`#player-${player3.id} .gameuser-image`).attr('src', player3image);
                                 }
                             }
                             if (gameusersArray[3]) {
+                                let player4 = gameusersArray[3];
                                 if ($('#player-4').length) {
-                                    $('#player-4').attr('id', `player-${gameusersArray[3].id}`);
+                                    $('#player-4').attr('id', `player-${player4.id}`);
                                 }
-                                $(`#player-${gameusersArray[3].id} .gameuser-name`).text(gameusersArray[3].user__username);
-                                if (gameusersArray[3].role__name) {
-                                    var player4image = "{% static 'tavern_app/' %}" + gameusersArray[3].role__name + "-" + gameusersArray[3].gender__name + ".png";
-                                    $(`#player-${gameusersArray[3].id} .gameuser-role`).text(gameusersArray[3].role__display_name);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-hp`).text(gameusersArray[3].role__start_hp);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-mp`).text(gameusersArray[3].role__start_mp);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-myst-attack`).text(gameusersArray[3].role__start_myst_attack);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-myst-defense`).text(gameusersArray[3].role__start_myst_defense);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-attack`).text(gameusersArray[3].role__start_attack);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-defense`).text(gameusersArray[3].role__start_defense);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-speed`).text(gameusersArray[3].role__start_speed);
-                                    $(`#player-${gameusersArray[3].id} .gameuser-image`).attr('src', player4image);
+                                $(`#player-${player4.id} .gameuser-name`).text(player4.user__username);
+                                if (player4.role__name) {
+                                    var player4image = "{% static 'tavern_app/' %}" + player4.role__name + "-" + player4.gender__name + ".png";
+                                    $(`#player-${player4.id} .gameuser-role`).text(player4.role__display_name);
+                                    $(`#player-${player4.id} .gameuser-hp`).text(player4.role__start_hp);
+                                    $(`#player-${player4.id} .gameuser-mp`).text(player4.role__start_mp);
+                                    $(`#player-${player4.id} .gameuser-myst-attack`).text(player4.role__start_myst_attack);
+                                    $(`#player-${player4.id} .gameuser-myst-defense`).text(player4.role__start_myst_defense);
+                                    $(`#player-${player4.id} .gameuser-attack`).text(player4.role__start_attack);
+                                    $(`#player-${player4.id} .gameuser-defense`).text(player4.role__start_defense);
+                                    $(`#player-${player4.id} .gameuser-speed`).text(player4.role__start_speed);
+                                    $(`#player-${player4.id} .gameuser-image`).attr('src', player4image);
                                 }
                             }
-                        } else {
-                            console.log("Objects are identical."); // TODO remove log line
                         }
                     }
                 },
