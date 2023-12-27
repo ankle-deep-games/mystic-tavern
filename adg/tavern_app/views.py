@@ -420,8 +420,6 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
         for form in self.forms:
             role = form.cleaned_data.get('role')
             gender = form.cleaned_data.get('gender')
-            # TODO monitor. sometimes getting weird gender setting to --- after submit with error?
-            # https://trello.com/c/lZVXv5tE/266-debug-role-gender-assignement-form-errors
 
             if not role or not gender:
                 raise forms.ValidationError("Every player must have a role and gender selected.")
@@ -455,7 +453,6 @@ def role_assignment(request, game_id):
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
 
     gameusers_queryset = GameUser.objects.filter(game_id=game_id)
-    gameusers_count = gameusers_queryset.count()
 
     user_names = [gameuser.user.username for gameuser in gameusers_queryset]
 
@@ -464,13 +461,13 @@ def role_assignment(request, game_id):
         model=GameUser,
         form=RoleAssignmentForm,
         formset=BaseRoleAssignmentFormSet,
-        extra=gameusers_count,  # Dynamically set the number of extra forms
+        extra=0,
         max_num=4,  # Maximum number of forms
         can_delete=False,
     )
 
     if request.method == 'POST':
-        formset = role_assignment_form_set(request.POST, instance=game)
+        formset = role_assignment_form_set(request.POST, instance=game, queryset=gameusers_queryset)
         if formset.is_valid():
             attack_ability = Ability.objects.get(pk=1)
             for form in formset:
@@ -502,7 +499,7 @@ def role_assignment(request, game_id):
             formset.save()  # Save the formset data after updating the players
             return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
     else:
-        formset = role_assignment_form_set(instance=game)
+        formset = role_assignment_form_set(instance=game, queryset=gameusers_queryset)
 
     return render(request, 'tavern_app/role_assignment.html', {'formset': formset, 'user_names': user_names})
 
