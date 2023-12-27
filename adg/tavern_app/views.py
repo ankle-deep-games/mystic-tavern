@@ -66,7 +66,7 @@ def seed(request):
         return redirect("tavern_app:games")
 
     seed_data()
-    return render(request, "seed.html")
+    return render(request, "tavern_app/seed.html")
 
 
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
