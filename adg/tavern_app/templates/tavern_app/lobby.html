@@ -53,14 +53,132 @@
             </div>
         </div>
 
-        <!-- FAQ 2: How to Invite People -->
+        <!-- FAQ 2: Roles -->
+        <div class="card text-light bg-secondary">
+            <div class="card-header" id="rolesHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link text-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#rolesCollapse" aria-expanded="false" aria-controls="rolesCollapse">
+                        Playable Roles
+                    </button>
+                </h2>
+            </div>
+            <div id="rolesCollapse" class="collapse" aria-labelledby="rolesHeader" data-bs-parent="#faqAccordion">
+                <div class="card-body">
+                    <div>
+                        <h4>Archer</h4>
+                        <div class="mb-2">
+                            <img src="{% static 'tavern_app/archer-male.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/archer-female.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                        </div>
+                        <p>The Archer is a master of precision and deadly
+                            accuracy.
+                            Armed with a trusty bow and an assortment of arrows, they rain down a flurry of projectiles
+                            from
+                            afar,
+                            swiftly dispatching enemies with their ranged physical attacks. With their keen eyes and
+                            nimble
+                            movements, Archers provide essential long-range support to their allies in the epic battles
+                            that
+                            unfold.</p>
+                    </div>
+
+                    <div>
+                        <h4>Paladin</h4>
+                        <div class="mb-2">
+                            <img src="{% static 'tavern_app/paladin-male.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/paladin-female.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                        </div>
+                        <p>As the frontline defender, the Paladin stands as a
+                            paragon of courage and
+                            strength. Clad in heavy armor and wielding a mighty sword or hammer, they excel in
+                            close-quarters
+                            combat, unleashing devastating melee physical attacks upon their foes. Paladins are renowned
+                            for
+                            their
+                            unwavering resolve, shielding their comrades from harm and leading the charge against evil
+                            forces.</p>
+                    </div>
+
+                    <div>
+                        <h4>Black Mage</h4>
+                        <div class="mb-2">
+                            <img src="{% static 'tavern_app/blackmage-male.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/blackmage-female.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                        </div>
+                        <p>The Black Mage harnesses the raw power of
+                            arcane forces. Wielding
+                            a staff crackling with dark energy, they unleash devastating ranged magical attacks upon
+                            their
+                            adversaries. Black Mages weave intricate spells, conjuring destructive elements and
+                            manipulating the
+                            very fabric of reality to decimate their foes from a distance.</p>
+                    </div>
+
+                    <div>
+                        <h4>White Mage</h4>
+                        <div class="mb-2">
+                            <img src="{% static 'tavern_app/whitemage-male.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/whitemage-female.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                        </div>
+                        <p>The White Mage embodies the essence
+                            of healing and
+                            restoration. Armed with ancient magical arts and wielding a staff, they are masters of
+                            mending
+                            wounds
+                            and revitalizing their allies. White Mages channel the ethereal powers of light, mending
+                            broken
+                            bodies
+                            and replenishing vital energy, ensuring their team remains strong and resilient throughout
+                            their
+                            perilous journeys.</p>
+                    </div>
+
+                    <div>
+                        <h4>Bard</h4>
+                        <div class="mb-2">
+                            <img src="{% static 'tavern_app/bard-male.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/bard-female.png' %}" class="rounded" alt="..."
+                                 style="width: 48%;">
+                        </div>
+                        <p>The Bard is a
+                            charismatic and versatile
+                            support role. Masters of both music and speech, they inspire their allies with uplifting
+                            melodies
+                            and
+                            captivating tales, bolstering their courage and enhancing their abilities. Bards excel at
+                            crowd
+                            control,
+                            manipulating the battlefield and providing crucial support, ensuring their comrades remain
+                            motivated
+                            and ready for any challenge that awaits.</p>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
+                            data-bs-target="#rolesCollapse" aria-expanded="false" aria-controls="rolesCollapse">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 3: Invite People -->
         <div class="card text-light bg-secondary">
             <div class="card-header" id="invitePeopleHeader">
                 <h2 class="mb-0">
                     <button class="btn btn-link text-light" type="button" data-bs-toggle="collapse"
                             data-bs-target="#invitePeopleCollapse" aria-expanded="false"
                             aria-controls="invitePeopleCollapse">
-                        How do I invite people to this game?
+                        Invite People
                     </button>
                 </h2>
             </div>
@@ -247,87 +365,11 @@
         {% endif %}
 
     </div>
-    {% endblock %}
-
-    {% block additional_content %}
-    <div class="container">
-        <hr>
-        <h4 class="text-white my-4">The Roles(Classes):</h4>
-
-        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
-            <img src="{% static 'tavern_app/archer-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
-            <div class="card-body">
-                <h3 class="card-title">Archer</h3>
-                <p class="card-text">In the world of Mystic Tavern, the Archer is a master of precision and deadly
-                    accuracy.
-                    Armed with a trusty bow and an assortment of arrows, they rain down a flurry of projectiles from
-                    afar,
-                    swiftly dispatching enemies with their ranged physical attacks. With their keen eyes and nimble
-                    movements, Archers provide essential long-range support to their allies in the epic battles that
-                    unfold.</p>
-            </div>
-        </div>
-
-        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
-            <img src="{% static 'tavern_app/paladin-male.png' %}" class="card-img-top" alt="..." style="width: 30%;">
-            <div class="card-body">
-                <h3 class="card-title">Paladin</h3>
-                <p class="card-text">As the frontline defender in the realm of Mystic Tavern, the Paladin stands as a
-                    paragon of courage and
-                    strength. Clad in heavy armor and wielding a mighty sword or hammer, they excel in close-quarters
-                    combat, unleashing devastating melee physical attacks upon their foes. Paladins are renowned for
-                    their
-                    unwavering resolve, shielding their comrades from harm and leading the charge against evil
-                    forces.</p>
-            </div>
-        </div>
-
-        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
-            <img src="{% static 'tavern_app/whitemage-female.png' %}" class="card-img-top" alt="..."
-                 style="width: 30%;">
-            <div class="card-body">
-                <h3 class="card-title">White Mage</h3>
-                <p class="card-text">Within the enchanting world of Mystic Tavern, the White Mage embodies the essence
-                    of healing and
-                    restoration. Armed with ancient magical arts and wielding a staff, they are masters of mending
-                    wounds
-                    and revitalizing their allies. White Mages channel the ethereal powers of light, mending broken
-                    bodies
-                    and replenishing vital energy, ensuring their team remains strong and resilient throughout their
-                    perilous journeys.</p>
-            </div>
-        </div>
-
-        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
-            <img src="{% static 'tavern_app/blackmage-male.png' %}" class="card-img-top" alt="..." style="width: 30%;">
-            <div class="card-body">
-                <h3 class="card-title">Black Mage</h3>
-                <p class="card-text">In the mystical realm of Mystic Tavern, the Black Mage harnesses the raw power of
-                    arcane forces. Wielding
-                    a staff crackling with dark energy, they unleash devastating ranged magical attacks upon their
-                    adversaries. Black Mages weave intricate spells, conjuring destructive elements and manipulating the
-                    very fabric of reality to decimate their foes from a distance.</p>
-            </div>
-        </div>
-
-        <div class="card text-white bg-secondary mb-3" style="flex-direction: row;">
-            <img src="{% static 'tavern_app/bard-female.png' %}" class="card-img-top" alt="..." style="width: 30%;">
-            <div class="card-body">
-                <h3 class="card-title">Bard</h3>
-                <p class="card-text">Within the enchanting world reminiscent of Lord of the Rings, the Bard is a
-                    charismatic and versatile
-                    support class. Masters of both music and speech, they inspire their allies with uplifting melodies
-                    and
-                    captivating tales, bolstering their courage and enhancing their abilities. Bards excel at crowd
-                    control,
-                    manipulating the battlefield and providing crucial support, ensuring their comrades remain motivated
-                    and ready for any challenge that awaits in the mythical realm of Mystic Tavern.</p>
-            </div>
-        </div>
-
-    </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function() {
     
