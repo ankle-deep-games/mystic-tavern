@@ -35,7 +35,12 @@
             </p>
             <button class="btn btn-primary mb-3" type="submit">Log In</button>
         </form>
+        {% if request.GET.next %}
+        <a href="{% url 'register' %}?next={{ request.GET.next }}" class="text-white">Don't have an account? Register
+            here.</a>
+        {% else %}
         <a href="{% url 'register' %}" class="text-white">Don't have an account? Register here.</a>
+        {% endif %}
     </div>
 
 </div>
