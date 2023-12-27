@@ -6,11 +6,11 @@
 
 {% if form.errors %}
 <div class="alert alert-danger" role="alert">
-        {% for field in form %}
-        {% for error in field.errors %}
-        <div>{{ error }}</div>
-        {% endfor %}
-        {% endfor %}
+    {% for field in form %}
+    {% for error in field.errors %}
+    <div>{{ error }}</div>
+    {% endfor %}
+    {% endfor %}
 </div>
 {% endif %}
 
@@ -27,8 +27,8 @@
     <form method="POST">
         {% csrf_token %}
         <p>
-            <label for="id_username">Username:</label>
-            <input class="form-control" type="text" name="username" required id="id_username">
+            <label for="id_username">Username (up to 7 characters):</label>
+            <input class="form-control" type="text" name="username" required id="id_username" maxlength="7">
         </p>
 
         <p>
