@@ -1,13 +1,13 @@
 from django.urls import path
 
 from . import views
-from .views import CreateOrJoinView, CreateGameView
+from .views import CreateGameView
 
 app_name = "tavern_app"
 
 # domain.com/
 urlpatterns = [
-    path("home/", CreateOrJoinView.as_view(), name="home"),
+    path("", views.homepage, name="home"),
     path("leeroy/og", views.simple_view),
     path("seed/", views.seed),
     path(

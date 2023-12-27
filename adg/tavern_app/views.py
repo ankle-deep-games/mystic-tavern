@@ -48,6 +48,10 @@ from .models import (
 )
 
 
+def homepage(request):
+    return render(request, 'tavern_app/home.html')
+
+
 def simple_view():
     return HttpResponse(
         "LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023"
@@ -56,7 +60,7 @@ def simple_view():
 
 def seed(request):
     if not request.user.is_superuser:
-        return redirect("tavern_app:home")
+        return redirect("tavern_app:games")
 
     seed_data()
     return render(request, "seed.html")
@@ -65,7 +69,7 @@ def seed(request):
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
 def add_three_users_to_game(request, game_id):
     if not request.user.is_superuser:
-        return redirect("tavern_app:home")
+        return redirect("tavern_app:games")
 
     game = Game(pk=game_id)
     GameUser(game=game, user=User(pk=2)).save()
@@ -87,10 +91,6 @@ def equip_placeholder():
         + gameuser.game.name
         + ". check admin for that gameuser to see changes."
     )
-
-
-class CreateOrJoinView(TemplateView):
-    template_name = "tavern_app/home.html"
 
 
 def games(request):
