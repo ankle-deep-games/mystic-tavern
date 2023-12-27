@@ -22,7 +22,7 @@ from .helpers.battle import (
     gameuser_heal_single_gameuser_and_save,
     calc_is_request_user_turn,
     gameuser_buff_single_gameuser_and_save,
-    is_any_player_alive, calc_turns_and_execute_enemy_turns,
+    is_any_player_alive, calc_turns_and_execute_enemy_turns, is_any_enemy_alive, reset_gameusers_buff_stats,
 )
 from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 from .helpers.scene import (
@@ -1021,6 +1021,21 @@ def battle(request, game_id, act, number):
             )
             # TODO new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id,
             #  'act': gamelocation.act, 'number': gamelocation.number})
+        else:
+            # TODO GAMEOVER https://trello.com/c/LhY4toGE/273-gameover-game-state-when-battle-lost
+            pass
+
+    if not is_any_enemy_alive(game=game):
+        reset_gameusers_buff_stats(game=game)
+
+        # TODO set new game location
+
+        # TODO set dialogue node of next scene
+
+        # TODO delete turn orders for this battle
+
+        # TODO redirect new game location
+        pass
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
     is_request_user_turn = calc_is_request_user_turn(

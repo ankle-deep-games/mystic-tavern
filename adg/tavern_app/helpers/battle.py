@@ -489,6 +489,10 @@ def is_any_player_alive(game: Game):
     return True if GameUser.objects.filter(game=game, current_hp__gt=0) else False
 
 
+def is_any_enemy_alive(game: Game):
+    return True if GameEnemy.objects.filter(game=game, current_hp__gt=0) else False
+
+
 def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers):
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
     if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
@@ -537,3 +541,23 @@ def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameu
             # if enemy will go after current enemy - have that enemy attack by looping again
             is_enemy_turn_next = (
                 True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
+
+
+def reset_gameusers_buff_stats(game: Game):
+    gameusers = GameUser.objects.filter(game=game)
+    for gameuser in gameusers:
+        gameuser.current_speed = gameuser.with_gear_speed
+        gameuser.current_myst_defense = gameuser.with_gear_myst_defense
+        gameuser.current_myst_attack = gameuser.with_gear_myst_attack
+        gameuser.current_defense = gameuser.with_gear_defense
+        gameuser.current_attack = gameuser.with_gear_attack
+
+        gameuser.current_max_mp = gameuser.with_gear_mp
+        if gameuser.current_mp > gameuser.with_gear_mp:
+            gameuser.current_mp = gameuser.with_gear_mp
+
+        gameuser.current_max_hp = gameuser.with_gear_hp
+        if gameuser.current_hp > gameuser.with_gear_hp:
+            gameuser.current_hp = gameuser.with_gear_hp
+
+        gameuser.save()
