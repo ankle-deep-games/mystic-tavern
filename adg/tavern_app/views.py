@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, reverse
 from django.shortcuts import render
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView
 
 from .forms import (
     CreateGameForm,
@@ -49,6 +49,9 @@ from .models import (
 
 
 def homepage(request):
+    if request.user.is_authenticated:
+        return redirect("tavern_app:games")
+
     return render(request, 'tavern_app/home.html')
 
 
