@@ -14,17 +14,85 @@
     {% endfor %}
     {% endif %}
 
+    <!-- FAQ section -->
+    <div class="accordion" id="faqAccordion" style="max-width: 23rem;">
+        <!-- FAQ 1: How to Play -->
+        <div class="card text-light bg-secondary">
+            <div class="card-header" id="howToPlayHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link text-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#howToPlayCollapse" aria-expanded="false" aria-controls="howToPlayCollapse">
+                        How to Play
+                    </button>
+                </h2>
+            </div>
+            <div id="howToPlayCollapse" class="collapse" aria-labelledby="howToPlayHeader"
+                 data-bs-parent="#faqAccordion">
+                <div class="card-body">
+                    <p>To start a game you must have 4 players.</p>
+                    <p>The party leader is the one who created the game. The party leader has the ability to click a
+                        button in the lobby to assign roles and genders to each player. These roles will determine what
+                        stats and abilities players in the party have throughout the game. Party members can tell the
+                        party leader which role and gender they want to play so the party leader knows what to assign.
+                        There can only be one of each role.</p>
+                    <p>Once there are 4 players and they've all been assigned a role the party leader can click a button
+                        in the lobby to start the game.</p>
+                    <p>The game has a mixture of dialogue and battles. In the dialogue portions the party leader will
+                        progress the dialogue and make decisions for the group as they come up. As a party leader, be
+                        sure to ask your party members how they think the group should proceed. And party members, be
+                        sure to share your opinion with the party leader.</p>
+                    <p>In battles each player makes their own choices in turn based combat. Be careful, if everyone in
+                        your party reaches 0 HP the game is over.</p>
+                    <p>As the game progresses you'll receive new weapons and armor to increase your stats, as well as
+                        more powerful abilities.</p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
+                            data-bs-target="#howToPlayCollapse" aria-expanded="false" aria-controls="howToPlayCollapse">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ 2: How to Invite People -->
+        <div class="card text-light bg-secondary">
+            <div class="card-header" id="invitePeopleHeader">
+                <h2 class="mb-0">
+                    <button class="btn btn-link text-light" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#invitePeopleCollapse" aria-expanded="false"
+                            aria-controls="invitePeopleCollapse">
+                        How do I invite people to this game?
+                    </button>
+                </h2>
+            </div>
+            <div id="invitePeopleCollapse" class="collapse" aria-labelledby="invitePeopleHeader"
+                 data-bs-parent="#faqAccordion">
+                <div class="card-body">
+                    <p>Instructions on how to invite people to the game go here.</p>
+                    <!-- TODO https://trello.com/c/VJCiWJ3p/269-lobby-give-easy-instructions-on-how-to-invite-others-to-join-your-game -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
+                            data-bs-target="#invitePeopleCollapse" aria-expanded="false"
+                            aria-controls="invitePeopleCollapse">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {% if is_leader == True %}
-    <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
-    {% if any_player_not_ready or num_players_in_lobby != 4 %}
-    <a href="#" class="btn btn-primary disabled">START GAME</a>
-    {% else %}
-    <form method="POST">
-        {% csrf_token %}
-        {{form}}
-        <input class="btn btn-primary mt-2" type="submit" value="START GAME">
-    </form>
-    {% endif %}
+    <div class="mt-3">
+        <a href="{% url 'tavern_app:role_assignment' game_id=game.pk  %}" class="btn btn-primary">ASSIGN GROUP ROLES</a>
+        {% if any_player_not_ready or num_players_in_lobby != 4 %}
+        <a href="#" class="btn btn-primary disabled">START GAME</a>
+        {% else %}
+        <form method="POST">
+            {% csrf_token %}
+            {{form}}
+            <input class="btn btn-primary mt-2" type="submit" value="START GAME">
+        </form>
+        {% endif %}
+    </div>
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
     <div class="card-group d-flex flex-row flex-nowrap overflow-auto">
@@ -260,9 +328,6 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
-        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).ready(function() {
     
