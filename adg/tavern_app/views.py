@@ -1115,4 +1115,4 @@ def gameover(request, game_id):
     if not game.game_over:
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game_id}))
 
-    return render(request, 'tavern_app/game_over.html')
+    return render(request, 'tavern_app/gameover.html')
