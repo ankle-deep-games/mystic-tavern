@@ -389,6 +389,8 @@ def gameuser_buff_single_gameuser_and_save(
         gameuser.current_mp -= ability.mp_cost
         gameuser.save()
 
+    buff_message = ''
+
     # if buffing themselves, requery since their MP just decreased
     if defensive_gameuser_target == gameuser:
         defensive_gameuser_target = GameUser.objects.get(pk=gameuser.pk)
@@ -401,6 +403,7 @@ def gameuser_buff_single_gameuser_and_save(
             hp_increase_delta = buffed_hp - defensive_gameuser_target.current_max_hp
             defensive_gameuser_target.current_max_hp = buffed_hp
             defensive_gameuser_target.current_hp += hp_increase_delta
+            buff_message += "Their HP increased. "
 
     if ability.buff_mp_percent > 0:
         buffed_mp = defensive_gameuser_target.with_gear_mp + round(
@@ -410,6 +413,7 @@ def gameuser_buff_single_gameuser_and_save(
             mp_increase_delta = buffed_mp - defensive_gameuser_target.current_max_mp
             defensive_gameuser_target.current_max_mp = buffed_mp
             defensive_gameuser_target.current_mp += mp_increase_delta
+            buff_message += "Their MP increased. "
 
     if ability.buff_attack_percent > 0:
         buffed_attack = defensive_gameuser_target.with_gear_attack + round(
@@ -417,6 +421,7 @@ def gameuser_buff_single_gameuser_and_save(
         )
         if buffed_attack > defensive_gameuser_target.current_attack:
             defensive_gameuser_target.current_attack = buffed_attack
+            buff_message += "Their attack increased. "
 
     if ability.buff_defense_percent > 0:
         buffed_defense = defensive_gameuser_target.with_gear_defense + round(
@@ -424,6 +429,7 @@ def gameuser_buff_single_gameuser_and_save(
         )
         if buffed_defense > defensive_gameuser_target.current_defense:
             defensive_gameuser_target.current_defense = buffed_defense
+            buff_message += "Their defense increased. "
 
     if ability.buff_myst_attack_percent > 0:
         buffed_myst_attack = defensive_gameuser_target.with_gear_myst_attack + round(
@@ -432,6 +438,7 @@ def gameuser_buff_single_gameuser_and_save(
         )
         if buffed_myst_attack > defensive_gameuser_target.current_myst_attack:
             defensive_gameuser_target.current_myst_attack = buffed_myst_attack
+            buff_message += "Their mystic attack increased. "
 
     if ability.buff_myst_defense_percent > 0:
         buffed_myst_defense = defensive_gameuser_target.with_gear_myst_defense + round(
@@ -440,6 +447,7 @@ def gameuser_buff_single_gameuser_and_save(
         )
         if buffed_myst_defense > defensive_gameuser_target.current_myst_defense:
             defensive_gameuser_target.current_myst_defense = buffed_myst_defense
+            buff_message += "Their mystic defense increased. "
 
     if ability.buff_speed_percent > 0:
         buffed_speed = defensive_gameuser_target.with_gear_speed + round(
@@ -447,6 +455,11 @@ def gameuser_buff_single_gameuser_and_save(
         )
         if buffed_speed > defensive_gameuser_target.current_speed:
             defensive_gameuser_target.current_speed = buffed_speed
+            buff_message += "Their speed increased. "
+
+    if len(buff_message) == 0:
+        buff_message = "Their stats were not increased because they were already at the maximum."
+    buff_message = buff_message.rstrip()
 
     defensive_gameuser_target.save()
 
@@ -464,7 +477,7 @@ def gameuser_buff_single_gameuser_and_save(
         resulting_gameenemies.values("id", "current_hp", "enemy__start_hp")
     )
 
-    message = f"{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()}. TODO buff what stats."
+    message = f"{gameuser.name()} used {ability.name} on {defensive_gameuser_target.name()}. {buff_message}"
 
     combat_log = CombatLog(
         game=game,
