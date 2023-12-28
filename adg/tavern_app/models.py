@@ -151,6 +151,10 @@ class GameUser(models.Model):
     with_gear_myst_attack = models.IntegerField(default=0)
     with_gear_myst_defense = models.IntegerField(default=0)
     with_gear_speed = models.IntegerField(default=0)
+    current_battle_act = models.IntegerField(null=True, blank=True)
+    current_battle_number = models.IntegerField(null=True, blank=True)
+    current_battle_starting_hp = models.IntegerField(null=True, blank=True)
+    current_battle_starting_mp = models.IntegerField(null=True, blank=True)
     ability_1 = models.ForeignKey(
         Ability,
         on_delete=models.PROTECT,

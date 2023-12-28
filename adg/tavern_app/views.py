@@ -1027,6 +1027,16 @@ def battle(request, game_id, act, number):
             )
         )
 
+    # check if this battle starting hp/mp exist. if they don't, assign them.
+    # these starting stats are used by frontend on first page load.
+    for gameuser in gameusers:
+        if gameuser.current_battle_act != act and gameuser.current_battle_number != battle_num:
+            gameuser.current_battle_act = act
+            gameuser.current_battle_number = battle_num
+            gameuser.current_battle_starting_hp = gameuser.current_hp
+            gameuser.current_battle_starting_mp = gameuser.current_mp
+            gameuser.save()
+
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
