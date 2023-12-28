@@ -13,7 +13,8 @@ class Game(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "Game Name: " + str(self.name) + ", Created by: " + str(self.creator)
+        return "Game Name: " + str(self.name) + ", Created by: " + str(self.creator) + ", Started: " + str(
+            self.game_started) + ", Game Over : " + str(self.game_over)
 
 
 class Type(models.Model):

@@ -202,6 +202,10 @@ def lobby(request, game_id):
         return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
 
     game = Game.objects.get(id=game_id)
+
+    if game.game_over:
+        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+
     gameusers = GameUser.objects.filter(game_id=game_id)
     is_leader = (
         True
@@ -439,6 +443,10 @@ def role_assignment(request, game_id):
         return redirect("tavern_app:games")
 
     game = Game.objects.get(pk=game_id)
+
+    if game.game_over:
+        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+
     is_leader = (
         True
         if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
@@ -517,6 +525,10 @@ def scene(request, game_id, act, number):
         return redirect("tavern_app:games")
 
     game = Game.objects.get(pk=game_id)
+
+    if game.game_over:
+        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+
     is_leader = (
         True
         if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
@@ -735,6 +747,10 @@ def battle(request, game_id, act, number):
         return redirect("tavern_app:games")
 
     game = Game.objects.get(pk=game_id)
+
+    if game.game_over:
+        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+
     request_gameuser = GameUser.objects.get(game=game, user=request.user)
     gameusers = GameUser.objects.filter(game=game)
     gameenemies = GameEnemy.objects.filter(game=game, act=act, battle=battle_num)
