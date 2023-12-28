@@ -361,8 +361,6 @@ def lobby_get_updates(request, game_id):
     game = Game.objects.get(pk=game_id)
 
     new_url = ""
-    # TODO add gameover check. if game over make new url the gameover screen
-    # also add this to BE pages? How to handle
     gamelocation_queryset = GameLocation.objects.filter(game=game)
     if gamelocation_queryset.exists():
         gamelocation = gamelocation_queryset.first()
@@ -374,6 +372,8 @@ def lobby_get_updates(request, game_id):
                 "number": gamelocation.number,
             },
         )
+    if game.game_over:
+        new_url = reverse("tavern_app:gameover", kwargs={"game_id": game_id})
 
     gameusers = GameUser.objects.filter(game=game)
     gameusers_json = list(
@@ -712,6 +712,8 @@ def scene_get_updates(request, game_id, act, number):
                 "number": gamelocation.number,
             },
         )
+    if game.game_over:
+        new_url = reverse("tavern_app:gameover", kwargs={"game_id": game_id})
 
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
