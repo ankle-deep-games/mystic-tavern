@@ -8,7 +8,6 @@ app_name = "tavern_app"
 # domain.com/
 urlpatterns = [
     path("", views.homepage, name="home"),
-    path("leeroy/og", views.simple_view),
     path("seed/", views.seed),
     path(
         "seed/game/<int:game_id>",
