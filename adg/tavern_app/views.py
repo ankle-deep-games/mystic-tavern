@@ -1034,7 +1034,11 @@ def battle(request, game_id, act, number):
             gameuser.current_battle_act = act
             gameuser.current_battle_number = battle_num
             gameuser.current_battle_starting_hp = gameuser.current_hp
+            gameuser.current_battle_starting_hp_percent = round(
+                (gameuser.current_battle_starting_hp / gameuser.with_gear_hp) * 100)
             gameuser.current_battle_starting_mp = gameuser.current_mp
+            gameuser.current_battle_starting_mp_percent = round(
+                (gameuser.current_battle_starting_mp / gameuser.with_gear_mp) * 100)
             gameuser.save()
 
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)

@@ -18,9 +18,6 @@ Password: `socks`
 
 Password (again): `socks`
 
-This password is too short. It must contain at least 8 characters.
-Bypass password validation and create user anyway? [y/N]: y `hit y`
-
 Superuser created successfully.
 
 `python3 manage.py runserver` to start the server again.

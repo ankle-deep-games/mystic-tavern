@@ -31,14 +31,16 @@
                 <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
                 <h6 class="card-title pt-2">{{ gameuser.name }}</h6>
                 <div class="progress rounded-0 position-relative" style="height: 23px;">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" id="player-hp-bar">
+                    <div class="progress-bar bg-success" role="progressbar"
+                         style="width: {{ gameuser.current_battle_starting_hp_percent}}%" id="player-hp-bar">
                         <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;"
                              id="player-hp-nums">{{ gameuser.current_battle_starting_hp }} / {{ gameuser.with_gear_hp }}
                         </div>
                     </div>
                 </div>
                 <div class="progress rounded-0 position-relative" style="height: 23px;">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 100%" id="player-mp-bar">
+                    <div class="progress-bar bg-info" role="progressbar"
+                         style="width: {{ gameuser.current_battle_starting_mp_percent}}%" id="player-mp-bar">
                         <div class="justify-content-end d-flex position-absolute text-dark fw-bold" style="width: 98%;"
                              id="player-mp-nums">{{ gameuser.current_battle_starting_mp }} / {{ gameuser.with_gear_mp }}
                         </div>

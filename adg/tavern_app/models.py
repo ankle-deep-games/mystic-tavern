@@ -154,7 +154,9 @@ class GameUser(models.Model):
     current_battle_act = models.IntegerField(null=True, blank=True)
     current_battle_number = models.IntegerField(null=True, blank=True)
     current_battle_starting_hp = models.IntegerField(null=True, blank=True)
+    current_battle_starting_hp_percent = models.IntegerField(null=True, blank=True)
     current_battle_starting_mp = models.IntegerField(null=True, blank=True)
+    current_battle_starting_mp_percent = models.IntegerField(null=True, blank=True)
     ability_1 = models.ForeignKey(
         Ability,
         on_delete=models.PROTECT,
@@ -237,12 +239,6 @@ class GameUser(models.Model):
 
     def image(self):
         return f"{self.role}-{self.gender}.png"
-
-    def hp_percentage(self):
-        return round((self.current_hp / self.current_max_hp) * 100)
-
-    def mp_percentage(self):
-        return round((self.current_mp / self.current_max_mp) * 100)
 
     def __str__(self):
         game_name = self.game.name if self.game else "Unknown Game"
@@ -360,9 +356,6 @@ class GameEnemy(models.Model):
 
     def image(self):
         return self.enemy.image
-
-    def hp_percentage(self):
-        return round((self.current_hp / self.enemy.start_hp) * 100)
 
     def __str__(self):
         return f"Game Name: {self.game.name}, Enemy Name: {self.name()}, Act: {self.act}, Battle: {self.battle}"
