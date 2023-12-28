@@ -81,6 +81,8 @@
     
     var gameuser_turn_name = '';
     var is_request_user_turn = false;
+    
+    var new_url = '';
 
     var gameEnemiesData = [
         {% for obj in gameenemies %}
@@ -247,12 +249,12 @@
             // Display the message and update HP/MP on the frontend
             displayMessageAndStatChanges(newEntry);
 
-            // Remove the message after 3 seconds and proceed to the next message
+            // Remove the message after N seconds and proceed to the next message
             setTimeout(() => {
                 removeFrontendMessage();
                 isDisplayingMessage = false;
                 updateFrontend(); // Process next message
-            }, 200); // TODO change back to longer time.
+            }, 2000); // TODO change back to longer time.
         } else {
             if (is_request_user_turn) {
                 removeFrontendMessage();
@@ -320,10 +322,10 @@
                         reattach4AbilityClickEvents();
                     });
                 });
-                    
-                    
             } else {
-                $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                if (!new_url) {
+                    $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                }
             }
         }
     }
@@ -368,12 +370,10 @@
                 type: 'GET',
                 url: "{% url 'tavern_app:battle_get_updates' game_id=game_id act=act number=battle_num %}",
                 success: function(response) {
-                    // TODO wait until all combat has been displayed
                     if (response.new_url) {
-                        window.location = response.new_url;
-                        return;
+                        new_url = response.new_url;
                     }
-
+                    
                     const updatedBackendArray = response.game_combat_log
 
                     // Compare updatedBackendArray with previousBackendArray to find new entries
@@ -393,6 +393,13 @@
                     gameuser_turn_name = response.gameuser_turn_name;
                     is_request_user_turn = response.is_request_user_turn;
 
+                    // wait for displaying messages to be over & all FE messages to be shown to redirect if new_url
+                    if (!isDisplayingMessage && frontendArray.length == 0) {
+                        if (new_url) {
+                            window.location = new_url;
+                            return;
+                        }
+                    }
                 },
                 error: function(response) {
                     console.log('error getting data');

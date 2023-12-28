@@ -22,7 +22,7 @@ from .helpers.battle import (
     gameuser_heal_single_gameuser_and_save,
     calc_is_request_user_turn,
     gameuser_buff_single_gameuser_and_save,
-    is_any_player_alive, calc_turns_and_execute_enemy_turns, is_any_enemy_alive, reset_gameusers_buff_stats,
+    calc_turns_and_execute_enemy_turns, check_and_handle_battle_over,
 )
 from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 from .helpers.scene import (
@@ -357,6 +357,8 @@ def lobby_get_updates(request, game_id):
     game = Game.objects.get(pk=game_id)
 
     new_url = ""
+    # TODO add gameover check. if game over make new url the gameover screen
+    # also add this to BE pages? How to handle
     gamelocation_queryset = GameLocation.objects.filter(game=game)
     if gamelocation_queryset.exists():
         gamelocation = gamelocation_queryset.first()
@@ -971,6 +973,7 @@ def battle(request, game_id, act, number):
                     )
 
                 calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
+                check_and_handle_battle_over(game, act, battle_num)
 
             data = {
                 "error": error_msg,
@@ -988,54 +991,6 @@ def battle(request, game_id, act, number):
         form = CombatLogForm()
 
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
-
-    # TODO prototype getting in here for proof of concept of drunk guys defeating players and then going to act 1
-    #  scene 2 this will change when battles use javascript (including other non party leaders redirecting) still
-    #  need to add defeating enemies and redirecting. related
-    #  https://trello.com/c/cS7s3OEs/217-combat-update-gamelocation-when-winning-and-loosing-battles-depending-on
-    #  -next-step-in-game
-    gamelocation = GameLocation.objects.get(game=game)
-    if not is_any_player_alive(game=game):
-        if act == 1 and battle_num == 1:
-            gamelocation.location_type = "scene"
-            gamelocation.number = 2
-            gamelocation.save()
-
-            # TODO change to real dialogue
-            act_one_scene_two_dialogue = GameDialogue(
-                game=game, dialogue=Dialogue.objects.get(pk=4)
-            )
-            act_one_scene_two_dialogue.save()
-
-            # TODO delete turn orders
-
-            return redirect(
-                reverse(
-                    "tavern_app:" + gamelocation.location_type,
-                    kwargs={
-                        "game_id": game.id,
-                        "act": gamelocation.act,
-                        "number": gamelocation.number,
-                    },
-                )
-            )
-            # TODO new_url = reverse("tavern_app:" + gamelocation.location_type, kwargs={'game_id': game.id,
-            #  'act': gamelocation.act, 'number': gamelocation.number})
-        else:
-            # TODO GAMEOVER https://trello.com/c/LhY4toGE/273-gameover-game-state-when-battle-lost
-            pass
-
-    if not is_any_enemy_alive(game=game):
-        reset_gameusers_buff_stats(game=game)
-
-        # TODO set new game location
-
-        # TODO set dialogue node of next scene
-
-        # TODO delete turn orders for this battle
-
-        # TODO redirect new game location
-        pass
 
     unit_turn = GameTurnOrder.objects.get(game=game, is_their_turn=True)
     is_request_user_turn = calc_is_request_user_turn(
@@ -1091,6 +1046,8 @@ def battle_get_updates(request, game_id, act, number):
                 "number": gamelocation.number,
             },
         )
+    if game.game_over:
+        new_url = reverse("tavern_app:gameover", kwargs={"game_id": game_id})
 
     game_combat_log = CombatLog.objects.filter(game=game, act=act, battle=battle_num)
     data_list = list(game_combat_log.values())
@@ -1126,7 +1083,7 @@ def gameover(request, game_id):
     if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
         return redirect("tavern_app:games")
 
-    game = Game(pk=game_id)
+    game = Game.objects.get(pk=game_id)
     if not game.game_over:
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game_id}))
 
