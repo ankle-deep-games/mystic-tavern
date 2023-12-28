@@ -295,13 +295,13 @@ def lobby(request, game_id):
                 ]
             )
 
-            game.game_started = True
-            game.save()
-
             gamelocation = GameLocation(
                 game=game, act=1, location_type="scene", number=1
             )
             gamelocation.save()
+
+            game.game_started = True
+            game.save()
 
             return redirect(
                 reverse(
@@ -354,9 +354,8 @@ def lobby_get_updates(request, game_id):
     game = Game.objects.get(pk=game_id)
 
     new_url = ""
-    gamelocation_queryset = GameLocation.objects.filter(game=game)
-    if gamelocation_queryset.exists():
-        gamelocation = gamelocation_queryset.first()
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
