@@ -55,12 +55,6 @@ def homepage(request):
     return render(request, 'tavern_app/home.html')
 
 
-def simple_view():
-    return HttpResponse(
-        "LEEEROY JEEEEENKINS! LETS GOOOOOOO - David Lorenz & Jordan Philyaw - Hackathon May 2023"
-    )
-
-
 def seed(request):
     if not request.user.is_superuser:
         return redirect("tavern_app:games")
