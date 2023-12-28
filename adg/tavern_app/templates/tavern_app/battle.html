@@ -103,8 +103,6 @@
     var CSRF_TOKEN = '{{ csrf_token }}';
 
     function showAbilityTargets(abilityNum, isAoe, isHeal, isBuff) {
-        console.log(`abilityNum: ${abilityNum}. isHeal: ${isHeal}. isAoe: ${isAoe}. isBuff: ${isBuff}`)
-
         var abilityContainerDiv = $('<div class="row"></div>');
 
         if (isAoe == "False" && isHeal == "False" && isBuff == "False") {
@@ -137,9 +135,7 @@
             // AOE buff
             abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE BUFF PLAYERS</button></form></div>`);
             $("#combat-ui-abilities").prepend(abilityContainerDiv);
-        } else {
-            console.log('this type of ability is not coded yet')
-        } 
+        }
     }
 
     // Functions to show ability description and back buttons
@@ -259,7 +255,6 @@
             }, 200); // TODO change back to longer time.
         } else {
             if (is_request_user_turn) {
-                console.log("is now request users turn and removing front end message")
                 removeFrontendMessage();
 
                 var originalContent = `
@@ -350,11 +345,6 @@
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function(response) {
-                if (response.new_url) {
-                    window.location = response.new_url;
-                    return;
-                }
-
                 $('#combat-ui-abilities').empty();
 
                 if (response.error) {
@@ -378,6 +368,7 @@
                 type: 'GET',
                 url: "{% url 'tavern_app:battle_get_updates' game_id=game_id act=act number=battle_num %}",
                 success: function(response) {
+                    // TODO wait until all combat has been displayed
                     if (response.new_url) {
                         window.location = response.new_url;
                         return;
