@@ -262,7 +262,6 @@ def lobby(request, game_id):
             )
             starting_game_dialogue.save()
 
-            # TODO improve later: query all enemies and loop through adding them all into the game
             enemy1 = Enemy.objects.get(pk=1)
             enemy2 = Enemy.objects.get(pk=2)
             gameenemy1 = GameEnemy(
@@ -296,13 +295,13 @@ def lobby(request, game_id):
                 ]
             )
 
-            game.game_started = True
-            game.save()
-
             gamelocation = GameLocation(
                 game=game, act=1, location_type="scene", number=1
             )
             gamelocation.save()
+
+            game.game_started = True
+            game.save()
 
             return redirect(
                 reverse(
@@ -355,9 +354,8 @@ def lobby_get_updates(request, game_id):
     game = Game.objects.get(pk=game_id)
 
     new_url = ""
-    gamelocation_queryset = GameLocation.objects.filter(game=game)
-    if gamelocation_queryset.exists():
-        gamelocation = gamelocation_queryset.first()
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
@@ -440,6 +438,19 @@ def role_assignment(request, game_id):
 
     if game.game_over:
         return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
+        return redirect(
+            reverse(
+                "tavern_app:" + gamelocation.location_type,
+                kwargs={
+                    "game_id": game.id,
+                    "act": gamelocation.act,
+                    "number": gamelocation.number,
+                },
+            )
+        )
 
     is_leader = (
         True
@@ -642,7 +653,6 @@ def scene(request, game_id, act, number):
             )
         )
 
-    # TODO refactor extract
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
@@ -655,8 +665,6 @@ def scene(request, game_id, act, number):
     )
 
     scene_image = SceneImage.objects.get(act=act, scene=scene_num)
-
-    # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
 
     context = {
         "game_id": game_id,
@@ -757,8 +765,6 @@ def battle(request, game_id, act, number):
         if form.is_valid():
             has_error = False
             error_msg = ""
-            # TODO add animation where if game ends, show the last combatlog and then redirect to next page or game
-            #  over. may put this in the battle_updates
 
             ability = Ability.objects.get(pk=form.cleaned_data["ability"].id)
 
@@ -1001,6 +1007,25 @@ def battle(request, game_id, act, number):
     # else render form
     else:
         form = CombatLogForm()
+
+    # redirect if they are not on this battle act/num
+    gamelocation = GameLocation.objects.get(game=game)
+    if (
+            gamelocation.game.pk != game_id
+            and gamelocation.act != act
+            and gamelocation.number != battle_num
+            or gamelocation.location_type != "battle"
+    ):
+        return redirect(
+            reverse(
+                "tavern_app:" + gamelocation.location_type,
+                kwargs={
+                    "game_id": game.id,
+                    "act": gamelocation.act,
+                    "number": gamelocation.number,
+                },
+            )
+        )
 
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
