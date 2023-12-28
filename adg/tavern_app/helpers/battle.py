@@ -577,34 +577,42 @@ def reset_gameusers_buff_stats(game: Game):
 
 
 def check_and_handle_battle_over(game, act, battle_num):
-    gamelocation = GameLocation.objects.get(game=game)
-    if not is_any_player_alive(game=game):
-        if act == 1 and battle_num == 2:  # TODO Temp changing to 2 for testing game over
-            gamelocation.location_type = "scene"
-            gamelocation.number = 2
-            gamelocation.save()
+    # new_url redirect happens in battle_get_updates
 
+    gamelocation = GameLocation.objects.get(game=game)
+
+    if not is_any_player_alive(game=game):
+        delete_game_turn_orders(game=game)
+
+        if act == 1 and battle_num == 1:
             # TODO change to real dialogue
             act_one_scene_two_dialogue = GameDialogue(
                 game=game, dialogue=Dialogue.objects.get(pk=4)
             )
             act_one_scene_two_dialogue.save()
 
-            # new_url redirect happens in get_updates
+            # set new game location
+            gamelocation.location_type = "scene"
+            gamelocation.number = 2
+            gamelocation.save()
         else:
             # *** GAME OVER ***
             game.game_over = True
             game.save()
 
-        # TODO delete turn orders
     if not is_any_enemy_alive(game=game):
+        delete_game_turn_orders(game=game)
         reset_gameusers_buff_stats(game=game)
-
-        # TODO set new game location
 
         # TODO set dialogue node of next scene
 
-        # TODO delete turn orders for this battle
+        # TODO set new game location
+        if act == 1 and battle_num == 2:
+            pass
+        if act == 2 and battle_num == 1:
+            pass
 
-        # new_url redirect happens in get_updates
-        pass
+
+def delete_game_turn_orders(game: Game):
+    game_turn_order = GameTurnOrder.objects.filter(game=game)
+    game_turn_order.delete()
