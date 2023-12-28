@@ -440,6 +440,19 @@ def role_assignment(request, game_id):
     if game.game_over:
         return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
 
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
+        return redirect(
+            reverse(
+                "tavern_app:" + gamelocation.location_type,
+                kwargs={
+                    "game_id": game.id,
+                    "act": gamelocation.act,
+                    "number": gamelocation.number,
+                },
+            )
+        )
+
     is_leader = (
         True
         if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
@@ -995,6 +1008,25 @@ def battle(request, game_id, act, number):
     # else render form
     else:
         form = CombatLogForm()
+
+    # redirect if they are not on this battle act/num
+    gamelocation = GameLocation.objects.get(game=game)
+    if (
+            gamelocation.game.pk != game_id
+            and gamelocation.act != act
+            and gamelocation.number != battle_num
+            or gamelocation.location_type != "battle"
+    ):
+        return redirect(
+            reverse(
+                "tavern_app:" + gamelocation.location_type,
+                kwargs={
+                    "game_id": game.id,
+                    "act": gamelocation.act,
+                    "number": gamelocation.number,
+                },
+            )
+        )
 
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 
