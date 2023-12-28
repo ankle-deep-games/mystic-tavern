@@ -81,6 +81,8 @@
     
     var gameuser_turn_name = '';
     var is_request_user_turn = false;
+    
+    var new_url = '';
 
     var gameEnemiesData = [
         {% for obj in gameenemies %}
@@ -103,8 +105,6 @@
     var CSRF_TOKEN = '{{ csrf_token }}';
 
     function showAbilityTargets(abilityNum, isAoe, isHeal, isBuff) {
-        console.log(`abilityNum: ${abilityNum}. isHeal: ${isHeal}. isAoe: ${isAoe}. isBuff: ${isBuff}`)
-
         var abilityContainerDiv = $('<div class="row"></div>');
 
         if (isAoe == "False" && isHeal == "False" && isBuff == "False") {
@@ -137,9 +137,7 @@
             // AOE buff
             abilityContainerDiv.append(`<div class="col"><form method='POST' class='battle-post-form'><input type='hidden' name='csrfmiddlewaretoken' value='${CSRF_TOKEN}'><input type='hidden' name='ability' id='ability' value='${abilityNum}' /><button type='submit' class='btn btn-sm btn-primary submit-button'>AOE BUFF PLAYERS</button></form></div>`);
             $("#combat-ui-abilities").prepend(abilityContainerDiv);
-        } else {
-            console.log('this type of ability is not coded yet')
-        } 
+        }
     }
 
     // Functions to show ability description and back buttons
@@ -251,15 +249,14 @@
             // Display the message and update HP/MP on the frontend
             displayMessageAndStatChanges(newEntry);
 
-            // Remove the message after 3 seconds and proceed to the next message
+            // Remove the message after N seconds and proceed to the next message
             setTimeout(() => {
                 removeFrontendMessage();
                 isDisplayingMessage = false;
                 updateFrontend(); // Process next message
-            }, 200); // TODO change back to longer time.
+            }, 2000); // TODO change back to longer time.
         } else {
             if (is_request_user_turn) {
-                console.log("is now request users turn and removing front end message")
                 removeFrontendMessage();
 
                 var originalContent = `
@@ -325,10 +322,10 @@
                         reattach4AbilityClickEvents();
                     });
                 });
-                    
-                    
             } else {
-                $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                if (!new_url) {
+                    $('#combat-ui-messages').text(`It is ${gameuser_turn_name}'s turn. Waiting for them to take action.`);
+                }
             }
         }
     }
@@ -350,11 +347,6 @@
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
             },
             success: function(response) {
-                if (response.new_url) {
-                    window.location = response.new_url;
-                    return;
-                }
-
                 $('#combat-ui-abilities').empty();
 
                 if (response.error) {
@@ -379,10 +371,9 @@
                 url: "{% url 'tavern_app:battle_get_updates' game_id=game_id act=act number=battle_num %}",
                 success: function(response) {
                     if (response.new_url) {
-                        window.location = response.new_url;
-                        return;
+                        new_url = response.new_url;
                     }
-
+                    
                     const updatedBackendArray = response.game_combat_log
 
                     // Compare updatedBackendArray with previousBackendArray to find new entries
@@ -402,6 +393,13 @@
                     gameuser_turn_name = response.gameuser_turn_name;
                     is_request_user_turn = response.is_request_user_turn;
 
+                    // wait for displaying messages to be over & all FE messages to be shown to redirect if new_url
+                    if (!isDisplayingMessage && frontendArray.length == 0) {
+                        if (new_url) {
+                            window.location = new_url;
+                            return;
+                        }
+                    }
                 },
                 error: function(response) {
                     console.log('error getting data');

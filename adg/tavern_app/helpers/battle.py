@@ -1,7 +1,7 @@
 import random
 from typing import Tuple
 
-from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser
+from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser, GameLocation, GameDialogue, Dialogue
 
 
 def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
@@ -574,3 +574,45 @@ def reset_gameusers_buff_stats(game: Game):
             gameuser.current_hp = gameuser.with_gear_hp
 
         gameuser.save()
+
+
+def check_and_handle_battle_over(game, act, battle_num):
+    # new_url redirect happens in battle_get_updates
+
+    gamelocation = GameLocation.objects.get(game=game)
+
+    if not is_any_player_alive(game=game):
+        delete_game_turn_orders(game=game)
+
+        if act == 1 and battle_num == 1:
+            # TODO change to real dialogue
+            act_one_scene_two_dialogue = GameDialogue(
+                game=game, dialogue=Dialogue.objects.get(pk=4)
+            )
+            act_one_scene_two_dialogue.save()
+
+            # set new game location
+            gamelocation.location_type = "scene"
+            gamelocation.number = 2
+            gamelocation.save()
+        else:
+            # *** GAME OVER ***
+            game.game_over = True
+            game.save()
+
+    if not is_any_enemy_alive(game=game):
+        delete_game_turn_orders(game=game)
+        reset_gameusers_buff_stats(game=game)
+
+        # TODO set dialogue node of next scene
+
+        # TODO set new game location
+        if act == 1 and battle_num == 2:
+            pass
+        if act == 2 and battle_num == 1:
+            pass
+
+
+def delete_game_turn_orders(game: Game):
+    game_turn_order = GameTurnOrder.objects.filter(game=game)
+    game_turn_order.delete()
