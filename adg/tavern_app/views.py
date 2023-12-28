@@ -262,7 +262,6 @@ def lobby(request, game_id):
             )
             starting_game_dialogue.save()
 
-            # TODO improve later: query all enemies and loop through adding them all into the game
             enemy1 = Enemy.objects.get(pk=1)
             enemy2 = Enemy.objects.get(pk=2)
             gameenemy1 = GameEnemy(
@@ -642,7 +641,6 @@ def scene(request, game_id, act, number):
             )
         )
 
-    # TODO refactor extract
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
@@ -655,8 +653,6 @@ def scene(request, game_id, act, number):
     )
 
     scene_image = SceneImage.objects.get(act=act, scene=scene_num)
-
-    # TODO https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
 
     context = {
         "game_id": game_id,
@@ -757,8 +753,6 @@ def battle(request, game_id, act, number):
         if form.is_valid():
             has_error = False
             error_msg = ""
-            # TODO add animation where if game ends, show the last combatlog and then redirect to next page or game
-            #  over. may put this in the battle_updates
 
             ability = Ability.objects.get(pk=form.cleaned_data["ability"].id)
 
