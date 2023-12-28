@@ -137,7 +137,6 @@
                     "</div>";
                     $("#dialogue-error-container").append(alert_element);
 
-                    // TODO could improve this with a fade in or out animation
                     setTimeout(function() {
                         $("#dialogue-error-container").empty();
                     }, 4000);
@@ -166,8 +165,6 @@
                         dialogueNewId = response.next_dialogue_list[0].id;
                         if (dialogueOldId != dialogueNewId) {
                             dialogueOldId = response.next_dialogue_list[0].id;
-                            // TODO if no final node because we're going to battle or another scene next - do something else.
-                            // https://trello.com/c/oL6acc6m/127-end-of-act-1-scene-1-final-button-goes-to-battle
                             $("#dialogue-container").empty();
                             for (var key in response.game_dialogue_progress_list) {
                                 if (response.game_dialogue_progress_list[key].node_type == "player response") {
@@ -215,7 +212,6 @@
                             "</div>";
                             $("#dialogue-error-container").append(alert_element);
 
-                            // TODO could improve this with a fade in or out animation
                             setTimeout(function() {
                                 $("#dialogue-error-container").empty();
                             }, 4000);
