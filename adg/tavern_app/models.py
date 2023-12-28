@@ -214,7 +214,6 @@ class GameUser(models.Model):
         null=True,
         related_name="armor_3",
     )
-    current_gold = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -375,9 +374,7 @@ class CombatLog(models.Model):
     gameenemy = models.ForeignKey(
         GameEnemy, on_delete=models.PROTECT, default=None, blank=True, null=True
     )
-    player_or_enemy_took_action = models.CharField(
-        max_length=255
-    )  # 'player' or 'enemy' string - could improve later
+    player_or_enemy_took_action = models.CharField(max_length=255)  # 'player' or 'enemy'
     defensive_gameuser_target = models.ForeignKey(
         GameUser,
         on_delete=models.PROTECT,
@@ -388,24 +385,12 @@ class CombatLog(models.Model):
     )
     ability = models.ForeignKey(Ability, on_delete=models.PROTECT)
     amount = models.IntegerField(default=0)
-    damage_or_heal_or_buff = models.CharField(
-        max_length=255
-    )  # 'damage' or 'heal' or 'buff' string - could improve later
-    message = models.TextField(
-        default=None, blank=True, null=True
-    )  # TODO remove the null
-    starting_gameusers_json = models.JSONField(
-        default=None, blank=True, null=True
-    )  # TODO remove the null
-    starting_gameenemies_json = models.JSONField(
-        default=None, blank=True, null=True
-    )  # TODO remove the null
-    resulting_gameusers_json = models.JSONField(
-        default=None, blank=True, null=True
-    )  # TODO remove the null
-    resulting_gameenemies_json = models.JSONField(
-        default=None, blank=True, null=True
-    )  # TODO remove the null
+    damage_or_heal_or_buff = models.CharField(max_length=255)  # 'damage' or 'heal' or 'buff'
+    message = models.TextField()
+    starting_gameusers_json = models.JSONField()
+    starting_gameenemies_json = models.JSONField()
+    resulting_gameusers_json = models.JSONField()
+    resulting_gameenemies_json = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
