@@ -81,6 +81,7 @@ def get_next_dialogue_list(
                     name = char["name"]
                     image = char["image"]
 
+            # TODO modify dialogue text here
             next_dialogue_list.append(
                 {
                     "id": dialogue.pk,

@@ -8,6 +8,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import redirect, reverse
 from django.shortcuts import render
 from django.views.generic import CreateView
+import re
 
 from .forms import (
     CreateGameForm,
@@ -65,14 +66,84 @@ def seed(request):
 
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
 def add_three_users_to_game(request, game_id):
-    if not request.user.is_superuser:
-        return redirect("tavern_app:games")
+    # if not request.user.is_superuser:
+    #     return redirect("tavern_app:games")
+    #
+    # game = Game(pk=game_id)
+    # GameUser(game=game, user=User(pk=2)).save()
+    # GameUser(game=game, user=User(pk=3)).save()
+    # GameUser(game=game, user=User(pk=4)).save()
+    # return HttpResponse("3 users added to game " + str(game_id))
 
-    game = Game(pk=game_id)
-    GameUser(game=game, user=User(pk=2)).save()
-    GameUser(game=game, user=User(pk=3)).save()
-    GameUser(game=game, user=User(pk=4)).save()
-    return HttpResponse("3 users added to game " + str(game_id))
+    # ___ Code testing for Regex Replace on an existing route ___
+
+    # empty list to store dict for each gu
+    gu_list = []
+    player_num = 1  # Initialize a counter for player numbers
+
+    # Hardcode game 3
+    gameusers_queryset = GameUser.objects.filter(game_id=3)
+    for index, gu in enumerate(gameusers_queryset, start=1):
+        weapon = "Default Weapon"
+        armor = "Default Armor"
+        short_description = "Default Description"
+
+        if gu.role.name == 'WHITEMAGE':
+            weapon = 'White Staff'
+            armor = "White Cloack"
+            short_description = "dope healer"
+        elif gu.role.name == 'BLACKMAGE':
+            weapon = 'Black Staff'
+            armor = "Black Cloak"
+            short_description = "dope mage"
+        elif gu.role.name == 'BARD':
+            weapon = 'Basic Lute'
+            armor = "Tattered Vestments"
+            short_description = "dope musician"
+        elif gu.role.name == 'PALADIN':
+            weapon = 'Basic Sword'
+            armor = "Chainmail"
+            short_description = "dope fighter"
+        elif gu.role.name == 'ARCHER':
+            weapon = 'Basic Bow'
+            armor = "Leather Tunic"
+            short_description = "dope shooter"
+
+        gu_dict = {
+            f'Party Member {player_num}': gu.user.username,
+            'role': gu.role.name,
+            'weapon 1': weapon,
+            'armor 1': armor,
+            'short role summary': short_description,
+            'player_num_name': f'Party Member {player_num}',
+        }
+        gu_list.append(gu_dict)
+
+        player_num += 1  # Increment the player number for the next iteration
+
+    # The text template
+    text_template = "First, for {Party Member 1}. I give to you my {weapon 1} and {armor 1}. You are a {role}. {short role summary}"
+
+    # Find the dictionary with 'player_num_name' = 'Party Member 1'
+    current_player = next((player for player in gu_list if player['player_num_name'] == 'Party Member 1'), None)
+
+    # Regex pattern to match text within curly braces {}
+    pattern = r"{([^{}]*)}"
+
+    # Find all matches within the text template
+    matches = re.findall(pattern, text_template)
+
+    # Replace placeholders in the text_template with values from current_player
+    replaced_text = text_template
+    if current_player:
+        for match in matches:
+            if match in current_player:
+                replaced_text = replaced_text.replace("{" + match + "}", str(current_player[match]))
+
+    print(replaced_text)
+
+    # outputs First, for dobby. I give to you my Basic Sword and Chainmail. You are a PALADIN. dope fighter
+    return HttpResponse(replaced_text)
 
 
 def equip_placeholder():
