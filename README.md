@@ -102,7 +102,7 @@ server {
     server_name 54.177.98.169;
 
     location /static/ {
-        alias /tavern_app/static/tavern_app;
+        alias /home/ubuntu/ankle-deep-games/tavern_app/static/;
     }
 
     location / {
