@@ -104,6 +104,9 @@ server {
     location /static/ {
         alias /home/ubuntu/ankle-deep-games/tavern_app/static/;
     }
+    location /static/admin/ {
+        alias /home/ubuntu/env/lib/python3.10/site-packages/django/contrib/admin/static/admin/;
+    }
 
     location / {
         include proxy_params;
