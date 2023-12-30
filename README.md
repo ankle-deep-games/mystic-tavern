@@ -118,3 +118,14 @@ server {
 - `sudo nginx -t`
 - `sudo ln django.conf /etc/nginx/sites-enabled`
 - `sudo service nginx restart`
+
+### activate the venv when sshd in
+`source env/bin/activate`
+
+### pull latest changes
+- cd into `ankle-deep-games` and `git pull`. enter philyawj and access token
+- restart gunicorn
+
+### restarting gunicorn or nginx
+`sudo systemctl restart nginx`
+`sudo supervisorctl restart guni:gunicorn`
