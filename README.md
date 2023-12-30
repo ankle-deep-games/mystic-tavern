@@ -99,7 +99,7 @@ programs:gunicorn
 ```
 server {
     listen 80;
-    server_name 52.53.149.134;
+    server_name 54.177.98.169;
 
     location /static/ {
         alias /tavern_app/static/tavern_app;
