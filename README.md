@@ -76,7 +76,7 @@ Region: us-west-1
 ```
 [program:gunicorn]
 directory=/home/ubuntu/ankle-deep-games
-command=/home/ubuntu/env/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/ankle-deep-games/app.sock adg.wsgi.application 
+command=/home/ubuntu/env/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/ankle-deep-games/app.sock adg.wsgi:application
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/gunicorn/gunicorn.err.log
@@ -90,3 +90,28 @@ programs:gunicorn
 - `sudo supervisorctl reread`
 - `sudo supervisorctl update`
 - `sudo supervisorctl status`
+- `cd ../..` into `/etc`
+- `sudo nano nginx.conf` --> change user on line 1 to `user root;`
+- `cd sites-available`
+- `sudo touch django.conf`
+- `sudo nano django.conf`
+
+```
+server {
+    listen 80;
+    server_name 52.53.149.134;
+
+    location /static/ {
+        alias /tavern_app/static/tavern_app;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/ubuntu/ankle-deep-games/app.sock;
+    }
+}
+```
+
+- `sudo nginx -t`
+- `sudo ln django.conf /etc/nginx/sites-enabled`
+- `sudo service nginx restart`
