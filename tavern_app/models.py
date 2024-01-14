@@ -135,6 +135,7 @@ class GameUser(models.Model):
         Gender, on_delete=models.PROTECT, default=None, blank=True, null=True
     )
     is_ready = models.BooleanField(default=False)
+    has_crystal = models.BooleanField(default=True)
     current_hp = models.IntegerField(default=0)
     current_max_hp = models.IntegerField(default=0)
     current_mp = models.IntegerField(default=0)
