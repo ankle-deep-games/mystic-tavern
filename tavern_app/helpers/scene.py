@@ -104,13 +104,20 @@ def get_default_role_attributes(role_name: str) -> dict:
     """Returns default attributes based on the role name."""
     # TODO all keys and correct values
     default_attributes = {
-        'WHITEMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope healer', 'ability2': 'Divine Light'},
-        'BLACKMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope mage', 'ability2': 'Arcane Blast'},
-        'BARD': {'weapon1': 'Wood Flute', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope musician', 'ability2': 'Anthem of Valor'},
-        'PALADIN': {'weapon1': 'Wood Sword', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope fighter', 'ability2': 'Shield Bash'},
-        'ARCHER': {'weapon1': 'Wood Bow', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope shooter', 'ability2': 'Shatter Shot'},
+        'WHITEMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope healer',
+                      'ability2': 'Divine Light'},
+        'BLACKMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope mage',
+                      'ability2': 'Arcane Blast'},
+        'BARD': {'weapon1': 'Wood Flute', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope musician',
+                 'ability2': 'Anthem of Valor'},
+        'PALADIN': {'weapon1': 'Wood Sword', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope fighter',
+                    'ability2': 'Shield Bash'},
+        'ARCHER': {'weapon1': 'Wood Bow', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope shooter',
+                   'ability2': 'Shatter Shot'},
     }
-    return default_attributes.get(role_name, {'weapon1': 'Default Weapon', 'armor1': 'Default Armor', 'short_role_summary': 'Default Description', 'ability2': 'Default Ability 2'})
+    return default_attributes.get(role_name, {'weapon1': 'Default Weapon', 'armor1': 'Default Armor',
+                                              'short_role_summary': 'Default Description',
+                                              'ability2': 'Default Ability 2'})
 
 
 def build_game_user_dict(gameuser: GameUser, player_num: int):
@@ -163,4 +170,3 @@ def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
     current_player = next(player for player in gameuser_dicts if current_player_key in player)
 
     return replace_dialogue_placeholders(dialogue.text, current_player)
-
