@@ -28,7 +28,7 @@ from .helpers.equipment import gameuser_equip_armor, gameuser_equip_weapon
 from .helpers.scene import (
     get_character_list,
     get_game_dialogue_progress_list,
-    get_next_dialogue_list,
+    get_next_dialogue_list, check_and_regex_replace_dialogue,
 )
 from .helpers.seed import seed_data
 from .models import (
@@ -569,6 +569,12 @@ def scene(request, game_id, act, number):
 
             if not has_error:
                 game_dialogue = GameDialogue(game=game, dialogue=dialogue)
+                replaced_text = check_and_regex_replace_dialogue(game=game, dialogue=dialogue)
+
+                # only populate regex text if there was a regex replace
+                if dialogue.text != replaced_text:
+                    game_dialogue.regex_replaced_text_or_empty = replaced_text
+
                 game_dialogue.save()
 
             if (
@@ -595,6 +601,7 @@ def scene(request, game_id, act, number):
                 scene_num=scene_num,
             )
             next_dialogue_list = get_next_dialogue_list(
+                game=game,
                 game_dialogue_progress_list=game_dialogue_progress_list,
                 character_list=character_list,
                 act=act,
@@ -617,6 +624,7 @@ def scene(request, game_id, act, number):
                 scene_num=scene_num,
             )
             next_dialogue_list = get_next_dialogue_list(
+                game=game,
                 game_dialogue_progress_list=game_dialogue_progress_list,
                 character_list=character_list,
                 act=act,
@@ -658,6 +666,7 @@ def scene(request, game_id, act, number):
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
     )
     next_dialogue_list = get_next_dialogue_list(
+        game=game,
         game_dialogue_progress_list=game_dialogue_progress_list,
         character_list=character_list,
         act=act,
@@ -722,6 +731,7 @@ def scene_get_updates(request, game_id, act, number):
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
     )
     next_dialogue_list = get_next_dialogue_list(
+        game=game,
         game_dialogue_progress_list=game_dialogue_progress_list,
         character_list=character_list,
         act=act,

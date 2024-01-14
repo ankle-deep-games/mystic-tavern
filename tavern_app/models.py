@@ -280,11 +280,17 @@ class GameDialogue(models.Model):
     objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     dialogue = models.ForeignKey(Dialogue, on_delete=models.PROTECT)
+    regex_replaced_text_or_empty = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_display_text(self):
+        """Return the regex replaced text if available, otherwise the original dialogue text."""
+        return self.regex_replaced_text_or_empty or self.dialogue.text
+
     def __str__(self):
-        return "game: " + str(self.game) + ", dialogue: " + str(self.dialogue)
+        return "game: " + str(self.game) + ", dialogue: " + str(
+            self.dialogue) + ", regex_replaced_text_or_empty: " + str(self.regex_replaced_text_or_empty)
 
 
 class Enemy(models.Model):
