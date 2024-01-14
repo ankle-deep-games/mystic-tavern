@@ -57,7 +57,7 @@ def get_game_dialogue_progress_list(
                     "id": game_dialogue.dialogue.pk,
                     "node_type": game_dialogue.dialogue.node_type,
                     "name": name,
-                    "text": game_dialogue.dialogue.text,
+                    "text": game_dialogue.get_display_text(),
                     "image": image,
                 }
             )
@@ -83,7 +83,6 @@ def get_next_dialogue_list(
                     name = char["name"]
                     image = char["image"]
 
-            # TODO here to show it next
             replaced_text = check_and_regex_replace_dialogue(game, dialogue)
 
             next_dialogue_list.append(
@@ -102,7 +101,7 @@ def get_next_dialogue_list(
 
 def get_default_role_attributes(role_name: str) -> dict:
     """Returns default attributes based on the role name."""
-    # TODO all keys and correct values
+    # TODO all keys and correct values https://trello.com/c/JRQnFXF9/292-finalize-all-regex-replace-values-once-dialogue-is-complete
     default_attributes = {
         'WHITEMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope healer',
                       'ability2': 'Divine Light'},
@@ -120,7 +119,7 @@ def get_default_role_attributes(role_name: str) -> dict:
                                               'ability2': 'Default Ability 2'})
 
 
-def build_game_user_dict(gameuser: GameUser, player_num: int):
+def build_game_user_dict(gameuser: GameUser, player_num: int) -> dict:
     """Constructs a dictionary of GameUser attributes."""
     role_attributes = get_default_role_attributes(gameuser.role.name)
     return {
