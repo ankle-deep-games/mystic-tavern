@@ -100,73 +100,67 @@ def get_next_dialogue_list(
     return next_dialogue_list
 
 
-def check_and_regex_replace_dialogue(game, dialogue):
-    d_id = dialogue.pk
+def get_default_role_attributes(role_name: str) -> dict:
+    """Returns default attributes based on the role name."""
+    # TODO all keys and correct values
+    default_attributes = {
+        'WHITEMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope healer', 'ability2': 'Divine Light'},
+        'BLACKMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope mage', 'ability2': 'Arcane Blast'},
+        'BARD': {'weapon1': 'Wood Flute', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope musician', 'ability2': 'Anthem of Valor'},
+        'PALADIN': {'weapon1': 'Wood Sword', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope fighter', 'ability2': 'Shield Bash'},
+        'ARCHER': {'weapon1': 'Wood Bow', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope shooter', 'ability2': 'Shatter Shot'},
+    }
+    return default_attributes.get(role_name, {'weapon1': 'Default Weapon', 'armor1': 'Default Armor', 'short_role_summary': 'Default Description', 'ability2': 'Default Ability 2'})
 
-    if d_id == 2:
-        player_num_to_regex = '1'
 
-    # empty list to store dict for each gu
-    gu_list = []
-    player_num = 1  # Initialize a counter for player numbers
+def build_game_user_dict(gameuser: GameUser, player_num: int):
+    """Constructs a dictionary of GameUser attributes."""
+    role_attributes = get_default_role_attributes(gameuser.role.name)
+    return {
+        f'player{player_num}': gameuser.user.username,
+        'role': gameuser.role.display_name,
+        'weapon1': role_attributes['weapon1'],
+        'armor1': role_attributes['armor1'],
+        'short_role_summary': role_attributes['short_role_summary'],
+        'ability2': role_attributes['ability2'],
+    }
 
-    gameusers_queryset = GameUser.objects.filter(game=game)
 
-    for index, gu in enumerate(gameusers_queryset, start=1):
-        weapon1 = "Default Weapon"
-        armor1 = "Default Armor"
-        short_description = "Default Description"
-
-        if gu.role.name == 'WHITEMAGE':
-            weapon1 = 'Wood Staff'
-            armor1 = "Cloth Tunic"
-            short_description = "dope healer"  # TODO
-        elif gu.role.name == 'BLACKMAGE':
-            weapon1 = 'Wood Staff'
-            armor1 = "Cloth Tunic"
-            short_description = "dope mage"
-        elif gu.role.name == 'BARD':
-            weapon1 = 'Wood Flute'
-            armor1 = "Cloth Tunic"
-            short_description = "dope musician"  # TODO
-        elif gu.role.name == 'PALADIN':
-            weapon1 = 'Wood Sword'
-            armor1 = "Cloth Tunic"
-            short_description = "dope fighter"  # TODO
-        elif gu.role.name == 'ARCHER':
-            weapon1 = 'Wood Bow'
-            armor1 = "Cloth Tunic"
-            short_description = "dope shooter"  # TODO
-
-        gu_dict = {
-            f'player{player_num}': gu.user.username,
-            'role': gu.role.display_name,
-            'weapon1': weapon1,
-            'armor1': armor1,
-            'short_role_summary': short_description,
-            'player_num_name': f'player{player_num}',
-        }
-        gu_list.append(gu_dict)
-
-        player_num += 1  # Increment the player number for the next iteration
-
-    # The text template
-    text_template = dialogue.text
-
-    # Find the dictionary with 'player_num_name' = 'player1'
-    current_player = next((player for player in gu_list if player['player_num_name'] == f'player{player_num_to_regex}'), None)
-
-    # Regex pattern to match text within curly braces {}
+def replace_dialogue_placeholders(dialogue_text: str, placeholders: dict) -> str:
+    """Replaces placeholders in the dialogue text with actual values."""
     pattern = r"{([^{}]*)}"
+    matches = re.findall(pattern, dialogue_text)
+    replaced_text = dialogue_text
 
-    # Find all matches within the text template
-    matches = re.findall(pattern, text_template)
-
-    # Replace placeholders in the text_template with values from current_player
-    replaced_text = text_template
-    if current_player:
-        for match in matches:
-            if match in current_player:
-                replaced_text = replaced_text.replace("{" + match + "}", str(current_player[match]))
+    for match in matches:
+        if match in placeholders:
+            replaced_text = replaced_text.replace("{" + match + "}", str(placeholders[match]))
 
     return replaced_text
+
+
+def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
+    """Processes and replaces placeholders in dialogue data."""
+    if dialogue.pk in [2, 3]:
+        current_player_key = 'player1'
+    elif dialogue.pk in [4, 5]:
+        current_player_key = 'player2'
+    elif dialogue.pk in [6, 7]:
+        current_player_key = 'player3'
+    elif dialogue.pk in [8, 9]:
+        current_player_key = 'player4'
+    elif dialogue.pk == 10:
+        # Handle specific case for dialogue.pk == 10, like the night decision
+        return dialogue.text
+    else:
+        # Return dialogue.text for any other case not explicitly handled above
+        return dialogue.text
+
+    gameusers = GameUser.objects.filter(game=game)
+    gameuser_dicts = [build_game_user_dict(gu, index) for index, gu in enumerate(gameusers, start=1)]
+
+    # Find the dictionary for the current player using the player number
+    current_player = next(player for player in gameuser_dicts if current_player_key in player)
+
+    return replace_dialogue_placeholders(dialogue.text, current_player)
+
