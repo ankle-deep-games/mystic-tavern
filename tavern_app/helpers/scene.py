@@ -1,3 +1,5 @@
+import re
+
 from ..models import Game, GameUser, NPC, GameDialogue, Dialogue
 
 
@@ -64,7 +66,7 @@ def get_game_dialogue_progress_list(
 
 
 def get_next_dialogue_list(
-        game_dialogue_progress_list: list, character_list: list, act: int, scene_num: int
+        game: Game, game_dialogue_progress_list: list, character_list: list, act: int, scene_num: int
 ) -> list:
     """queries the game dialogue progress for the next single dialogue or multiple player dialogue choices"""
     next_dialogue_list = []
@@ -81,15 +83,90 @@ def get_next_dialogue_list(
                     name = char["name"]
                     image = char["image"]
 
+            # TODO here to show it next
+            replaced_text = check_and_regex_replace_dialogue(game, dialogue)
+
             next_dialogue_list.append(
                 {
                     "id": dialogue.pk,
                     "from_node_id": dialogue.from_node_id,
                     "node_type": dialogue.node_type,
                     "name": name,
-                    "text": dialogue.text,
+                    "text": replaced_text,
                     "image": image,
                 }
             )
 
     return next_dialogue_list
+
+
+def check_and_regex_replace_dialogue(game, dialogue):
+    d_id = dialogue.pk
+
+    if d_id == 2:
+        player_num_to_regex = '1'
+
+    # empty list to store dict for each gu
+    gu_list = []
+    player_num = 1  # Initialize a counter for player numbers
+
+    gameusers_queryset = GameUser.objects.filter(game=game)
+
+    for index, gu in enumerate(gameusers_queryset, start=1):
+        weapon1 = "Default Weapon"
+        armor1 = "Default Armor"
+        short_description = "Default Description"
+
+        if gu.role.name == 'WHITEMAGE':
+            weapon1 = 'Wood Staff'
+            armor1 = "Cloth Tunic"
+            short_description = "dope healer"  # TODO
+        elif gu.role.name == 'BLACKMAGE':
+            weapon1 = 'Wood Staff'
+            armor1 = "Cloth Tunic"
+            short_description = "dope mage"
+        elif gu.role.name == 'BARD':
+            weapon1 = 'Wood Flute'
+            armor1 = "Cloth Tunic"
+            short_description = "dope musician"  # TODO
+        elif gu.role.name == 'PALADIN':
+            weapon1 = 'Wood Sword'
+            armor1 = "Cloth Tunic"
+            short_description = "dope fighter"  # TODO
+        elif gu.role.name == 'ARCHER':
+            weapon1 = 'Wood Bow'
+            armor1 = "Cloth Tunic"
+            short_description = "dope shooter"  # TODO
+
+        gu_dict = {
+            f'player{player_num}': gu.user.username,
+            'role': gu.role.display_name,
+            'weapon1': weapon1,
+            'armor1': armor1,
+            'short_role_summary': short_description,
+            'player_num_name': f'player{player_num}',
+        }
+        gu_list.append(gu_dict)
+
+        player_num += 1  # Increment the player number for the next iteration
+
+    # The text template
+    text_template = dialogue.text
+
+    # Find the dictionary with 'player_num_name' = 'player1'
+    current_player = next((player for player in gu_list if player['player_num_name'] == f'player{player_num_to_regex}'), None)
+
+    # Regex pattern to match text within curly braces {}
+    pattern = r"{([^{}]*)}"
+
+    # Find all matches within the text template
+    matches = re.findall(pattern, text_template)
+
+    # Replace placeholders in the text_template with values from current_player
+    replaced_text = text_template
+    if current_player:
+        for match in matches:
+            if match in current_player:
+                replaced_text = replaced_text.replace("{" + match + "}", str(current_player[match]))
+
+    return replaced_text

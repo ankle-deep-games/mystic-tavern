@@ -569,6 +569,7 @@ def scene(request, game_id, act, number):
 
             if not has_error:
                 game_dialogue = GameDialogue(game=game, dialogue=dialogue)
+                # TODO here to save it on submission
                 game_dialogue.save()
 
             if (
@@ -595,6 +596,7 @@ def scene(request, game_id, act, number):
                 scene_num=scene_num,
             )
             next_dialogue_list = get_next_dialogue_list(
+                game=game,
                 game_dialogue_progress_list=game_dialogue_progress_list,
                 character_list=character_list,
                 act=act,
@@ -617,6 +619,7 @@ def scene(request, game_id, act, number):
                 scene_num=scene_num,
             )
             next_dialogue_list = get_next_dialogue_list(
+                game=game,
                 game_dialogue_progress_list=game_dialogue_progress_list,
                 character_list=character_list,
                 act=act,
@@ -658,6 +661,7 @@ def scene(request, game_id, act, number):
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
     )
     next_dialogue_list = get_next_dialogue_list(
+        game=game,
         game_dialogue_progress_list=game_dialogue_progress_list,
         character_list=character_list,
         act=act,
@@ -722,6 +726,7 @@ def scene_get_updates(request, game_id, act, number):
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
     )
     next_dialogue_list = get_next_dialogue_list(
+        game=game,
         game_dialogue_progress_list=game_dialogue_progress_list,
         character_list=character_list,
         act=act,
