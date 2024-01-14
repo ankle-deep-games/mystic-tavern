@@ -1563,7 +1563,7 @@ def seed_data():
     # # player decision
     node31 = Dialogue(
         from_node_id=30,
-        node_type="player response",
+        node_type="choice",
         speaker="Group Leader",
         text="Book a night at the inn and see what tomorrow brings",
         act=1,
@@ -1571,7 +1571,7 @@ def seed_data():
     )
     node32 = Dialogue(
         from_node_id=30,
-        node_type="player response",
+        node_type="choice",
         speaker="Group Leader",
         text="Attempt to leave the tavern and try to get back home",
         act=1,
@@ -1579,7 +1579,7 @@ def seed_data():
     )
     node33 = Dialogue(
         from_node_id=30,
-        node_type="player response",
+        node_type="choice",
         speaker="Group Leader",
         text="Continue to talk to the old man",
         act=1,

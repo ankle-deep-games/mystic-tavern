@@ -252,7 +252,7 @@ class Dialogue(models.Model):
     objects = models.Manager()
     from_node_id = models.IntegerField(default=0)
     node_type = models.CharField(max_length=255)
-    # talk     | player response | narration
+    # talk     | choice           | narration
     speaker = models.CharField(max_length=255)
     # npc name | Group Leader     | narator
     text = models.TextField()
