@@ -2,24 +2,20 @@
 
 {% block content %}
 <div class="container">
-
     <h1 class="my-3">Role Assignment Form</h1>
     <form method="POST">
         {% csrf_token %}
+        {{ formset.management_form }}
+
         {% if formset.non_form_errors %}
         <div class="alert alert-danger" role="alert">
             {{ formset.non_form_errors.as_text|slice:"2:" }}
         </div>
         {% endif %}
 
-        {% for user_name in user_names %}
-        <h2>{{ user_name }}</h2>
-        {{ formset.management_form }}
         {% for form in formset %}
-        {% if form.instance.user.username == user_name %}
+        <h2>{{ form.instance.user.username }}</h2>
         {{ form.as_p }}
-        {% endif %}
-        {% endfor %}
         {% endfor %}
         <input class="btn btn-primary" type="submit" value="Submit">
     </form>
