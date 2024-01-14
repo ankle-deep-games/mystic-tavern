@@ -6,18 +6,18 @@ def get_character_list(game: Game) -> list:
     character_list = []
     game_users = GameUser.objects.filter(game=game)
 
-    # in dialogue we save speakers as "Group Leader" or "Group Member 1"
+    # in dialogue we save speakers as player1 - player4
     # at run time compare those against players in the game, so we can display the player username
     for idx, game_user in enumerate(game_users):
         speaker = ""
         if idx == 0:
-            speaker = "Group Leader"
+            speaker = "player1"
         elif idx == 1:
-            speaker = "Group Member 1"
+            speaker = "player2"
         elif idx == 2:
-            speaker = "Group Member 2"
+            speaker = "player3"
         elif idx == 3:
-            speaker = "Group Member 3"
+            speaker = "player4"
         character_list.append(
             {"name": game_user.name(), "image": game_user.image(), "speaker": speaker}
         )

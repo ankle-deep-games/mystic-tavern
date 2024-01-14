@@ -1346,7 +1346,7 @@ def seed_data():
     node4 = Dialogue(
         from_node_id=3,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="We don't mean any harm. We're just passing through, gentlemen.",
         act=1,
         scene=1,
@@ -1362,7 +1362,7 @@ def seed_data():
     node6 = Dialogue(
         from_node_id=5,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="We don't want any trouble. We'll be on our way.",
         act=1,
         scene=1,
@@ -1418,7 +1418,7 @@ def seed_data():
     node13 = Dialogue(
         from_node_id=12,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Thank you for your help. We'll gladly take shelter in your tavern.",
         act=1,
         scene=1,
@@ -1434,7 +1434,7 @@ def seed_data():
     node15 = Dialogue(
         from_node_id=14,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Dude! Is that a freakin wizard's staff?",
         act=1,
         scene=1,
@@ -1450,7 +1450,7 @@ def seed_data():
     node17 = Dialogue(
         from_node_id=16,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Sick!",
         act=1,
         scene=1,
@@ -1458,7 +1458,7 @@ def seed_data():
     node18 = Dialogue(
         from_node_id=17,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Uhh guys.. Excuse me sir.. but can you tell us just what the hell is going on?",
         act=1,
         scene=1,
@@ -1474,7 +1474,7 @@ def seed_data():
     node20 = Dialogue(
         from_node_id=19,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="Us? Why us?",
         act=1,
         scene=1,
@@ -1490,7 +1490,7 @@ def seed_data():
     node22 = Dialogue(
         from_node_id=21,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="How did we even end up in this village?",
         act=1,
         scene=1,
@@ -1506,7 +1506,7 @@ def seed_data():
     node24 = Dialogue(
         from_node_id=23,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="Why now?",
         act=1,
         scene=1,
@@ -1522,7 +1522,7 @@ def seed_data():
     node26 = Dialogue(
         from_node_id=25,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="But we're not warriors or fighters. We're just regular old people!",
         act=1,
         scene=1,
@@ -1538,7 +1538,7 @@ def seed_data():
     node28 = Dialogue(
         from_node_id=27,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="Set off where??",
         act=1,
         scene=1,
@@ -1554,7 +1554,7 @@ def seed_data():
     node30 = Dialogue(
         from_node_id=29,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="What are we going to do?",
         act=1,
         scene=1,
@@ -1564,7 +1564,7 @@ def seed_data():
     node31 = Dialogue(
         from_node_id=30,
         node_type="choice",
-        speaker="Group Leader",
+        speaker="player1",
         text="Book a night at the inn and see what tomorrow brings",
         act=1,
         scene=1,
@@ -1572,7 +1572,7 @@ def seed_data():
     node32 = Dialogue(
         from_node_id=30,
         node_type="choice",
-        speaker="Group Leader",
+        speaker="player1",
         text="Attempt to leave the tavern and try to get back home",
         act=1,
         scene=1,
@@ -1580,7 +1580,7 @@ def seed_data():
     node33 = Dialogue(
         from_node_id=30,
         node_type="choice",
-        speaker="Group Leader",
+        speaker="player1",
         text="Continue to talk to the old man",
         act=1,
         scene=1,
@@ -1590,7 +1590,7 @@ def seed_data():
     node34 = Dialogue(
         from_node_id=31,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="We've had quite a day. Maybe we should get some rest, see what tomorrow brings.",
         act=1,
         scene=1,
@@ -1598,7 +1598,7 @@ def seed_data():
     node35 = Dialogue(
         from_node_id=34,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="It's been a lot to take in. A good night's rest might clear our heads.",
         act=1,
         scene=1,
@@ -1606,7 +1606,7 @@ def seed_data():
     node36 = Dialogue(
         from_node_id=35,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="But what if we're really stuck here? We can't just wait around forever.",
         act=1,
         scene=1,
@@ -1614,7 +1614,7 @@ def seed_data():
     node37 = Dialogue(
         from_node_id=36,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="We'll keep our eyes and ears open. If there's a chance to find our way back, we'll take it. For now, let's book a night at the inn and regroup in the morning.",
         act=1,
         scene=1,
@@ -1630,7 +1630,7 @@ def seed_data():
     node39 = Dialogue(
         from_node_id=38,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Hold on, everyone. Come take a look at this!",
         act=1,
         scene=1,
@@ -1638,7 +1638,7 @@ def seed_data():
     node40 = Dialogue(
         from_node_id=39,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="What is it?",
         act=1,
         scene=1,
@@ -1646,7 +1646,7 @@ def seed_data():
     node41 = Dialogue(
         from_node_id=40,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="It's the exact spot where we found ourselves transported! There's a weird shimmer in the air. Maybe that's just me, I'm pretty zoinked right now, but I think we should investigate.",
         act=1,
         scene=1,
@@ -1654,7 +1654,7 @@ def seed_data():
     node42 = Dialogue(
         from_node_id=41,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="You're right. It's worth checking out. Let's head over there and see if we can find any clues.",
         act=1,
         scene=1,
@@ -1664,7 +1664,7 @@ def seed_data():
     node43 = Dialogue(
         from_node_id=32,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="We can't just sit around here hoping for answers. We need to go back to where we entered this place and look for clues. Maybe we'll find a way back home.",
         act=1,
         scene=1,
@@ -1672,7 +1672,7 @@ def seed_data():
     node44 = Dialogue(
         from_node_id=43,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="I agree. It's worth a shot. We should at least try to retrace our steps.",
         act=1,
         scene=1,
@@ -1680,7 +1680,7 @@ def seed_data():
     node45 = Dialogue(
         from_node_id=44,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Alright, it's settled then. Let's head back to the alley and see if we can find any clues.",
         act=1,
         scene=1,
@@ -1698,7 +1698,7 @@ def seed_data():
     node47 = Dialogue(
         from_node_id=46,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Dude's wasted! He isn't going to be any help until the morning.",
         act=1,
         scene=1,
@@ -1706,7 +1706,7 @@ def seed_data():
     node48 = Dialogue(
         from_node_id=47,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Dammit. OK. Executive decision, let's retrace our steps.",
         act=1,
         scene=1,
@@ -1742,7 +1742,7 @@ def seed_data():
     node52 = Dialogue(
         from_node_id=49,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Do you guys feel that too? It's like there's something... different.",
         act=1,
         scene=1,
@@ -1750,7 +1750,7 @@ def seed_data():
     node53 = Dialogue(
         from_node_id=52,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="Yeah, it's strange. I can't quite put my finger on it.",
         act=1,
         scene=1,
@@ -1758,7 +1758,7 @@ def seed_data():
     node54 = Dialogue(
         from_node_id=53,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Everything's dead, guys.",
         act=1,
         scene=1,
@@ -1790,7 +1790,7 @@ def seed_data():
     node58 = Dialogue(
         from_node_id=57,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="We've had enough of this. Let's just take these guys out!",
         act=1,
         scene=1,
@@ -1800,7 +1800,7 @@ def seed_data():
     node59 = Dialogue(
         from_node_id=50,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Do you guys feel that too? It's like there's something... different.",
         act=1,
         scene=1,
@@ -1808,7 +1808,7 @@ def seed_data():
     node60 = Dialogue(
         from_node_id=59,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="Yeah, it's strange. I can't quite put my finger on it.",
         act=1,
         scene=1,
@@ -1816,7 +1816,7 @@ def seed_data():
     node61 = Dialogue(
         from_node_id=60,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Everything's dead, guys.",
         act=1,
         scene=1,
@@ -1848,7 +1848,7 @@ def seed_data():
     node65 = Dialogue(
         from_node_id=64,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="We've had enough of this. Let's just take these guys out!",
         act=1,
         scene=1,
@@ -1858,7 +1858,7 @@ def seed_data():
     node66 = Dialogue(
         from_node_id=51,
         node_type="talk",
-        speaker="Group Leader",
+        speaker="player1",
         text="Do you guys feel that too? It's like there's something... different.",
         act=1,
         scene=1,
@@ -1866,7 +1866,7 @@ def seed_data():
     node67 = Dialogue(
         from_node_id=66,
         node_type="talk",
-        speaker="Group Member 2",
+        speaker="player3",
         text="Yeah, it's strange. I can't quite put my finger on it.",
         act=1,
         scene=1,
@@ -1874,7 +1874,7 @@ def seed_data():
     node68 = Dialogue(
         from_node_id=67,
         node_type="talk",
-        speaker="Group Member 1",
+        speaker="player2",
         text="Everything's dead, guys.",
         act=1,
         scene=1,
@@ -1906,7 +1906,7 @@ def seed_data():
     node72 = Dialogue(
         from_node_id=71,
         node_type="talk",
-        speaker="Group Member 3",
+        speaker="player4",
         text="We've had enough of this. Let's just take these guys out!",
         act=1,
         scene=1,

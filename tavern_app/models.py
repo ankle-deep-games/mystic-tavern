@@ -251,10 +251,10 @@ class GameUser(models.Model):
 class Dialogue(models.Model):
     objects = models.Manager()
     from_node_id = models.IntegerField(default=0)
-    node_type = models.CharField(max_length=255)
-    # talk     | choice           | narration
-    speaker = models.CharField(max_length=255)
-    # npc name | Group Leader     | narator
+    node_type = models.CharField(max_length=255)  # talk | choice | narration
+    speaker = models.CharField(
+        max_length=255)  # player names dynamically overwritten for FE display. Players are player1 - player4.
+    # Speaker on choice node_type always player1.
     text = models.TextField()
     act = models.IntegerField(default=0)
     scene = models.IntegerField(default=0)
