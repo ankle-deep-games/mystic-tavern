@@ -9,6 +9,7 @@ from django.shortcuts import redirect, reverse
 from django.shortcuts import render
 from django.views.generic import CreateView
 
+from .constants import QUEST_1_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -592,6 +593,10 @@ def scene(request, game_id, act, number):
                         "number": gamelocation.number,
                     },
                 )
+            elif act == 1 and scene_num == 1 and dialogue.id == QUEST_1_NODE:
+                # TODO
+                pass
+                # gameuser_equip_armor()
 
             character_list = get_character_list(game=game)
             game_dialogue_progress_list = get_game_dialogue_progress_list(
