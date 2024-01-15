@@ -9,7 +9,7 @@ from django.shortcuts import redirect, reverse
 from django.shortcuts import render
 from django.views.generic import CreateView
 
-from .constants import QUEST_1_NODE
+from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, ROLE_GAME_PROGRESSION_DICT
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -578,11 +578,13 @@ def scene(request, game_id, act, number):
 
                 game_dialogue.save()
 
+            # TODO move inside not has_error?
             if (
                     (act == 1 and scene_num == 1 and dialogue.id == 58)
                     or (act == 1 and scene_num == 1 and dialogue.id == 65)
                     or (act == 1 and scene_num == 1 and dialogue.id == 72)
             ):
+                # TODO put dialogue ids above into constants
                 gamelocation.location_type = "battle"
                 gamelocation.save()
                 new_url = reverse(
@@ -593,10 +595,32 @@ def scene(request, game_id, act, number):
                         "number": gamelocation.number,
                     },
                 )
+            # TODO assign weapon1 and armor1 at correct locations
             elif act == 1 and scene_num == 1 and dialogue.id == QUEST_1_NODE:
-                # TODO
-                pass
-                # gameuser_equip_armor()
+                # rewards: armor 2 and ability 3 for each player
+                gameusers = GameUser.objects.filter(game=game)
+                for gameuser in gameusers:
+                    armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
+                    gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
+                    # TODO ABILITY 3
+
+            elif act == 1 and scene_num == 1 and dialogue.id == QUEST_2_NODE:
+                # rewards: armor 2 and armor 3 for each player
+                gameusers = GameUser.objects.filter(game=game)
+                for gameuser in gameusers:
+                    armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
+                    armor3 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor3'])
+                    gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
+                    gameuser_equip_armor(gameuser=gameuser, armor=armor3, slot=3)
+
+            elif act == 1 and scene_num == 1 and dialogue.id == QUEST_3_NODE:
+                # rewards: armor 2 and armor 3 for each player
+                gameusers = GameUser.objects.filter(game=game)
+                for gameuser in gameusers:
+                    armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
+                    armor3 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor3'])
+                    gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
+                    gameuser_equip_armor(gameuser=gameuser, armor=armor3, slot=3)
 
             character_list = get_character_list(game=game)
             game_dialogue_progress_list = get_game_dialogue_progress_list(
