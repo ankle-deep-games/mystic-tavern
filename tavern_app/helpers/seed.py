@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
 
-from ..constants import DIVINE_LIGHT, GALE_FURY, SHADOW_BLAST
+from ..constants import DIVINE_LIGHT, GALE_FURY, SHADOW_BLAST, ATTACK, SHIELD_BASH, SHATTER_SHOT, ANTHEM_OF_VALOR, \
+    DIVINE_STRIKE, SHADOW_VOLLEY, ENCHANTED_GROVE, RESONANT_STONES, HOLY_WRATH, GROVES_VENGEANCE, SANCTUARY, \
+    ARCANE_DARKNESS, ETHEREAL_CRESCENDO, WOOD_STAFF, WOOD_SWORD, WOOD_BOW, WOOD_FLUTE, LONGSWORD, LONGBOW, IVORY_ROD, \
+    OBSIDIAN_WAND, MELODIOUS_LUTE, CLOTH_TUNIC, RADIANT_VALOR_PLATE, ELVEN_WINDWRAP, ARCHMAGES_VESTMENTS, \
+    SORCERERS_ROBES, MAESTROS_TAILCOAT
 from ..models import (
     Game,
     GameUser,
@@ -171,31 +175,31 @@ def seed_data():
 
     # weapons
     weapon1 = Weapon(
-        name="Wood Staff", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
+        name=WOOD_STAFF, attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
     )
     weapon2 = Weapon(
-        name="Wood Sword", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
+        name=WOOD_SWORD, attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
     )
     weapon3 = Weapon(
-        name="Wood Bow", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
+        name=WOOD_BOW, attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
     )
     weapon4 = Weapon(
-        name="Wood Flute", attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
+        name=WOOD_FLUTE, attack_mod=5, myst_attack_mod=5, speed_mod=5, mp_mod=5
     )
     weapon5 = Weapon(
-        name="Longsword", attack_mod=26, myst_attack_mod=12, speed_mod=10, mp_mod=12
+        name=LONGSWORD, attack_mod=26, myst_attack_mod=12, speed_mod=10, mp_mod=12
     )
     weapon6 = Weapon(
-        name="Longbow", attack_mod=26, myst_attack_mod=10, speed_mod=12, mp_mod=12
+        name=LONGBOW, attack_mod=26, myst_attack_mod=10, speed_mod=12, mp_mod=12
     )
     weapon7 = Weapon(
-        name="Ivory Rod", attack_mod=10, myst_attack_mod=20, speed_mod=10, mp_mod=20
+        name=IVORY_ROD, attack_mod=10, myst_attack_mod=20, speed_mod=10, mp_mod=20
     )
     weapon8 = Weapon(
-        name="Obsidian Wand", attack_mod=10, myst_attack_mod=22, speed_mod=10, mp_mod=18
+        name=OBSIDIAN_WAND, attack_mod=10, myst_attack_mod=22, speed_mod=10, mp_mod=18
     )
     weapon9 = Weapon(
-        name="Melodious Lute",
+        name=MELODIOUS_LUTE,
         attack_mod=10,
         myst_attack_mod=20,
         speed_mod=12,
@@ -265,7 +269,7 @@ def seed_data():
 
     # armor
     armor1 = Armor(
-        name="Cloth Tunic",
+        name=CLOTH_TUNIC,
         defense_mod=5,
         myst_defense_mod=5,
         speed_mod=5,
@@ -297,7 +301,7 @@ def seed_data():
         mp_mod=15,
     )
     armor5 = Armor(
-        name="Sorcerer's Robes",
+        name=SORCERERS_ROBES,
         defense_mod=10,
         myst_defense_mod=20,
         speed_mod=15,
@@ -313,7 +317,7 @@ def seed_data():
         mp_mod=20,
     )
     armor7 = Armor(
-        name="Radiant Valor Plate",
+        name=RADIANT_VALOR_PLATE,
         defense_mod=20,
         myst_defense_mod=25,
         speed_mod=15,
@@ -321,7 +325,7 @@ def seed_data():
         mp_mod=23,
     )
     armor8 = Armor(
-        name="Elven Windwrap",
+        name=ELVEN_WINDWRAP,
         defense_mod=20,
         myst_defense_mod=20,
         speed_mod=30,
@@ -329,7 +333,7 @@ def seed_data():
         mp_mod=18,
     )
     armor9 = Armor(
-        name="Archmage's Vestments",
+        name=ARCHMAGES_VESTMENTS,
         defense_mod=25,
         myst_defense_mod=18,
         speed_mod=20,
@@ -385,7 +389,7 @@ def seed_data():
         mp_mod=35,
     )
     armor16 = Armor(
-        name="Maestro's Tailcoat",
+        name=MAESTROS_TAILCOAT,
         defense_mod=20,
         myst_defense_mod=40,
         speed_mod=35,
@@ -416,7 +420,7 @@ def seed_data():
     # abilities
     # Tier 1
     ability1 = Ability(
-        name="Attack",
+        name=ATTACK,
         description="A basic single-target physical attack that inflicts low damage without consuming MP.",
         type=type_normal,
         mp_cost=0,
@@ -429,7 +433,7 @@ def seed_data():
     )
     # Tier 2
     ability2 = Ability(
-        name="Shield Bash",
+        name=SHIELD_BASH,
         description="A physical attack that deals low damage to one enemy by thrusting a shield into the enemy.",
         type=type_stone,
         mp_cost=5,
@@ -441,7 +445,7 @@ def seed_data():
         max_amount=15,
     )
     ability3 = Ability(
-        name="Shatter Shot",
+        name=SHATTER_SHOT,
         description="A precise single-target physical attack that delivers medium damage to one enemy with a "
                     "precisely aimed arrow.",
         type=type_forest,
@@ -480,7 +484,7 @@ def seed_data():
         max_amount=15,
     )
     ability6 = Ability(
-        name="Anthem of Valor",
+        name=ANTHEM_OF_VALOR,
         description="Empowers a single ally with a medium physical attack boost and a defensive buff, enhancing their"
                     "strength and resilience.",
         type=type_wind,
@@ -494,7 +498,7 @@ def seed_data():
     )
     # Tier 3
     ability7 = Ability(
-        name="Divine Strike",
+        name=DIVINE_STRIKE,
         description="Launches a medium mystic attack, harnessing the power of light to strike a single target with "
                     "celestial force.",
         type=type_light,
@@ -507,7 +511,7 @@ def seed_data():
         max_amount=30,
     )
     ability8 = Ability(
-        name="Shadow Volley",
+        name=SHADOW_VOLLEY,
         description="Fires a barrage of dark-infused arrows in a medium mystic attack that targets a single enemy.",
         type=type_dark,
         mp_cost=30,
@@ -519,7 +523,7 @@ def seed_data():
         max_amount=30,
     )
     ability9 = Ability(
-        name="Enchanted Grove",
+        name=ENCHANTED_GROVE,
         description="Evokes the magic of the forest with a medium mystic attack, creating an enchanting grove that "
                     "envelops a single target.",
         type=type_forest,
@@ -532,7 +536,7 @@ def seed_data():
         max_amount=30,
     )
     ability10 = Ability(
-        name="Resonant Stones",
+        name=RESONANT_STONES,
         description="Conjures a medium mystic attack with resonating stones, creating a harmonious symphony that "
                     "engulfs a single target.",
         type=type_stone,
@@ -559,7 +563,7 @@ def seed_data():
     )
     # Tier 4
     ability12 = Ability(
-        name="Holy Wrath",
+        name=HOLY_WRATH,
         description="Summons divine fury, delivering a devastating high physical attack that channels holy energy to "
                     "smite multiple targets with righteous force.",
         type=type_stone,
@@ -572,7 +576,7 @@ def seed_data():
         max_amount=45,
     )
     ability13 = Ability(
-        name="Grove's Vengeance",
+        name=GROVES_VENGEANCE,
         description="Harnesses the fury of the forest, unleashing a potent high physical attack that embodies the "
                     "wrath of nature upon multiple targets.",
         type=type_forest,
@@ -585,7 +589,7 @@ def seed_data():
         max_amount=45,
     )
     ability14 = Ability(
-        name="Sanctuary",
+        name=SANCTUARY,
         description="Invokes a healing haven, granting a substantial high-level heal that envelops multiple targets "
                     "in a protective aura of rejuvenation.",
         type=type_light,
@@ -598,7 +602,7 @@ def seed_data():
         max_amount=45,
     )
     ability15 = Ability(
-        name="Arcane Darkness",
+        name=ARCANE_DARKNESS,
         description="Conjures dark mystic forces, casting a formidable high mystic attack that shrouds multiple "
                     "targets in shadowy, unpredictable energies.",
         type=type_dark,
@@ -611,7 +615,7 @@ def seed_data():
         max_amount=45,
     )
     ability16 = Ability(
-        name="Ethereal Crescendo",
+        name=ETHEREAL_CRESCENDO,
         description="Orchestrates a symphony of power, bestowing a robust buff to all stats upon multiple targets, "
                     "elevating them to an ethereal peak of strength and grace.",
         type=type_wind,
