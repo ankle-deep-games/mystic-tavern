@@ -465,9 +465,7 @@ def role_assignment(request, game_id):
         )
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
 
-    gameusers_queryset = GameUser.objects.filter(game_id=game_id)
-
-    user_names = [gameuser.user.username for gameuser in gameusers_queryset]
+    gameusers_queryset = GameUser.objects.filter(game=game)
 
     role_assignment_form_set = inlineformset_factory(
         parent_model=Game,
@@ -514,7 +512,7 @@ def role_assignment(request, game_id):
     else:
         formset = role_assignment_form_set(instance=game, queryset=gameusers_queryset)
 
-    return render(request, 'tavern_app/role_assignment.html', {'formset': formset, 'user_names': user_names})
+    return render(request, 'tavern_app/role_assignment.html', {'formset': formset})
 
 
 def scene(request, game_id, act, number):
