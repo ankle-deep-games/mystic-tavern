@@ -1,5 +1,6 @@
 import re
 
+from ..constants import ROLE_GAME_PROGRESSION_DICT
 from ..models import Game, GameUser, NPC, GameDialogue, Dialogue
 
 
@@ -99,36 +100,17 @@ def get_next_dialogue_list(
     return next_dialogue_list
 
 
-def get_default_role_attributes(role_name: str) -> dict:
-    """Returns default attributes based on the role name."""
-    # TODO all keys and correct values https://trello.com/c/JRQnFXF9/292-finalize-all-regex-replace-values-once-dialogue-is-complete
-    default_attributes = {
-        'WHITEMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope healer',
-                      'ability2': 'Divine Light'},
-        'BLACKMAGE': {'weapon1': 'Wood Staff', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope mage',
-                      'ability2': 'Arcane Blast'},
-        'BARD': {'weapon1': 'Wood Flute', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope musician',
-                 'ability2': 'Anthem of Valor'},
-        'PALADIN': {'weapon1': 'Wood Sword', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope fighter',
-                    'ability2': 'Shield Bash'},
-        'ARCHER': {'weapon1': 'Wood Bow', 'armor1': 'Cloth Tunic', 'short_role_summary': 'dope shooter',
-                   'ability2': 'Shatter Shot'},
-    }
-    return default_attributes.get(role_name, {'weapon1': 'Default Weapon', 'armor1': 'Default Armor',
-                                              'short_role_summary': 'Default Description',
-                                              'ability2': 'Default Ability 2'})
-
-
 def build_game_user_dict(gameuser: GameUser, player_num: int) -> dict:
     """Constructs a dictionary of GameUser attributes."""
-    role_attributes = get_default_role_attributes(gameuser.role.name)
+    role = gameuser.role.name
     return {
         f'player{player_num}': gameuser.user.username,
         'role': gameuser.role.display_name,
-        'weapon1': role_attributes['weapon1'],
-        'armor1': role_attributes['armor1'],
-        'short_role_summary': role_attributes['short_role_summary'],
-        'ability2': role_attributes['ability2'],
+        'weapon1': ROLE_GAME_PROGRESSION_DICT[role]['weapon1'],
+        'armor1': ROLE_GAME_PROGRESSION_DICT[role]['armor1'],
+        'short_role_summary': ROLE_GAME_PROGRESSION_DICT[role]['short_role_summary'],
+        'ability2': ROLE_GAME_PROGRESSION_DICT[role]['ability2'],
+        'ability3': ROLE_GAME_PROGRESSION_DICT[role]['ability3'],
     }
 
 
@@ -148,21 +130,21 @@ def replace_dialogue_placeholders(dialogue_text: str, placeholders: dict) -> str
 def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
     """Processes and replaces placeholders in dialogue data."""
     # TODO assign correct nodes https://trello.com/c/GqoKIApr/293-assign-regex-replace-on-final-nodes
-    # if dialogue.pk in [2, 3]:
-    #     current_player_key = 'player1'
-    # elif dialogue.pk in [4, 5]:
-    #     current_player_key = 'player2'
-    # elif dialogue.pk in [6, 7]:
-    #     current_player_key = 'player3'
-    # elif dialogue.pk in [8, 9]:
-    #     current_player_key = 'player4'
-    # elif dialogue.pk == 10:
-    #     # Handle specific case for dialogue.pk == 10, like the night decision
-    #     return dialogue.text
-    # else:
-    #     # Return dialogue.text for any other case not explicitly handled above
-    #     return dialogue.text
-    return dialogue.text # remove line after TODO
+    if dialogue.pk in [2, 3]:
+        current_player_key = 'player1'
+    elif dialogue.pk in [4, 5]:
+        current_player_key = 'player2'
+    elif dialogue.pk in [6, 7]:
+        current_player_key = 'player3'
+    elif dialogue.pk in [8, 9]:
+        current_player_key = 'player4'
+    elif dialogue.pk == 10:
+        # Handle specific case for dialogue.pk == 10, like the night decision
+        return dialogue.text
+    else:
+        # Return dialogue.text for any other case not explicitly handled above
+        return dialogue.text
+    # return dialogue.text  # remove line after TODO
 
     gameusers = GameUser.objects.filter(game=game)
     gameuser_dicts = [build_game_user_dict(gu, index) for index, gu in enumerate(gameusers, start=1)]
