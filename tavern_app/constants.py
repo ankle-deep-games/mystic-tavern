@@ -121,6 +121,7 @@ ROLE_GAME_PROGRESSION_DICT = {
     },
 }
 
+# TODO real quest nodes https://trello.com/c/7ohf05pK/250-finalize-weapon-armor-ability-assignments-for-each-role-and-assign-them-in-the-code-as-game-progresses
 # Dialogue pk
 QUEST_1_NODE = 3
 QUEST_2_NODE = 4

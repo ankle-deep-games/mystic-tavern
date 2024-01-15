@@ -18,6 +18,7 @@ from .forms import (
     StartGameForm,
     CombatLogForm,
 )
+from .helpers.ability import gameuser_grant_ability
 from .helpers.battle import (
     gameuser_attack_single_gameenemy_and_save,
     gameuser_heal_single_gameuser_and_save,
@@ -602,7 +603,8 @@ def scene(request, game_id, act, number):
                 for gameuser in gameusers:
                     armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
                     gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                    # TODO ABILITY 3
+                    ability3 = Ability.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
+                    gameuser_grant_ability(gameuser=gameuser, ability=ability3, slot=3)
 
             elif act == 1 and scene_num == 1 and dialogue.id == QUEST_2_NODE:
                 # rewards: armor 2 and armor 3 for each player
