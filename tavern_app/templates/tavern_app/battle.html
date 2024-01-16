@@ -395,6 +395,11 @@
                     gameuser_turn_name = response.gameuser_turn_name;
                     is_request_user_turn = response.is_request_user_turn;
 
+                    // if enemies didn't attack first - start showing the ability and turn waiting message
+                    if (updatedBackendArray.length === 0 && gameuser_turn_name !== '') {
+                        updateFrontend();
+                    }
+
                     // wait for displaying messages to be over & all FE messages to be shown to redirect if new_url
                     if (!isDisplayingMessage && frontendArray.length == 0) {
                         if (new_url) {
