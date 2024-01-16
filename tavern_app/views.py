@@ -77,21 +77,6 @@ def add_three_users_to_game(request, game_id):
     return HttpResponse("3 users added to game " + str(game_id))
 
 
-def equip_placeholder():
-    gameuser = GameUser.objects.get(pk=6)
-    armor = Armor.objects.get(pk=16)
-    weapon = Weapon.objects.get(pk=1)
-    gameuser_equip_armor(gameuser=gameuser, armor=armor, slot=3)
-    gameuser_equip_weapon(gameuser=gameuser, weapon=weapon)
-    return HttpResponse(
-        "updated weapons and armor for "
-        + gameuser.name()
-        + " in game "
-        + gameuser.game.name
-        + ". check admin for that gameuser to see changes."
-    )
-
-
 def games(request):
     if not request.user.is_authenticated:
         messages.error(
