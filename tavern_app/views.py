@@ -389,6 +389,8 @@ class CreateGameView(CreateView):
 
 class BaseRoleAssignmentFormSet(BaseInlineFormSet):
     def clean(self):
+        # TODO remove role assignments prints when done debugging
+        # https://trello.com/c/9DhXpUWT/296-role-assignments-form-debug
         print("BaseRoleAssignmentFormSet CLEAN")
         """Custom formset-level validation."""
         if any(self.errors):
