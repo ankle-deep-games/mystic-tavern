@@ -878,20 +878,18 @@ def battle(request, game_id, act, number):
                                 game=game, pk=form.cleaned_data["gameenemy"].id
                             )
                             if gameenemy_target.current_hp == 0:
-                                has_error = True
                                 error_msg = "Cannot single target enemy with 0 hp."
-
-                        if not has_error:
-                            gameuser_attack_single_gameenemy_and_save(
-                                game=game,
-                                gameuser=request_gameuser,
-                                gameenemy=gameenemy_target,
-                                ability=ability,
-                                unit_turn=unit_turn,
-                                act=act,
-                                battle=battle_num,
-                                deduct_mp=True,
-                            )
+                            else:
+                                gameuser_attack_single_gameenemy_and_save(
+                                    game=game,
+                                    gameuser=request_gameuser,
+                                    gameenemy=gameenemy_target,
+                                    ability=ability,
+                                    unit_turn=unit_turn,
+                                    act=act,
+                                    battle=battle_num,
+                                    deduct_mp=True,
+                                )
 
                 # Heal Abilities
                 elif ability.is_heal:
@@ -941,20 +939,18 @@ def battle(request, game_id, act, number):
                                 game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                             )
                             if defensive_gameuser_target.current_hp == 0:
-                                has_error = True
                                 error_msg = "Cannot single target heal player with 0 hp."
-
-                        if not has_error:
-                            gameuser_heal_single_gameuser_and_save(
-                                game=game,
-                                gameuser=request_gameuser,
-                                defensive_gameuser_target=defensive_gameuser_target,
-                                ability=ability,
-                                unit_turn=unit_turn,
-                                act=act,
-                                battle=battle_num,
-                                deduct_mp=True,
-                            )
+                            else:
+                                gameuser_heal_single_gameuser_and_save(
+                                    game=game,
+                                    gameuser=request_gameuser,
+                                    defensive_gameuser_target=defensive_gameuser_target,
+                                    ability=ability,
+                                    unit_turn=unit_turn,
+                                    act=act,
+                                    battle=battle_num,
+                                    deduct_mp=True,
+                                )
 
                 # Buff Abilities
                 elif ability.is_buff:
@@ -1004,20 +1000,18 @@ def battle(request, game_id, act, number):
                                 game=game, pk=form.cleaned_data["defensive_gameuser_target"].id
                             )
                             if defensive_gameuser_target.current_hp == 0:
-                                has_error = True
                                 error_msg = "Cannot single target buff player with 0 hp."
-
-                        if not has_error:
-                            gameuser_buff_single_gameuser_and_save(
-                                game=game,
-                                gameuser=request_gameuser,
-                                defensive_gameuser_target=defensive_gameuser_target,
-                                ability=ability,
-                                unit_turn=unit_turn,
-                                act=act,
-                                battle=battle_num,
-                                deduct_mp=True,
-                            )
+                            else:
+                                gameuser_buff_single_gameuser_and_save(
+                                    game=game,
+                                    gameuser=request_gameuser,
+                                    defensive_gameuser_target=defensive_gameuser_target,
+                                    ability=ability,
+                                    unit_turn=unit_turn,
+                                    act=act,
+                                    battle=battle_num,
+                                    deduct_mp=True,
+                                )
                 else:
                     messages.error(
                         request,
