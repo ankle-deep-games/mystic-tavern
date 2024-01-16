@@ -389,18 +389,24 @@ class CreateGameView(CreateView):
 
 class BaseRoleAssignmentFormSet(BaseInlineFormSet):
     def clean(self):
+        print("BaseRoleAssignmentFormSet CLEAN")
         """Custom formset-level validation."""
         if any(self.errors):
+            print("BaseRoleAssignmentFormSet IF ANY ERRORS")
             # Don't perform validation if there are form errors already
             return
 
         roles = [form.cleaned_data.get('role') for form in self.forms if form.cleaned_data.get('role')]
+        print("BaseRoleAssignmentFormSet ROLES")
+        print(roles)
         if len(roles) != len(set(roles)):
             raise forms.ValidationError("Each player must have a unique role.")
 
         for form in self.forms:
             role = form.cleaned_data.get('role')
             gender = form.cleaned_data.get('gender')
+            print(role)
+            print(gender)
 
             if not role or not gender:
                 raise forms.ValidationError("Every player must have a role and gender selected.")
@@ -451,6 +457,8 @@ def role_assignment(request, game_id):
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
 
     gameusers_queryset = GameUser.objects.filter(game=game)
+    print("GAMEUSERS QUERYSET")
+    print(gameusers_queryset)
 
     role_assignment_form_set = inlineformset_factory(
         parent_model=Game,
@@ -463,11 +471,16 @@ def role_assignment(request, game_id):
     )
 
     if request.method == 'POST':
+        print("INSIDE THE POST")
+        print(request.POST)
         formset = role_assignment_form_set(request.POST, instance=game, queryset=gameusers_queryset)
         if formset.is_valid():
+            print("FORMSET IS VALID")
             attack_ability = Ability.objects.get(pk=1)
             for form in formset:
+                print(form)
                 if form.cleaned_data:
+                    print("CLEANED")
                     player = form.save(commit=False)  # Get the player object from the form
                     # Perform additional operations on the player based on the form data
                     player.current_hp = player.role.start_hp
