@@ -573,7 +573,8 @@ def scene(request, game_id, act, number):
                         for gameuser in gameusers:
                             armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
                             gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                            ability3 = Ability.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
+                            ability3 = Ability.objects.get(
+                                name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
                             gameuser_grant_ability(gameuser=gameuser, ability=ability3, slot=3)
 
                     elif scene_num == 1 and dialogue.id == QUEST_2_NODE:
@@ -1022,12 +1023,7 @@ def battle(request, game_id, act, number):
 
     # redirect if they are not on this battle act/num
     gamelocation = GameLocation.objects.get(game=game)
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != battle_num
-            or gamelocation.location_type != "battle"
-    ):
+    if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
         return redirect(
             reverse(
                 "tavern_app:" + gamelocation.location_type,
@@ -1095,12 +1091,7 @@ def battle_get_updates(request, game_id, act, number):
     gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this battle act/num - populate new_url so front end can redirect them
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != battle_num
-            or gamelocation.location_type != "battle"
-    ):
+    if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
