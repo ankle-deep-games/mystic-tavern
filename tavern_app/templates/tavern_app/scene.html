@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load static %}
-<div class="container my-3" id="scene-container">
+<div class="container" id="scene-container">
 
     <div class="row">
         <div id="dialogue-error-container"></div>
@@ -12,7 +12,7 @@
             {% if game_dialogue_progress_list|length == 1 %}
             <div class="row justify-content-center">
                 <div class="col-8 col-md-6 d-flex justify-content-center">
-                    <img src="{% static 'tavern_app/' %}{{ scene_image }}" alt="Image of the scene" class="img-fluid">
+                    <img src="{% static 'tavern_app/' %}{{ scene_image }}" alt="Image of the scene" class="img-fluid mt-3">
                 </div>
             </div>
             {% endif %}

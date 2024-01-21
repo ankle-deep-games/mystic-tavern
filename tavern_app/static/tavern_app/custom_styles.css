@@ -150,7 +150,7 @@ a.text-primary:hover, a.text-primary:focus {
 }
 
 .dialogue-text {
-    font-size: 0.875rem;
+    font-size: .875rem;
 }
 
 .speaker-img {
@@ -162,12 +162,12 @@ a.text-primary:hover, a.text-primary:focus {
 /* sm breakpoint */
 @media (min-width: 576px) {
     .dialogue-text {
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
 
     .speaker-img {
-        width: 175px;
-        height: 175px;
+        width: 150px;
+        height: 150px;
         margin-right: 1rem;
     }
 }
