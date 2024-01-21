@@ -28,6 +28,7 @@ from .helpers.battle import (
 )
 from .helpers.equipment import gameuser_equip_armor
 from .helpers.game_setup import init_game_enemies
+from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
     get_character_list,
     get_game_dialogue_progress_list,
@@ -77,11 +78,17 @@ def add_three_users_to_game(request, game_id):
 
 
 def games(request):
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see games.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    criteria = [
+        {
+            'condition': not request.user.is_authenticated,
+            'message_type': 'error',
+            'message': "Must be logged in to see games.",
+            'redirect_url': "login"
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     game_list = []
     games_queryset = Game.objects.filter(game_over=False).annotate(num_players=Count("gameuser"))
