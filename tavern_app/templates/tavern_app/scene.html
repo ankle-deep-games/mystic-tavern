@@ -1,9 +1,10 @@
 {% extends 'tavern_app/mt_base_no_nav.html' %}
 
 {% block content %}
-<div class="container">
-    {% load static %}
-    <div class="row my-2">
+{% load static %}
+<div class="container" id="scene-container">
+
+    <div class="row">
         <div id="dialogue-error-container"></div>
         <div id="dialogue-container">
 
@@ -11,7 +12,7 @@
             {% if game_dialogue_progress_list|length == 1 %}
             <div class="row justify-content-center">
                 <div class="col-8 col-md-6 d-flex justify-content-center">
-                    <img src="{% static 'tavern_app/' %}{{ scene_image }}" alt="Image of the scene" class="img-fluid">
+                    <img src="{% static 'tavern_app/' %}{{ scene_image }}" alt="Image of the scene" class="img-fluid mt-3">
                 </div>
             </div>
             {% endif %}
@@ -24,8 +25,8 @@
             </div>
             {% else %}
             <div class="d-flex mt-3">
-                <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" style="width:100px;height:100px;">
-                <p class="scene-p"><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
+                <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" class="speaker-img">
+                <p class="dialogue-text"><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
             </div>
             {% endif %}
             {% endfor %}
@@ -34,16 +35,16 @@
             {% for dialogue in next_dialogue_list %}
             {% if dialogue.node_type == "talk" or dialogue.node_type == "narration" %}
             <div class="d-flex mt-3">
-                <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" style="width:100px;height:100px;">
-                <p class="scene-p"><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
+                <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" class="speaker-img">
+                <p class="dialogue-text"><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
             </div>
             <form method="POST" class="dialogue-post-form">
                 {% csrf_token %}
                 <input type="hidden" name="dialogue" id="dialogue" value="{{ dialogue.id }}"/>
                 {% if is_leader %}
-                <button type="submit" class="btn btn-primary mt-3 submit-button">Next</button>
+                <button type="submit" class="btn scene-button btn-primary mt-3 submit-button">Next</button>
                 {% else %}
-                <button type="submit" class="btn btn-primary mt-3 submit-button" disabled>Next</button>
+                <button type="submit" class="btn scene-button btn-primary mt-3 submit-button" disabled>Next</button>
                 {% endif %}
             </form>
             {% elif dialogue.node_type == "choice" %}
@@ -52,9 +53,9 @@
                     {% csrf_token %}
                     <input type="hidden" name="dialogue" id="dialogue" value="{{ dialogue.id }}"/>
                     {% if is_leader %}
-                    <button type="submit" class="btn btn-primary mb-3 submit-button">{{ dialogue.text }}</button>
+                    <button type="submit" class="btn scene-button btn-primary mb-3 submit-button">{{ dialogue.text }}</button>
                     {% else %}
-                    <button type="submit" class="btn btn-primary mb-3 submit-button" disabled>{{ dialogue.text }}
+                    <button type="submit" class="btn scene-button btn-primary mb-3 submit-button" disabled>{{ dialogue.text }}
                     </button>
                     {% endif %}
                 </form>
@@ -97,8 +98,8 @@
                                         "</div>";
                     } else {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                            "<p class='scene-p'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" + "/>" +
+                            "<p class='dialogue-text'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                             "</div>";
                     }
                     $("#dialogue-container").append(element);
@@ -109,20 +110,20 @@
 
                     if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                            "<p class='scene-p'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" + "/>" +
+                            "<p class='dialogue-text'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                             "</div>" +
                             "<form method='POST' class='dialogue-post-form'>" +
                             "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
                             "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
-                            "<button type='submit' class='btn btn-primary mt-3 submit-button'>Next</button>" +
+                            "<button type='submit' class='btn scene-button btn-primary mt-3 submit-button'>Next</button>" +
                             "</form>";
                     } else if (response.next_dialogue_list[key].node_type == "choice") {
                         var element = "<div class='mt-3'>" +
                             "<form method='POST' class='dialogue-post-form'>" +
                             "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
                             "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
-                            "<button type='submit' class='btn btn-primary mt-3 submit-button'>" + response.next_dialogue_list[key].text + "</button>" +
+                            "<button type='submit' class='btn scene-button btn-primary mt-3 submit-button'>" + response.next_dialogue_list[key].text + "</button>" +
                             "</form>" +
                             "</div>";
                     }
@@ -171,8 +172,8 @@
                                                     "</div>";
                                 } else {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                        "<p class='scene-p'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" + "/>" +
+                                        "<p class='dialogue-text'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                                         "</div>";
                                 }
                                 $("#dialogue-container").append(element);
@@ -183,20 +184,20 @@
     
                                 if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                        "<p class='scene-p'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" + "/>" +
+                                        "<p class='dialogue-text'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                                         "</div>" +
                                         "<form method='POST' class='dialogue-post-form'>" +
                                         "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
                                         "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
-                                        "<button type='submit' class='btn btn-primary mt-3 submit-button' disabled>Next</button>" +
+                                        "<button type='submit' class='btn scene-button btn-primary mt-3 submit-button' disabled>Next</button>" +
                                         "</form>";
                                 } else if (response.next_dialogue_list[key].node_type == "choice") {
                                     var element = "<div class='mt-3'>" +
                                         "<form method='POST' class='dialogue-post-form'>" +
                                         "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
                                         "<input type='hidden' name='dialogue' id='dialogue' value='" + response.next_dialogue_list[key].id + "' />" +
-                                        "<button type='submit' class='btn btn-primary mt-3 submit-button' disabled>" + response.next_dialogue_list[key].text + "</button>" +
+                                        "<button type='submit' class='btn scene-button btn-primary mt-3 submit-button' disabled>" + response.next_dialogue_list[key].text + "</button>" +
                                         "</form>" +
                                         "</div>";
                                 }
