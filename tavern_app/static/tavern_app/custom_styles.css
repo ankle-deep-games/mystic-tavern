@@ -152,6 +152,10 @@ a.text-primary:hover, a.text-primary:focus {
 /*------------------------------------
 - Battle
 ------------------------------------*/
+#battle-container {
+    max-width: 51rem;
+}
+
 #combat-ui-box {
     height: 13.5rem;
 }
@@ -163,6 +167,31 @@ a.text-primary:hover, a.text-primary:focus {
 .ability-name {
     margin-bottom: .0625rem;
     cursor: pointer;
+}
+
+.ability-text {
+    text-align: left;
+    font-size: .875em;
+}
+
+.battle-button {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
+/* sm breakpoint */
+@media (min-width: 576px) {
+    .ability-text {
+        font-size: 1rem;
+    }
+
+    .battle-button {
+        padding: .375rem .75rem; /* Default padding for regular buttons */
+        font-size: 1rem; /* Default font size for regular buttons */
+        /* line-height and border-radius remain the same as default btn */
+    }
 }
 
 /*------------------------------------
