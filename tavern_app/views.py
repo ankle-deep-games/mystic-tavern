@@ -653,12 +653,7 @@ def scene(request, game_id, act, number):
 
     # redirect if they are not on this scene act/num
     gamelocation = GameLocation.objects.get(game=game)
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != scene_num
-            or gamelocation.location_type != "scene"
-    ):
+    if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
         return redirect(
             reverse(
                 "tavern_app:" + gamelocation.location_type,
@@ -718,12 +713,7 @@ def scene_get_updates(request, game_id, act, number):
     gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this scene act/num - populate new_url so front end can redirect them
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != scene_num
-            or gamelocation.location_type != "scene"
-    ):
+    if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
