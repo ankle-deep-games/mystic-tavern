@@ -164,6 +164,10 @@ a.text-primary:hover, a.text-primary:focus {
     text-align: center;
 }
 
+.combat-card {
+    width: 7rem;
+}
+
 .ability-name {
     margin-bottom: .0625rem;
     cursor: pointer;
@@ -191,6 +195,10 @@ a.text-primary:hover, a.text-primary:focus {
         padding: .375rem .75rem; /* Default padding for regular buttons */
         font-size: 1rem; /* Default font size for regular buttons */
         /* line-height and border-radius remain the same as default btn */
+    }
+
+    .combat-card {
+        width: 16rem;
     }
 }
 

@@ -7,7 +7,7 @@
     <div class="row">
         <div class="container d-flex justify-content-center">
             {% for gameenemy in gameenemies %}
-            <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="enemy-{{gameenemy.pk}}">
+            <div class="card bg-dark text-white border-0 mx-1 combat-card" id="enemy-{{gameenemy.pk}}">
                 <img src="{% static 'tavern_app/' %}{{ gameenemy.image }}" class="card-img rounded-0" alt="...">
                 <h6 class="card-title pt-2">{{ gameenemy.name }}</h6>
                 <div class="progress rounded-0 position-relative" style="height: 23px;">
@@ -27,7 +27,7 @@
     <div class="row">
         <div class="container d-flex justify-content-center">
             {% for gameuser in gameusers %}
-            <div class="card bg-dark text-white border-0 mx-1" style="width: 16rem;" id="player-{{gameuser.pk}}">
+            <div class="card bg-dark text-white border-0 mx-1 combat-card" id="player-{{gameuser.pk}}">
                 <img src="{% static 'tavern_app/' %}{{ gameuser.image }}" class="card-img rounded-0" alt="...">
                 <h6 class="card-title pt-2">{{ gameuser.name }}</h6>
                 <div class="progress rounded-0 position-relative" style="height: 23px;">
