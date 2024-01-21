@@ -573,20 +573,12 @@ def scene(request, game_id, act, number):
                         for gameuser in gameusers:
                             armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
                             gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                            ability3 = Ability.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
+                            ability3 = Ability.objects.get(
+                                name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
                             gameuser_grant_ability(gameuser=gameuser, ability=ability3, slot=3)
 
-                    elif scene_num == 1 and dialogue.id == QUEST_2_NODE:
-                        # rewards: armor 2 and armor 3 for each player
-                        gameusers = GameUser.objects.filter(game=game)
-                        for gameuser in gameusers:
-                            armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
-                            armor3 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor3'])
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor3, slot=3)
-
-                    elif scene_num == 1 and dialogue.id == QUEST_3_NODE:
-                        # rewards: armor 2 and armor 3 for each player
+                    elif scene_num == 1 and dialogue.id in [QUEST_2_NODE, QUEST_3_NODE]:
+                        # rewards: armor 2 and armor 3 for each player. choice 2 and 3 have same outcome.
                         gameusers = GameUser.objects.filter(game=game)
                         for gameuser in gameusers:
                             armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
@@ -652,12 +644,7 @@ def scene(request, game_id, act, number):
 
     # redirect if they are not on this scene act/num
     gamelocation = GameLocation.objects.get(game=game)
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != scene_num
-            or gamelocation.location_type != "scene"
-    ):
+    if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
         return redirect(
             reverse(
                 "tavern_app:" + gamelocation.location_type,
@@ -717,12 +704,7 @@ def scene_get_updates(request, game_id, act, number):
     gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this scene act/num - populate new_url so front end can redirect them
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != scene_num
-            or gamelocation.location_type != "scene"
-    ):
+    if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
@@ -1022,12 +1004,7 @@ def battle(request, game_id, act, number):
 
     # redirect if they are not on this battle act/num
     gamelocation = GameLocation.objects.get(game=game)
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != battle_num
-            or gamelocation.location_type != "battle"
-    ):
+    if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
         return redirect(
             reverse(
                 "tavern_app:" + gamelocation.location_type,
@@ -1095,12 +1072,7 @@ def battle_get_updates(request, game_id, act, number):
     gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this battle act/num - populate new_url so front end can redirect them
-    if (
-            gamelocation.game.pk != game_id
-            and gamelocation.act != act
-            and gamelocation.number != battle_num
-            or gamelocation.location_type != "battle"
-    ):
+    if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
         new_url = reverse(
             "tavern_app:" + gamelocation.location_type,
             kwargs={
