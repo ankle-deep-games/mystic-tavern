@@ -98,7 +98,7 @@
                                         "</div>";
                     } else {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" +
+                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" + "/>" +
                             "<p class='dialogue-text'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                             "</div>";
                     }
@@ -110,7 +110,7 @@
 
                     if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" +
+                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" + "/>" +
                             "<p class='dialogue-text'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                             "</div>" +
                             "<form method='POST' class='dialogue-post-form'>" +
@@ -172,7 +172,7 @@
                                                     "</div>";
                                 } else {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" + "/>" +
                                         "<p class='dialogue-text'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                                         "</div>";
                                 }
@@ -184,7 +184,7 @@
     
                                 if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" + "/>" +
                                         "<p class='dialogue-text'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                                         "</div>" +
                                         "<form method='POST' class='dialogue-post-form'>" +
