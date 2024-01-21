@@ -152,6 +152,10 @@ a.text-primary:hover, a.text-primary:focus {
 /*------------------------------------
 - Battle
 ------------------------------------*/
+#battle-container {
+    max-width: 51rem;
+}
+
 #combat-ui-box {
     height: 13.5rem;
 }

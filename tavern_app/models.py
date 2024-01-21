@@ -123,6 +123,9 @@ class Ability(models.Model):
     def __str__(self):
         return str(self.name)
 
+    def attack_type(self):
+        return "Mystic" if self.is_myst_attack else "Physical"
+
 
 class GameUser(models.Model):
     objects = models.Manager()
