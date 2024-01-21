@@ -159,6 +159,13 @@ a.text-primary:hover, a.text-primary:focus {
     margin-right: .5rem;
 }
 
+.scene-button {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+
 /* sm breakpoint */
 @media (min-width: 576px) {
     .dialogue-text {
@@ -169,6 +176,12 @@ a.text-primary:hover, a.text-primary:focus {
         width: 150px;
         height: 150px;
         margin-right: 1rem;
+    }
+
+    .scene-button {
+        padding: .375rem .75rem; /* Default padding for regular buttons */
+        font-size: 1rem; /* Default font size for regular buttons */
+        /* line-height and border-radius remain the same as default btn */
     }
 }
 
