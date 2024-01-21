@@ -145,8 +145,31 @@ a.text-primary:hover, a.text-primary:focus {
 /*------------------------------------
 - Scene
 ------------------------------------*/
-.scene-p {
+#scene-container {
+    max-width: 51rem;
+}
+
+.dialogue-text {
     font-size: 0.875rem;
+}
+
+.speaker-img {
+    width: 100px;
+    height: 100px;
+    margin-right: .5rem;
+}
+
+/* sm breakpoint */
+@media (min-width: 576px) {
+    .dialogue-text {
+        font-size: 1.25rem;
+    }
+
+    .speaker-img {
+        width: 175px;
+        height: 175px;
+        margin-right: 1rem;
+    }
 }
 
 /*------------------------------------

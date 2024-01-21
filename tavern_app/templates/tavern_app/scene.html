@@ -1,9 +1,10 @@
 {% extends 'tavern_app/mt_base_no_nav.html' %}
 
 {% block content %}
-<div class="container">
-    {% load static %}
-    <div class="row my-2">
+{% load static %}
+<div class="container my-3" id="scene-container">
+
+    <div class="row">
         <div id="dialogue-error-container"></div>
         <div id="dialogue-container">
 
@@ -24,8 +25,8 @@
             </div>
             {% else %}
             <div class="d-flex mt-3">
-                <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" style="width:100px;height:100px;">
-                <p class="scene-p"><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
+                <img src="{% static 'tavern_app/' %}{{ game_dialogue.image }}" class="speaker-img">
+                <p class="dialogue-text"><b>{{ game_dialogue.name }}</b>: {{ game_dialogue.text }}</p>
             </div>
             {% endif %}
             {% endfor %}
@@ -34,8 +35,8 @@
             {% for dialogue in next_dialogue_list %}
             {% if dialogue.node_type == "talk" or dialogue.node_type == "narration" %}
             <div class="d-flex mt-3">
-                <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" style="width:100px;height:100px;">
-                <p class="scene-p"><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
+                <img src="{% static 'tavern_app/' %}{{ dialogue.image }}" class="speaker-img">
+                <p class="dialogue-text"><b>{{ dialogue.name }}</b>: {{ dialogue.text }}</p>
             </div>
             <form method="POST" class="dialogue-post-form">
                 {% csrf_token %}
@@ -97,8 +98,8 @@
                                         "</div>";
                     } else {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                            "<p class='scene-p'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                            "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" +
+                            "<p class='dialogue-text'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                             "</div>";
                     }
                     $("#dialogue-container").append(element);
@@ -109,8 +110,8 @@
 
                     if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                         var element = "<div class='d-flex mt-3'>" +
-                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                            "<p class='scene-p'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                            "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" +
+                            "<p class='dialogue-text'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                             "</div>" +
                             "<form method='POST' class='dialogue-post-form'>" +
                             "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
@@ -171,8 +172,8 @@
                                                     "</div>";
                                 } else {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                        "<p class='scene-p'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.game_dialogue_progress_list[key].image + "' class='speaker-img'" +
+                                        "<p class='dialogue-text'><b>" + response.game_dialogue_progress_list[key].name + "</b>: " + response.game_dialogue_progress_list[key].text + " </p>" +
                                         "</div>";
                                 }
                                 $("#dialogue-container").append(element);
@@ -183,8 +184,8 @@
     
                                 if (response.next_dialogue_list[key].node_type == "talk" || response.next_dialogue_list[key].node_type == "narration") {
                                     var element = "<div class='d-flex mt-3'>" +
-                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' style ='width:100px;height:100px;'>" +
-                                        "<p class='scene-p'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
+                                        "<img src='{% static 'tavern_app/' %}" + response.next_dialogue_list[key].image + "' class='speaker-img'" +
+                                        "<p class='dialogue-text'><b>" + response.next_dialogue_list[key].name + "</b>: " + response.next_dialogue_list[key].text + "</p>" +
                                         "</div>" +
                                         "<form method='POST' class='dialogue-post-form'>" +
                                         "<input type='hidden' name='csrfmiddlewaretoken' value='" + CSRF_TOKEN + "'>" +
