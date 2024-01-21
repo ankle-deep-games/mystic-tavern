@@ -1,7 +1,7 @@
-from ..models import Enemy, GameEnemy
+from ..models import Enemy, GameEnemy, Game
 
 
-def init_game_enemies(game):
+def init_game_enemies(game: Game) -> None:
     #########
     # Act 1 #
     #########

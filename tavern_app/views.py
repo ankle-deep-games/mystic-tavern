@@ -248,7 +248,7 @@ def lobby(request, game_id):
             )
             starting_game_dialogue.save()
 
-            init_game_enemies(game)
+            init_game_enemies(game=game)
 
             gamelocation = GameLocation(
                 game=game, act=1, location_type="scene", number=1
