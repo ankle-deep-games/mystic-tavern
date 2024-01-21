@@ -123,7 +123,7 @@ ROLE_GAME_PROGRESSION_DICT = {
 
 # TODO real quest nodes https://trello.com/c/7ohf05pK/250-finalize-weapon-armor-ability-assignments-for-each-role-and-assign-them-in-the-code-as-game-progresses
 # Dialogue pk/ids of important nodes used for game flow in views.scene
-END_OF_SCENE_1_NODES = {58, 65, 72}
+END_OF_SCENE_1_NODES = [58, 65, 72]
 
 QUEST_1_NODE = 3
 QUEST_2_NODE = 4

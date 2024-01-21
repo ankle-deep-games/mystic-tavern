@@ -577,17 +577,8 @@ def scene(request, game_id, act, number):
                                 name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
                             gameuser_grant_ability(gameuser=gameuser, ability=ability3, slot=3)
 
-                    elif scene_num == 1 and dialogue.id == QUEST_2_NODE:
-                        # rewards: armor 2 and armor 3 for each player
-                        gameusers = GameUser.objects.filter(game=game)
-                        for gameuser in gameusers:
-                            armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
-                            armor3 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor3'])
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor3, slot=3)
-
-                    elif scene_num == 1 and dialogue.id == QUEST_3_NODE:
-                        # rewards: armor 2 and armor 3 for each player
+                    elif scene_num == 1 and dialogue.id in [QUEST_2_NODE, QUEST_3_NODE]:
+                        # rewards: armor 2 and armor 3 for each player. choice 2 and 3 have same outcome.
                         gameusers = GameUser.objects.filter(game=game)
                         for gameuser in gameusers:
                             armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
