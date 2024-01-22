@@ -7,6 +7,7 @@ from django.shortcuts import redirect, reverse
 
 def check_redirect_criteria(request: HttpRequest, criteria: List[Dict[str, object]]) -> Optional[HttpResponseRedirect]:
     """
+    Used at the top of views functions to handle redirects.
     Check and process redirect criteria including setting messages with specific types and tags.
 
     Args:
