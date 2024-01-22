@@ -207,6 +207,7 @@ def lobby(request, game_id):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = GameLocation.objects.get(game=game)
 
     criteria = [
         {
@@ -221,30 +222,30 @@ def lobby(request, game_id):
             'redirect_url': "tavern_app:join_game",
             'kwargs': {'pk': game_id}
         },
+        {
+            'condition': game.game_over,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:gameover",
+            'kwargs': {"game_id": game_id}
+        },
+        {
+            'condition': game.game_started,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:" + gamelocation.location_type,
+            'kwargs': {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
     if redirect_response:
         return redirect_response
 
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
-
     gameusers = GameUser.objects.filter(game_id=game_id)
     any_player_not_ready = gameusers.filter(is_ready=False).exists()
     num_players_in_lobby = gameusers.count()
-
-    if game.game_started:
-        gamelocation = GameLocation.objects.get(game=game)
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
 
     if request.method == "POST":
         form = StartGameForm(request.POST)
