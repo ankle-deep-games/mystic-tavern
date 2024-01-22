@@ -203,13 +203,28 @@ def join_game(request, pk):
 
 
 def lobby(request, game_id):
-    if not request.user.is_authenticated:
-        return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
-
-    game = Game.objects.get(id=game_id)
+    criteria = [
+        {
+            'condition': not request.user.is_authenticated,
+            'message_type': 'info',
+            'message': "Must be logged in to join a game. Log in or click the link below to register a new account.",
+            'redirect_url': f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            'condition': not is_user_in_game,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:join_game",
+            'kwargs': {'pk': game_id}
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     if game.game_over:
         return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
