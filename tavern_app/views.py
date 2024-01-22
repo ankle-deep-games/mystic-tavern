@@ -51,8 +51,15 @@ from .models import (
 
 
 def homepage(request):
-    if request.user.is_authenticated:
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            'condition': request.user.is_authenticated,
+            'redirect_url': "tavern_app:games"
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     return render(request, 'tavern_app/home.html')
 
