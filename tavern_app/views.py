@@ -140,7 +140,7 @@ def join_game(request, pk):
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
 
-    initial_criteria = [
+    criteria = [
         {
             'condition': not request.user.is_authenticated,
             'message_type': 'info',
@@ -160,9 +160,9 @@ def join_game(request, pk):
             'redirect_url': "tavern_app:games",
         },
     ]
-    initial_redirect_response = check_redirect_criteria(request, initial_criteria)
-    if initial_redirect_response:
-        return initial_redirect_response
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     if request.method == "POST":
         form = JoinGameForm(request.POST)
