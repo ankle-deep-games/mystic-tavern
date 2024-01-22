@@ -221,11 +221,6 @@ def lobby(request, game_id):
         return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
 
     gameusers = GameUser.objects.filter(game_id=game_id)
-    is_leader = (
-        True
-        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-        else False
-    )
     any_player_not_ready = gameusers.filter(is_ready=False).exists()
     num_players_in_lobby = gameusers.count()
 
@@ -318,7 +313,7 @@ def lobby(request, game_id):
         "game_id": game_id,
         "game": game,
         "gameusers": gameusers,
-        "is_leader": is_leader,
+        "is_leader": request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user,
         "any_player_not_ready": any_player_not_ready,
         "num_players_in_lobby": num_players_in_lobby,
         "form": form,
@@ -449,11 +444,7 @@ def role_assignment(request, game_id):
             )
         )
 
-    is_leader = (
-        True
-        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-        else False
-    )
+    is_leader = request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
     if not is_leader:
         messages.error(
             request, "Only party leader can assign roles.", extra_tags="alert alert-danger"
@@ -536,11 +527,7 @@ def scene(request, game_id, act, number):
     if game.game_over:
         return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
 
-    is_leader = (
-        True
-        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-        else False
-    )
+    is_leader = request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == "POST":
