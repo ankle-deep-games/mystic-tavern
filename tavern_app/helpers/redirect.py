@@ -2,7 +2,7 @@ from typing import List, Dict, Optional
 
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, reverse
 
 
 def check_redirect_criteria(request: HttpRequest, criteria: List[Dict[str, object]]) -> Optional[HttpResponseRedirect]:
@@ -27,5 +27,11 @@ def check_redirect_criteria(request: HttpRequest, criteria: List[Dict[str, objec
                 elif message_type == 'info':
                     messages.info(request, message, extra_tags="alert alert-info")
 
-            return redirect(criterion['redirect_url'])
+            if criterion.get('use_reverse', False):
+                reverse_name = criterion.get('redirect_url', '')
+                kwargs = criterion.get('kwargs', {})
+                return redirect(reverse(reverse_name, kwargs=kwargs))
+            else:
+                return redirect(criterion['redirect_url'])
+
     return None

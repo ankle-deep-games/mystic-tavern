@@ -54,7 +54,7 @@ def homepage(request):
     criteria = [
         {
             'condition': request.user.is_authenticated,
-            'redirect_url': "tavern_app:games"
+            'redirect_url': "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -68,7 +68,7 @@ def seed(request):
     criteria = [
         {
             'condition': not request.user.is_superuser,
-            'redirect_url': "tavern_app:games"
+            'redirect_url': "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -84,7 +84,7 @@ def add_three_users_to_game(request, game_id):
     criteria = [
         {
             'condition': not request.user.is_superuser,
-            'redirect_url': "tavern_app:games"
+            'redirect_url': "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -104,7 +104,7 @@ def games(request):
             'condition': not request.user.is_authenticated,
             'message_type': 'error',
             'message': "Must be logged in to see games.",
-            'redirect_url': "login"
+            'redirect_url': "login",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -140,24 +140,34 @@ def games(request):
 
 
 def join_game(request, pk):
-    if not request.user.is_authenticated:
-        messages.info(
-            request, "Must be logged in to join a game. Log in or click the link below to register a new account.",
-            extra_tags="alert alert-info"
-        )
-        return redirect(f"{reverse('login')}?next=/games/{pk}")
-
-    game_exists = Game.objects.filter(pk=pk).exists()
-    if not game_exists:
-        messages.error(request, "Game does not exist.", extra_tags="alert alert-danger")
-        return redirect("tavern_app:games")
-
     game = Game.objects.get(pk=pk)
-    is_user_in_game = (
-        True if GameUser.objects.filter(game=game, user=request.user) else False
-    )
-    if is_user_in_game:
-        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+
+    criteria = [
+        {
+            'condition': not request.user.is_authenticated,
+            'message_type': 'info',
+            'message': "Must be logged in to join a game. Log in or click the link below to register a new account.",
+            'redirect_url': f"{reverse('login')}?next=/games/{pk}",
+        },
+        {
+            'condition': not Game.objects.filter(pk=pk).exists(),
+            'message_type': 'error',
+            'message': "Game does not exist.",
+            'redirect_url': "tavern_app:games",
+        },
+        {
+            'condition': is_user_in_game,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:lobby",
+            'kwargs': {"game_id": game.id},
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     is_full = True if GameUser.objects.filter(game_id=pk).count() == 4 else False
     if is_full:
