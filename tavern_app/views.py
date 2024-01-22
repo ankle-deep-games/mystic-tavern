@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.http import JsonResponse
 from django.http.response import HttpResponse
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, get_object_or_404
 from django.shortcuts import render
 from django.views.generic import CreateView
 
@@ -135,23 +135,17 @@ def games(request):
 
 
 def join_game(request, pk):
-    game = Game.objects.get(pk=pk)
+    game = get_object_or_404(Game, pk=pk)
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
 
-    criteria = [
+    initial_criteria = [
         {
             'condition': not request.user.is_authenticated,
             'message_type': 'info',
             'message': "Must be logged in to join a game. Log in or click the link below to register a new account.",
             'redirect_url': f"{reverse('login')}?next=/games/{pk}",
-        },
-        {
-            'condition': not Game.objects.filter(pk=pk).exists(),
-            'message_type': 'error',
-            'message': "Game does not exist.",
-            'redirect_url': "tavern_app:games",
         },
         {
             'condition': is_user_in_game,
@@ -166,9 +160,9 @@ def join_game(request, pk):
             'redirect_url': "tavern_app:games",
         },
     ]
-    redirect_response = check_redirect_criteria(request, criteria)
-    if redirect_response:
-        return redirect_response
+    initial_redirect_response = check_redirect_criteria(request, initial_criteria)
+    if initial_redirect_response:
+        return initial_redirect_response
 
     if request.method == "POST":
         form = JoinGameForm(request.POST)
