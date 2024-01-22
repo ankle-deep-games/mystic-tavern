@@ -1,0 +1,13 @@
+{% extends 'tavern_app/mt_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="container text-center mt-5">
+    <h1 class="lead-text text-danger">Page Not Found</h1>
+    <p class="mb-3">It seems you've tried to conjure a page that exists only in legend. Try navigating back to known
+        lands!</p>
+    <a href="{% url 'tavern_app:home' %}" class="btn btn-primary">Home</a>
+</div>
+
+{% endblock %}
