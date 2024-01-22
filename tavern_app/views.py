@@ -115,18 +115,13 @@ def games(request):
     games_queryset = Game.objects.filter(game_over=False).annotate(num_players=Count("gameuser"))
 
     for game in games_queryset:
-        is_user_in_game = (
-            True if GameUser.objects.filter(game=game, user=request.user) else False
-        )
-        is_full = True if game.num_players == 4 else False
-        is_started = game.game_started
         game_list.append(
             {
                 "creator": game.creator,
                 "id": game.id,
-                "is_full": is_full,
-                "is_started": is_started,
-                "is_user_in_game": is_user_in_game,
+                "is_full": game.num_players == 4,
+                "is_started": game.game_started,
+                "is_user_in_game": GameUser.objects.filter(game=game, user=request.user).exists(),
                 "name": game.name,
                 "num_players": game.num_players,
             }
@@ -164,15 +159,16 @@ def join_game(request, pk):
             'redirect_url': "tavern_app:lobby",
             'kwargs': {"game_id": game.id},
         },
+        {
+            'condition': GameUser.objects.filter(game_id=pk).count() == 4,
+            'message_type': 'error',
+            'message': "Game is full.",
+            'redirect_url': "tavern_app:games",
+        },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
     if redirect_response:
         return redirect_response
-
-    is_full = True if GameUser.objects.filter(game_id=pk).count() == 4 else False
-    if is_full:
-        messages.error(request, "Game is full.", extra_tags="alert alert-danger")
-        return redirect("tavern_app:games")
 
     if request.method == "POST":
         form = JoinGameForm(request.POST)
