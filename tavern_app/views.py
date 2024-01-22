@@ -58,8 +58,15 @@ def homepage(request):
 
 
 def seed(request):
-    if not request.user.is_superuser:
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            'condition': not request.user.is_superuser,
+            'redirect_url': "tavern_app:games"
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     seed_data()
     return render(request, "tavern_app/seed.html")
@@ -67,8 +74,15 @@ def seed(request):
 
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
 def add_three_users_to_game(request, game_id):
-    if not request.user.is_superuser:
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            'condition': not request.user.is_superuser,
+            'redirect_url': "tavern_app:games"
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     game = Game(pk=game_id)
     GameUser(game=game, user=User(pk=2)).save()

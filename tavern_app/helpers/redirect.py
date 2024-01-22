@@ -1,7 +1,8 @@
-from django.shortcuts import redirect
-from django.contrib import messages
 from typing import List, Dict, Optional
+
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponseRedirect
+from django.shortcuts import redirect
 
 
 def check_redirect_criteria(request: HttpRequest, criteria: List[Dict[str, object]]) -> Optional[HttpResponseRedirect]:
@@ -20,10 +21,11 @@ def check_redirect_criteria(request: HttpRequest, criteria: List[Dict[str, objec
             message_type = criterion.get('message_type', 'error')
             message = criterion.get('message', '')
 
-            if message_type == 'error':
-                messages.error(request, message, extra_tags="alert alert-danger")
-            elif message_type == 'info':
-                messages.info(request, message, extra_tags="alert alert-info")
+            if message:
+                if message_type == 'error':
+                    messages.error(request, message, extra_tags="alert alert-danger")
+                elif message_type == 'info':
+                    messages.info(request, message, extra_tags="alert alert-info")
 
             return redirect(criterion['redirect_url'])
     return None
