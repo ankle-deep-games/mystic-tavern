@@ -326,7 +326,7 @@ def lobby(request, game_id):
         "game_id": game_id,
         "game": game,
         "gameusers": gameusers,
-        "is_leader": request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user,
+        "is_leader": request.user == GameUser.objects.get(game=game, user=game.creator).user,
         "any_player_not_ready": any_player_not_ready,
         "num_players_in_lobby": num_players_in_lobby,
         "form": form,
@@ -576,7 +576,7 @@ def scene(request, game_id, act, number):
     if game.game_over:
         return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
 
-    is_leader = request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
+    is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == "POST":
