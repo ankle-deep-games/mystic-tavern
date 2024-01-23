@@ -53,8 +53,8 @@ from .models import (
 def homepage(request):
     criteria = [
         {
-            'condition': request.user.is_authenticated,
-            'redirect_url': "tavern_app:games",
+            "condition": request.user.is_authenticated,
+            "redirect_url": "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -67,8 +67,8 @@ def homepage(request):
 def seed(request):
     criteria = [
         {
-            'condition': not request.user.is_superuser,
-            'redirect_url': "tavern_app:games",
+            "condition": not request.user.is_superuser,
+            "redirect_url": "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -83,8 +83,8 @@ def seed(request):
 def add_three_users_to_game(request, game_id):
     criteria = [
         {
-            'condition': not request.user.is_superuser,
-            'redirect_url': "tavern_app:games",
+            "condition": not request.user.is_superuser,
+            "redirect_url": "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -101,10 +101,10 @@ def add_three_users_to_game(request, game_id):
 def games(request):
     criteria = [
         {
-            'condition': not request.user.is_authenticated,
-            'message_type': 'error',
-            'message': "Must be logged in to see games.",
-            'redirect_url': "login",
+            "condition": not request.user.is_authenticated,
+            "message_type": "error",
+            "message": "Must be logged in to see games.",
+            "redirect_url": "login",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -142,22 +142,22 @@ def join_game(request, pk):
 
     criteria = [
         {
-            'condition': not request.user.is_authenticated,
-            'message_type': 'info',
-            'message': "Must be logged in to join a game. Log in or click the link below to register a new account.",
-            'redirect_url': f"{reverse('login')}?next=/games/{pk}",
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to join a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{pk}",
         },
         {
-            'condition': is_user_in_game,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:lobby",
-            'kwargs': {"game_id": game.id},
+            "condition": is_user_in_game,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id},
         },
         {
-            'condition': GameUser.objects.filter(game_id=pk).count() == 4,
-            'message_type': 'error',
-            'message': "Game is full.",
-            'redirect_url': "tavern_app:games",
+            "condition": GameUser.objects.filter(game_id=pk).count() == 4,
+            "message_type": "error",
+            "message": "Game is full.",
+            "redirect_url": "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -214,28 +214,28 @@ def lobby(request, game_id):
 
     criteria = [
         {
-            'condition': not request.user.is_authenticated,
-            'message_type': 'info',
-            'message': "Must be logged in to see a game. Log in or click the link below to register a new account.",
-            'redirect_url': f"{reverse('login')}?next=/games/{game_id}",
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
         },
         {
-            'condition': not is_user_in_game,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:join_game",
-            'kwargs': {'pk': game_id}
+            "condition": not is_user_in_game,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:join_game",
+            "kwargs": {"pk": game_id}
         },
         {
-            'condition': game.game_over,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:gameover",
-            'kwargs': {"game_id": game_id}
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
         },
         {
-            'condition': game.game_started,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:" + gamelocation.location_type,
-            'kwargs': {
+            "condition": game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
                 "game_id": game.id,
                 "act": gamelocation.act,
                 "number": gamelocation.number,
@@ -343,12 +343,12 @@ def lobby_get_updates(request, game_id):
 
     criteria = [
         {
-            'condition': not request.user.is_authenticated,
-            'redirect_url': "login",
+            "condition": not request.user.is_authenticated,
+            "redirect_url": "login",
         },
         {
-            'condition': not is_user_in_game,
-            'redirect_url': "tavern_app:games",
+            "condition": not is_user_in_game,
+            "redirect_url": "tavern_app:games",
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -394,10 +394,10 @@ class CreateGameView(CreateView):
     def get(self, request, *args, **kwargs):
         criteria = [
             {
-                'condition': not request.user.is_authenticated,
-                'message_type': 'error',
-                'message': "Must be logged in to create games.",
-                'redirect_url': "login",
+                "condition": not request.user.is_authenticated,
+                "message_type": "error",
+                "message": "Must be logged in to create games.",
+                "redirect_url": "login",
             },
         ]
         redirect_response = check_redirect_criteria(request, criteria)
@@ -460,40 +460,40 @@ def role_assignment(request, game_id):
 
     criteria = [
         {
-            'condition': not request.user.is_authenticated,
-            'message_type': 'info',
-            'message': "Must be logged in to see a game. Log in or click the link below to register a new account.",
-            'redirect_url': f"{reverse('login')}?next=/games/{game_id}",
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
         },
         {
-            'condition': not is_user_in_game,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:join_game",
-            'kwargs': {'pk': game_id}
+            "condition": not is_user_in_game,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:join_game",
+            "kwargs": {"pk": game_id}
         },
         {
-            'condition': game.game_over,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:gameover",
-            'kwargs': {"game_id": game_id}
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
         },
         {
-            'condition': game.game_started,
-            'use_reverse': True,
-            'redirect_url': "tavern_app:" + gamelocation.location_type,
-            'kwargs': {
+            "condition": game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
                 "game_id": game.id,
                 "act": gamelocation.act,
                 "number": gamelocation.number,
             }
         },
         {
-            'condition': not is_leader,
-            'message': "Only party leader can assign roles.",
-            'message_type': 'error',
-            'use_reverse': True,
-            'redirect_url': "tavern_app:lobby",
-            'kwargs': {"game_id": game.id}
+            "condition": not is_leader,
+            "message": "Only party leader can assign roles.",
+            "message_type": "error",
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id}
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
