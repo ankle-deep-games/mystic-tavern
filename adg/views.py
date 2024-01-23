@@ -5,10 +5,12 @@ from django.shortcuts import render, redirect
 
 
 def login_user(request):
+    # TODO https://trello.com/c/QeuoeR54/282-login-page-if-already-logged-in-redirect-to-games-page
     return render(request, 'registration/login.html', {})
 
 
 def register(request):
+    # TODO https://trello.com/c/QeuoeR54/282-login-page-if-already-logged-in-redirect-to-games-page
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():

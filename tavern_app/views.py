@@ -207,7 +207,10 @@ def lobby(request, game_id):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
-    gamelocation = GameLocation.objects.get(game=game)
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
+    else:
+        gamelocation = GameLocation()
 
     criteria = [
         {
@@ -384,10 +387,25 @@ def lobby_get_updates(request, game_id):
 
 
 class CreateGameView(CreateView):
-    # TODO put behind logged in
     model = Game
     template_name = "tavern_app/create_game.html"
     form_class = CreateGameForm
+
+    def get(self, request, *args, **kwargs):
+        criteria = [
+            {
+                'condition': not request.user.is_authenticated,
+                'message_type': 'error',
+                'message': "Must be logged in to create games.",
+                'redirect_url': "login",
+            },
+        ]
+        redirect_response = check_redirect_criteria(request, criteria)
+        if redirect_response:
+            return redirect_response
+
+        # If criteria check passes, proceed with normal behavior
+        return super(CreateGameView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         game = form.save(commit=False)
