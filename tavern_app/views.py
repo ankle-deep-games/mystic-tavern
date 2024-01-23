@@ -562,7 +562,10 @@ def scene(request, game_id, act, number):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
-    gamelocation = GameLocation.objects.get(game=game)
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
+    else:
+        gamelocation = GameLocation()
     is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
 
     criteria = [
@@ -580,7 +583,13 @@ def scene(request, game_id, act, number):
             "condition": game.game_over,
             "use_reverse": True,
             "redirect_url": "tavern_app:gameover",
-            "kwargs": {"game_id": game_id}
+            "kwargs": {"game_id": game_id},
+        },
+        {
+            "condition": not game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id},
         },
         {
             "condition": gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene",
@@ -764,6 +773,10 @@ def scene_get_updates(request, game_id, act, number):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
+    else:
+        gamelocation = GameLocation()
 
     criteria = [
         {
@@ -774,13 +787,18 @@ def scene_get_updates(request, game_id, act, number):
             "condition": not is_user_in_game,
             "redirect_url": "tavern_app:games",
         },
+        {
+            "condition": not game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id},
+        },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
     if redirect_response:
         return redirect_response
 
     new_url = ""
-    gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this scene act/num - populate new_url so front end can redirect them
     if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
@@ -817,22 +835,52 @@ def scene_get_updates(request, game_id, act, number):
 
 def battle(request, game_id, act, number):
     battle_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    if game.game_started:
+        gamelocation = GameLocation.objects.get(game=game)
+    else:
+        gamelocation = GameLocation()
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
+        },
+        {
+            "condition": not game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id}
+        },
+        {
+            "condition": gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle",
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     request_gameuser = GameUser.objects.get(game=game, user=request.user)
     gameusers = GameUser.objects.filter(game=game)
@@ -1081,21 +1129,6 @@ def battle(request, game_id, act, number):
     # else render form
     else:
         form = CombatLogForm()
-
-    # redirect if they are not on this battle act/num
-    # TODO move up
-    gamelocation = GameLocation.objects.get(game=game)
-    if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
 
     # check if this battle starting hp/mp exist. if they don't, assign them.
     # these starting stats are used by frontend on first page load.
