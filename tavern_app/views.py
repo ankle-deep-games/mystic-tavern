@@ -350,6 +350,8 @@ def lobby_get_updates(request, game_id):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
     ]
@@ -469,6 +471,8 @@ def role_assignment(request, game_id):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
         {
@@ -576,6 +580,8 @@ def scene(request, game_id, act, number):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
         {
@@ -777,6 +783,8 @@ def scene_get_updates(request, game_id, act, number):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
     ]
@@ -836,6 +844,8 @@ def battle(request, game_id, act, number):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
         {
@@ -1160,6 +1170,8 @@ def battle_get_updates(request, game_id, act, number):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
     ]
@@ -1225,6 +1237,8 @@ def gameover(request, game_id):
         },
         {
             "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
             "redirect_url": "tavern_app:games",
         },
         {
