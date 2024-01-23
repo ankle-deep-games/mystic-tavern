@@ -522,6 +522,7 @@ def role_assignment(request, game_id):
             for form in formset:
                 print(form)
                 if form.cleaned_data:
+                    # TODO move into game_setup.py
                     print("CLEANED")
                     player = form.save(commit=False)  # Get the player object from the form
                     # Perform additional operations on the player based on the form data
@@ -759,19 +760,24 @@ def scene(request, game_id, act, number):
 
 def scene_get_updates(request, game_id, act, number):
     scene_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "redirect_url": "login",
+        },
+        {
+            "condition": not is_user_in_game,
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     new_url = ""
     gamelocation = GameLocation.objects.get(game=game)
@@ -1051,6 +1057,7 @@ def battle(request, game_id, act, number):
                                     deduct_mp=True,
                                 )
                 else:
+                    # TODO think this can be removed. already checking above
                     messages.error(
                         request,
                         "It is not your turn to attack.",
@@ -1076,6 +1083,7 @@ def battle(request, game_id, act, number):
         form = CombatLogForm()
 
     # redirect if they are not on this battle act/num
+    # TODO move up
     gamelocation = GameLocation.objects.get(game=game)
     if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
         return redirect(
