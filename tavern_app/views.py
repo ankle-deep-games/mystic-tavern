@@ -467,9 +467,7 @@ def role_assignment(request, game_id):
         },
         {
             "condition": not is_user_in_game,
-            "use_reverse": True,
-            "redirect_url": "tavern_app:join_game",
-            "kwargs": {"pk": game_id}
+            "redirect_url": "tavern_app:games",
         },
         {
             "condition": game.game_over,
@@ -559,24 +557,44 @@ def role_assignment(request, game_id):
 
 def scene(request, game_id, act, number):
     scene_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
-
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
-
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = GameLocation.objects.get(game=game)
     is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
+
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
+        },
+        {
+            "condition": gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene",
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == "POST":
@@ -591,7 +609,6 @@ def scene(request, game_id, act, number):
             latest_game_dialogue_id = (
                 GameDialogue.objects.filter(game=game).latest("id").dialogue.id
             )
-            gamelocation = GameLocation.objects.get(game=game)
             has_error = False
             error_msg = ""
             new_url = ""
@@ -711,20 +728,6 @@ def scene(request, game_id, act, number):
     # else render form
     else:
         form = GameDialogueForm()
-
-    # redirect if they are not on this scene act/num
-    gamelocation = GameLocation.objects.get(game=game)
-    if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
 
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
