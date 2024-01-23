@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from django.http import JsonResponse
 from django.http.response import HttpResponse
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, get_object_or_404
 from django.shortcuts import render
 from django.views.generic import CreateView
 
@@ -28,6 +28,7 @@ from .helpers.battle import (
 )
 from .helpers.equipment import gameuser_equip_armor
 from .helpers.game_setup import init_game_enemies
+from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
     get_character_list,
     get_game_dialogue_progress_list,
@@ -50,15 +51,29 @@ from .models import (
 
 
 def homepage(request):
-    if request.user.is_authenticated:
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            "condition": request.user.is_authenticated,
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     return render(request, 'tavern_app/home.html')
 
 
 def seed(request):
-    if not request.user.is_superuser:
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            "condition": not request.user.is_superuser,
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     seed_data()
     return render(request, "tavern_app/seed.html")
@@ -66,8 +81,15 @@ def seed(request):
 
 # /seed/game/:id - faster way to add 3 users to a game when creating games with dobby for manual testing
 def add_three_users_to_game(request, game_id):
-    if not request.user.is_superuser:
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            "condition": not request.user.is_superuser,
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     game = Game(pk=game_id)
     GameUser(game=game, user=User(pk=2)).save()
@@ -77,28 +99,29 @@ def add_three_users_to_game(request, game_id):
 
 
 def games(request):
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see games.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "error",
+            "message": "Must be logged in to see games. Log in or click the link below to register a new account.",
+            "redirect_url": "login",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     game_list = []
     games_queryset = Game.objects.filter(game_over=False).annotate(num_players=Count("gameuser"))
 
     for game in games_queryset:
-        is_user_in_game = (
-            True if GameUser.objects.filter(game=game, user=request.user) else False
-        )
-        is_full = True if game.num_players == 4 else False
-        is_started = game.game_started
         game_list.append(
             {
                 "creator": game.creator,
                 "id": game.id,
-                "is_full": is_full,
-                "is_started": is_started,
-                "is_user_in_game": is_user_in_game,
+                "is_full": game.num_players == 4,
+                "is_started": game.game_started,
+                "is_user_in_game": GameUser.objects.filter(game=game, user=request.user).exists(),
                 "name": game.name,
                 "num_players": game.num_players,
             }
@@ -112,29 +135,34 @@ def games(request):
 
 
 def join_game(request, pk):
-    if not request.user.is_authenticated:
-        messages.info(
-            request, "Must be logged in to join a game. Log in or click the link below to register a new account.",
-            extra_tags="alert alert-info"
-        )
-        return redirect(f"{reverse('login')}?next=/games/{pk}")
+    game = get_object_or_404(Game, pk=pk)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
 
-    game_exists = Game.objects.filter(pk=pk).exists()
-    if not game_exists:
-        messages.error(request, "Game does not exist.", extra_tags="alert alert-danger")
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=pk)
-    is_user_in_game = (
-        True if GameUser.objects.filter(game=game, user=request.user) else False
-    )
-    if is_user_in_game:
-        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
-
-    is_full = True if GameUser.objects.filter(game_id=pk).count() == 4 else False
-    if is_full:
-        messages.error(request, "Game is full.", extra_tags="alert alert-danger")
-        return redirect("tavern_app:games")
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to join a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{pk}",
+        },
+        {
+            "condition": is_user_in_game,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id},
+        },
+        {
+            "condition": GameUser.objects.filter(game_id=pk).count() == 4,
+            "message_type": "error",
+            "message": "Game is full.",
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     if request.method == "POST":
         form = JoinGameForm(request.POST)
@@ -175,38 +203,52 @@ def join_game(request, pk):
 
 
 def lobby(request, game_id):
-    if not request.user.is_authenticated:
-        return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
-
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        return redirect(reverse('tavern_app:join_game', kwargs={'pk': game_id}))
-
-    game = Game.objects.get(id=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
-
-    gameusers = GameUser.objects.filter(game_id=game_id)
-    is_leader = (
-        True
-        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-        else False
-    )
-    any_player_not_ready = gameusers.filter(is_ready=False).exists()
-    num_players_in_lobby = gameusers.count()
-
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
     if game.game_started:
         gamelocation = GameLocation.objects.get(game=game)
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
+    else:
+        gamelocation = GameLocation()
+
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:join_game",
+            "kwargs": {"pk": game_id}
+        },
+        {
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
+        },
+        {
+            "condition": game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
+
+    gameusers = GameUser.objects.filter(game_id=game_id)
+    any_player_not_ready = gameusers.filter(is_ready=False).exists()
+    num_players_in_lobby = gameusers.count()
 
     if request.method == "POST":
         form = StartGameForm(request.POST)
@@ -284,7 +326,7 @@ def lobby(request, game_id):
         "game_id": game_id,
         "game": game,
         "gameusers": gameusers,
-        "is_leader": is_leader,
+        "is_leader": request.user == GameUser.objects.get(game=game, user=game.creator).user,
         "any_player_not_ready": any_player_not_ready,
         "num_players_in_lobby": num_players_in_lobby,
         "form": form,
@@ -294,19 +336,28 @@ def lobby(request, game_id):
 
 
 def lobby_get_updates(request, game_id):
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     new_url = ""
     if game.game_started:
@@ -343,6 +394,22 @@ class CreateGameView(CreateView):
     model = Game
     template_name = "tavern_app/create_game.html"
     form_class = CreateGameForm
+
+    def get(self, request, *args, **kwargs):
+        criteria = [
+            {
+                "condition": not request.user.is_authenticated,
+                "message_type": "error",
+                "message": "Must be logged in to create games. Log in or click the link below to register a new account.",
+                "redirect_url": "login",
+            },
+        ]
+        redirect_response = check_redirect_criteria(request, criteria)
+        if redirect_response:
+            return redirect_response
+
+        # If criteria check passes, proceed with normal behavior
+        return super(CreateGameView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         game = form.save(commit=False)
@@ -385,46 +452,57 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
 
 
 def role_assignment(request, game_id):
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
-
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
-
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
     if game.game_started:
         gamelocation = GameLocation.objects.get(game=game)
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
+    else:
+        gamelocation = GameLocation()
+    is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
 
-    is_leader = (
-        True
-        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-        else False
-    )
-    if not is_leader:
-        messages.error(
-            request, "Only party leader can assign roles.", extra_tags="alert alert-danger"
-        )
-        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
+        },
+        {
+            "condition": game.game_started,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+        {
+            "condition": not is_leader,
+            "message": "Only party leader can assign roles.",
+            "message_type": "error",
+            "use_reverse": True,
+            "redirect_url": "tavern_app:lobby",
+            "kwargs": {"game_id": game.id}
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     gameusers_queryset = GameUser.objects.filter(game=game)
     print("GAMEUSERS QUERYSET")
@@ -450,6 +528,7 @@ def role_assignment(request, game_id):
             for form in formset:
                 print(form)
                 if form.cleaned_data:
+                    # TODO move into game_setup.py
                     print("CLEANED")
                     player = form.save(commit=False)  # Get the player object from the form
                     # Perform additional operations on the player based on the form data
@@ -485,28 +564,46 @@ def role_assignment(request, game_id):
 
 def scene(request, game_id, act, number):
     scene_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = get_object_or_404(GameLocation, game=game)
+    is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
-
-    is_leader = (
-        True
-        if request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-        else False
-    )
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id},
+        },
+        {
+            "condition": gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene",
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     # form submission if game owner clicked next button or dialogue option
     if request.method == "POST":
@@ -521,7 +618,6 @@ def scene(request, game_id, act, number):
             latest_game_dialogue_id = (
                 GameDialogue.objects.filter(game=game).latest("id").dialogue.id
             )
-            gamelocation = GameLocation.objects.get(game=game)
             has_error = False
             error_msg = ""
             new_url = ""
@@ -642,20 +738,6 @@ def scene(request, game_id, act, number):
     else:
         form = GameDialogueForm()
 
-    # redirect if they are not on this scene act/num
-    gamelocation = GameLocation.objects.get(game=game)
-    if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
-
     character_list = get_character_list(game=game)
     game_dialogue_progress_list = get_game_dialogue_progress_list(
         character_list=character_list, game_id=game_id, act=act, scene_num=scene_num
@@ -686,22 +768,31 @@ def scene(request, game_id, act, number):
 
 def scene_get_updates(request, game_id, act, number):
     scene_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     new_url = ""
-    gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this scene act/num - populate new_url so front end can redirect them
     if gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene":
@@ -738,22 +829,45 @@ def scene_get_updates(request, game_id, act, number):
 
 def battle(request, game_id, act, number):
     battle_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:gameover",
+            "kwargs": {"game_id": game_id}
+        },
+        {
+            "condition": gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle",
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     request_gameuser = GameUser.objects.get(game=game, user=request.user)
     gameusers = GameUser.objects.filter(game=game)
@@ -978,6 +1092,7 @@ def battle(request, game_id, act, number):
                                     deduct_mp=True,
                                 )
                 else:
+                    # TODO think this can be removed. already checking above
                     messages.error(
                         request,
                         "It is not your turn to attack.",
@@ -1001,20 +1116,6 @@ def battle(request, game_id, act, number):
     # else render form
     else:
         form = CombatLogForm()
-
-    # redirect if they are not on this battle act/num
-    gamelocation = GameLocation.objects.get(game=game)
-    if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
 
     # check if this battle starting hp/mp exist. if they don't, assign them.
     # these starting stats are used by frontend on first page load.
@@ -1054,22 +1155,31 @@ def battle(request, game_id, act, number):
 
 def battle_get_updates(request, game_id, act, number):
     battle_num = number
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     new_url = ""
-    gamelocation = GameLocation.objects.get(game=game)
 
     # if they are not on this battle act/num - populate new_url so front end can redirect them
     if gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle":
@@ -1112,14 +1222,38 @@ def battle_get_updates(request, game_id, act, number):
 
 
 def gameover(request, game_id):
-    if not request.user.is_authenticated:
-        return redirect("tavern_app:games")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-    if not game.game_over:
-        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game_id}))
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "message_type": "error",
+            "message": "Must be in the game to see it.",
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": not game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     return render(request, 'tavern_app/gameover.html')
