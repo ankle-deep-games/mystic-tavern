@@ -103,7 +103,7 @@ def games(request):
         {
             "condition": not request.user.is_authenticated,
             "message_type": "error",
-            "message": "Must be logged in to see games.",
+            "message": "Must be logged in to see games. Log in or click the link below to register a new account.",
             "redirect_url": "login",
         },
     ]
@@ -344,7 +344,9 @@ def lobby_get_updates(request, game_id):
     criteria = [
         {
             "condition": not request.user.is_authenticated,
-            "redirect_url": "login",
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
         },
         {
             "condition": not is_user_in_game,
@@ -396,7 +398,7 @@ class CreateGameView(CreateView):
             {
                 "condition": not request.user.is_authenticated,
                 "message_type": "error",
-                "message": "Must be logged in to create games.",
+                "message": "Must be logged in to create games. Log in or click the link below to register a new account.",
                 "redirect_url": "login",
             },
         ]
@@ -769,7 +771,9 @@ def scene_get_updates(request, game_id, act, number):
     criteria = [
         {
             "condition": not request.user.is_authenticated,
-            "redirect_url": "login",
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
         },
         {
             "condition": not is_user_in_game,
@@ -1150,7 +1154,9 @@ def battle_get_updates(request, game_id, act, number):
     criteria = [
         {
             "condition": not request.user.is_authenticated,
-            "redirect_url": "login",
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
         },
         {
             "condition": not is_user_in_game,
@@ -1204,14 +1210,36 @@ def battle_get_updates(request, game_id, act, number):
 
 
 def gameover(request, game_id):
-    if not request.user.is_authenticated:
-        return redirect("tavern_app:games")
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-    if not game.game_over:
-        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game_id}))
+    criteria = [
+        {
+            "condition": not request.user.is_authenticated,
+            "message_type": "info",
+            "message": "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            "redirect_url": f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            "condition": not is_user_in_game,
+            "redirect_url": "tavern_app:games",
+        },
+        {
+            "condition": not game.game_over,
+            "use_reverse": True,
+            "redirect_url": "tavern_app:" + gamelocation.location_type,
+            "kwargs": {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     return render(request, 'tavern_app/gameover.html')
