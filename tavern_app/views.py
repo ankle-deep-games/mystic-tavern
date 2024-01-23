@@ -562,10 +562,7 @@ def scene(request, game_id, act, number):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
-    if game.game_started:
-        gamelocation = GameLocation.objects.get(game=game)
-    else:
-        gamelocation = GameLocation()
+    gamelocation = get_object_or_404(GameLocation, game=game)
     is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
 
     criteria = [
@@ -584,12 +581,6 @@ def scene(request, game_id, act, number):
             "use_reverse": True,
             "redirect_url": "tavern_app:gameover",
             "kwargs": {"game_id": game_id},
-        },
-        {
-            "condition": not game.game_started,
-            "use_reverse": True,
-            "redirect_url": "tavern_app:lobby",
-            "kwargs": {"game_id": game.id},
         },
         {
             "condition": gamelocation.act != act or gamelocation.number != scene_num or gamelocation.location_type != "scene",
@@ -773,10 +764,7 @@ def scene_get_updates(request, game_id, act, number):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
-    if game.game_started:
-        gamelocation = GameLocation.objects.get(game=game)
-    else:
-        gamelocation = GameLocation()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
     criteria = [
         {
@@ -786,12 +774,6 @@ def scene_get_updates(request, game_id, act, number):
         {
             "condition": not is_user_in_game,
             "redirect_url": "tavern_app:games",
-        },
-        {
-            "condition": not game.game_started,
-            "use_reverse": True,
-            "redirect_url": "tavern_app:lobby",
-            "kwargs": {"game_id": game.id},
         },
     ]
     redirect_response = check_redirect_criteria(request, criteria)
@@ -839,10 +821,7 @@ def battle(request, game_id, act, number):
     is_user_in_game = False
     if request.user.is_authenticated:
         is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
-    if game.game_started:
-        gamelocation = GameLocation.objects.get(game=game)
-    else:
-        gamelocation = GameLocation()
+    gamelocation = get_object_or_404(GameLocation, game=game)
 
     criteria = [
         {
@@ -860,12 +839,6 @@ def battle(request, game_id, act, number):
             "use_reverse": True,
             "redirect_url": "tavern_app:gameover",
             "kwargs": {"game_id": game_id}
-        },
-        {
-            "condition": not game.game_started,
-            "use_reverse": True,
-            "redirect_url": "tavern_app:lobby",
-            "kwargs": {"game_id": game.id}
         },
         {
             "condition": gamelocation.act != act or gamelocation.number != battle_num or gamelocation.location_type != "battle",
