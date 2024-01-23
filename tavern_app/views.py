@@ -216,7 +216,7 @@ def lobby(request, game_id):
         {
             'condition': not request.user.is_authenticated,
             'message_type': 'info',
-            'message': "Must be logged in to join a game. Log in or click the link below to register a new account.",
+            'message': "Must be logged in to see a game. Log in or click the link below to register a new account.",
             'redirect_url': f"{reverse('login')}?next=/games/{game_id}",
         },
         {
@@ -448,42 +448,57 @@ class BaseRoleAssignmentFormSet(BaseInlineFormSet):
 
 
 def role_assignment(request, game_id):
-    if not request.user.is_authenticated:
-        messages.error(
-            request, "Must be logged in to see a game.", extra_tags="alert alert-danger"
-        )
-        return redirect("login")
-
-    if not GameUser.objects.filter(user_id=request.user, game_id=game_id).exists():
-        messages.error(
-            request, "Must be in the game to see it.", extra_tags="alert alert-danger"
-        )
-        return redirect("tavern_app:games")
-
-    game = Game.objects.get(pk=game_id)
-
-    if game.game_over:
-        return redirect(reverse("tavern_app:gameover", kwargs={"game_id": game_id}))
-
+    game = get_object_or_404(Game, pk=game_id)
+    is_user_in_game = False
+    if request.user.is_authenticated:
+        is_user_in_game = GameUser.objects.filter(game=game, user=request.user).exists()
     if game.game_started:
         gamelocation = GameLocation.objects.get(game=game)
-        return redirect(
-            reverse(
-                "tavern_app:" + gamelocation.location_type,
-                kwargs={
-                    "game_id": game.id,
-                    "act": gamelocation.act,
-                    "number": gamelocation.number,
-                },
-            )
-        )
+    else:
+        gamelocation = GameLocation()
+    is_leader = request.user == GameUser.objects.get(game=game, user=game.creator).user
 
-    is_leader = request.user == GameUser.objects.get(game_id=game_id, user=game.creator).user
-    if not is_leader:
-        messages.error(
-            request, "Only party leader can assign roles.", extra_tags="alert alert-danger"
-        )
-        return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
+    criteria = [
+        {
+            'condition': not request.user.is_authenticated,
+            'message_type': 'info',
+            'message': "Must be logged in to see a game. Log in or click the link below to register a new account.",
+            'redirect_url': f"{reverse('login')}?next=/games/{game_id}",
+        },
+        {
+            'condition': not is_user_in_game,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:join_game",
+            'kwargs': {'pk': game_id}
+        },
+        {
+            'condition': game.game_over,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:gameover",
+            'kwargs': {"game_id": game_id}
+        },
+        {
+            'condition': game.game_started,
+            'use_reverse': True,
+            'redirect_url': "tavern_app:" + gamelocation.location_type,
+            'kwargs': {
+                "game_id": game.id,
+                "act": gamelocation.act,
+                "number": gamelocation.number,
+            }
+        },
+        {
+            'condition': not is_leader,
+            'message': "Only party leader can assign roles.",
+            'message_type': 'error',
+            'use_reverse': True,
+            'redirect_url': "tavern_app:lobby",
+            'kwargs': {"game_id": game.id}
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
 
     gameusers_queryset = GameUser.objects.filter(game=game)
     print("GAMEUSERS QUERYSET")
