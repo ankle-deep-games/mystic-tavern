@@ -26,7 +26,7 @@
 
     <div class="form-group mb-3">
         {% comment %} Added p manually so we can apply bootstrap form-control class to inputs {% endcomment %}
-        <form method="POST">
+        <form method="POST" action="{% url 'register' %}">
             {% csrf_token %}
             <p>
                 <label for="id_username">Username (up to 7 characters):</label>

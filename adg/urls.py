@@ -1,16 +1,16 @@
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.views import LoginView
 from django.urls import path, include
 
 from . import views
+from .views import CustomLoginView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("tavern_app.urls")),
     path(
         "login/",
-        LoginView.as_view(
+        CustomLoginView.as_view(
             template_name="registration/login.html", next_page="tavern_app:games"
         ),
         name="login",

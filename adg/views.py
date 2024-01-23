@@ -1,16 +1,29 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 
+from tavern_app.helpers.redirect import check_redirect_criteria
 
-def login_user(request):
-    # TODO https://trello.com/c/QeuoeR54/282-login-page-if-already-logged-in-redirect-to-games-page
-    return render(request, 'registration/login.html', {})
+
+class CustomLoginView(LoginView):
+    # if logged in redirects to next_page which is games page
+    redirect_authenticated_user = True
+    template_name = "registration/login.html"
 
 
 def register(request):
-    # TODO https://trello.com/c/QeuoeR54/282-login-page-if-already-logged-in-redirect-to-games-page
+    criteria = [
+        {
+            "condition": request.user.is_authenticated,
+            "redirect_url": "tavern_app:games",
+        },
+    ]
+    redirect_response = check_redirect_criteria(request, criteria)
+    if redirect_response:
+        return redirect_response
+
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
