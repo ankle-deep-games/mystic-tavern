@@ -3,7 +3,7 @@
 {% block content %}
 {% load static %}
 <div class="container">
-    <h1 class="text-primary my-4">Game Lobby - {{ game.name }}</h1>
+    <h1 class="text-primary my-4">Lobby: {{ game.name }}</h1>
     <hr>
 
     {% if messages %}
@@ -186,12 +186,11 @@
                  data-bs-parent="#faqAccordion">
                 <div class="card-body">
                     <p>Your game URL is:</p>
-                    <p>{{ request.build_absolute_uri }}</p>
-                    <p>Copy that link and send it to your friends along with the game password. They'll be prompted to
-                        log in or register an account and then enter the game password.</p>
+                    <p><u>{{ request.build_absolute_uri }}</u></p>
+                    <p>Copy that link and send it to your friends along with the game password.</p>
+                    <p>They'll be prompted to log in or register an account and then enter the game password.</p>
                     <p>If they ever don't have the direct game link, they can go to {{ request.META.HTTP_HOST}}/games to
-                        log in, find this game to join from the list of games, and then enter the
-                        password.</p>
+                        log in, find this game to join from the list of games, and then enter the password.</p>
                     <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
                             data-bs-target="#invitePeopleCollapse" aria-expanded="false"
                             aria-controls="invitePeopleCollapse">
