@@ -27,7 +27,7 @@ from .helpers.battle import (
     calc_turns_and_execute_enemy_turns, check_and_handle_battle_over,
 )
 from .helpers.equipment import gameuser_equip_armor
-from .helpers.game_setup import init_game_enemies
+from .helpers.game_setup import init_game_enemies, role_assignment_init_player_stats
 from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
     get_character_list,
@@ -400,7 +400,8 @@ class CreateGameView(CreateView):
             {
                 "condition": not request.user.is_authenticated,
                 "message_type": "error",
-                "message": "Must be logged in to create games. Log in or click the link below to register a new account.",
+                "message": "Must be logged in to create games. Log in or click the link below to register a new "
+                           "account.",
                 "redirect_url": "login",
             },
         ]
@@ -523,37 +524,7 @@ def role_assignment(request, game_id):
         print(request.POST)
         formset = role_assignment_form_set(request.POST, instance=game, queryset=gameusers_queryset)
         if formset.is_valid():
-            print("FORMSET IS VALID")
-            attack_ability = Ability.objects.get(pk=1)
-            for form in formset:
-                print(form)
-                if form.cleaned_data:
-                    # TODO move into game_setup.py
-                    print("CLEANED")
-                    player = form.save(commit=False)  # Get the player object from the form
-                    # Perform additional operations on the player based on the form data
-                    player.current_hp = player.role.start_hp
-                    player.current_max_hp = player.role.start_hp
-                    player.current_mp = player.role.start_mp
-                    player.current_max_mp = player.role.start_mp
-                    player.current_attack = player.role.start_attack
-                    player.current_defense = player.role.start_defense
-                    player.current_myst_attack = player.role.start_myst_attack
-                    player.current_myst_defense = player.role.start_myst_defense
-                    player.current_speed = player.role.start_speed
-
-                    player.with_gear_hp = player.role.start_hp
-                    player.with_gear_mp = player.role.start_mp
-                    player.with_gear_attack = player.role.start_attack
-                    player.with_gear_defense = player.role.start_defense
-                    player.with_gear_myst_attack = player.role.start_myst_attack
-                    player.with_gear_myst_defense = player.role.start_myst_defense
-                    player.with_gear_speed = player.role.start_speed
-
-                    player.ability_1 = attack_ability
-
-                    player.save()  # Save the updated player information
-
+            role_assignment_init_player_stats(formset)
             formset.save()  # Save the formset data after updating the players
             return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
     else:

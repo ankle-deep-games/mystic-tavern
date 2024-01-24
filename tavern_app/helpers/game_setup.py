@@ -1,4 +1,4 @@
-from ..models import Enemy, GameEnemy, Game
+from ..models import Enemy, GameEnemy, Game, Ability
 
 
 def init_game_enemies(game: Game) -> None:
@@ -209,3 +209,35 @@ def init_game_enemies(game: Game) -> None:
             gameenemy13,
         ]
     )
+
+
+def role_assignment_init_player_stats(formset):
+    print("FORMSET IS VALID")
+    attack_ability = Ability.objects.get(pk=1)
+    for form in formset:
+        print(form)
+        if form.cleaned_data:
+            print("CLEANED")
+            player = form.save(commit=False)  # Get the player object from the form
+
+            player.current_hp = player.role.start_hp
+            player.current_max_hp = player.role.start_hp
+            player.current_mp = player.role.start_mp
+            player.current_max_mp = player.role.start_mp
+            player.current_attack = player.role.start_attack
+            player.current_defense = player.role.start_defense
+            player.current_myst_attack = player.role.start_myst_attack
+            player.current_myst_defense = player.role.start_myst_defense
+            player.current_speed = player.role.start_speed
+
+            player.with_gear_hp = player.role.start_hp
+            player.with_gear_mp = player.role.start_mp
+            player.with_gear_attack = player.role.start_attack
+            player.with_gear_defense = player.role.start_defense
+            player.with_gear_myst_attack = player.role.start_myst_attack
+            player.with_gear_myst_defense = player.role.start_myst_defense
+            player.with_gear_speed = player.role.start_speed
+
+            player.ability_1 = attack_ability
+
+            player.save()  # Save the updated player information
