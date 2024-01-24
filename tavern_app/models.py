@@ -4,7 +4,7 @@ from django.db import models
 
 class Game(models.Model):
     objects = models.Manager()
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=16)
     password = models.CharField(max_length=255)
     creator = models.ForeignKey(User, on_delete=models.PROTECT)
     game_started = models.BooleanField(default=False)

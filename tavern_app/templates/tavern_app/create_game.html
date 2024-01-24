@@ -5,14 +5,27 @@
 <div class="container">
 
     <h1 class="my-3"> Create Game </h1>
-    <div class="form-group">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn btn-primary">Create</button>
 
-        </form>
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+        {% endfor %}
     </div>
+    {% endif %}
+
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {% for field in form %}
+        <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+        </p>
+        {% endfor %}
+        <button class="btn btn-primary">Create</button>
+    </form>
 
 </div>
 
