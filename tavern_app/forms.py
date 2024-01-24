@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm
+from django.forms import ModelForm, BaseInlineFormSet
 
 from .models import Game, GameUser, GameDialogue, CombatLog, Role
 
@@ -65,3 +65,32 @@ class CombatLogForm(ModelForm):
     class Meta:
         model = CombatLog
         fields = ["gameenemy", "ability", "defensive_gameuser_target"]
+
+
+class BaseRoleAssignmentFormSet(BaseInlineFormSet):
+    def clean(self):
+        # TODO remove role assignments prints when done debugging
+        # https://trello.com/c/9DhXpUWT/296-role-assignments-form-debug
+        print("BaseRoleAssignmentFormSet CLEAN")
+        """Custom formset-level validation."""
+        if any(self.errors):
+            print("BaseRoleAssignmentFormSet IF ANY ERRORS")
+            # Don't perform validation if there are form errors already
+            return
+
+        roles = [form.cleaned_data.get('role') for form in self.forms if form.cleaned_data.get('role')]
+        print("BaseRoleAssignmentFormSet ROLES")
+        print(roles)
+        if len(roles) != len(set(roles)):
+            raise forms.ValidationError("Each player must have a unique role.")
+
+        for form in self.forms:
+            role = form.cleaned_data.get('role')
+            gender = form.cleaned_data.get('gender')
+            print(role)
+            print(gender)
+
+            if not role or not gender:
+                raise forms.ValidationError("Every player must have a role and gender selected.")
+
+        return super().clean()

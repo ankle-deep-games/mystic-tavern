@@ -1,3 +1,4 @@
+from ..forms import BaseRoleAssignmentFormSet
 from ..models import Enemy, GameEnemy, Game, Ability
 
 
@@ -211,7 +212,7 @@ def init_game_enemies(game: Game) -> None:
     )
 
 
-def role_assignment_init_player_stats(formset):
+def role_assignment_init_player_stats(formset: BaseRoleAssignmentFormSet) -> None:
     print("FORMSET IS VALID")
     attack_ability = Ability.objects.get(pk=1)
     for form in formset:

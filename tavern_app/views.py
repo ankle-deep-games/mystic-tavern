@@ -1,8 +1,7 @@
-from django import forms
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.forms import inlineformset_factory, BaseInlineFormSet
+from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, reverse, get_object_or_404
@@ -16,7 +15,7 @@ from .forms import (
     RoleAssignmentForm,
     GameDialogueForm,
     StartGameForm,
-    CombatLogForm,
+    CombatLogForm, BaseRoleAssignmentFormSet,
 )
 from .helpers.ability import gameuser_grant_ability
 from .helpers.battle import (
@@ -421,35 +420,6 @@ class CreateGameView(CreateView):
         GameUser.objects.create(user=self.request.user, game=game)
 
         return redirect(reverse("tavern_app:lobby", kwargs={"game_id": game.id}))
-
-
-class BaseRoleAssignmentFormSet(BaseInlineFormSet):
-    def clean(self):
-        # TODO remove role assignments prints when done debugging
-        # https://trello.com/c/9DhXpUWT/296-role-assignments-form-debug
-        print("BaseRoleAssignmentFormSet CLEAN")
-        """Custom formset-level validation."""
-        if any(self.errors):
-            print("BaseRoleAssignmentFormSet IF ANY ERRORS")
-            # Don't perform validation if there are form errors already
-            return
-
-        roles = [form.cleaned_data.get('role') for form in self.forms if form.cleaned_data.get('role')]
-        print("BaseRoleAssignmentFormSet ROLES")
-        print(roles)
-        if len(roles) != len(set(roles)):
-            raise forms.ValidationError("Each player must have a unique role.")
-
-        for form in self.forms:
-            role = form.cleaned_data.get('role')
-            gender = form.cleaned_data.get('gender')
-            print(role)
-            print(gender)
-
-            if not role or not gender:
-                raise forms.ValidationError("Every player must have a role and gender selected.")
-
-        return super().clean()
 
 
 def role_assignment(request, game_id):
