@@ -4,7 +4,7 @@
 ------------------------------------*/
 .alert-primary {
     color: #6a3e85;
-    background-color: #8f5ab1; /* TODO make more transparent */
+    background-color: #8f5ab1;
     border-color: #fbf9fc;
 }
 
@@ -140,6 +140,18 @@ button.bg-primary:focus {
 
 a.text-primary:hover, a.text-primary:focus {
     color: #8f5ab1 !important;
+}
+
+/*------------------------------------
+- Homepage
+------------------------------------*/
+.homepage-container {
+    max-width: 36rem;
+}
+
+.homepage-logo {
+    display: flex;
+    width: 100%
 }
 
 /*------------------------------------
