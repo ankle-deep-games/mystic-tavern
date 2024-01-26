@@ -222,7 +222,7 @@
         <div class="card text-white bg-secondary mb-3" id="player-{{gameuser.pk}}">
             {% if gameuser.is_ready %}
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
-                 alt="role and gender picture">
+                 alt="player role and gender">
             <div class="card-body p-2 p-2" id="player-cards">
                 <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
                 <h6 class="card-title text-white gameuser-role">{{ gameuser.role.display_name }}</h6>
@@ -237,7 +237,8 @@
                 </div>
             </div>
             {% else %}
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image"
+                 src="{% static 'tavern_app/player' %}{{ forloop.counter }}-lobby.png" alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -259,7 +260,8 @@
 
         {% if num_players_in_lobby == 1 %}
         <div class="card text-white bg-secondary mb-3" id="player-2">
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player2-lobby.png' %}"
+                 alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -276,7 +278,8 @@
             </div>
         </div>
         <div class="card text-white bg-secondary mb-3" id="player-3">
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player3-lobby.png' %}"
+                 alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -293,7 +296,8 @@
             </div>
         </div>
         <div class="card text-white bg-secondary mb-3" id="player-4">
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player4-lobby.png' %}"
+                 alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -313,7 +317,8 @@
 
         {% if num_players_in_lobby == 2 %}
         <div class="card text-white bg-secondary mb-3" id="player-3">
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player3-lobby.png' %}"
+                 alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -330,7 +335,8 @@
             </div>
         </div>
         <div class="card text-white bg-secondary mb-3" id="player-4">
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player4-lobby.png' %}"
+                 alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
@@ -350,7 +356,8 @@
 
         {% if num_players_in_lobby == 3 %}
         <div class="card text-white bg-secondary mb-3" id="player-4">
-            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/logo.png' %}" alt="game logo">
+            <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player4-lobby.png' %}"
+                 alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
                 <h6 class="card-title text-white gameuser-role">???</h6>
