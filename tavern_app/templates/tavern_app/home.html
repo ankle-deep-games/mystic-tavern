@@ -3,17 +3,10 @@
 {% block content %}
 {% load static %}
 
-<div class="container text-center mt-5" style="max-width: 36rem;">
-    <img src="{% static 'tavern_app/logo.png' %}" alt="Logo" class="mb-4" style="max-width: 10rem;">
-    <h1 class="lead-text">Mystic Tavern</h1>
-    <p class="mb-4 small fst-italic">
-        Step into the mesmerizing realm of Mystic Tavern. Join forces with your fellow adventurers, each
-        wielding their unique set of skills and strengths, as you embark on a quest to unearth the secrets veiled within
-        the Tavern's mysterious walls and rescue a land besieged by an ominous force. Engage in strategic, team-based
-        encounters, employing a diverse array of abilities and tactics to overcome challenges while unraveling a
-        compelling narrative steeped in lore and intrigue. Will your fellowship rise to the occasion and save Mystic
-        Tavern from its imminent threats?</p>
+<div class="container homepage-container text-center">
+    <img src="{% static 'tavern_app/logo.png' %}" alt="Logo" class="homepage-logo mb-3">
     <a href="{% url 'register' %}" class="btn btn-primary me-1">Register</a>
     <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
 </div>
+
 {% endblock %}
