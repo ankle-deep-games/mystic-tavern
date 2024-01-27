@@ -23,7 +23,7 @@ from .helpers.battle import (
     gameuser_heal_single_gameuser_and_save,
     calc_is_request_user_turn,
     gameuser_buff_single_gameuser_and_save,
-    calc_turns_and_execute_enemy_turns, check_and_handle_battle_over,
+    calc_turns_and_execute_enemy_turns, check_and_handle_battle_over, init_gameusers_current_battle_starting_stats,
 )
 from .helpers.equipment import gameuser_equip_armor
 from .helpers.game_setup import init_game_enemies, role_assignment_init_player_stats
@@ -1058,19 +1058,7 @@ def battle(request, game_id, act, number):
     else:
         form = CombatLogForm()
 
-    # check if this battle starting hp/mp exist. if they don't, assign them.
-    # these starting stats are used by frontend on first page load.
-    for gameuser in gameusers:
-        if gameuser.current_battle_act != act and gameuser.current_battle_number != battle_num:
-            gameuser.current_battle_act = act
-            gameuser.current_battle_number = battle_num
-            gameuser.current_battle_starting_hp = gameuser.current_hp
-            gameuser.current_battle_starting_hp_percent = round(
-                (gameuser.current_battle_starting_hp / gameuser.with_gear_hp) * 100)
-            gameuser.current_battle_starting_mp = gameuser.current_mp
-            gameuser.current_battle_starting_mp_percent = round(
-                (gameuser.current_battle_starting_mp / gameuser.with_gear_mp) * 100)
-            gameuser.save()
+    init_gameusers_current_battle_starting_stats(gameusers, act, battle_num)
 
     calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
 

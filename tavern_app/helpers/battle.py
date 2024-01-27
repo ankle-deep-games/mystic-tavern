@@ -1,6 +1,8 @@
 import random
 from typing import Tuple
 
+from django.db.models import QuerySet
+
 from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser, GameLocation, GameDialogue, Dialogue
 
 
@@ -616,3 +618,21 @@ def check_and_handle_battle_over(game, act, battle_num):
 def delete_game_turn_orders(game: Game):
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     game_turn_order.delete()
+
+
+def init_gameusers_current_battle_starting_stats(gameusers: QuerySet[GameUser], act: int, battle_num: int) -> None:
+    """
+    Check if starting stats exist for this act/ + battle. if they don't, assign them.
+    Used by frontend on first page load for javascript to have a starting point.
+    """
+    for gameuser in gameusers:
+        if gameuser.current_battle_act != act and gameuser.current_battle_number != battle_num:
+            gameuser.current_battle_act = act
+            gameuser.current_battle_number = battle_num
+            gameuser.current_battle_starting_hp = gameuser.current_hp
+            gameuser.current_battle_starting_hp_percent = round(
+                (gameuser.current_battle_starting_hp / gameuser.with_gear_hp) * 100)
+            gameuser.current_battle_starting_mp = gameuser.current_mp
+            gameuser.current_battle_starting_mp_percent = round(
+                (gameuser.current_battle_starting_mp / gameuser.with_gear_mp) * 100)
+            gameuser.save()
