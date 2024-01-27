@@ -1,10 +1,12 @@
 import random
 from typing import Tuple
 
+from django.db.models import QuerySet
+
 from ..models import GameTurnOrder, CombatLog, GameEnemy, Ability, Game, GameUser, GameLocation, GameDialogue, Dialogue
 
 
-def calc_and_save_turn_order(game: Game, gameusers, gameenemies) -> None:
+def calc_and_save_turn_order(game: Game, gameusers: QuerySet[GameUser], gameenemies: QuerySet[GameEnemy]) -> None:
     # get the game turn order. if it doesn't exist yet - populate the table and requery.
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     if not game_turn_order:
@@ -277,7 +279,7 @@ def enemy_choose_random_ability(gameenemy: GameEnemy) -> Ability:
     return getattr(gameenemy.enemy, random_ability)
 
 
-def enemy_choose_random_alive_target(gameusers) -> GameUser:
+def enemy_choose_random_alive_target(gameusers: QuerySet[GameUser]) -> GameUser:
     gameuser_list = []
     for gameuser in gameusers:
         if gameuser.current_hp > 0:
@@ -498,15 +500,16 @@ def gameuser_buff_single_gameuser_and_save(
     combat_log.save()
 
 
-def is_any_player_alive(game: Game):
-    return True if GameUser.objects.filter(game=game, current_hp__gt=0) else False
+def is_any_player_alive(game: Game) -> bool:
+    return GameUser.objects.filter(game=game, current_hp__gt=0).exists()
 
 
-def is_any_enemy_alive(game: Game):
-    return True if GameEnemy.objects.filter(game=game, current_hp__gt=0) else False
+def is_any_enemy_alive(game: Game) -> bool:
+    return GameEnemy.objects.filter(game=game, current_hp__gt=0).exists()
 
 
-def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers):
+def calc_turns_and_execute_enemy_turns(act: int, battle_num: int, game: Game, gameenemies: QuerySet[GameEnemy],
+                                       gameusers: QuerySet[GameUser]):
     calc_and_save_turn_order(game=game, gameusers=gameusers, gameenemies=gameenemies)
     if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy:
         is_enemy_turn_next = True
@@ -556,7 +559,7 @@ def calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameu
                 True if GameTurnOrder.objects.get(game=game, is_their_turn=True).gameenemy is not None else False)
 
 
-def reset_gameusers_buff_stats(game: Game):
+def reset_gameusers_buff_stats(game: Game) -> None:
     gameusers = GameUser.objects.filter(game=game)
     for gameuser in gameusers:
         gameuser.current_speed = gameuser.with_gear_speed
@@ -576,7 +579,7 @@ def reset_gameusers_buff_stats(game: Game):
         gameuser.save()
 
 
-def check_and_handle_battle_over(game, act, battle_num):
+def check_and_handle_battle_over(game: Game, act: int, battle_num: int) -> None:
     # new_url redirect happens in battle_get_updates
 
     gamelocation = GameLocation.objects.get(game=game)
@@ -613,6 +616,24 @@ def check_and_handle_battle_over(game, act, battle_num):
             pass
 
 
-def delete_game_turn_orders(game: Game):
+def delete_game_turn_orders(game: Game) -> None:
     game_turn_order = GameTurnOrder.objects.filter(game=game)
     game_turn_order.delete()
+
+
+def init_gameusers_current_battle_starting_stats(gameusers: QuerySet[GameUser], act: int, battle_num: int) -> None:
+    """
+    Check if starting stats exist for this act + battle. if they don't, assign them.
+    Used by frontend on first page load for javascript to have a starting point.
+    """
+    for gameuser in gameusers:
+        if gameuser.current_battle_act != act and gameuser.current_battle_number != battle_num:
+            gameuser.current_battle_act = act
+            gameuser.current_battle_number = battle_num
+            gameuser.current_battle_starting_hp = gameuser.current_hp
+            gameuser.current_battle_starting_hp_percent = round(
+                (gameuser.current_battle_starting_hp / gameuser.with_gear_hp) * 100)
+            gameuser.current_battle_starting_mp = gameuser.current_mp
+            gameuser.current_battle_starting_mp_percent = round(
+                (gameuser.current_battle_starting_mp / gameuser.with_gear_mp) * 100)
+            gameuser.save()
