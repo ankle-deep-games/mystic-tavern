@@ -189,8 +189,6 @@ def join_game(request, pk):
                 "Something in the form was not valid.",
                 extra_tags="alert alert-danger",
             )
-
-    # else render form
     else:
         form = JoinGameForm()
 
@@ -674,8 +672,6 @@ def scene(request, game_id, act, number):
                 "new_url": "",
             }
             return JsonResponse(data)
-
-    # else render form
     else:
         form = GameDialogueForm()
 
@@ -1046,8 +1042,6 @@ def battle(request, game_id, act, number):
                 "error": error_msg,
             }
             return JsonResponse(data)
-
-    # else render form
     else:
         form = CombatLogForm()
 
