@@ -1032,13 +1032,6 @@ def battle(request, game_id, act, number):
                                     battle=battle_num,
                                     deduct_mp=True,
                                 )
-                else:
-                    # TODO think this can be removed. already checking above
-                    messages.error(
-                        request,
-                        "It is not your turn to attack.",
-                        extra_tags="alert alert-danger",
-                    )
 
                 calc_turns_and_execute_enemy_turns(act, battle_num, game, gameenemies, gameusers)
                 check_and_handle_battle_over(game, act, battle_num)
