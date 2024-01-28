@@ -217,7 +217,7 @@
     </div>
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
-    <div class="card-group d-flex flex-row flex-nowrap overflow-auto">
+    <div class="card-group d-flex flex-row flex-nowrap overflow-auto lobby-card-group">
         {% for gameuser in gameusers %}
         <div class="card text-white bg-secondary mb-3" id="player-{{gameuser.pk}}">
             {% if gameuser.is_ready %}

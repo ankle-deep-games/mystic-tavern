@@ -265,3 +265,11 @@ a.text-primary:hover, a.text-primary:focus {
 .lobby-role-faq-img {
     width: 48%;
 }
+
+.lobby-card-group > .card {
+    --bs-border-radius: 0;
+}
+
+.lobby-card-group > .card:not(:first-child) {
+    border-left: 0;
+}
