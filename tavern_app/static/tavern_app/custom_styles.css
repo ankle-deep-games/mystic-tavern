@@ -261,3 +261,7 @@ a.text-primary:hover, a.text-primary:focus {
 .lobby-card-stats > p {
     margin-bottom: 0.5rem;
 }
+
+.lobby-role-faq-img {
+    width: 48%;
+}
