@@ -613,6 +613,9 @@ def scene(request, game_id, act, number):
                 # Act 2 #
                 #########
                 if act == 1:  # TODO change back to act 1
+                    # TODO https://trello.com/c/FOmJYpJ3/310-assign-real-weapon-upgrade-nodes
+
+
                     # TODO https://trello.com/c/b4qqBBgH/298-quest-assign-real-nodes
                     if scene_num == 1 and dialogue.id == QUEST_1_NODE:
                         quest_choice_1(game=game)
