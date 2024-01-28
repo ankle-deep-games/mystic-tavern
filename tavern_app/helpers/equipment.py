@@ -92,3 +92,15 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser) -> None:
     gameuser.current_mp += mp_delta
 
     gameuser.save()
+
+
+def gameuser_remove_armor(gameuser: GameUser, slot: int) -> None:
+    gameuser = GameUser.objects.get(pk=gameuser.pk)
+    if slot == 1:
+        gameuser.armor_1 = None
+    elif slot == 2:
+        gameuser.armor_2 = None
+    elif slot == 3:
+        gameuser.armor_3 = None
+
+    gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)

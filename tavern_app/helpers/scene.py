@@ -139,6 +139,7 @@ def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
     elif dialogue.pk in [8, 9]:
         current_player_key = 'player4'
     elif dialogue.pk == 10:
+        # TODO might not do the regex replace like this for outcomes. only use for regex replace within text
         # Handle specific case for dialogue.pk == 10, like the night decision
         return dialogue.text
     else:
