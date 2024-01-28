@@ -61,14 +61,13 @@ def night_choice_rotate_rest(game: Game, game_dialogue: GameDialogue):
     Cons: Not 100% restoration.
     Overwrites the dialogue node with the outcome.
     """
-    event_description = "The party rotated watch. Everyone slept part of the night and resorted some HP and MP."
+    event_description = "The party rotated watch. Everyone slept part of the night and restored some HP and MP."
     game_dialogue.regex_replaced_text_or_empty = event_description
     game_dialogue.save()
 
     gameusers = GameUser.objects.filter(game=game)
     for gameuser in gameusers:
         restore_gameuser_hp_and_mp_x_percent(gameuser=gameuser, restore_percent=0.5)
-        # TODO test this
 
 
 def restore_gameuser_hp_and_mp_x_percent(gameuser: GameUser, restore_percent: float):
@@ -79,7 +78,6 @@ def restore_gameuser_hp_and_mp_x_percent(gameuser: GameUser, restore_percent: fl
         gameuser.current_mp = gameuser.current_max_mp
         gameuser.save()
     else:
-        # TODO verify this in partial rest choice
         hp_increase = round(gameuser.with_gear_hp * restore_percent)
         if (gameuser.current_hp + hp_increase) > gameuser.current_max_hp:
             gameuser.current_hp = gameuser.current_max_hp
