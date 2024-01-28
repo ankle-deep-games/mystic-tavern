@@ -31,7 +31,7 @@ def night_choice_all_rest(game: Game, game_dialogue: GameDialogue):
     """
     100% rest.
     Pros: Full HP/MP restoration for all party members.
-    Cons: 100% chance all gold stolen and 75% 1 random armor 3 to be stolen from 1 player
+    Cons: 100% chance all gold stolen and 75% 1 random armor 3 to be stolen from 1 player.
     Overwrites the dialogue node with the outcome.
     """
     # Initial string
@@ -52,6 +52,23 @@ def night_choice_all_rest(game: Game, game_dialogue: GameDialogue):
     # then restore all gameusers to full hp/mp
     for gameuser in gameusers:
         restore_gameuser_hp_and_mp_x_percent(gameuser=gameuser, restore_percent=1.0)
+
+
+def night_choice_rotate_rest(game: Game, game_dialogue: GameDialogue):
+    """
+    Partial rest. Everyone rotates a watch shift.
+    Pros: Partial (50%) HP/MP restoration for all party members
+    Cons: Not 100% restoration.
+    Overwrites the dialogue node with the outcome.
+    """
+    event_description = "The party rotated watch. Everyone slept part of the night and resorted some HP and MP."
+    game_dialogue.regex_replaced_text_or_empty = event_description
+    game_dialogue.save()
+
+    gameusers = GameUser.objects.filter(game=game)
+    for gameuser in gameusers:
+        restore_gameuser_hp_and_mp_x_percent(gameuser=gameuser, restore_percent=0.5)
+        # TODO test this
 
 
 def restore_gameuser_hp_and_mp_x_percent(gameuser: GameUser, restore_percent: float):
