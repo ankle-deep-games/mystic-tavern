@@ -27,7 +27,7 @@ def quest_choice_2_and_3(game: Game) -> None:
         gameuser_equip_armor(gameuser=gameuser, armor=armor3, slot=3)
 
 
-def night_choice_all_rest(game: Game, game_dialogue: GameDialogue):
+def night_choice_all_rest(game: Game, game_dialogue: GameDialogue) -> None:
     """
     100% rest.
     Pros: Full HP/MP restoration for all party members.
@@ -54,7 +54,7 @@ def night_choice_all_rest(game: Game, game_dialogue: GameDialogue):
         restore_gameuser_hp_and_mp_x_percent(gameuser=gameuser, restore_percent=1.0)
 
 
-def night_choice_rotate_rest(game: Game, game_dialogue: GameDialogue):
+def night_choice_rotate_watch(game: Game, game_dialogue: GameDialogue) -> None:
     """
     Partial rest. Everyone rotates a watch shift.
     Pros: Partial (50%) HP/MP restoration for all party members
@@ -70,6 +70,30 @@ def night_choice_rotate_rest(game: Game, game_dialogue: GameDialogue):
         restore_gameuser_hp_and_mp_x_percent(gameuser=gameuser, restore_percent=0.5)
 
 
+def night_choice_one_player_watch(game: Game, player_num: int, game_dialogue: GameDialogue) -> None:
+    """
+    No rest for one. One assigned person stays up as watch.
+    Pros: No theft, and a 100% hp/mp restoration for everyone else.
+    Cons: 10% HP decrease for that one individual.
+    Overwrites the dialogue node with the outcome.
+    """
+    gameusers = GameUser.objects.filter(game=game)
+    player_queryset_index = player_num - 1
+    selected_gameuser = gameusers[player_queryset_index]
+
+    event_description = (f"{selected_gameuser.name()} stayed up to watch. They became weary and lost some HP. The rest "
+                         f"of the party slept well and restored their full HP and MP.")
+    game_dialogue.regex_replaced_text_or_empty = event_description
+    game_dialogue.save()
+
+    gameusers = GameUser.objects.filter(game=game)
+    for gameuser in gameusers:
+        if gameuser == selected_gameuser:
+            deduct_gameuser_hp_x_percent(gameuser=selected_gameuser, deduct_hp_percent=0.1)
+        else:
+            restore_gameuser_hp_and_mp_x_percent(gameuser=gameuser, restore_percent=1.0)
+
+
 def restore_gameuser_hp_and_mp_x_percent(gameuser: GameUser, restore_percent: float):
     gameuser = GameUser.objects.get(pk=gameuser.pk)
 
@@ -78,16 +102,28 @@ def restore_gameuser_hp_and_mp_x_percent(gameuser: GameUser, restore_percent: fl
         gameuser.current_mp = gameuser.current_max_mp
         gameuser.save()
     else:
-        hp_increase = round(gameuser.with_gear_hp * restore_percent)
+        hp_increase = round(gameuser.current_max_hp * restore_percent)
         if (gameuser.current_hp + hp_increase) > gameuser.current_max_hp:
             gameuser.current_hp = gameuser.current_max_hp
         else:
             gameuser.current_hp += hp_increase
 
-        mp_increase = round(gameuser.with_gear_mp * restore_percent)
+        mp_increase = round(gameuser.current_max_mp * restore_percent)
         if (gameuser.current_mp + mp_increase) > gameuser.current_max_mp:
             gameuser.current_mp = gameuser.current_max_mp
         else:
             gameuser.current_mp += mp_increase
 
         gameuser.save()
+
+
+def deduct_gameuser_hp_x_percent(gameuser: GameUser, deduct_hp_percent: float) -> None:
+    gameuser = GameUser.objects.get(pk=gameuser.pk)
+
+    hp_decrease = round(gameuser.current_max_hp * deduct_hp_percent)
+    if (gameuser.current_hp - hp_decrease) < 1:
+        gameuser.current_hp = 1
+    else:
+        gameuser.current_hp -= hp_decrease
+
+    gameuser.save()

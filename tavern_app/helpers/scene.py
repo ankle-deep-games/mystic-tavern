@@ -130,6 +130,7 @@ def replace_dialogue_placeholders(dialogue_text: str, placeholders: dict) -> str
 def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
     """Processes and replaces placeholders in dialogue data."""
     # TODO assign correct nodes https://trello.com/c/GqoKIApr/293-assign-regex-replace-on-final-nodes
+    # TODO night choice 3 where one person stays up as watch - regex replace their name
     if dialogue.pk in [2, 3]:
         current_player_key = 'player1'
     elif dialogue.pk in [4, 5]:
@@ -138,10 +139,6 @@ def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
         current_player_key = 'player3'
     elif dialogue.pk in [8, 9]:
         current_player_key = 'player4'
-    elif dialogue.pk == 10:
-        # TODO might not do the regex replace like this for outcomes. only use for regex replace within text
-        # Handle specific case for dialogue.pk == 10, like the night decision
-        return dialogue.text
     else:
         # Return dialogue.text for any other case not explicitly handled above
         return dialogue.text

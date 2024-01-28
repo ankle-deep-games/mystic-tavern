@@ -9,7 +9,8 @@ from django.shortcuts import render
 from django.views.generic import CreateView
 
 from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_NODES, \
-    NIGHT_DECISION_ALL_REST_NODE, NIGHT_DECISION_ROTATE_REST_NODE
+    NIGHT_DECISION_ALL_REST_NODE, NIGHT_DECISION_ROTATE_REST_NODE, NIGHT_DECISION_PLAYER_1_WATCH_NODE, \
+    NIGHT_DECISION_PLAYER_2_WATCH_NODE, NIGHT_DECISION_PLAYER_3_WATCH_NODE, NIGHT_DECISION_PLAYER_4_WATCH_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -25,7 +26,8 @@ from .helpers.battle import (
     gameuser_buff_single_gameuser_and_save,
     calc_turns_and_execute_enemy_turns, check_and_handle_battle_over, init_gameusers_current_battle_starting_stats,
 )
-from .helpers.choice import quest_choice_1, quest_choice_2_and_3, night_choice_all_rest, night_choice_rotate_rest
+from .helpers.choice import quest_choice_1, quest_choice_2_and_3, night_choice_all_rest, night_choice_rotate_watch, \
+    night_choice_one_player_watch
 from .helpers.game_setup import init_game_enemies, role_assignment_init_player_stats
 from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
@@ -611,7 +613,19 @@ def scene(request, game_id, act, number):
                         night_choice_all_rest(game=game, game_dialogue=game_dialogue)
 
                     elif scene_num == 1 and dialogue.id == NIGHT_DECISION_ROTATE_REST_NODE:
-                        night_choice_rotate_rest(game=game, game_dialogue=game_dialogue)
+                        night_choice_rotate_watch(game=game, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_1_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=1, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_2_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=2, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_3_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=3, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_4_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=4, game_dialogue=game_dialogue)
 
                 #########
                 # Act 3 #
