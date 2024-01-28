@@ -1,3 +1,8 @@
+"""
+choice.py:
+- conditional game progression functions that depend on the selected choice
+"""
+
 import random
 
 from tavern_app.constants import ROLE_GAME_PROGRESSION_DICT

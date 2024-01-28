@@ -1,3 +1,9 @@
+"""
+game_lifecycle.py:
+- game init functions
+- game progression functions that happen every game
+"""
+
 from .ability import gameuser_grant_ability
 from .equipment import gameuser_equip_armor, gameuser_equip_weapon
 from ..constants import ROLE_GAME_PROGRESSION_DICT
