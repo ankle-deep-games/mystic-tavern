@@ -29,22 +29,22 @@
             <div id="howToPlayCollapse" class="collapse" aria-labelledby="howToPlayHeader"
                  data-bs-parent="#faqAccordion">
                 <div class="card-body">
-                    <p>To start a game you must have 4 players.</p>
-                    <p>The party leader is the one who created the game. The party leader has the ability to click a
-                        button in the lobby to assign roles and genders to each player. These roles will determine what
-                        stats and abilities players in the party have throughout the game. Party members can tell the
-                        party leader which role and gender they want to play so the party leader knows what to assign.
-                        There can only be one of each role.</p>
-                    <p>Once there are 4 players and they've all been assigned a role the party leader can click a button
+                    <p>To play this game you need exactly 4 people.</p>
+                    <p>One person, called the Party Leader, is the one who set up the game. In the game's lobby, which
+                        is like a waiting room, the Party Leader assigns each player a specific role and gender.
+                        These roles have different abilities and strengths that will be important in the game. Each
+                        player can let the Party Leader know their preferred role and gender, but remember, each role is
+                        unique and can only be played by one person.</p>
+                    <p>Once there are 4 players and they've all been assigned a role the Party Leader can click a button
                         in the lobby to start the game.</p>
-                    <p>The game has a mixture of dialogue and battles. In the dialogue portions the party leader will
-                        progress the dialogue and make decisions for the group as they come up. As a party leader, be
-                        sure to ask your party members how they think the group should proceed. And party members, be
-                        sure to share your opinion with the party leader.</p>
-                    <p>In battles each player makes their own choices in turn based combat. Be careful, if everyone in
-                        your party reaches 0 HP the game is over.</p>
-                    <p>As the game progresses you'll receive new weapons and armor to increase your stats, as well as
-                        more powerful abilities.</p>
+                    <p>The game is a mix of storytelling and battles. During the storytelling parts, the Party Leader
+                        moves the story along and makes decisions for the group, like choosing paths in the adventure.
+                        But it's important for the Party Leader to ask the opinions of the other players, and for the
+                        players to share their thoughts and ideas with the Leader.</p>
+                    <p>When it comes to battles, each player fights in turns, making their own decisions about how to
+                        act in the fight.</p>
+                    <p>As the game goes on you'll find new weapons and armor, which make you stronger and
+                        better at fighting. You'll also learn new and more powerful abilities.</p>
                     <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
                             data-bs-target="#howToPlayCollapse" aria-expanded="false" aria-controls="howToPlayCollapse">
                         Close
@@ -68,10 +68,10 @@
                     <div>
                         <h4>Archer</h4>
                         <div class="mb-2">
-                            <img src="{% static 'tavern_app/ARCHER-MALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
-                            <img src="{% static 'tavern_app/ARCHER-FEMALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/ARCHER-MALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="male archer">
+                            <img src="{% static 'tavern_app/ARCHER-FEMALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="female archer">
                         </div>
                         <p>The Archer is a master of precision and deadly
                             accuracy.
@@ -88,10 +88,10 @@
                     <div>
                         <h4>Paladin</h4>
                         <div class="mb-2">
-                            <img src="{% static 'tavern_app/PALADIN-MALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
-                            <img src="{% static 'tavern_app/PALADIN-FEMALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/PALADIN-MALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="male paladin">
+                            <img src="{% static 'tavern_app/PALADIN-FEMALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="female paladin">
                         </div>
                         <p>As the frontline defender, the Paladin stands as a
                             paragon of courage and
@@ -107,10 +107,10 @@
                     <div>
                         <h4>Black Mage</h4>
                         <div class="mb-2">
-                            <img src="{% static 'tavern_app/BLACKMAGE-MALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
-                            <img src="{% static 'tavern_app/BLACKMAGE-FEMALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/BLACKMAGE-MALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="male blackmage">
+                            <img src="{% static 'tavern_app/BLACKMAGE-FEMALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="female blackmage">
                         </div>
                         <p>The Black Mage harnesses the raw power of
                             arcane forces. Wielding
@@ -124,10 +124,10 @@
                     <div>
                         <h4>White Mage</h4>
                         <div class="mb-2">
-                            <img src="{% static 'tavern_app/WHITEMAGE-MALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
-                            <img src="{% static 'tavern_app/WHITEMAGE-FEMALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/WHITEMAGE-MALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="male whitemage">
+                            <img src="{% static 'tavern_app/WHITEMAGE-FEMALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="female whitemage">
                         </div>
                         <p>The White Mage embodies the essence
                             of healing and
@@ -145,10 +145,10 @@
                     <div>
                         <h4>Bard</h4>
                         <div class="mb-2">
-                            <img src="{% static 'tavern_app/BARD-MALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
-                            <img src="{% static 'tavern_app/BARD-FEMALE.png' %}" class="rounded" alt="..."
-                                 style="width: 48%;">
+                            <img src="{% static 'tavern_app/BARD-MALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="male bard">
+                            <img src="{% static 'tavern_app/BARD-FEMALE.png' %}" class="rounded lobby-role-faq-img"
+                                 alt="female bard">
                         </div>
                         <p>The Bard is a
                             charismatic and versatile
@@ -189,8 +189,9 @@
                     <p><u>{{ request.build_absolute_uri }}</u></p>
                     <p>Copy that link and send it to your friends along with the game password.</p>
                     <p>They'll be prompted to log in or register an account and then enter the game password.</p>
-                    <p>If they ever don't have the direct game link, they can go to {{ request.META.HTTP_HOST}}/games to
-                        log in, find this game to join from the list of games, and then enter the password.</p>
+                    <p>If they ever don't have the direct game link, they can go to
+                        <u>{{request.META.HTTP_HOST}}/games</u> to log in, find this game to join from the list of
+                        games, and then enter the password.</p>
                     <button type="button" class="btn btn-primary" data-bs-toggle="collapse"
                             data-bs-target="#invitePeopleCollapse" aria-expanded="false"
                             aria-controls="invitePeopleCollapse">
@@ -217,9 +218,9 @@
     </div>
     {% endif %}
     <h2 class="text-white my-4">Players:</h2>
-    <div class="card-group d-flex flex-row flex-nowrap overflow-auto">
+    <div class="card-group d-flex flex-row flex-nowrap overflow-auto lobby-card-group mb-3">
         {% for gameuser in gameusers %}
-        <div class="card text-white bg-secondary mb-3" id="player-{{gameuser.pk}}">
+        <div class="card text-white bg-secondary" id="player-{{gameuser.pk}}">
             {% if gameuser.is_ready %}
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/' %}{{ gameuser.image }}"
                  alt="player role and gender">
@@ -241,16 +242,16 @@
                  src="{% static 'tavern_app/player' %}{{ forloop.counter }}-lobby.png" alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">{{ gameuser.name }}</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
             {% endif %}
@@ -259,117 +260,117 @@
         {% endfor %}
 
         {% if num_players_in_lobby == 1 %}
-        <div class="card text-white bg-secondary mb-3" id="player-2">
+        <div class="card text-white bg-secondary" id="player-2">
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player2-lobby.png' %}"
                  alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-secondary mb-3" id="player-3">
+        <div class="card text-white bg-secondary" id="player-3">
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player3-lobby.png' %}"
                  alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-secondary mb-3" id="player-4">
+        <div class="card text-white bg-secondary" id="player-4">
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player4-lobby.png' %}"
                  alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
         </div>
         {% endif %}
 
         {% if num_players_in_lobby == 2 %}
-        <div class="card text-white bg-secondary mb-3" id="player-3">
+        <div class="card text-white bg-secondary" id="player-3">
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player3-lobby.png' %}"
                  alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
         </div>
-        <div class="card text-white bg-secondary mb-3" id="player-4">
+        <div class="card text-white bg-secondary" id="player-4">
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player4-lobby.png' %}"
                  alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
         </div>
         {% endif %}
 
         {% if num_players_in_lobby == 3 %}
-        <div class="card text-white bg-secondary mb-3" id="player-4">
+        <div class="card text-white bg-secondary" id="player-4">
             <img class="card-img-top gameuser-image" src="{% static 'tavern_app/player4-lobby.png' %}"
                  alt="player mysterious figure">
             <div class="card-body p-2">
                 <h6 class="card-title text-white gameuser-name">pending</h6>
-                <h6 class="card-title text-white gameuser-role">???</h6>
+                <h6 class="card-title text-white gameuser-role">Role: ?</h6>
                 <div class="lobby-card-stats">
-                    <p>HP: <span class="gameuser-hp">???</span></p>
-                    <p>MP: <span class="gameuser-mp">???</span></p>
-                    <p>Attack: <span class="gameuser-attack">???</span></p>
-                    <p>Defense: <span class="gameuser-defense">???</span></p>
-                    <p>Myst Attack: <span class="gameuser-myst-attack">???</span></p>
-                    <p>Myst Defense: <span class="gameuser-myst-defense">???</span>
+                    <p>HP: <span class="gameuser-hp">?</span></p>
+                    <p>MP: <span class="gameuser-mp">?</span></p>
+                    <p>Attack: <span class="gameuser-attack">?</span></p>
+                    <p>Defense: <span class="gameuser-defense">?</span></p>
+                    <p>Myst Attack: <span class="gameuser-myst-attack">?</span></p>
+                    <p>Myst Defense: <span class="gameuser-myst-defense">?</span>
                     <p>
-                    <p>Speed: <span class="gameuser-speed">???</span></p>
+                    <p>Speed: <span class="gameuser-speed">?</span></p>
                 </div>
             </div>
         </div>

@@ -261,3 +261,27 @@ a.text-primary:hover, a.text-primary:focus {
 .lobby-card-stats > p {
     margin-bottom: 0.5rem;
 }
+
+.lobby-role-faq-img {
+    width: 48%;
+}
+
+.lobby-card-group > .card {
+    --bs-border-radius: 0;
+}
+
+.lobby-card-group > .card:not(:first-child) {
+    border-left: 0;
+}
+
+@media (min-width: 576px) {
+    .gameuser-name.card-title {
+        font-size: 1.5rem;
+    }
+    .gameuser-role.card-title {
+        font-size: 1.25rem;
+    }
+    .lobby-card-stats {
+        font-size: 1rem;
+    }
+}
