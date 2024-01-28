@@ -8,7 +8,9 @@ from django.shortcuts import redirect, reverse, get_object_or_404
 from django.shortcuts import render
 from django.views.generic import CreateView
 
-from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, ROLE_GAME_PROGRESSION_DICT, END_OF_SCENE_1_NODES
+from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_NODES, \
+    NIGHT_DECISION_ALL_REST_NODE, NIGHT_DECISION_ROTATE_REST_NODE, NIGHT_DECISION_PLAYER_1_WATCH_NODE, \
+    NIGHT_DECISION_PLAYER_2_WATCH_NODE, NIGHT_DECISION_PLAYER_3_WATCH_NODE, NIGHT_DECISION_PLAYER_4_WATCH_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -17,7 +19,6 @@ from .forms import (
     StartGameForm,
     CombatLogForm, BaseRoleAssignmentFormSet,
 )
-from .helpers.ability import gameuser_grant_ability
 from .helpers.battle import (
     gameuser_attack_single_gameenemy_and_save,
     gameuser_heal_single_gameuser_and_save,
@@ -25,7 +26,8 @@ from .helpers.battle import (
     gameuser_buff_single_gameuser_and_save,
     calc_turns_and_execute_enemy_turns, check_and_handle_battle_over, init_gameusers_current_battle_starting_stats,
 )
-from .helpers.equipment import gameuser_equip_armor
+from .helpers.choice import quest_choice_1, quest_choice_2_and_3, night_choice_all_rest, night_choice_rotate_watch, \
+    night_choice_one_player_watch
 from .helpers.game_setup import init_game_enemies, role_assignment_init_player_stats
 from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
@@ -44,7 +46,6 @@ from .models import (
     CombatLog,
     GameLocation,
     GameTurnOrder,
-    Armor,
     SceneImage,
 )
 
@@ -600,26 +601,31 @@ def scene(request, game_id, act, number):
                 #########
                 # Act 2 #
                 #########
-                if act == 2:
+                if act == 1:  # TODO change back to act 1
                     # TODO https://trello.com/c/b4qqBBgH/298-quest-assign-real-nodes
                     if scene_num == 1 and dialogue.id == QUEST_1_NODE:
-                        # rewards: armor 2 and ability 3 for each player
-                        gameusers = GameUser.objects.filter(game=game)
-                        for gameuser in gameusers:
-                            armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                            ability3 = Ability.objects.get(
-                                name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['ability3'])
-                            gameuser_grant_ability(gameuser=gameuser, ability=ability3, slot=3)
+                        quest_choice_1(game=game)
 
                     elif scene_num == 1 and dialogue.id in [QUEST_2_NODE, QUEST_3_NODE]:
-                        # rewards: armor 2 and armor 3 for each player. choice 2 and 3 have same outcome.
-                        gameusers = GameUser.objects.filter(game=game)
-                        for gameuser in gameusers:
-                            armor2 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor2'])
-                            armor3 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[gameuser.role.name]['armor3'])
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor2, slot=2)
-                            gameuser_equip_armor(gameuser=gameuser, armor=armor3, slot=3)
+                        quest_choice_2_and_3(game=game)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_ALL_REST_NODE:
+                        night_choice_all_rest(game=game, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_ROTATE_REST_NODE:
+                        night_choice_rotate_watch(game=game, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_1_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=1, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_2_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=2, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_3_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=3, game_dialogue=game_dialogue)
+
+                    elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_4_WATCH_NODE:
+                        night_choice_one_player_watch(game=game, player_num=4, game_dialogue=game_dialogue)
 
                 #########
                 # Act 3 #

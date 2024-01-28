@@ -75,7 +75,11 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser) -> None:
     hp_delta = new_geared_hp - gameuser.current_max_hp
     gameuser.with_gear_hp = new_geared_hp
     gameuser.current_max_hp = new_geared_hp
-    gameuser.current_hp += hp_delta
+    # hp_delta can be negative when removing armor
+    if (gameuser.current_hp + hp_delta) < 1:
+        gameuser.current_hp = 1
+    else:
+        gameuser.current_hp += hp_delta
 
     new_geared_mp = gameuser.role.start_mp
     if gameuser.armor_1:
@@ -89,6 +93,22 @@ def gameuser_recalculate_gear_stats_and_save(gameuser: GameUser) -> None:
     mp_delta = new_geared_mp - gameuser.current_max_mp
     gameuser.with_gear_mp = new_geared_mp
     gameuser.current_max_mp = new_geared_mp
-    gameuser.current_mp += mp_delta
+    # mp_delta can be negative when removing armor
+    if (gameuser.current_mp + mp_delta) < 1:
+        gameuser.current_mp = 1
+    else:
+        gameuser.current_mp += mp_delta
 
     gameuser.save()
+
+
+def gameuser_remove_armor(gameuser: GameUser, slot: int) -> None:
+    gameuser = GameUser.objects.get(pk=gameuser.pk)
+    if slot == 1:
+        gameuser.armor_1 = None
+    elif slot == 2:
+        gameuser.armor_2 = None
+    elif slot == 3:
+        gameuser.armor_3 = None
+
+    gameuser_recalculate_gear_stats_and_save(gameuser=gameuser)
