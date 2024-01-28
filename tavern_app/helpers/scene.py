@@ -4,7 +4,8 @@ from ..constants import ROLE_GAME_PROGRESSION_DICT, PLAYER_1_GRANT_WEAPON1_ARMOR
     PLAYER_1_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_2_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
     PLAYER_2_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
     PLAYER_3_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
-    PLAYER_4_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE
+    PLAYER_4_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_1_WEAPON_UPGRADE_NODE, PLAYER_2_WEAPON_UPGRADE_NODE, \
+    PLAYER_3_WEAPON_UPGRADE_NODE, PLAYER_4_WEAPON_UPGRADE_NODE
 from ..models import Game, GameUser, NPC, GameDialogue, Dialogue
 
 
@@ -135,13 +136,17 @@ def check_and_regex_replace_dialogue(game: Game, dialogue: Dialogue) -> str:
     """Processes and replaces placeholders in dialogue data."""
     # TODO assign correct nodes https://trello.com/c/GqoKIApr/293-assign-regex-replace-on-final-nodes
     # TODO night choice 3 where one person stays up as watch - regex replace their name
-    if dialogue.pk in [PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_1_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE]:
+    if dialogue.pk in [PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_1_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE,
+                       PLAYER_1_WEAPON_UPGRADE_NODE]:
         current_player_key = 'player1'
-    elif dialogue.pk in [PLAYER_2_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_2_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE]:
+    elif dialogue.pk in [PLAYER_2_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_2_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE,
+                         PLAYER_2_WEAPON_UPGRADE_NODE]:
         current_player_key = 'player2'
-    elif dialogue.pk in [PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_3_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE]:
+    elif dialogue.pk in [PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_3_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE,
+                         PLAYER_3_WEAPON_UPGRADE_NODE]:
         current_player_key = 'player3'
-    elif dialogue.pk in [PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE]:
+    elif dialogue.pk in [PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_RESULT_WEAPON1_ARMOR1_ABILITY2_NODE,
+                         PLAYER_4_WEAPON_UPGRADE_NODE]:
         current_player_key = 'player4'
     else:
         # Return dialogue.text for any other case not explicitly handled above

@@ -12,7 +12,9 @@ from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_
     NIGHT_DECISION_ALL_REST_NODE, NIGHT_DECISION_ROTATE_REST_NODE, NIGHT_DECISION_PLAYER_1_WATCH_NODE, \
     NIGHT_DECISION_PLAYER_2_WATCH_NODE, NIGHT_DECISION_PLAYER_3_WATCH_NODE, NIGHT_DECISION_PLAYER_4_WATCH_NODE, \
     PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_2_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
-    PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE
+    PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
+    PLAYER_1_WEAPON_UPGRADE_NODE, PLAYER_2_WEAPON_UPGRADE_NODE, PLAYER_3_WEAPON_UPGRADE_NODE, \
+    PLAYER_4_WEAPON_UPGRADE_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -30,8 +32,8 @@ from .helpers.battle import (
 )
 from .helpers.choice import quest_choice_1, quest_choice_2_and_3, night_choice_all_rest, night_choice_rotate_watch, \
     night_choice_one_player_watch
-from .helpers.game_setup import init_game_enemies, role_assignment_init_player_stats, \
-    equip_player_with_starting_weapon1_armor1_ability2
+from .helpers.game_lifecycle import init_game_enemies, role_assignment_init_player_stats, \
+    equip_player_with_starting_weapon1_armor1_ability2, player_weapon2_upgrade
 from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
     get_character_list,
@@ -613,8 +615,18 @@ def scene(request, game_id, act, number):
                 # Act 2 #
                 #########
                 if act == 1:  # TODO change back to act 1
+                    # TODO https://trello.com/c/FOmJYpJ3/310-assign-real-weapon-upgrade-nodes
+                    if scene_num == 1 and dialogue.id == PLAYER_1_WEAPON_UPGRADE_NODE:
+                        player_weapon2_upgrade(game=game, player_num=1)
+                    elif scene_num == 1 and dialogue.id == PLAYER_2_WEAPON_UPGRADE_NODE:
+                        player_weapon2_upgrade(game=game, player_num=2)
+                    elif scene_num == 1 and dialogue.id == PLAYER_3_WEAPON_UPGRADE_NODE:
+                        player_weapon2_upgrade(game=game, player_num=3)
+                    elif scene_num == 1 and dialogue.id == PLAYER_4_WEAPON_UPGRADE_NODE:
+                        player_weapon2_upgrade(game=game, player_num=4)
+
                     # TODO https://trello.com/c/b4qqBBgH/298-quest-assign-real-nodes
-                    if scene_num == 1 and dialogue.id == QUEST_1_NODE:
+                    elif scene_num == 1 and dialogue.id == QUEST_1_NODE:
                         quest_choice_1(game=game)
 
                     elif scene_num == 1 and dialogue.id in [QUEST_2_NODE, QUEST_3_NODE]:
@@ -628,13 +640,10 @@ def scene(request, game_id, act, number):
 
                     elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_1_WATCH_NODE:
                         night_choice_one_player_watch(game=game, player_num=1, game_dialogue=game_dialogue)
-
                     elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_2_WATCH_NODE:
                         night_choice_one_player_watch(game=game, player_num=2, game_dialogue=game_dialogue)
-
                     elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_3_WATCH_NODE:
                         night_choice_one_player_watch(game=game, player_num=3, game_dialogue=game_dialogue)
-
                     elif scene_num == 1 and dialogue.id == NIGHT_DECISION_PLAYER_4_WATCH_NODE:
                         night_choice_one_player_watch(game=game, player_num=4, game_dialogue=game_dialogue)
 

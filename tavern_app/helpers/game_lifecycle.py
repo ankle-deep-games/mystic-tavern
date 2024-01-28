@@ -1,3 +1,9 @@
+"""
+game_lifecycle.py:
+- game init functions
+- game progression functions that happen every game
+"""
+
 from .ability import gameuser_grant_ability
 from .equipment import gameuser_equip_armor, gameuser_equip_weapon
 from ..constants import ROLE_GAME_PROGRESSION_DICT
@@ -257,3 +263,11 @@ def equip_player_with_starting_weapon1_armor1_ability2(game: Game, player_num: i
     gameuser_equip_weapon(gameuser=selected_gameuser, weapon=weapon1)
     ability2 = Ability.objects.get(name=ROLE_GAME_PROGRESSION_DICT[selected_gameuser.role.name]['ability2'])
     gameuser_grant_ability(gameuser=selected_gameuser, ability=ability2, slot=2)
+
+
+def player_weapon2_upgrade(game: Game, player_num: int) -> None:
+    gameusers = GameUser.objects.filter(game=game)
+    player_queryset_index = player_num - 1
+    selected_gameuser = gameusers[player_queryset_index]
+    weapon2 = Weapon.objects.get(name=ROLE_GAME_PROGRESSION_DICT[selected_gameuser.role.name]['weapon2'])
+    gameuser_equip_weapon(gameuser=selected_gameuser, weapon=weapon2)
