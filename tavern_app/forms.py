@@ -9,6 +9,9 @@ class CreateGameForm(ModelForm):
     class Meta:
         model = Game
         fields = ("name", "password")
+        labels = {
+            'name': 'Name (up to 16 characters)',
+        }
         error_messages = {
             'name': {
                 'max_length': "Game name must be less than 17 characters.",
