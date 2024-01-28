@@ -32,7 +32,7 @@ from .helpers.battle import (
 )
 from .helpers.choice import quest_choice_1, quest_choice_2_and_3, night_choice_all_rest, night_choice_rotate_watch, \
     night_choice_one_player_watch
-from .helpers.game_setup import init_game_enemies, role_assignment_init_player_stats, \
+from .helpers.game_lifecycle import init_game_enemies, role_assignment_init_player_stats, \
     equip_player_with_starting_weapon1_armor1_ability2, player_weapon2_upgrade
 from .helpers.redirect import check_redirect_criteria
 from .helpers.scene import (
