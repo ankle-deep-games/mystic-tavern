@@ -1,5 +1,8 @@
+from .ability import gameuser_grant_ability
+from .equipment import gameuser_equip_armor, gameuser_equip_weapon
+from ..constants import ROLE_GAME_PROGRESSION_DICT
 from ..forms import BaseRoleAssignmentFormSet
-from ..models import Enemy, GameEnemy, Game, Ability
+from ..models import Enemy, GameEnemy, Game, Ability, GameUser, Armor, Weapon
 
 
 def init_game_enemies(game: Game) -> None:
@@ -242,3 +245,15 @@ def role_assignment_init_player_stats(formset: BaseRoleAssignmentFormSet) -> Non
             player.ability_1 = attack_ability
 
             player.save()  # Save the updated player information
+
+
+def equip_player_with_starting_weapon1_armor1_ability2(game: Game, player_num: int) -> None:
+    gameusers = GameUser.objects.filter(game=game)
+    player_queryset_index = player_num - 1
+    selected_gameuser = gameusers[player_queryset_index]
+    armor1 = Armor.objects.get(name=ROLE_GAME_PROGRESSION_DICT[selected_gameuser.role.name]['armor1'])
+    gameuser_equip_armor(gameuser=selected_gameuser, armor=armor1, slot=1)
+    weapon1 = Weapon.objects.get(name=ROLE_GAME_PROGRESSION_DICT[selected_gameuser.role.name]['weapon1'])
+    gameuser_equip_weapon(gameuser=selected_gameuser, weapon=weapon1)
+    ability2 = Ability.objects.get(name=ROLE_GAME_PROGRESSION_DICT[selected_gameuser.role.name]['ability2'])
+    gameuser_grant_ability(gameuser=selected_gameuser, ability=ability2, slot=2)
