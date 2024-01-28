@@ -47,7 +47,7 @@ def night_choice_all_rest(game: Game, game_dialogue: GameDialogue) -> None:
         game_dialogue.regex_replaced_text_or_empty = event_description
         game_dialogue.save()
 
-        gameuser_remove_armor(gameuser=selected_gameuser, slot=3)  # TODO verify this correctly reduces stats
+        gameuser_remove_armor(gameuser=selected_gameuser, slot=3)
 
     # then restore all gameusers to full hp/mp
     for gameuser in gameusers:
