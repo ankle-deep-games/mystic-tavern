@@ -87,9 +87,37 @@ def seed_data():
 
     # scene images
     scene_image1 = SceneImage(act=1, scene=1, image="setting-alley.png")
+    scene_image2 = SceneImage(act=1, scene=2, image="setting-alley.png")
+    scene_image3 = SceneImage(act=1, scene=3, image="setting-alley.png")
+    scene_image4 = SceneImage(act=1, scene=4, image="setting-alley.png")
+    scene_image5 = SceneImage(act=1, scene=5, image="setting-alley.png")
+    scene_image6 = SceneImage(act=1, scene=6, image="setting-alley.png")
+    scene_image7 = SceneImage(act=1, scene=7, image="setting-alley.png")
+    scene_image8 = SceneImage(act=1, scene=8, image="setting-alley.png")
+    scene_image9 = SceneImage(act=1, scene=9, image="setting-alley.png")
+    scene_image10 = SceneImage(act=1, scene=10, image="setting-alley.png")
+    scene_image11 = SceneImage(act=1, scene=11, image="setting-alley.png")
+    scene_image12 = SceneImage(act=1, scene=12, image="setting-alley.png")
+    scene_image13 = SceneImage(act=1, scene=13, image="setting-alley.png")
+    scene_image14 = SceneImage(act=1, scene=14, image="setting-alley.png")
+    scene_image15 = SceneImage(act=1, scene=15, image="setting-alley.png")
     SceneImage.objects.bulk_create(
         [
             scene_image1,
+            scene_image2,
+            scene_image3,
+            scene_image4,
+            scene_image5,
+            scene_image6,
+            scene_image7,
+            scene_image8,
+            scene_image9,
+            scene_image10,
+            scene_image11,
+            scene_image12,
+            scene_image13,
+            scene_image14,
+            scene_image15,
         ]
     )
 
@@ -1050,14 +1078,12 @@ def seed_data():
     npc2 = NPC(name="Old Man", image="old-man.png")
     npc3 = NPC(name="Drunk Man 1", image="drunk-man-1.png")
     npc4 = NPC(name="Drunk Man 2", image="drunk-man-2.png")
-    npc5 = NPC(name="Hilda", image="hilda.png")
     NPC.objects.bulk_create(
         [
             npc1,
             npc2,
             npc3,
             npc4,
-            npc5,
         ]
     )
 
@@ -1228,686 +1254,328 @@ def seed_data():
         ]
     )
 
-    # TODO https://trello.com/c/WG4PwvLG/148-create-act-2-dialogue
-    # TODO https://trello.com/c/mY9nRdLe/149-create-act-3-dialogue
+    # Dialogue
+    node1 = Dialogue(from_node_id=0, node_type="narration", speaker="Narrator",
+                     text="Your group finds themselves teleported to an abandoned alleyway in what looks like a quaint old village. The narrow passage is dimly lit, and the silence is broken by the distant sounds of chatter and laughter. Suddenly, two drunk men spot your group and stagger towards you, their eyes gleaming with mischief.",
+                     act=1, scene=1)
+    node2 = Dialogue(from_node_id=1, node_type="talk", speaker="Drunk Man 1",
+                     text="Blimey, would ya look at this lot! Fancied themselves lost tourists, do they?", act=1,
+                     scene=1)
+    node3 = Dialogue(from_node_id=2, node_type="talk", speaker="Drunk Man 2",
+                     text="Aven't seen faces like these 'round 'ere before!", act=1, scene=1)
+    node4 = Dialogue(from_node_id=3, node_type="talk", speaker="player1",
+                     text="We don't mean any harm. We're just passing through, gentlemen.", act=1, scene=1)
+    node5 = Dialogue(from_node_id=4, node_type="talk", speaker="Drunk Man 1",
+                     text="Passin' through, eh? Not so fast! We don't get visitors often, so we might as well 'ave some fun with ya!",
+                     act=1, scene=1)
+    node6 = Dialogue(from_node_id=5, node_type="talk", speaker="player1",
+                     text="We don't want any trouble. We'll be on our way.", act=1, scene=1)
+    node7 = Dialogue(from_node_id=6, node_type="talk", speaker="Drunk Man 2", text="Not so fast! You're stayin' put!",
+                     act=1, scene=1)
+    node8 = Dialogue(from_node_id=7, node_type="talk", speaker="Old Man", text="Ey, what's all this ruckus?", act=1,
+                     scene=1)
+    node9 = Dialogue(from_node_id=8, node_type="talk", speaker="Drunk Man 1",
+                     text="Stay out of this, old timer! These strangers are gonna get what's comin' to 'em!", act=1,
+                     scene=1)
+    node10 = Dialogue(from_node_id=9, node_type="talk", speaker="Old Man",
+                      text="Now, now, lads. That's no way to treat our guests. Let 'em pass and be on their way.",
+                      act=1, scene=1)
+    node11 = Dialogue(from_node_id=10, node_type="talk", speaker="Drunk Man 2",
+                      text="Fine, but they better not show their faces 'round here again!", act=1, scene=1)
+    node12 = Dialogue(from_node_id=11, node_type="talk", speaker="Old Man",
+                      text="I apologize for their behavior. They can get a bit rowdy when they've 'ad a few too many. Please, come inside my tavern. You'll be safe there.",
+                      act=1, scene=1)
+    node13 = Dialogue(from_node_id=12, node_type="talk", speaker="player1",
+                      text="Thank you for your help. We'll gladly take shelter in your tavern.", act=1, scene=1)
 
-    # # Dialogue Act 1, Scene 1
-    node1 = Dialogue(
-        from_node_id=0,
-        node_type="narration",
-        speaker="Narrator",
-        text="Your group finds themselves teleported to an abandoned alleyway in what looks like a quaint old village. The narrow passage is dimly lit, and the silence is broken by the distant sounds of chatter and laughter. Suddenly, two drunk men spot your group and stagger towards you, their eyes gleaming with mischief.",
-        act=1,
-        scene=1,
+    node14 = Dialogue(from_node_id=13, node_type="narration", speaker="Narrator",
+                      text="As your group hurries into the tavern, the old man closes the door behind you, shutting out the noise and tension from the alleyway.",
+                      act=1, scene=2)
+    node15 = Dialogue(from_node_id=14, node_type="talk", speaker="Old Man",
+                      text="Sit, sit! Let me tell ya a tale of our plight. Evil creatures, they are. Taking control over our town, the last stronghold of good in our world. We need help, you see, from individuals not easily swayed by these beasts. And, it dawns on me, I believe you and your group might be the ones we've been waitin' for.",
+                      act=1, scene=2)
+    node16 = Dialogue(from_node_id=15, node_type="talk", speaker="player1", text="Us? Why us?", act=1, scene=2)
+    node17 = Dialogue(from_node_id=16, node_type="talk", speaker="Old Man",
+                      text="Not entirely sure, my dear, but it seems fate has brought you here. We've been seekin' aid for a long time now, and you seem like a capable bunch. A band of mercenaries you ain't, but together, you make a good team.",
+                      act=1, scene=2)
+    node18 = Dialogue(from_node_id=17, node_type="talk", speaker="player1",
+                      text="How did we even end up in this village?", act=1, scene=2)
+    node19 = Dialogue(from_node_id=18, node_type="talk", speaker="Old Man",
+                      text="Have another round, and I'll tell ya what I think. As for the \"how\"... well, we're in a magical and mysterious place, ain't we? My guess is that you were brought here for a reason. The only way to defeat these creatures is with outside help, and you seem like the help we need.",
+                      act=1, scene=2)
+    node20 = Dialogue(from_node_id=19, node_type="talk", speaker="player1",
+                      text="Why now? Why did we end up here at this specific time?", act=1, scene=2)
+    node21 = Dialogue(from_node_id=20, node_type="talk", speaker="Old Man",
+                      text="Time's runnin' out, I'm afraid. These creatures are changin', and it's not for the better. Other towns nearby have already felt their wrath. We're on the brink of losin' ourselves. You might just be our last hope.",
+                      act=1, scene=2)
+    node22 = Dialogue(from_node_id=21, node_type="talk", speaker="player1",
+                      text="But we're not warriors or fighters. We're just regular old people!", act=1, scene=2)
+    node23 = Dialogue(from_node_id=22, node_type="talk", speaker="Old Man",
+                      text="Regular people, eh? I don't believe that for a second. I believe you have somethin' within you. You'll find what you need to face this challenge. First things first, get a room upstairs in the tavern inn. In the morning, head to the general store and gather some equipment for your journey. You'll need it before you set off.",
+                      act=1, scene=2)
+    node24 = Dialogue(from_node_id=23, node_type="choice", speaker="player1",
+                      text="1. Book a night at the inn and see what tomorrow brings.", act=1, scene=2)
+    node25 = Dialogue(from_node_id=23, node_type="choice", speaker="player1",
+                      text="2. Attempt to leave the tavern and try to get home.", act=1, scene=2)
+    node26 = Dialogue(from_node_id=23, node_type="choice", speaker="player1",
+                      text="3. Continue to talk to the old man.", act=1, scene=2)
+
+    node27 = Dialogue(from_node_id=24, node_type="talk", speaker="player1",
+                      text="We've had quite a day. Maybe we should get some rest, see what tomorrow brings.", act=1,
+                      scene=3)
+    node28 = Dialogue(from_node_id=27, node_type="talk", speaker="player2",
+                      text="It's been a lot to take in. A good night's rest might clear our heads.", act=1, scene=3)
+    node29 = Dialogue(from_node_id=28, node_type="talk", speaker="player3",
+                      text="But what if we're really stuck here? We can't just wait around forever.", act=1, scene=3)
+    node30 = Dialogue(from_node_id=29, node_type="talk", speaker="player1",
+                      text="We'll keep our eyes and ears open. If there's a chance to find our way back, we'll take it. For now, let's book a night at the inn and regroup in the morning.",
+                      act=1, scene=3)
+    node31 = Dialogue(from_node_id=30, node_type="narration", speaker="Narrator",
+                      text="As the group gets settled into their room above the tavern inn, they realize they have a window with a view into the very same alleyway they found themselves in earlier that evening.",
+                      act=1, scene=3)
+    node32 = Dialogue(from_node_id=31, node_type="talk", speaker="player2",
+                      text="Hold on, everyone. Come take a look at this!", act=1, scene=3)
+    node33 = Dialogue(from_node_id=32, node_type="talk", speaker="player3", text="What is it?", act=1, scene=3)
+    node34 = Dialogue(from_node_id=33, node_type="talk", speaker="player2",
+                      text="It's the exact spot where we found ourselves transported! There's a weird glimmer in the air. I think we should investigate.",
+                      act=1, scene=3)
+    node35 = Dialogue(from_node_id=34, node_type="talk", speaker="player1",
+                      text="You're right. It's worth checking out. Let's head over there and see if we can find any clues.",
+                      act=1, scene=3)
+
+    node36 = Dialogue(from_node_id=25, node_type="talk", speaker="player2",
+                      text="We can't just sit around here hoping for answers. We need to go back to where we entered this place and look for clues. Maybe we'll find a way back home.",
+                      act=1, scene=4)
+    node37 = Dialogue(from_node_id=36, node_type="talk", speaker="player3",
+                      text="I agree. It's worth a shot. We should at least try to retrace our steps.", act=1, scene=4)
+    node38 = Dialogue(from_node_id=37, node_type="talk", speaker="player1",
+                      text="Alright, it's settled then. Let's head back to the alley and see if we can find any clues.",
+                      act=1, scene=4)
+
+    node39 = Dialogue(from_node_id=26, node_type="narration", speaker="Narrator",
+                      text="The group debates their options, torn between waiting for answers and seeking a way back home. They turn back to the old man and he is passed out under the table.",
+                      act=1, scene=5)
+    node40 = Dialogue(from_node_id=39, node_type="talk", speaker="player2",
+                      text="I think he's had a bit too much to drink. Maybe we should leave him be for now.", act=1,
+                      scene=5)
+    node41 = Dialogue(from_node_id=40, node_type="talk", speaker="player1",
+                      text="Agreed. Let's try to figure this out on our own for now.", act=1, scene=5)
+
+    node101 = Dialogue(from_node_id=100, node_type="talk", speaker="player1",
+                       text="Do you guys feel that too? It's like there's something... different.", act=1, scene=6)
+    node102 = Dialogue(from_node_id=101, node_type="talk", speaker="player2",
+                       text="Yeah, it's strange. I can't quite put my finger on it.", act=1, scene=6)
+    node103 = Dialogue(from_node_id=102, node_type="talk", speaker="player3",
+                       text="Well, whatever it is, let's stay alert. We don't know what's out there.", act=1, scene=6)
+    node104 = Dialogue(from_node_id=103, node_type="talk", speaker="Drunk Man 1",
+                       text="Look who's back for another beating!", act=1, scene=6)
+    node105 = Dialogue(from_node_id=104, node_type="talk", speaker="Drunk Man 2", text="We warned ya to stay away!",
+                       act=1, scene=6)
+    node106 = Dialogue(from_node_id=105, node_type="talk", speaker="player1",
+                       text="We've had enough of this. Let's just take these guys out.", act=1, scene=6)
+
+    node107 = Dialogue(from_node_id=106, node_type="narration", speaker="Narrator", text="{battle 1 outcome}", act=1,
+                       scene=7)
+    node108 = Dialogue(from_node_id=107, node_type="talk", speaker="Old Man",
+                       text="What in blazes were ya thinkin', runnin' off like that? I told you the town was slowly descending into chaos and your response to that was to go out into the unknown?! Idiots!",
+                       act=1, scene=7)
+    node109 = Dialogue(from_node_id=108, node_type="talk", speaker="player1",
+                       text="We didn't mean to cause any trouble. We just thought we could handle it.", act=1, scene=7)
+    node110 = Dialogue(from_node_id=109, node_type="talk", speaker="Old Man",
+                       text="Handle it, eh? You young ones are too green to be takin' on those ruffians. Now, let's get you all up to your room.",
+                       act=1, scene=7)
+
+    node111 = Dialogue(from_node_id=110, node_type="talk", speaker="Old Man",
+                       text="Be ready to head to the store in the mornin'. You'll need supplies if you're plannin' to stay and help us. After that, I will teach you to fight. Goodnight!",
+                       act=1, scene=8)
+    node112 = Dialogue(from_node_id=111, node_type="narration", speaker="Narrator",
+                       text="The old man promptly sits in the chair and immediately falls asleep.", act=1, scene=8)
+    node113 = Dialogue(from_node_id=112, node_type="talk", speaker="player1",
+                       text="Well, that was unexpected. Maybe we should have one person awake on lookout. Who knows what's out there.",
+                       act=1, scene=8)
+    node114 = Dialogue(from_node_id=113, node_type="talk", speaker="player2", text="I'll take the first watch.", act=1,
+                       scene=8)
+
+    node115 = Dialogue(from_node_id=114, node_type="narration", speaker="Narrator",
+                       text="The group wakes up in their room, feeling refreshed after a night of rest, only to be greeted by the old man poking them with his cane.",
+                       act=1, scene=9)
+    node116 = Dialogue(from_node_id=115, node_type="talk", speaker="Old Man",
+                       text="Rise and shine, sleepyheads! Time's a-wastin', and there's much to be done!", act=1,
+                       scene=9)
+    node117 = Dialogue(from_node_id=116, node_type="talk", speaker="player1",
+                       text="Good morning to you too, but do you have to be so loud?", act=1, scene=9)
+    node118 = Dialogue(from_node_id=117, node_type="talk", speaker="Old Man",
+                       text="Loud is the only way to get you young ones movin'! Now, listen up! Sleep is very important here. Very restorative, yes, especially for warriors such as yourselves. You must be available for battle at all times.",
+                       act=1, scene=9)
+    node119 = Dialogue(from_node_id=118, node_type="talk", speaker="player2",
+                       text="We're not warriors. How many times do we have to tell you?", act=1, scene=9)
+    node120 = Dialogue(from_node_id=119, node_type="talk", speaker="Old Man",
+                       text="That may be so, but you're our best chance at pushin' back those nasty creatures. You've got potential, and with a good night's sleep, you'll be even better prepared for what lies ahead.",
+                       act=1, scene=9)
+    node121 = Dialogue(from_node_id=120, node_type="talk", speaker="player3",
+                       text="How do you know so much about this place and the creatures? Have you been fighting them for long?",
+                       act=1, scene=9)
+    node122 = Dialogue(from_node_id=121, node_type="talk", speaker="Old Man",
+                       text="Aye, I've seen my fair share of battles in this village. Been fightin' these beasts for longer than I care to remember. But I'm gettin' too old for this now. That's why we need you young ones.",
+                       act=1, scene=9)
+    node123 = Dialogue(from_node_id=122, node_type="talk", speaker="player4",
+                       text="We just got wasted by two drunk guys last night. How do you expect us to help?", act=1,
+                       scene=9)
+    node124 = Dialogue(from_node_id=123, node_type="talk", speaker="Old Man",
+                       text="Aye, that's the spirit! We'll head to my house and get what you need.", act=1, scene=9)
+    node125 = Dialogue(from_node_id=124, node_type="narration", speaker="Narrator",
+                       text="The group looks at each other, stunned, not sure what to do. The old man doesn't even seem to be listening to them. They begrugingly agree to follow the old man to his house, hoping to get a glimpse of the spot they appeared at the night before.",
+                       act=1, scene=9)
+
+    node126 = Dialogue(from_node_id=125, node_type="talk", speaker="Old Man",
+                       text="Wait here and I'll go in and scrounge up some stuffs for ya.", act=1, scene=10)
+    node127 = Dialogue(from_node_id=126, node_type="talk", speaker="player4",
+                       text="What the heck is going on. Are we really doing this?", act=1, scene=10)
+    node128 = Dialogue(from_node_id=127, node_type="talk", speaker="player3", text="Got any other ideas?", act=1,
+                       scene=10)
+    node129 = Dialogue(from_node_id=128, node_type="narration", speaker="Narrator",
+                       text="The old man reappears with a bunch of raggedy clothes and what look to be wooden weapons.",
+                       act=1, scene=10)
+    node130 = Dialogue(from_node_id=129, node_type="talk", speaker="Old Man",
+                       text="Well this will have to do for now... Whittled by meself these!", act=1, scene=10)
+    node131 = Dialogue(from_node_id=130, node_type="talk", speaker="Old Man",
+                       text="First, for {player1}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. I beg of you, save us.",
+                       act=1, scene=10)
+    node132 = Dialogue(from_node_id=131, node_type="narration", speaker="Narrator",
+                       text="{player1} has learned {ability2}!", act=1, scene=10)
+    node133 = Dialogue(from_node_id=132, node_type="talk", speaker="Old Man",
+                       text="Second, for {player2}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. I beg of you, save us.",
+                       act=1, scene=10)
+    node134 = Dialogue(from_node_id=133, node_type="narration", speaker="Narrator",
+                       text="{player2} has learned {ability2}!", act=1, scene=10)
+    node135 = Dialogue(from_node_id=134, node_type="talk", speaker="Old Man",
+                       text="Third, for {player3}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. I beg of you, save us.",
+                       act=1, scene=10)
+    node136 = Dialogue(from_node_id=135, node_type="narration", speaker="Narrator",
+                       text="{player3} has learned {ability2}!", act=1, scene=10)
+    node137 = Dialogue(from_node_id=136, node_type="talk", speaker="Old Man",
+                       text="Fourth, for {player4}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. The fate of our world lies in your hands. I beg of you, save us.",
+                       act=1, scene=10)
+    node138 = Dialogue(from_node_id=137, node_type="narration", speaker="Narrator",
+                       text="{player4} has learned {ability2}!", act=1, scene=10)
+
+    node139 = Dialogue(from_node_id=138, node_type="narration", speaker="Narrator",
+                       text="The old man walks past them without another word hobbling to the edge of town. A silence came upon the group. The group hurries to put their new weapons and armor on and follow him.",
+                       act=1, scene=11)
+    node140 = Dialogue(from_node_id=139, node_type="talk", speaker="Old Man",
+                       text="May these weapons and armor embolden you. Now I reckon when you left the tavern last night you felt something was different. A feeling in the back of your mind that wasn't there before. This is called Mystic Power. This power, everyone has, but few know how to wield it. Keep it in your thoughts. Practice it, harness it. Use it to defeat evil. There is truly something mystical about this tavern. It has a way of opening peoples' awareness to their inner power.",
+                       act=1, scene=11)
+    node141 = Dialogue(from_node_id=140, node_type="talk", speaker="Old Man",
+                       text="The greater the strength of the ability you use, the more Mystic Power will be needed for it. Use it with caution for this power is not unlimited, and must be replenished through rest.",
+                       act=1, scene=11)
+    node142 = Dialogue(from_node_id=141, node_type="talk", speaker="Old Man",
+                       text="When I gave you your equipment I could sense that each of you awakened a new ability within yourselves. As you may have noticed in your scuffle last night, your fists do very little here. A touch of Mystic Power is necessary to overpower your opponents. Don't worry. You will learn more abilities as you progress on your travels.",
+                       act=1, scene=11)
+    node143 = Dialogue(from_node_id=142, node_type="talk", speaker="Old Man", text="I leave you he----", act=1,
+                       scene=11)
+    node144 = Dialogue(from_node_id=143, node_type="talk", speaker="Drunk Man 1",
+                       text="There they are! Back for more are ya?!", act=1, scene=11)
+
+    node145 = Dialogue(from_node_id=144, node_type="narration", speaker="Narrator",
+                       text="You wake up to the old man giving your group an elixer", act=1, scene=12)
+    node146 = Dialogue(from_node_id=145, node_type="talk", speaker="Old Man",
+                       text="Wakey wakey. This isn't gonna be no cakewalk. Maybe you aren't cut out for this.. Shame. Not sure anyone else is left.",
+                       act=1, scene=12)
+    node147 = Dialogue(from_node_id=146, node_type="talk", speaker="player1",
+                       text="No. We can do this. We were much better this time. We just need to practice.", act=1,
+                       scene=12)
+    node148 = Dialogue(from_node_id=147, node_type="talk", speaker="Old Man",
+                       text="Your spirit is encouraging. Unfortunately, you will have to learn by doing, but I should be able to get some extra equipment for you all before we leave. My whittlework and old rags don't seem to be cutting it. Time is of the essense. Let me take you to the edge of town.",
+                       act=1, scene=12)
+
+    node149 = Dialogue(from_node_id=144, node_type="talk", speaker="Old Man",
+                       text="Well well well, congratulations. It looks like you will do just fine out there. Those guys are pretty tough.",
+                       act=1, scene=13)
+    node150 = Dialogue(from_node_id=149, node_type="talk", speaker="player1", text="Great work team!", act=1, scene=13)
+    node151 = Dialogue(from_node_id=150, node_type="talk", speaker="player2", text="Just kickin' ass and takin' names.",
+                       act=1, scene=13)
+    node152 = Dialogue(from_node_id=151, node_type="talk", speaker="Old Man",
+                       text="Your spirit is encouraging. Get some gold off those guys, then follow me! Time is of the essense. Let me take you to the edge of town.",
+                       act=1, scene=13)
+    node153 = Dialogue(from_node_id=152, node_type="narration", speaker="Narrator",
+                       text="{player1} has received 5 gold!", act=1, scene=13)
+    node154 = Dialogue(from_node_id=153, node_type="narration", speaker="Narrator",
+                       text="{player2} has received 5 gold!", act=1, scene=13)
+    node155 = Dialogue(from_node_id=154, node_type="narration", speaker="Narrator",
+                       text="{player3} has received 5 gold!", act=1, scene=13)
+    node156 = Dialogue(from_node_id=155, node_type="narration", speaker="Narrator",
+                       text="{player4} has received 5 gold!", act=1, scene=13)
+
+    node157 = Dialogue(from_node_id=144, node_type="talk", speaker="Old Man",
+                       text="Well well well, congratulations. It looks like you will do just fine out there. Those guys are pretty tough. A bit worse for wear, but nothing my special elixer can't fix. Here you go.",
+                       act=1, scene=14)
+    node158 = Dialogue(from_node_id=157, node_type="talk", speaker="player1", text="Great work team!", act=1, scene=14)
+    node159 = Dialogue(from_node_id=158, node_type="talk", speaker="player2", text="Just kickin' ass and takin' names",
+                       act=1, scene=14)
+    node160 = Dialogue(from_node_id=159, node_type="talk", speaker="Old Man",
+                       text="Your spirit is encouraging. Get some gold off those guys, then follow me! Time is of the essense. Let me take you to the edge of town.",
+                       act=1, scene=14)
+    node161 = Dialogue(from_node_id=160, node_type="narration", speaker="Narrator",
+                       text="{player1} has received 5 gold!", act=1, scene=14)
+    node162 = Dialogue(from_node_id=161, node_type="narration", speaker="Narrator",
+                       text="{player2} has received 5 gold!", act=1, scene=14)
+    node163 = Dialogue(from_node_id=162, node_type="narration", speaker="Narrator",
+                       text="{player3} has received 5 gold!", act=1, scene=14)
+    node164 = Dialogue(from_node_id=163, node_type="narration", speaker="Narrator",
+                       text="{player4} has received 5 gold!", act=1, scene=14)
+
+    node201 = Dialogue(from_node_id=200, node_type="talk", speaker="Old Man",
+                       text="I don't want to understate our dire situation. You may very well be our last hope.", act=1,
+                       scene=15)
+    node202 = Dialogue(from_node_id=201, node_type="talk", speaker="Old Man",
+                       text="Remember these things: Communicate with your group! Make sure everyone agrees on the decision, trust each other. Unfortunately, trust nearly no one else. You are entering into the unknown out there. Nobody who has left has come back. Get rest as much as possible. Train as much as you can, get better equipment any way you can. As far as I know, the creature.. or creatures... doing this to us is down this road. It's your decision alone on what to do from there. Trust your instincts. Good luck.",
+                       act=1, scene=15)
+    node203 = Dialogue(from_node_id=202, node_type="narration", speaker="Narrator",
+                       text="The group stares out down the road.", act=1, scene=15)
+    node204 = Dialogue(from_node_id=203, node_type="talk", speaker="player4",
+                       text="Your directions are just down the road? Surely you have more to go on than -----", act=1,
+                       scene=15)
+    node205 = Dialogue(from_node_id=204, node_type="narration", speaker="Narrator",
+                       text="The group turns around and the old man has vanished.", act=1, scene=15)
+    node206 = Dialogue(from_node_id=205, node_type="talk", speaker="player3", text="Great.", act=1, scene=15)
+    node207 = Dialogue(from_node_id=206, node_type="talk", speaker="player2",
+                       text="Well... onward and upward, I guess.", act=1, scene=15)
+    node208 = Dialogue(from_node_id=207, node_type="narration", speaker="Narrator",
+                       text="{player1} kneels down next to where the old man was standing and rises up, fists closed.",
+                       act=1, scene=15)
+    node209 = Dialogue(from_node_id=208, node_type="talk", speaker="player4",
+                       text="What's that you got there? Did he drop something?", act=1, scene=15)
+    node210 = Dialogue(from_node_id=209, node_type="narration", speaker="Narrator",
+                       text="{player1} extends his palms out to the group revealing five crystals, one white, one black, one green, one grey, one purple.",
+                       act=1, scene=15)
+    node211 = Dialogue(from_node_id=210, node_type="narration", speaker="Narrator",
+                       text="{player1} kneels down, digs a small hole, and places the green crystal in it and fills the hole back in, puts his hand on the agitated dirt and mutters something. The ground lights up green for a few seconds then dies away.",
+                       act=1, scene=15)
+    node212 = Dialogue(from_node_id=211, node_type="talk", speaker="player3", text="What did you just do?", act=1,
+                       scene=15)
+    node213 = Dialogue(from_node_id=212, node_type="talk", speaker="player1",
+                       text="I... I don't know... but it felt like the correct thing to do. Looks like there's one for each of us. Take one for yourselves and let's head out.",
+                       act=1, scene=15)
+    node214 = Dialogue(from_node_id=213, node_type="narration", speaker="Narrator",
+                       text="{player1} takes the white crystal, {player2} takes the black crystal, {player3} takes the grey crystal, and {player4} takes the purple crystal.",
+                       act=1, scene=15)
+
+    Dialogue.objects.bulk_create(
+        [
+            node1, node2, node3, node4, node5, node6, node7, node8, node9, node10, node11, node12, node13,
+            node14, node15, node16, node17, node18, node19, node20, node21, node22, node23, node24, node25, node26,
+            node27, node28, node29, node30, node31, node32, node33, node34, node35,
+            node36, node37, node38,
+            node39, node40, node41,
+            node101, node102, node103, node104, node105, node106,
+            node107, node108, node109, node110,
+            node111, node112, node113, node114,
+            node115, node116, node117, node118, node119, node120, node121, node122, node123, node124, node125,
+            node126, node127, node128, node129, node130, node131, node132, node133, node134, node135, node136, node137, node138,
+            node139, node140, node141, node142, node143, node144,
+            node145, node146, node147, node148,
+            node149, node150, node151, node152, node153, node154, node155, node156,
+            node157, node158, node159, node160, node161, node162, node163, node164,
+            node201, node202, node203, node204, node205, node206, node207, node208, node209, node210, node211, node212, node213, node214,
+        ]
     )
-    node2 = Dialogue(from_node_id=1, node_type="talk", speaker="Old Man", text="First, for {player1}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. I beg of you, save us.", act=1, scene=1)
-    node3 = Dialogue(from_node_id=2, node_type="narration", speaker="Narrator", text="{player1} has learned {ability2}!", act=1, scene=1)
-    node4 = Dialogue(from_node_id=3, node_type="talk", speaker="Old Man", text="Second, for {player2}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. I beg of you, save us.", act=1, scene=1)
-    node5 = Dialogue(from_node_id=4, node_type="narration", speaker="Narrator", text="{player2} has learned {ability2}!", act=1, scene=1)
-    node6 = Dialogue(from_node_id=5, node_type="talk", speaker="Old Man", text="Third, for {player3}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. I beg of you, save us.", act=1, scene=1)
-    node7 = Dialogue(from_node_id=6, node_type="narration", speaker="Narrator", text="{player3} has learned {ability2}!", act=1, scene=1)
-    node8 = Dialogue(from_node_id=7, node_type="talk", speaker="Old Man", text="Fourth, for {player4}. I give to you my {weapon1} and {armor1}. You are a {role}. {short_role_summary}. You have the most responsibility of all. The fate of our world lies in your hands. I beg of you, save us.", act=1, scene=1)
-    node9 = Dialogue(from_node_id=8, node_type="narration", speaker="Narrator", text="{player4} has learned {ability2}!", act=1, scene=1)
-    node10 = Dialogue(from_node_id=9, node_type="talk", speaker="Old Man", text="This final node has nothing to replace", act=1, scene=1)
-    Dialogue.objects.bulk_create([node1,node2,node3,node4,node5,node6,node7,node8,node9,node10])
-    # node2 = Dialogue(
-    #     from_node_id=1,
-    #     node_type="talk",
-    #     speaker="Drunk Man 1",
-    #     text="Blimey, would ya look at this lot! Fancied themselves lost tourists, do they?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node3 = Dialogue(
-    #     from_node_id=2,
-    #     node_type="talk",
-    #     speaker="Drunk Man 2",
-    #     text="Aven't seen faces like these 'round 'ere before!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node4 = Dialogue(
-    #     from_node_id=3,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="We don't mean any harm. We're just passing through, gentlemen.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node5 = Dialogue(
-    #     from_node_id=4,
-    #     node_type="talk",
-    #     speaker="Drunk Man 1",
-    #     text="Passin' through, eh? Not so fast! We don't get visitors often, so we might as well 'ave some fun with ya!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node6 = Dialogue(
-    #     from_node_id=5,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="We don't want any trouble. We'll be on our way.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node7 = Dialogue(
-    #     from_node_id=6,
-    #     node_type="talk",
-    #     speaker="Drunk Man 2",
-    #     text="Not so fast! You're stayin' put!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node8 = Dialogue(
-    #     from_node_id=7,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Ey, what's all this ruckus?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node9 = Dialogue(
-    #     from_node_id=8,
-    #     node_type="talk",
-    #     speaker="Drunk Man 1",
-    #     text="Stay out of this, old timer! These strangers are gonna get what's comin' to 'em!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node10 = Dialogue(
-    #     from_node_id=9,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Now, now, lads. That's no way to treat our guests. Let 'em pass and be on their way.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node11 = Dialogue(
-    #     from_node_id=10,
-    #     node_type="talk",
-    #     speaker="Drunk Man 2",
-    #     text="Fine, but they better not show their faces 'round here again!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node12 = Dialogue(
-    #     from_node_id=11,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="I apologize for their behavior. They can get a bit rowdy when they've 'ad a few too many. Please, come inside my tavern. You'll be safe there.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node13 = Dialogue(
-    #     from_node_id=12,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Thank you for your help. We'll gladly take shelter in your tavern.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node14 = Dialogue(
-    #     from_node_id=13,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="As your group hurries into the tavern, the old man closes the door behind you, shutting out the noise and tension from the alleyway.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node15 = Dialogue(
-    #     from_node_id=14,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Dude! Is that a freakin wizard's staff?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node16 = Dialogue(
-    #     from_node_id=15,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Oh this old thing? No no no, just an old hand me down from my pappie",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node17 = Dialogue(
-    #     from_node_id=16,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Sick!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node18 = Dialogue(
-    #     from_node_id=17,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Uhh guys.. Excuse me sir.. but can you tell us just what the hell is going on?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node19 = Dialogue(
-    #     from_node_id=18,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Sit, sit! Let me tell ya a tale of our plight. Evil creatures, they are. Taking control over our town, the last stronghold of good in our world. We need help, you see, from individuals not easily swayed by these beasts. And, it dawns on me, I believe you and your group might be the ones we've been waitin' for.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node20 = Dialogue(
-    #     from_node_id=19,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="Us? Why us?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node21 = Dialogue(
-    #     from_node_id=20,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Not entirely sure, my dear, but it seems fate has brought you here. We've been seekin' aid for a long time now, and you seem like a capable bunch. A band of mercenaries you ain't, but together, you make a good team.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node22 = Dialogue(
-    #     from_node_id=21,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="How did we even end up in this village?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node23 = Dialogue(
-    #     from_node_id=22,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Have another round, and I'll tell ya what I think. As for the 'how'... well, we're in a magical and mysterious place, ain't we? My guess is that you were brought here for a reason. The only way to defeat these creatures is with outside help, and you seem like the help we need.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node24 = Dialogue(
-    #     from_node_id=23,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="Why now?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node25 = Dialogue(
-    #     from_node_id=24,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Time's runnin' out, I'm afraid. These creatures are changin', and it's not for the better. Other towns nearby have already felt their wrath. We're on the brink of losin' ourselves. You might just be our last hope.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node26 = Dialogue(
-    #     from_node_id=25,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="But we're not warriors or fighters. We're just regular old people!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node27 = Dialogue(
-    #     from_node_id=26,
-    #     node_type="talk",
-    #     speaker="Old Man",
-    #     text="Regular people, eh? I don't believe that for a second. I believe you have somethin' within you. You'll find what you need to face this challenge. First things first, get a room upstairs in the tavern inn. In the morning, head to the general store and gather some equipment for your journey. You'll need it before you set off.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node28 = Dialogue(
-    #     from_node_id=27,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="Set off where??",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node29 = Dialogue(
-    #     from_node_id=28,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="The old man had already lumbered off to get another tankard of ale from the barman.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node30 = Dialogue(
-    #     from_node_id=29,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="What are we going to do?",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # player decision
-    # node31 = Dialogue(
-    #     from_node_id=30,
-    #     node_type="choice",
-    #     speaker="player1",
-    #     text="Book a night at the inn and see what tomorrow brings",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node32 = Dialogue(
-    #     from_node_id=30,
-    #     node_type="choice",
-    #     speaker="player1",
-    #     text="Attempt to leave the tavern and try to get back home",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node33 = Dialogue(
-    #     from_node_id=30,
-    #     node_type="choice",
-    #     speaker="player1",
-    #     text="Continue to talk to the old man",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # node 31 Tree: Book a night at the inn and see what tomorrow brings
-    # node34 = Dialogue(
-    #     from_node_id=31,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="We've had quite a day. Maybe we should get some rest, see what tomorrow brings.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node35 = Dialogue(
-    #     from_node_id=34,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="It's been a lot to take in. A good night's rest might clear our heads.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node36 = Dialogue(
-    #     from_node_id=35,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="But what if we're really stuck here? We can't just wait around forever.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node37 = Dialogue(
-    #     from_node_id=36,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="We'll keep our eyes and ears open. If there's a chance to find our way back, we'll take it. For now, let's book a night at the inn and regroup in the morning.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node38 = Dialogue(
-    #     from_node_id=37,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="As the group gets settled into their room above the tavern inn, they realize they have a window with a view into the very same alleyway they found themselves in earlier that evening.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node39 = Dialogue(
-    #     from_node_id=38,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Hold on, everyone. Come take a look at this!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node40 = Dialogue(
-    #     from_node_id=39,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="What is it?",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node41 = Dialogue(
-    #     from_node_id=40,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="It's the exact spot where we found ourselves transported! There's a weird shimmer in the air. Maybe that's just me, I'm pretty zoinked right now, but I think we should investigate.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node42 = Dialogue(
-    #     from_node_id=41,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="You're right. It's worth checking out. Let's head over there and see if we can find any clues.",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # node 32 Tree: Attempt to leave the tavern and try to get home
-    # node43 = Dialogue(
-    #     from_node_id=32,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="We can't just sit around here hoping for answers. We need to go back to where we entered this place and look for clues. Maybe we'll find a way back home.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node44 = Dialogue(
-    #     from_node_id=43,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="I agree. It's worth a shot. We should at least try to retrace our steps.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node45 = Dialogue(
-    #     from_node_id=44,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Alright, it's settled then. Let's head back to the alley and see if we can find any clues.",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # node 33 Tree: Continue to talk to the old man
-    # node46 = Dialogue(
-    #     from_node_id=33,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="The group debates their options, torn between waiting for answers and seeking a way back home. They turn back to the old man and he is passed out under the table.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node47 = Dialogue(
-    #     from_node_id=46,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Dude's wasted! He isn't going to be any help until the morning.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node48 = Dialogue(
-    #     from_node_id=47,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Dammit. OK. Executive decision, let's retrace our steps.",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # 3 options lead to same choice
-    # node49 = Dialogue(
-    #     from_node_id=42,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="They open the door to the tavern to leave and finally have a chance to take in their surroundings. While it's mostly familiar, there was something unsettling about this town.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node50 = Dialogue(
-    #     from_node_id=45,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="They open the door to the tavern to leave and finally have a chance to take in their surroundings. While it's mostly familiar, there was something unsettling about this town.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node51 = Dialogue(
-    #     from_node_id=48,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="They open the door to the tavern to leave and finally have a chance to take in their surroundings. While it's mostly familiar, there was something unsettling about this town.",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # continuation of story from node 49
-    # node52 = Dialogue(
-    #     from_node_id=49,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Do you guys feel that too? It's like there's something... different.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node53 = Dialogue(
-    #     from_node_id=52,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="Yeah, it's strange. I can't quite put my finger on it.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node54 = Dialogue(
-    #     from_node_id=53,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Everything's dead, guys.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node55 = Dialogue(
-    #     from_node_id=54,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="And it was. The group, looking around, noticed that all the trees and plants were either dead, or dying.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node56 = Dialogue(
-    #     from_node_id=55,
-    #     node_type="talk",
-    #     speaker="Drunk Man 1",
-    #     text="HEY! Look who's back for another beating!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node57 = Dialogue(
-    #     from_node_id=56,
-    #     node_type="talk",
-    #     speaker="Drunk Man 2",
-    #     text="We warned ya to stay away!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node58 = Dialogue(
-    #     from_node_id=57,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="We've had enough of this. Let's just take these guys out!",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # continuation of story from node 50
-    # node59 = Dialogue(
-    #     from_node_id=50,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Do you guys feel that too? It's like there's something... different.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node60 = Dialogue(
-    #     from_node_id=59,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="Yeah, it's strange. I can't quite put my finger on it.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node61 = Dialogue(
-    #     from_node_id=60,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Everything's dead, guys.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node62 = Dialogue(
-    #     from_node_id=61,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="And it was. The group, looking around, noticed that all the trees and plants were either dead, or dying.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node63 = Dialogue(
-    #     from_node_id=62,
-    #     node_type="talk",
-    #     speaker="Drunk Man 1",
-    #     text="HEY! Look who's back for another beating!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node64 = Dialogue(
-    #     from_node_id=63,
-    #     node_type="talk",
-    #     speaker="Drunk Man 2",
-    #     text="We warned ya to stay away!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node65 = Dialogue(
-    #     from_node_id=64,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="We've had enough of this. Let's just take these guys out!",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # # # continuation of story from node 51
-    # node66 = Dialogue(
-    #     from_node_id=51,
-    #     node_type="talk",
-    #     speaker="player1",
-    #     text="Do you guys feel that too? It's like there's something... different.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node67 = Dialogue(
-    #     from_node_id=66,
-    #     node_type="talk",
-    #     speaker="player3",
-    #     text="Yeah, it's strange. I can't quite put my finger on it.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node68 = Dialogue(
-    #     from_node_id=67,
-    #     node_type="talk",
-    #     speaker="player2",
-    #     text="Everything's dead, guys.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node69 = Dialogue(
-    #     from_node_id=68,
-    #     node_type="narration",
-    #     speaker="Narrator",
-    #     text="And it was. The group, looking around, noticed that all the trees and plants were either dead, or dying.",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node70 = Dialogue(
-    #     from_node_id=69,
-    #     node_type="talk",
-    #     speaker="Drunk Man 1",
-    #     text="HEY! Look who's back for another beating!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node71 = Dialogue(
-    #     from_node_id=70,
-    #     node_type="talk",
-    #     speaker="Drunk Man 2",
-    #     text="We warned ya to stay away!",
-    #     act=1,
-    #     scene=1,
-    # )
-    # node72 = Dialogue(
-    #     from_node_id=71,
-    #     node_type="talk",
-    #     speaker="player4",
-    #     text="We've had enough of this. Let's just take these guys out!",
-    #     act=1,
-    #     scene=1,
-    # )
-
-    # Dialogue.objects.bulk_create(
-    #     [
-    #         node1,
-    #         node2,
-    #         node3,
-    #         node4,
-    #         node5,
-    #         node6,
-    #         node7,
-    #         node8,
-    #         node9,
-    #         node10,
-    #         node11,
-    #         node12,
-    #         node13,
-    #         node14,
-    #         node15,
-    #         node16,
-    #         node17,
-    #         node18,
-    #         node19,
-    #         node20,
-    #         node21,
-    #         node22,
-    #         node23,
-    #         node24,
-    #         node25,
-    #         node26,
-    #         node27,
-    #         node28,
-    #         node29,
-    #         node30,
-    #         node31,
-    #         node32,
-    #         node33,
-    #         node34,
-    #         node35,
-    #         node36,
-    #         node37,
-    #         node38,
-    #         node39,
-    #         node40,
-    #         node41,
-    #         node42,
-    #         node43,
-    #         node44,
-    #         node45,
-    #         node46,
-    #         node47,
-    #         node48,
-    #         node49,
-    #         node50,
-    #         node51,
-    #         node52,
-    #         node53,
-    #         node54,
-    #         node55,
-    #         node56,
-    #         node57,
-    #         node58,
-    #         node59,
-    #         node60,
-    #         node61,
-    #         node62,
-    #         node63,
-    #         node64,
-    #         node65,
-    #         node66,
-    #         node67,
-    #         node68,
-    #         node69,
-    #         node70,
-    #         node71,
-    #         node72,
-    #     ]
-    # )
