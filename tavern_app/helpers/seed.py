@@ -87,9 +87,37 @@ def seed_data():
 
     # scene images
     scene_image1 = SceneImage(act=1, scene=1, image="setting-alley.png")
+    scene_image2 = SceneImage(act=1, scene=2, image="setting-alley.png")
+    scene_image3 = SceneImage(act=1, scene=3, image="setting-alley.png")
+    scene_image4 = SceneImage(act=1, scene=4, image="setting-alley.png")
+    scene_image5 = SceneImage(act=1, scene=5, image="setting-alley.png")
+    scene_image6 = SceneImage(act=1, scene=6, image="setting-alley.png")
+    scene_image7 = SceneImage(act=1, scene=7, image="setting-alley.png")
+    scene_image8 = SceneImage(act=1, scene=8, image="setting-alley.png")
+    scene_image9 = SceneImage(act=1, scene=9, image="setting-alley.png")
+    scene_image10 = SceneImage(act=1, scene=10, image="setting-alley.png")
+    scene_image11 = SceneImage(act=1, scene=11, image="setting-alley.png")
+    scene_image12 = SceneImage(act=1, scene=12, image="setting-alley.png")
+    scene_image13 = SceneImage(act=1, scene=13, image="setting-alley.png")
+    scene_image14 = SceneImage(act=1, scene=14, image="setting-alley.png")
+    scene_image15 = SceneImage(act=1, scene=15, image="setting-alley.png")
     SceneImage.objects.bulk_create(
         [
             scene_image1,
+            scene_image2,
+            scene_image3,
+            scene_image4,
+            scene_image5,
+            scene_image6,
+            scene_image7,
+            scene_image8,
+            scene_image9,
+            scene_image10,
+            scene_image11,
+            scene_image12,
+            scene_image13,
+            scene_image14,
+            scene_image15,
         ]
     )
 
