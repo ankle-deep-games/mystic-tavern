@@ -1,10 +1,15 @@
 # Armor
 ARCHMAGES_VESTMENTS = "Archmage's Vestments"
+CELESTIAL_CIRCLET = "Celestial Circlet"
 CLOTH_TUNIC = "Cloth Tunic"
 ELVEN_WINDWRAP = "Elven Windwrap"
+FALCONERS_BRACERS = "Falconer's Bracers"
+HARMONISTS_CUMMERBUND = "Harmonist's Cummerbund"
 MAESTROS_TAILCOAT = "Maestro's Tailcoat"
-RADIANT_VALOR_PLATE = "Radiant Valor Plate"
+RADIANT_CUIRASS = "Radiant Cuirass"
+SHADOWWEAVE_CAPE = "Shadowweave Cape"
 SORCERERS_ROBES = "Sorcerer's Robes"
+VALOR_SHIELD = "Valor Shield"
 
 # Weapon
 IVORY_ROD = "Ivory Rod"

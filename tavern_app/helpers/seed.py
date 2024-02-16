@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from ..constants import DIVINE_LIGHT, GALE_FURY, SHADOW_BLAST, ATTACK, SHIELD_BASH, SHATTER_SHOT, ANTHEM_OF_VALOR, \
     DIVINE_STRIKE, SHADOW_VOLLEY, ENCHANTED_GROVE, RESONANT_STONES, HOLY_WRATH, GROVES_VENGEANCE, SANCTUARY, \
     ARCANE_DARKNESS, ETHEREAL_CRESCENDO, WOOD_STAFF, WOOD_SWORD, WOOD_BOW, WOOD_FLUTE, LONGSWORD, LONGBOW, IVORY_ROD, \
-    OBSIDIAN_WAND, MELODIOUS_LUTE, CLOTH_TUNIC, RADIANT_VALOR_PLATE, ELVEN_WINDWRAP, ARCHMAGES_VESTMENTS, \
-    SORCERERS_ROBES, MAESTROS_TAILCOAT
+    OBSIDIAN_WAND, MELODIOUS_LUTE, CLOTH_TUNIC, RADIANT_CUIRASS, ELVEN_WINDWRAP, ARCHMAGES_VESTMENTS, \
+    SORCERERS_ROBES, MAESTROS_TAILCOAT, VALOR_SHIELD, FALCONERS_BRACERS, CELESTIAL_CIRCLET, SHADOWWEAVE_CAPE, \
+    HARMONISTS_CUMMERBUND
 from ..models import (
     Game,
     GameUser,
@@ -277,7 +278,7 @@ def seed_data():
         mp_mod=5,
     )
     armor2 = Armor(
-        name="Steel Plate Armor",
+        name=RADIANT_CUIRASS,
         defense_mod=20,
         myst_defense_mod=20,
         speed_mod=10,
@@ -285,7 +286,7 @@ def seed_data():
         mp_mod=10,
     )
     armor3 = Armor(
-        name="Leather Armor",
+        name=ELVEN_WINDWRAP,
         defense_mod=15,
         myst_defense_mod=15,
         speed_mod=15,
@@ -293,7 +294,7 @@ def seed_data():
         mp_mod=15,
     )
     armor4 = Armor(
-        name="Acolyte's Robes",
+        name=ARCHMAGES_VESTMENTS,
         defense_mod=18,
         myst_defense_mod=20,
         speed_mod=10,
@@ -309,7 +310,7 @@ def seed_data():
         mp_mod=20,
     )
     armor6 = Armor(
-        name="Harmonist's Cummerbund",
+        name=MAESTROS_TAILCOAT,
         defense_mod=10,
         myst_defense_mod=20,
         speed_mod=15,
@@ -317,7 +318,7 @@ def seed_data():
         mp_mod=20,
     )
     armor7 = Armor(
-        name=RADIANT_VALOR_PLATE,
+        name=VALOR_SHIELD,
         defense_mod=20,
         myst_defense_mod=25,
         speed_mod=15,
@@ -325,7 +326,7 @@ def seed_data():
         mp_mod=23,
     )
     armor8 = Armor(
-        name=ELVEN_WINDWRAP,
+        name=FALCONERS_BRACERS,
         defense_mod=20,
         myst_defense_mod=20,
         speed_mod=30,
@@ -333,7 +334,7 @@ def seed_data():
         mp_mod=18,
     )
     armor9 = Armor(
-        name=ARCHMAGES_VESTMENTS,
+        name=CELESTIAL_CIRCLET,
         defense_mod=25,
         myst_defense_mod=18,
         speed_mod=20,
@@ -341,7 +342,7 @@ def seed_data():
         mp_mod=25,
     )
     armor10 = Armor(
-        name="Warlock's Cloak",
+        name=SHADOWWEAVE_CAPE,
         defense_mod=25,
         myst_defense_mod=20,
         speed_mod=20,
@@ -349,52 +350,12 @@ def seed_data():
         mp_mod=28,
     )
     armor11 = Armor(
-        name="Virtuoso's Ensemble",
+        name=HARMONISTS_CUMMERBUND,
         defense_mod=25,
         myst_defense_mod=20,
         speed_mod=23,
         hp_mod=20,
         mp_mod=25,
-    )
-    armor12 = Armor(
-        name="Divine Warplate",
-        defense_mod=40,
-        myst_defense_mod=40,
-        speed_mod=20,
-        hp_mod=30,
-        mp_mod=20,
-    )
-    armor13 = Armor(
-        name="Galestrider Vest",
-        defense_mod=35,
-        myst_defense_mod=35,
-        speed_mod=35,
-        hp_mod=25,
-        mp_mod=20,
-    )
-    armor14 = Armor(
-        name="Celestrial Regalia",
-        defense_mod=25,
-        myst_defense_mod=40,
-        speed_mod=30,
-        hp_mod=25,
-        mp_mod=30,
-    )
-    armor15 = Armor(
-        name="Shadowweave Cape",
-        defense_mod=20,
-        myst_defense_mod=40,
-        speed_mod=35,
-        hp_mod=20,
-        mp_mod=35,
-    )
-    armor16 = Armor(
-        name=MAESTROS_TAILCOAT,
-        defense_mod=20,
-        myst_defense_mod=40,
-        speed_mod=35,
-        hp_mod=20,
-        mp_mod=35,
     )
     Armor.objects.bulk_create(
         [
@@ -409,11 +370,6 @@ def seed_data():
             armor9,
             armor10,
             armor11,
-            armor12,
-            armor13,
-            armor14,
-            armor15,
-            armor16,
         ]
     )
 
