@@ -206,44 +206,6 @@ def seed_data():
         speed_mod=12,
         mp_mod=18,
     )
-    weapon10 = Weapon(
-        name="Holy Avenger", attack_mod=30, myst_attack_mod=25, speed_mod=15, mp_mod=20
-    )
-    weapon11 = Weapon(
-        name="Shadowstrike", attack_mod=35, myst_attack_mod=15, speed_mod=20, mp_mod=20
-    )
-    weapon12 = Weapon(
-        name="Divine Scepter",
-        attack_mod=15,
-        myst_attack_mod=30,
-        speed_mod=15,
-        mp_mod=30,
-    )
-    weapon13 = Weapon(
-        name="Voidcaller", attack_mod=15, myst_attack_mod=30, speed_mod=15, mp_mod=30
-    )
-    weapon14 = Weapon(
-        name="Symphony Harp", attack_mod=15, myst_attack_mod=30, speed_mod=17, mp_mod=28
-    )
-    weapon15 = Weapon(
-        name="Excalibur", attack_mod=45, myst_attack_mod=30, speed_mod=20, mp_mod=25
-    )
-    weapon16 = Weapon(
-        name="Arbalest", attack_mod=53, myst_attack_mod=20, speed_mod=22, mp_mod=25
-    )
-    weapon17 = Weapon(
-        name="Seraph's Wand", attack_mod=20, myst_attack_mod=40, speed_mod=20, mp_mod=40
-    )
-    weapon18 = Weapon(
-        name="Ulrich Tome", attack_mod=20, myst_attack_mod=40, speed_mod=20, mp_mod=40
-    )
-    weapon19 = Weapon(
-        name="Seranade Baton",
-        attack_mod=20,
-        myst_attack_mod=38,
-        speed_mod=22,
-        mp_mod=40,
-    )
     Weapon.objects.bulk_create(
         [
             weapon1,
@@ -255,16 +217,6 @@ def seed_data():
             weapon7,
             weapon8,
             weapon9,
-            weapon10,
-            weapon11,
-            weapon12,
-            weapon13,
-            weapon14,
-            weapon15,
-            weapon16,
-            weapon17,
-            weapon18,
-            weapon19,
         ]
     )
 
