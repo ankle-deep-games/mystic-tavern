@@ -95,7 +95,8 @@ ROLE_GAME_PROGRESSION_DICT = {
         "armor1": ARCHER_ARMOR_1,
         "armor2": ARCHER_ARMOR_2,
         "armor3": ARCHER_ARMOR_3,
-        "short_role_summary": "dope shooter",
+        "short_role_summary": "The Archer, a sharpshooter with a mighty bow, knocks ‘em dead from a distance, givin’ a "
+                              "hand to their mates in bloody fights with eagle eyes and quick feet.",
         "ability2": ARCHER_ABILITY_2,
         "ability3": ARCHER_ABILITY_3,
         "ability4": ARCHER_ABILITY_4,
@@ -106,7 +107,10 @@ ROLE_GAME_PROGRESSION_DICT = {
         "armor1": BARD_ARMOR_1,
         "armor2": BARD_ARMOR_2,
         "armor3": BARD_ARMOR_3,
-        "short_role_summary": "dope musician",
+        "short_role_summary": "The Bard, a charming and handy helper, plays music and tells stories. They cheer up "
+                              "their mates with happy tunes and thrilling tales, makin’ them brave and strong. "
+                              "Bards are good at changin’ the fight and helpin’ out, keepin’ their team keen and "
+                              "prepared for any trouble ahead.",
         "ability2": BARD_ABILITY_2,
         "ability3": BARD_ABILITY_3,
         "ability4": BARD_ABILITY_4,
@@ -117,7 +121,9 @@ ROLE_GAME_PROGRESSION_DICT = {
         "armor1": BLACKMAGE_ARMOR_1,
         "armor2": BLACKMAGE_ARMOR_2,
         "armor3": BLACKMAGE_ARMOR_3,
-        "short_role_summary": "dope mage",
+        "short_role_summary": "The Black Mage, a master of magic, holds a staff buzzin’ with dark power, blastin’ "
+                              "enemies from far away with wicked spells. Black Mages cast complex curses, summonin’ "
+                              "nasty things and twistin’ the laws of nature to destroy their enemies from afar.",
         "ability2": BLACKMAGE_ABILITY_2,
         "ability3": BLACKMAGE_ABILITY_3,
         "ability4": BLACKMAGE_ABILITY_4,
@@ -128,7 +134,10 @@ ROLE_GAME_PROGRESSION_DICT = {
         "armor1": PALADIN_ARMOR_1,
         "armor2": PALADIN_ARMOR_2,
         "armor3": PALADIN_ARMOR_3,
-        "short_role_summary": "dope fighter",
+        "short_role_summary": "The Paladin, a brave and strong fighter, wears thick armor and brandishes a gleaming "
+                              "sword and shield. They’re good at bashin’ enemies up close, crushin’ them with mighty "
+                              "blows. Paladins are famous for their grit, protectin’ their friends from danger and "
+                              "just straight out stormin’ the evil bastards!",
         "ability2": PALADIN_ABILITY_2,
         "ability3": PALADIN_ABILITY_3,
         "ability4": PALADIN_ABILITY_4,
@@ -139,7 +148,10 @@ ROLE_GAME_PROGRESSION_DICT = {
         "armor1": WHITEMAGE_ARMOR_1,
         "armor2": WHITEMAGE_ARMOR_2,
         "armor3": WHITEMAGE_ARMOR_3,
-        "short_role_summary": "dope healer",
+        "short_role_summary": "The White Mage, a healer and restorer, carries a staff and is versed in ancient magic. "
+                              "They’re experts at fixin’ injuries and boostin’ their friends. White Mages use the "
+                              "power of light, healin’ hurt bodies and fillin’ up energy, makin’ sure their team "
+                              "stays tough and ready on their dangerous adventure.",
         "ability2": WHITEMAGE_ABILITY_2,
         "ability3": WHITEMAGE_ABILITY_3,
         "ability4": WHITEMAGE_ABILITY_4,
