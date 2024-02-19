@@ -588,6 +588,31 @@ def scene(request, game_id, act, number):
                 # Act 1 #
                 #########
                 if act == 1:
+                    # TODO change to consts
+                    if scene_num == 1 and dialogue.id == 13:
+                        # write next game dialogue first node of act 1 scene 2
+                        next_scene_dialogue = GameDialogue(
+                            game=game, dialogue=Dialogue.objects.get(pk=14)
+                        )
+                        next_scene_dialogue.save()
+                        
+                        # update gamelocation to act 1 scene 2
+                        gamelocation.location_type = "scene"
+                        gamelocation.number = 2
+                        gamelocation.save()
+                        new_url = reverse(
+                            "tavern_app:" + gamelocation.location_type,
+                            kwargs={
+                                "game_id": game.id,
+                                "act": gamelocation.act,
+                                "number": gamelocation.number,
+                            },
+                        )
+
+                    # TODO make END_OF_SCENE_2_NODES
+
+                    # TODO other scenes in act 1 that go to another scene or battle
+
                     # TODO https://trello.com/c/jYRmW3vN/309-weapon1-armor1-ability2-real-nodes
                     if scene_num == 1 and dialogue.id == PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE:
                         equip_player_with_starting_weapon1_armor1_ability2(game=game, player_num=1)
@@ -600,6 +625,7 @@ def scene(request, game_id, act, number):
 
                     # TODO https://trello.com/c/cS7s3OEs/217-combat-update-gamelocation-when-winning-and-losing-battles-depending-on-next-step-in-game
                     if scene_num == 1 and dialogue.id in END_OF_SCENE_1_NODES:
+                        # TODO update real nodes. no longer end of scene 1
                         gamelocation.location_type = "battle"
                         gamelocation.save()
                         new_url = reverse(
