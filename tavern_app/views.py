@@ -16,7 +16,8 @@ from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_
     PLAYER_1_WEAPON_UPGRADE_NODE, PLAYER_2_WEAPON_UPGRADE_NODE, PLAYER_3_WEAPON_UPGRADE_NODE, \
     PLAYER_4_WEAPON_UPGRADE_NODE, ACT_1_SCENE_1_ENDING_NODE, ACT_1_SCENE_2_STARTING_NODE, \
     ACT_1_SCENE_2_ENDING_NODE_CHOICE_1, ACT_1_SCENE_2_ENDING_NODE_CHOICE_2, ACT_1_SCENE_3_STARTING_NODE, \
-    ACT_1_SCENE_4_STARTING_NODE, ACT_1_SCENE_2_ENDING_NODE_CHOICE_3, ACT_1_SCENE_5_STARTING_NODE
+    ACT_1_SCENE_4_STARTING_NODE, ACT_1_SCENE_2_ENDING_NODE_CHOICE_3, ACT_1_SCENE_5_STARTING_NODE, \
+    ACT_1_SCENE_6_STARTING_NODE, ACT_1_SCENE_3_ENDING_NODE, ACT_1_SCENE_4_ENDING_NODE, ACT_1_SCENE_5_ENDING_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -618,7 +619,7 @@ def scene(request, game_id, act, number):
                     ###########
                     # SCENE 2 #
                     ###########
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_1:
+                    if scene_num == 2 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_1:
                         # write next game dialogue first node of act 1, scene 3
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_3_STARTING_NODE)
@@ -640,7 +641,7 @@ def scene(request, game_id, act, number):
                             },
                         )
 
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_2:
+                    if scene_num == 2 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_2:
                         # write next game dialogue first node of act 1, scene 4
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_4_STARTING_NODE)
@@ -662,7 +663,7 @@ def scene(request, game_id, act, number):
                             },
                         )
 
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_3:
+                    if scene_num == 2 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_3:
                         # write next game dialogue first node of act 1, scene 5
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_5_STARTING_NODE)
@@ -687,7 +688,99 @@ def scene(request, game_id, act, number):
                     ###########
                     # SCENE 3 #
                     ###########
-                    # TODO
+                    if scene_num == 3 and dialogue.id == ACT_1_SCENE_3_ENDING_NODE:
+                        # write next game dialogue first node of act 1, scene 6
+                        # TODO hook these up right.
+                        # TODO its going from scene 3 to scene 6 but with no scene image or dialogue display
+                        # Instead of getting and inserting a node. I need to create my own node
+                        # Node is 100
+                        # from_node is 35, 38, 41
+                        # TODO https://trello.com/c/N6oIJUrp/323-scene-3-to-6
+                        # TODO Change GameDialogue
+                        # TODO dialogue = models.OneToOneField(Dialogue, on_delete=models.PROTECT, null=True)
+                        # Removes the foreign key requirement so I can commit a Dialogue() that doesn't exist in DB
+                        # FK requires it exist in DB. This new way it's an optional join and we can write an in memory
+                        # version of Dialogue() and save it directly.
+
+                        # Solves this error
+                        # TypeError at /games/5/act/1/scene/3
+                        # save() got an unexpected keyword argument 'validate'
+                        
+                        node100 = Dialogue(from_node_id=ACT_1_SCENE_3_ENDING_NODE, node_type="narration", speaker="Narrator",
+                                           text="They open the door to the tavern to leave and sense an unusual "
+                                                "change in the air. Something inside them feels different—strength, "
+                                                "confidence, or something else they can't quite grasp.",
+                                           act=1, scene=ACT_1_SCENE_6_STARTING_NODE)
+
+                        next_scene_dialogue = GameDialogue(
+                            game=game, dialogue=node100
+                        )
+                        next_scene_dialogue.save()
+
+                        # update gamelocation to act 1, scene 6
+                        gamelocation.location_type = "scene"
+                        gamelocation.number = 6
+                        gamelocation.save()
+
+                        # create new_url so front end can redirect player
+                        new_url = reverse(
+                            "tavern_app:" + gamelocation.location_type,
+                            kwargs={
+                                "game_id": game.id,
+                                "act": gamelocation.act,
+                                "number": gamelocation.number,
+                            },
+                        )
+
+                        ###########
+                        # SCENE 4 #
+                        ###########
+                        if scene_num == 4 and dialogue.id == ACT_1_SCENE_4_ENDING_NODE:
+                            # write next game dialogue first node of act 1, scene 6
+                            next_scene_dialogue = GameDialogue(
+                                game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
+                            )
+                            next_scene_dialogue.save()
+
+                            # update gamelocation to act 1, scene 6
+                            gamelocation.location_type = "scene"
+                            gamelocation.number = 6
+                            gamelocation.save()
+
+                            # create new_url so front end can redirect player
+                            new_url = reverse(
+                                "tavern_app:" + gamelocation.location_type,
+                                kwargs={
+                                    "game_id": game.id,
+                                    "act": gamelocation.act,
+                                    "number": gamelocation.number,
+                                },
+                            )
+
+                        ###########
+                        # SCENE 5 #
+                        ###########
+                        if scene_num == 5 and dialogue.id == ACT_1_SCENE_5_ENDING_NODE:
+                            # write next game dialogue first node of act 1, scene 6
+                            next_scene_dialogue = GameDialogue(
+                                game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
+                            )
+                            next_scene_dialogue.save()
+
+                            # update gamelocation to act 1, scene 6
+                            gamelocation.location_type = "scene"
+                            gamelocation.number = 6
+                            gamelocation.save()
+
+                            # create new_url so front end can redirect player
+                            new_url = reverse(
+                                "tavern_app:" + gamelocation.location_type,
+                                kwargs={
+                                    "game_id": game.id,
+                                    "act": gamelocation.act,
+                                    "number": gamelocation.number,
+                                },
+                            )
 
                     # TODO https://trello.com/c/jYRmW3vN/309-weapon1-armor1-ability2-real-nodes
                     if scene_num == 1 and dialogue.id == PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE:
