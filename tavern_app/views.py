@@ -695,8 +695,20 @@ def scene(request, game_id, act, number):
                         # Instead of getting and inserting a node. I need to create my own node
                         # Node is 100
                         # from_node is 35, 38, 41
+                        # TODO https://trello.com/c/N6oIJUrp/323-scene-3-to-6
+                        # TODO Change GameDialogue
+                        # TODO dialogue = models.OneToOneField(Dialogue, on_delete=models.PROTECT, null=True)
+                        # Removes the foreign key requirement so I can commit a Dialogue() that doesn't exist in DB
+                        # FK requires it exist in DB. This new way it's an optional join and we can write an in memory
+                        # version of Dialogue() and save it directly.
+                        node100 = Dialogue(from_node_id=ACT_1_SCENE_3_ENDING_NODE, node_type="narration", speaker="Narrator",
+                                           text="They open the door to the tavern to leave and sense an unusual "
+                                                "change in the air. Something inside them feels different—strength, "
+                                                "confidence, or something else they can't quite grasp.",
+                                           act=1, scene=ACT_1_SCENE_6_STARTING_NODE)
+
                         next_scene_dialogue = GameDialogue(
-                            game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
+                            game=game, dialogue=node100
                         )
                         next_scene_dialogue.save()
 
