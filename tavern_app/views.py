@@ -690,6 +690,11 @@ def scene(request, game_id, act, number):
                     ###########
                     if scene_num == 3 and dialogue.id == ACT_1_SCENE_3_ENDING_NODE:
                         # write next game dialogue first node of act 1, scene 6
+                        # TODO hook these up right.
+                        # TODO its going from scene 3 to scene 6 but with no scene image or dialogue display
+                        # Instead of getting and inserting a node. I need to create my own node
+                        # Node is 100
+                        # from_node is 35, 38, 41
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
                         )
