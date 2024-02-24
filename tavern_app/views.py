@@ -701,6 +701,11 @@ def scene(request, game_id, act, number):
                         # Removes the foreign key requirement so I can commit a Dialogue() that doesn't exist in DB
                         # FK requires it exist in DB. This new way it's an optional join and we can write an in memory
                         # version of Dialogue() and save it directly.
+
+                        # Solves this error
+                        # TypeError at /games/5/act/1/scene/3
+                        # save() got an unexpected keyword argument 'validate'
+                        
                         node100 = Dialogue(from_node_id=ACT_1_SCENE_3_ENDING_NODE, node_type="narration", speaker="Narrator",
                                            text="They open the door to the tavern to leave and sense an unusual "
                                                 "change in the air. Something inside them feels different—strength, "
