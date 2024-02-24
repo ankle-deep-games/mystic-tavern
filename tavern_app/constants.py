@@ -175,6 +175,7 @@ ACT_1_SCENE_4_ENDING_NODE = 38
 ACT_1_SCENE_5_STARTING_NODE = 39
 ACT_1_SCENE_5_ENDING_NODE = 41
 
+ACT_1_SCENE_6_STARTING_NODE = 100
 
 # TODO real quest nodes https://trello.com/c/7ohf05pK/250-finalize-weapon-armor-ability-assignments-for-each-role-and-assign-them-in-the-code-as-game-progresses
 # Dialogue pk/ids of important nodes used for game flow in views.scene

@@ -16,7 +16,8 @@ from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_
     PLAYER_1_WEAPON_UPGRADE_NODE, PLAYER_2_WEAPON_UPGRADE_NODE, PLAYER_3_WEAPON_UPGRADE_NODE, \
     PLAYER_4_WEAPON_UPGRADE_NODE, ACT_1_SCENE_1_ENDING_NODE, ACT_1_SCENE_2_STARTING_NODE, \
     ACT_1_SCENE_2_ENDING_NODE_CHOICE_1, ACT_1_SCENE_2_ENDING_NODE_CHOICE_2, ACT_1_SCENE_3_STARTING_NODE, \
-    ACT_1_SCENE_4_STARTING_NODE, ACT_1_SCENE_2_ENDING_NODE_CHOICE_3, ACT_1_SCENE_5_STARTING_NODE
+    ACT_1_SCENE_4_STARTING_NODE, ACT_1_SCENE_2_ENDING_NODE_CHOICE_3, ACT_1_SCENE_5_STARTING_NODE, \
+    ACT_1_SCENE_6_STARTING_NODE, ACT_1_SCENE_3_ENDING_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -687,7 +688,27 @@ def scene(request, game_id, act, number):
                     ###########
                     # SCENE 3 #
                     ###########
-                    # TODO
+                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_3_ENDING_NODE:
+                        # write next game dialogue first node of act 1, scene 6
+                        next_scene_dialogue = GameDialogue(
+                            game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
+                        )
+                        next_scene_dialogue.save()
+
+                        # update gamelocation to act 1, scene 6
+                        gamelocation.location_type = "scene"
+                        gamelocation.number = 6
+                        gamelocation.save()
+
+                        # create new_url so front end can redirect player
+                        new_url = reverse(
+                            "tavern_app:" + gamelocation.location_type,
+                            kwargs={
+                                "game_id": game.id,
+                                "act": gamelocation.act,
+                                "number": gamelocation.number,
+                            },
+                        )
 
                     # TODO https://trello.com/c/jYRmW3vN/309-weapon1-armor1-ability2-real-nodes
                     if scene_num == 1 and dialogue.id == PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE:
