@@ -619,7 +619,7 @@ def scene(request, game_id, act, number):
                     ###########
                     # SCENE 2 #
                     ###########
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_1:
+                    if scene_num == 2 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_1:
                         # write next game dialogue first node of act 1, scene 3
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_3_STARTING_NODE)
@@ -641,7 +641,7 @@ def scene(request, game_id, act, number):
                             },
                         )
 
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_2:
+                    if scene_num == 2 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_2:
                         # write next game dialogue first node of act 1, scene 4
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_4_STARTING_NODE)
@@ -663,7 +663,7 @@ def scene(request, game_id, act, number):
                             },
                         )
 
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_3:
+                    if scene_num == 2 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_3:
                         # write next game dialogue first node of act 1, scene 5
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_5_STARTING_NODE)
@@ -688,7 +688,7 @@ def scene(request, game_id, act, number):
                     ###########
                     # SCENE 3 #
                     ###########
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_3_ENDING_NODE:
+                    if scene_num == 3 and dialogue.id == ACT_1_SCENE_3_ENDING_NODE:
                         # write next game dialogue first node of act 1, scene 6
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
@@ -713,7 +713,7 @@ def scene(request, game_id, act, number):
                         ###########
                         # SCENE 4 #
                         ###########
-                        if scene_num == 1 and dialogue.id == ACT_1_SCENE_4_ENDING_NODE:
+                        if scene_num == 4 and dialogue.id == ACT_1_SCENE_4_ENDING_NODE:
                             # write next game dialogue first node of act 1, scene 6
                             next_scene_dialogue = GameDialogue(
                                 game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
@@ -738,7 +738,7 @@ def scene(request, game_id, act, number):
                         ###########
                         # SCENE 5 #
                         ###########
-                        if scene_num == 1 and dialogue.id == ACT_1_SCENE_5_ENDING_NODE:
+                        if scene_num == 5 and dialogue.id == ACT_1_SCENE_5_ENDING_NODE:
                             # write next game dialogue first node of act 1, scene 6
                             next_scene_dialogue = GameDialogue(
                                 game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_6_STARTING_NODE)
