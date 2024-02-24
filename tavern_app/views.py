@@ -14,7 +14,7 @@ from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_
     PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_2_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
     PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
     PLAYER_1_WEAPON_UPGRADE_NODE, PLAYER_2_WEAPON_UPGRADE_NODE, PLAYER_3_WEAPON_UPGRADE_NODE, \
-    PLAYER_4_WEAPON_UPGRADE_NODE
+    PLAYER_4_WEAPON_UPGRADE_NODE, ACT_1_SCENE_1_ENDING_NODE, ACT_1_SCENE_2_STARTING_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -588,18 +588,19 @@ def scene(request, game_id, act, number):
                 # Act 1 #
                 #########
                 if act == 1:
-                    # TODO change to consts
-                    if scene_num == 1 and dialogue.id == 13:
-                        # write next game dialogue first node of act 1 scene 2
+                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_1_ENDING_NODE:
+                        # write next game dialogue first node of act 1, scene 2
                         next_scene_dialogue = GameDialogue(
-                            game=game, dialogue=Dialogue.objects.get(pk=14)
+                            game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_2_STARTING_NODE)
                         )
                         next_scene_dialogue.save()
-                        
-                        # update gamelocation to act 1 scene 2
+
+                        # update gamelocation to act 1, scene 2
                         gamelocation.location_type = "scene"
                         gamelocation.number = 2
                         gamelocation.save()
+
+                        # create new_url so front end can redirect player
                         new_url = reverse(
                             "tavern_app:" + gamelocation.location_type,
                             kwargs={
@@ -609,9 +610,7 @@ def scene(request, game_id, act, number):
                             },
                         )
 
-                    # TODO make END_OF_SCENE_2_NODES
-
-                    # TODO other scenes in act 1 that go to another scene or battle
+                    # TODO ACT 1, SCENE 2
 
                     # TODO https://trello.com/c/jYRmW3vN/309-weapon1-armor1-ability2-real-nodes
                     if scene_num == 1 and dialogue.id == PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE:

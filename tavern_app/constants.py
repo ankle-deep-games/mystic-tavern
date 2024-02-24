@@ -158,6 +158,11 @@ ROLE_GAME_PROGRESSION_DICT = {
     },
 }
 
+# Scene starting and ending nodes
+ACT_1_SCENE_1_ENDING_NODE = 13
+
+ACT_1_SCENE_2_STARTING_NODE = 14
+
 # TODO real quest nodes https://trello.com/c/7ohf05pK/250-finalize-weapon-armor-ability-assignments-for-each-role-and-assign-them-in-the-code-as-game-progresses
 # Dialogue pk/ids of important nodes used for game flow in views.scene
 PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE = 202
