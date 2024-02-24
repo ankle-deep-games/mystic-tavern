@@ -162,6 +162,19 @@ ROLE_GAME_PROGRESSION_DICT = {
 ACT_1_SCENE_1_ENDING_NODE = 13
 
 ACT_1_SCENE_2_STARTING_NODE = 14
+ACT_1_SCENE_2_ENDING_NODE_CHOICE_1 = 24
+ACT_1_SCENE_2_ENDING_NODE_CHOICE_2 = 25
+ACT_1_SCENE_2_ENDING_NODE_CHOICE_3 = 26
+
+ACT_1_SCENE_3_STARTING_NODE = 27
+ACT_1_SCENE_3_ENDING_NODE = 35
+
+ACT_1_SCENE_4_STARTING_NODE = 36
+ACT_1_SCENE_4_ENDING_NODE = 38
+
+ACT_1_SCENE_5_STARTING_NODE = 39
+ACT_1_SCENE_5_ENDING_NODE = 41
+
 
 # TODO real quest nodes https://trello.com/c/7ohf05pK/250-finalize-weapon-armor-ability-assignments-for-each-role-and-assign-them-in-the-code-as-game-progresses
 # Dialogue pk/ids of important nodes used for game flow in views.scene

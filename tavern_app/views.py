@@ -14,7 +14,9 @@ from .constants import QUEST_1_NODE, QUEST_2_NODE, QUEST_3_NODE, END_OF_SCENE_1_
     PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_2_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
     PLAYER_3_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, PLAYER_4_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE, \
     PLAYER_1_WEAPON_UPGRADE_NODE, PLAYER_2_WEAPON_UPGRADE_NODE, PLAYER_3_WEAPON_UPGRADE_NODE, \
-    PLAYER_4_WEAPON_UPGRADE_NODE, ACT_1_SCENE_1_ENDING_NODE, ACT_1_SCENE_2_STARTING_NODE
+    PLAYER_4_WEAPON_UPGRADE_NODE, ACT_1_SCENE_1_ENDING_NODE, ACT_1_SCENE_2_STARTING_NODE, \
+    ACT_1_SCENE_2_ENDING_NODE_CHOICE_1, ACT_1_SCENE_2_ENDING_NODE_CHOICE_2, ACT_1_SCENE_3_STARTING_NODE, \
+    ACT_1_SCENE_4_STARTING_NODE, ACT_1_SCENE_2_ENDING_NODE_CHOICE_3, ACT_1_SCENE_5_STARTING_NODE
 from .forms import (
     CreateGameForm,
     JoinGameForm,
@@ -588,6 +590,9 @@ def scene(request, game_id, act, number):
                 # Act 1 #
                 #########
                 if act == 1:
+                    ###########
+                    # SCENE 1 #
+                    ###########
                     if scene_num == 1 and dialogue.id == ACT_1_SCENE_1_ENDING_NODE:
                         # write next game dialogue first node of act 1, scene 2
                         next_scene_dialogue = GameDialogue(
@@ -610,7 +615,79 @@ def scene(request, game_id, act, number):
                             },
                         )
 
-                    # TODO ACT 1, SCENE 2
+                    ###########
+                    # SCENE 2 #
+                    ###########
+                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_1:
+                        # write next game dialogue first node of act 1, scene 3
+                        next_scene_dialogue = GameDialogue(
+                            game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_3_STARTING_NODE)
+                        )
+                        next_scene_dialogue.save()
+
+                        # update gamelocation to act 1, scene 3
+                        gamelocation.location_type = "scene"
+                        gamelocation.number = 3
+                        gamelocation.save()
+
+                        # create new_url so front end can redirect player
+                        new_url = reverse(
+                            "tavern_app:" + gamelocation.location_type,
+                            kwargs={
+                                "game_id": game.id,
+                                "act": gamelocation.act,
+                                "number": gamelocation.number,
+                            },
+                        )
+
+                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_2:
+                        # write next game dialogue first node of act 1, scene 4
+                        next_scene_dialogue = GameDialogue(
+                            game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_4_STARTING_NODE)
+                        )
+                        next_scene_dialogue.save()
+
+                        # update gamelocation to act 1, scene 4
+                        gamelocation.location_type = "scene"
+                        gamelocation.number = 4
+                        gamelocation.save()
+
+                        # create new_url so front end can redirect player
+                        new_url = reverse(
+                            "tavern_app:" + gamelocation.location_type,
+                            kwargs={
+                                "game_id": game.id,
+                                "act": gamelocation.act,
+                                "number": gamelocation.number,
+                            },
+                        )
+
+                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_2_ENDING_NODE_CHOICE_3:
+                        # write next game dialogue first node of act 1, scene 5
+                        next_scene_dialogue = GameDialogue(
+                            game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_5_STARTING_NODE)
+                        )
+                        next_scene_dialogue.save()
+
+                        # update gamelocation to act 1, scene 5
+                        gamelocation.location_type = "scene"
+                        gamelocation.number = 5
+                        gamelocation.save()
+
+                        # create new_url so front end can redirect player
+                        new_url = reverse(
+                            "tavern_app:" + gamelocation.location_type,
+                            kwargs={
+                                "game_id": game.id,
+                                "act": gamelocation.act,
+                                "number": gamelocation.number,
+                            },
+                        )
+
+                    ###########
+                    # SCENE 3 #
+                    ###########
+                    # TODO
 
                     # TODO https://trello.com/c/jYRmW3vN/309-weapon1-armor1-ability2-real-nodes
                     if scene_num == 1 and dialogue.id == PLAYER_1_GRANT_WEAPON1_ARMOR1_ABILITY2_NODE:
