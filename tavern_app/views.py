@@ -594,7 +594,7 @@ def scene(request, game_id, act, number):
                     ###########
                     # SCENE 1 #
                     ###########
-                    if scene_num == 1 and dialogue.id == ACT_1_SCENE_1_ENDING_NODE:
+                    if scene_num == 1 and dialogue.node_id == ACT_1_SCENE_1_ENDING_NODE: # TODO COME BACK HERE
                         # write next game dialogue first node of act 1, scene 2
                         next_scene_dialogue = GameDialogue(
                             game=game, dialogue=Dialogue.objects.get(pk=ACT_1_SCENE_2_STARTING_NODE)

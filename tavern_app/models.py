@@ -283,6 +283,7 @@ class GameDialogue(models.Model):
     objects = models.Manager()
     game = models.ForeignKey(Game, on_delete=models.PROTECT)
     dialogue = models.ForeignKey(Dialogue, on_delete=models.PROTECT)
+    node_id = models.IntegerField(default=0) # TODO MAKE WORK
     regex_replaced_text_or_empty = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
