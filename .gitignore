@@ -10,3 +10,12 @@ tavern_app/migrations/*
 .DS_Store
 
 .idea/
+
+# Modern TypeScript tracer bullet
+node_modules/
+dist/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.env
+.env.local

@@ -1,0 +1,26 @@
+{
+  "name": "ankle-deep-games",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "pnpm --filter @adg/game-core build && pnpm --filter @adg/server build && pnpm --filter @adg/web build",
+    "dev": "pnpm --filter @adg/game-core build && concurrently -k -n server,web -c magenta,cyan \"pnpm --filter @adg/server dev\" \"pnpm --filter @adg/web dev\"",
+    "start": "pnpm --filter @adg/server start",
+    "test": "pnpm --filter @adg/game-core test && pnpm --filter @adg/server test",
+    "test:e2e": "playwright test",
+    "typecheck": "pnpm --filter @adg/game-core build && pnpm --filter @adg/game-core typecheck && pnpm --filter @adg/server typecheck && pnpm --filter @adg/web typecheck"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "concurrently": "10.0.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "msgpackr-extract"
+    ]
+  }
+}
