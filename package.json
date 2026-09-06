@@ -11,7 +11,7 @@
     "start": "pnpm --filter @adg/server start",
     "test": "pnpm --filter @adg/game-core test && pnpm --filter @adg/server test",
     "test:e2e": "playwright test",
-    "typecheck": "pnpm --filter @adg/game-core typecheck && pnpm --filter @adg/server typecheck && pnpm --filter @adg/web typecheck"
+    "typecheck": "pnpm --filter @adg/game-core build && pnpm --filter @adg/game-core typecheck && pnpm --filter @adg/server typecheck && pnpm --filter @adg/web typecheck"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
