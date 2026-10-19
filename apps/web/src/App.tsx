@@ -127,6 +127,23 @@ function Header({ game, status, onLeave }: { game: GameState | null; status: str
 function Landing({ onConnect, connecting }: { onConnect: (mode: "create" | "join", name: string, code?: string) => void; connecting: boolean }) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [joinError, setJoinError] = useState("");
+
+  function handleJoin() {
+    if (!name.trim()) {
+      setJoinError("Please enter your traveler name.");
+      return;
+    }
+
+    if (!code.trim()) {
+      setJoinError("Please enter a party code.");
+      return;
+    }
+
+    setJoinError("");
+    onConnect("join", name.trim(), code.trim());
+  }
+
   return (
     <section className="landing panel">
       <div className="landing-copy">
@@ -137,7 +154,7 @@ function Landing({ onConnect, connecting }: { onConnect: (mode: "create" | "join
       </div>
       <div className="join-card">
         <label htmlFor="traveler-name">Traveler name</label>
-        <input id="traveler-name" autoFocus maxLength={18} value={name} onChange={(event) => setName(event.target.value)} placeholder="Jordan" />
+        <input id="traveler-name" autoFocus maxLength={18} value={name} onChange={(event) => setName(event.target.value)} placeholder="Dobby" />
         <button className="primary" disabled={connecting || !name.trim()} onClick={() => onConnect("create", name)}>
           {connecting ? "Opening the door…" : "Create a party"}
         </button>
@@ -145,8 +162,13 @@ function Landing({ onConnect, connecting }: { onConnect: (mode: "create" | "join
         <label htmlFor="party-code">Party code</label>
         <div className="join-row">
           <input id="party-code" value={code} onChange={(event) => setCode(event.target.value)} placeholder="Room code" />
-          <button disabled={connecting || !name.trim() || !code.trim()} onClick={() => onConnect("join", name, code)}>Join</button>
+          <button disabled={connecting} onClick={handleJoin}>Join</button>
         </div>
+        {joinError && (
+          <p className="join-error" role="alert">
+            {joinError}
+          </p>
+        )}
       </div>
     </section>
   );
