@@ -161,7 +161,16 @@ function Landing({ onConnect, connecting }: { onConnect: (mode: "create" | "join
         <div className="divider"><span>or join friends</span></div>
         <label htmlFor="party-code">Party code</label>
         <div className="join-row">
-          <input id="party-code" value={code} onChange={(event) => setCode(event.target.value)} placeholder="Room code" />
+          <input
+            id="party-code"
+            value={code}
+            maxLength={4}
+            autoComplete="off"
+            placeholder="ABCD"
+            onChange={(event) =>
+              setCode(event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""))
+            }
+          />
           <button disabled={connecting} onClick={handleJoin}>Join</button>
         </div>
         {joinError && (

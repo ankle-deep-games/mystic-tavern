@@ -23,7 +23,9 @@ app.get(/.*/, (request, response, next) => {
 
 const httpServer = createServer(app);
 const gameServer = new Server({ transport: new WebSocketTransport({ server: httpServer }) });
-gameServer.define("party", GameRoom);
+gameServer
+  .define("party", GameRoom)
+  .filterBy(["partyCode"]);
 
 await gameServer.listen(port);
 console.log(`Ankle Deep Games realtime server listening on http://localhost:${port}`);
