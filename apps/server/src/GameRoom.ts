@@ -18,6 +18,7 @@ import {
 } from "@adg/game-core";
 import { Client, Room } from "colyseus";
 import { z } from "zod";
+import { randomInt } from "node:crypto";
 
 const roleId = z.enum(["paladin", "black-mage", "white-mage", "archer"]);
 const portrait = z.enum(["male", "female"]);
@@ -39,15 +40,30 @@ const commandSchema = z.discriminatedUnion("type", [
 
 const joinOptions = z.object({ name: z.string().trim().min(1).max(18) });
 
+const CODE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+function generateRoomCode(): string {
+  return Array.from(
+    { length: 4 },
+    () => CODE_CHARACTERS[randomInt(CODE_CHARACTERS.length)]
+  ).join("");
+}
+
 export class GameRoom extends Room {
   maxClients = 4;
   private game!: GameState;
   private roundTimer: ReturnType<typeof setTimeout> | null = null;
 
   onCreate(): void {
+    this.roomId = generateRoomCode();
     this.game = createGame(this.roomId);
-    this.onMessage("command", (client, payload) => this.handleCommand(client, payload));
-    this.onMessage("request-state", (client) => client.send("game-state", this.game));
+
+    this.onMessage("command", (client, payload) =>
+      this.handleCommand(client, payload)
+    );
+    this.onMessage("request-state", (client) =>
+      client.send("game-state", this.game)
+    );
   }
 
   onJoin(client: Client, options: unknown): void {
