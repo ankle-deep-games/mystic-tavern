@@ -1,4 +1,4 @@
-# Ankle Deep Games: Four Crystals
+# Ankle Deep Games: Mystic Tavern
 
 A bare-bones, start-to-finish proof of concept for a simultaneous four-player cooperative browser RPG.
 

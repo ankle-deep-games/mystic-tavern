@@ -111,7 +111,7 @@ function Header({ game, status, onLeave }: { game: GameState | null; status: str
     <header className="topbar">
       <div className="brand-lockup">
         <img src="/assets/logo.png" alt="" />
-        <div><span>Ankle Deep Games</span><strong>FOUR CRYSTALS</strong></div>
+        <div><span>Ankle Deep Games</span><strong>MYSTIC TAVERN</strong></div>
       </div>
       {game && (
         <div className="room-meta">
